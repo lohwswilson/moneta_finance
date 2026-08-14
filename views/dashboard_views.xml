@@ -7,38 +7,38 @@
         <field name="arch" type="xml">
             <form string="Personal Finance Command Center" class="o_moneta_dashboard">
                 <sheet>
-                    <!-- Top Command Center Hero Header -->
+                    <!-- Top Command Center Hero Header (Soothing Light Sky Blue) -->
                     <div class="moneta-hero-banner p-4 mb-4">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle p-1 bg-white bg-opacity-25 shadow-sm">
-                                    <div class="rounded-circle bg-white p-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
-                                        <i class="fa fa-diamond fa-2x" style="color: #0d9488;"/>
+                                <div class="rounded-circle p-1 bg-white shadow-sm border border-info border-opacity-25">
+                                    <div class="rounded-circle bg-primary-light p-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: #e0f2fe !important;">
+                                        <i class="fa fa-diamond fa-2x" style="color: #0284c7;"/>
                                     </div>
                                 </div>
                                 <div>
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <span class="badge rounded-pill bg-white bg-opacity-20 text-white px-3 py-1 fw-bold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">
+                                        <span class="badge rounded-pill bg-white text-primary border border-info border-opacity-25 px-3 py-1 fw-bold text-uppercase shadow-xs" style="letter-spacing: 0.05em; font-size: 0.72rem; color: #0284c7 !important;">
                                             <i class="fa fa-circle text-success me-1" style="font-size: 0.6rem;"/>Live Command Center
                                         </span>
-                                        <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.75rem;">
-                                            Base: <field name="currency_id"/>
+                                        <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold border shadow-xs" style="font-size: 0.75rem;">
+                                            Base Currency: <field name="currency_id"/>
                                         </span>
                                     </div>
-                                    <h3 class="fw-bold mb-0 text-white mt-1">
+                                    <h3 class="fw-bold mb-0 mt-1" style="color: #0f172a;">
                                         Personal Finance &amp; Wealth Dashboard
                                     </h3>
-                                    <span class="text-white text-opacity-75 small">
+                                    <span class="small fw-medium" style="color: #0369a1;">
                                         Consolidated wealth, real-time portfolio valuations, cash flow, and debt resilience.
                                     </span>
                                 </div>
                             </div>
                             <!-- Header Quick Action Triggers -->
                             <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <button name="action_open_holdings" type="object" class="btn btn-light rounded-pill px-3 shadow-sm fw-semibold" style="font-size: 0.85rem;">
-                                    <i class="fa fa-line-chart text-primary me-1"/>Portfolio Center
+                                <button name="action_open_holdings" type="object" class="btn btn-primary rounded-pill px-3 shadow-sm fw-semibold" style="font-size: 0.85rem; background-color: #0284c7 !important; border-color: #0284c7 !important;">
+                                    <i class="fa fa-line-chart me-1"/>Portfolio Center
                                 </button>
-                                <button name="action_open_insights" type="object" class="btn btn-outline-light rounded-pill px-3 fw-semibold" style="font-size: 0.85rem;">
+                                <button name="action_open_insights" type="object" class="btn btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 0.85rem; border-color: #0284c7 !important; color: #0284c7 !important; background: #ffffff !important;">
                                     <i class="fa fa-lightbulb-o me-1"/>AI Insights (<field name="insight_count"/>)
                                 </button>
                             </div>
@@ -46,7 +46,7 @@
                     </div>
 
                     <!-- AI Smart Financial Insights Banner -->
-                    <div class="card moneta-card p-3 mb-4" style="background: linear-gradient(135deg, #f0fdfa 0%, #f8fafc 100%) !important; border-left: 5px solid #0d9488 !important;">
+                    <div class="card moneta-card p-3 mb-4" style="background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%) !important; border-left: 5px solid #0284c7 !important; border: 1px solid rgba(186, 230, 253, 0.6) !important;">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="rounded-circle bg-white p-3 shadow-xs text-primary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
