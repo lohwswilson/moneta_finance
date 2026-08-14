@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Moneta Personal Finance',
-    'version': '18.0.4.0.0',
+    'version': '18.0.4.1.0',
     'category': 'Accounting/Finance',
     'summary': 'Personal finance & wealth OS: Quicken-style registers, investments, budgets, loans, Monte Carlo, real estate, vehicles, antiques & FIRE analytics.',
     'description': """
