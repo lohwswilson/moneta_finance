@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Monte Carlo Simulation Form View -->
+    <record id="view_moneta_monte_carlo_form" model="ir.ui.view">
+        <field name="name">moneta.monte.carlo.form</field>
+        <field name="model">moneta.monte.carlo</field>
+        <field name="arch" type="xml">
+            <form string="Monte Carlo Retirement Simulator">
+                <header>
+                    <button name="action_run_simulation" type="object" string="Run 1,000 Stochastic Simulations" class="btn-primary" icon="fa-random"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Retirement Plan"/>
+                        <h1><field name="name" placeholder="e.g. Early Retirement Plan @ Age 60"/></h1>
+                    </div>
+
+                    <!-- Simulation Result Metrics Banner -->
+                    <div class="row g-3 my-3">
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Plan Success Rate</span>
+                                <h2 class="fw-bold mb-0" decoration-success="success_probability_pct &gt;= 85.0" decoration-warning="success_probability_pct &lt; 85.0 and success_probability_pct &gt;= 70.0" decoration-danger="success_probability_pct &lt; 70.0">
+                                    <field name="success_probability_pct"/>%
+                                </h2>
+                                <span class="small text-muted">1,000 Market Paths</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Median Wealth at Retirement</span>
+                                <h3 class="fw-bold text-primary mb-0"><field name="median_wealth_at_retirement" widget="monetary"/></h3>
+                                <span class="small text-muted">50th Percentile</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Conservative Ending Wealth</span>
+                                <h3 class="fw-bold text-dark mb-0"><field name="p10_ending_wealth" widget="monetary"/></h3>
+                                <span class="small text-muted">10th Percentile Worst Case</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Optimistic Ending Wealth</span>
+                                <h3 class="fw-bold text-success mb-0"><field name="p90_ending_wealth" widget="monetary"/></h3>
+                                <span class="small text-muted">90th Percentile Bull Case</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Financial Assumptions">
+                            <field name="starting_portfolio_value" widget="monetary"/>
+                            <field name="annual_savings_contribution" widget="monetary"/>
+                            <field name="years_to_retirement"/>
+                            <field name="years_in_retirement"/>
+                            <field name="annual_retirement_spend" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                        <group string="Portfolio Allocation &amp; Inflation">
+                            <field name="equity_allocation_pct"/>
+                            <field name="bond_allocation_pct" readonly="1"/>
+                            <field name="inflation_rate_pct"/>
+                            <field name="simulations_count"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Year-by-Year Percentile Trajectory" name="trajectory_page">
+                            <field name="path_ids" readonly="1">
+                                <list>
+                                    <field name="year_number" string="Year"/>
+                                    <field name="phase" string="Phase" widget="badge" decoration-info="phase == 'Accumulation'" decoration-success="phase == 'Retirement'"/>
+                                    <field name="p10_conservative" widget="monetary" string="10th %ile (Conservative)"/>
+                                    <field name="p50_median" widget="monetary" string="50th %ile (Median)"/>
+                                    <field name="p90_optimistic" widget="monetary" string="90th %ile (Optimistic)"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Monte Carlo Simulation List View -->
+    <record id="view_moneta_monte_carlo_tree" model="ir.ui.view">
+        <field name="name">moneta.monte.carlo.list</field>
+        <field name="model">moneta.monte.carlo</field>
+        <field name="arch" type="xml">
+            <list string="Monte Carlo Plans">
+                <field name="name"/>
+                <field name="starting_portfolio_value" widget="monetary"/>
+                <field name="years_to_retirement" string="Years to Retire"/>
+                <field name="annual_retirement_spend" widget="monetary" string="Annual Spend"/>
+                <field name="success_probability_pct" widget="badge" 
+                       decoration-success="success_probability_pct &gt;= 85.0" 
+                       decoration-warning="success_probability_pct &lt; 85.0 and success_probability_pct &gt;= 70.0" 
+                       decoration-danger="success_probability_pct &lt; 70.0"/>
+                <field name="median_wealth_at_retirement" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_monte_carlo" model="ir.actions.act_window">
+        <field name="name">Monte Carlo Retirement Simulator</field>
+        <field name="res_model">moneta.monte.carlo</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Monte Carlo Retirement Plan
+            </p>
+            <p>
+                Run 1,000 stochastic simulations to analyze the probability of your portfolio lasting through retirement.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Moneta Personal Finance',
-    'version': '18.0.1.5.0',
+    'version': '18.0.2.0.0',
     'category': 'Accounting/Finance',
     'summary': 'Personal finance manager: bank accounts, credit cards, investments, budgets & QIF/OFX imports.',
     'description': """
@@ -45,6 +45,9 @@ Features:
         'views/recurring_views.xml',
         'views/tag_views.xml',
         'views/dashboard_views.xml',
+        'views/loan_views.xml',
+        'views/monte_carlo_views.xml',
+        'views/emergency_views.xml',
         'views/net_worth_views.xml',
         'views/wizard_views.xml',
         'views/menu_views.xml',

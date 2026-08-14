@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Emergency Access Contact Form View -->
+    <record id="view_moneta_emergency_contact_form" model="ir.ui.view">
+        <field name="name">moneta.emergency.contact.form</field>
+        <field name="model">moneta.emergency.contact</field>
+        <field name="arch" type="xml">
+            <form string="Emergency Access &amp; Digital Estate Contact">
+                <header>
+                    <button name="action_initiate_claim" type="object" string="Initiate Emergency Claim" class="btn-warning" invisible="status != 'active'" confirm="Are you sure you want to trigger the emergency claim waiting period?"/>
+                    <button name="action_approve_access" type="object" string="Grant Access" class="btn-success" invisible="status != 'pending_claim'"/>
+                    <button name="action_revoke_access" type="object" string="Revoke Contact" class="btn-danger" invisible="status == 'revoked'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="active,pending_claim,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Contact Name"/>
+                        <h1><field name="name" placeholder="e.g. Jane Doe (Spouse)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Contact Details">
+                            <field name="email" widget="email"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="relationship"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                        <group string="Security Waiting Period">
+                            <field name="waiting_period_days"/>
+                            <field name="claim_request_date" invisible="not claim_request_date"/>
+                            <field name="access_granted_date" invisible="not access_granted_date"/>
+                        </group>
+                    </group>
+                    <group string="Secure Instructions &amp; Vault Notes">
+                        <field name="notes" placeholder="Add confidential guidance for this contact (e.g. location of physical documents, estate attorney contact info, safe deposit instructions)..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Emergency Access Contact List View -->
+    <record id="view_moneta_emergency_contact_tree" model="ir.ui.view">
+        <field name="name">moneta.emergency.contact.list</field>
+        <field name="model">moneta.emergency.contact</field>
+        <field name="arch" type="xml">
+            <list string="Emergency Contacts">
+                <field name="name"/>
+                <field name="relationship"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="waiting_period_days" string="Waiting Period (Days)"/>
+                <field name="status" widget="badge" 
+                       decoration-success="status == 'active'" 
+                       decoration-warning="status == 'pending_claim'" 
+                       decoration-info="status == 'approved'" 
+                       decoration-danger="status == 'revoked'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_emergency_contact" model="ir.actions.act_window">
+        <field name="name">Emergency Contacts &amp; Digital Will</field>
+        <field name="res_model">moneta.emergency.contact</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Designate a Trusted Emergency Contact
+            </p>
+            <p>
+                Set up a secure emergency protocol with configurable waiting periods for family or estate executors.
+            </p>
+        </field>
+    </record>
+</odoo>

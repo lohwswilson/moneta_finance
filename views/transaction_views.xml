@@ -18,6 +18,11 @@
                     <field name="state" widget="statusbar" statusbar_visible="unreconciled,cleared,reconciled,void" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_attachments" type="object" class="oe_stat_button" icon="fa-paperclip">
+                            <field name="attachment_count" widget="statinfo" string="Receipts"/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="transaction_date"/>
@@ -39,8 +44,14 @@
                             <field name="linked_transaction_id" invisible="not is_transfer"/>
                         </group>
                     </group>
-                    <notebook invisible="not is_split">
-                        <page string="Split Line Items">
+                    <notebook>
+                        <page string="Receipt &amp; Document" name="receipt_page">
+                            <group>
+                                <field name="receipt_attachment" widget="image" class="oe_avatar" options="{'size': [250, 250]}"/>
+                                <field name="receipt_filename" invisible="1"/>
+                            </group>
+                        </page>
+                        <page string="Split Line Items" name="splits_page" invisible="not is_split">
                             <field name="split_ids">
                                 <list editable="bottom">
                                     <field name="category_id" options="{'no_create': True}"/>

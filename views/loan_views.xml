@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Loan Scenario Form View -->
+    <record id="view_moneta_loan_scenario_form" model="ir.ui.view">
+        <field name="name">moneta.loan.scenario.form</field>
+        <field name="model">moneta.loan.scenario</field>
+        <field name="arch" type="xml">
+            <form string="Loan &amp; Mortgage Early Payoff Scenario">
+                <header>
+                    <button name="action_generate_schedule" type="object" string="Calculate Full Amortization Table" class="btn-primary" icon="fa-calculator"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Scenario Name"/>
+                        <h1><field name="name" placeholder="e.g. Home Mortgage 30yr vs 15yr Prepayment"/></h1>
+                    </div>
+
+                    <!-- Executive Savings KPI Banner -->
+                    <div class="row g-3 my-3">
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Monthly Payment (P&amp;I)</span>
+                                <h3 class="fw-bold text-primary mb-0"><field name="monthly_payment" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Interest Saved</span>
+                                <h3 class="fw-bold text-success mb-0"><field name="interest_saved" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Time Saved</span>
+                                <h3 class="fw-bold text-info mb-0"><field name="years_saved"/> Years (<field name="months_saved"/> mo)</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Accelerated Payoff</span>
+                                <h3 class="fw-bold text-danger mb-0"><field name="actual_payoff_date"/></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Loan Terms">
+                            <field name="account_id"/>
+                            <field name="principal_amount" widget="monetary"/>
+                            <field name="annual_interest_rate"/>
+                            <field name="loan_term_years"/>
+                            <field name="start_date"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                        <group string="Prepayment Strategies">
+                            <field name="extra_monthly_payment" widget="monetary"/>
+                            <field name="lump_sum_payment" widget="monetary"/>
+                            <field name="lump_sum_date"/>
+                            <separator string="Original Schedule"/>
+                            <field name="total_interest_original" widget="monetary" readonly="1"/>
+                            <field name="total_payment_original" widget="monetary" readonly="1"/>
+                            <field name="original_payoff_date" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Month-by-Month Amortization Table" name="amortization_table">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="payment_number" string="#"/>
+                                    <field name="payment_date" string="Date"/>
+                                    <field name="starting_balance" widget="monetary"/>
+                                    <field name="principal_amount" widget="monetary" string="Principal"/>
+                                    <field name="interest_amount" widget="monetary" string="Interest"/>
+                                    <field name="extra_payment" widget="monetary" string="Extra Principal"/>
+                                    <field name="total_payment" widget="monetary" string="Total Paid"/>
+                                    <field name="ending_balance" widget="monetary" string="Ending Balance"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Variable Rate Adjustments" name="rate_changes">
+                            <field name="rate_change_ids">
+                                <list editable="bottom">
+                                    <field name="effective_date"/>
+                                    <field name="annual_rate"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Loan Scenario List View -->
+    <record id="view_moneta_loan_scenario_tree" model="ir.ui.view">
+        <field name="name">moneta.loan.scenario.list</field>
+        <field name="model">moneta.loan.scenario</field>
+        <field name="arch" type="xml">
+            <list string="Loan Scenarios">
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="principal_amount" widget="monetary"/>
+                <field name="annual_interest_rate" string="Rate (%)"/>
+                <field name="monthly_payment" widget="monetary"/>
+                <field name="interest_saved" widget="monetary" string="Interest Saved" decoration-success="interest_saved &gt; 0"/>
+                <field name="years_saved" string="Time Saved (Yrs)" decoration-success="years_saved &gt; 0"/>
+                <field name="actual_payoff_date" string="Payoff Date"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_loan_scenario" model="ir.actions.act_window">
+        <field name="name">Loan &amp; Mortgage Amortization</field>
+        <field name="res_model">moneta.loan.scenario</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Loan or Mortgage Early Payoff Scenario
+            </p>
+            <p>
+                Simulate extra monthly principal payments and lump sum prepayments to calculate exact interest savings and early payoff dates.
+            </p>
+        </field>
+    </record>
+</odoo>

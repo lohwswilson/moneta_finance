@@ -64,7 +64,7 @@
 
     <!-- Bills & Planning -->
     <menuitem id="menu_moneta_planning_root"
-              name="Bills &amp; Budgets"
+              name="Bills &amp; Planning"
               parent="menu_moneta_root"
               sequence="30"/>
 
@@ -79,6 +79,18 @@
               parent="menu_moneta_planning_root"
               action="action_moneta_budget"
               sequence="20"/>
+
+    <menuitem id="menu_moneta_loan_scenarios"
+              name="Loan &amp; Mortgage Amortization"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_loan_scenario"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_monte_carlo"
+              name="Monte Carlo Wealth Simulator"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_monte_carlo"
+              sequence="40"/>
 
     <!-- Net Worth & Analytics -->
     <menuitem id="menu_moneta_reports_root"
@@ -116,7 +128,7 @@
               action="action_moneta_import_wizard"
               sequence="20"/>
 
-    <!-- Configuration -->
+    <!-- Configuration & Estate -->
     <menuitem id="menu_moneta_config_root"
               name="Configuration"
               parent="menu_moneta_root"
@@ -145,4 +157,10 @@
               parent="menu_moneta_config_root"
               action="action_moneta_institution"
               sequence="40"/>
+
+    <menuitem id="menu_moneta_emergency_contacts"
+              name="Emergency Contacts &amp; Estate"
+              parent="menu_moneta_config_root"
+              action="action_moneta_emergency_contact"
+              sequence="50"/>
 </odoo>

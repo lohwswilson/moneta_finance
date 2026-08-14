@@ -17,4 +17,4 @@ from . import test_delete_guards
 from . import test_security_allocation
 from . import test_payee_analytics
 from . import test_gem_strategy
-from . import test_account_share
+from . import test_account_sharefrom . import test_loan_and_simulations

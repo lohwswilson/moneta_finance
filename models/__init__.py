@@ -13,3 +13,6 @@ from . import net_worth
 from . import gem_strategy
 from . import account_share
 from . import res_users
+from . import loan
+from . import monte_carlo
+from . import emergency_access

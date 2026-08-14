@@ -48,12 +48,36 @@ class MonetaTransaction(models.Model):
     split_ids = fields.One2many('moneta.transaction.split', 'transaction_id', string='Split Details')
 
     tag_ids = fields.Many2many('moneta.tag', string='Tags')
+    receipt_attachment = fields.Binary(string='Receipt / Invoice', attachment=True)
+    receipt_filename = fields.Char(string='Receipt Filename')
+    attachment_count = fields.Integer(string='Attachments', compute='_compute_attachment_count')
 
     user_id = fields.Many2one(
         'res.users', string='Owner',
         default=lambda self: self.env.user, required=True,
         index=True,
     )
+
+    def _compute_attachment_count(self):
+        for rec in self:
+            count = self.env['ir.attachment'].search_count([
+                ('res_model', '=', 'moneta.transaction'),
+                ('res_id', '=', rec.id),
+            ])
+            if rec.receipt_attachment:
+                count = max(count, 1)
+            rec.attachment_count = count
+
+    def action_view_attachments(self):
+        self.ensure_one()
+        return {
+            'name': 'Attachments',
+            'domain': [('res_model', '=', 'moneta.transaction'), ('res_id', '=', self.id)],
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'kanban,list,form',
+            'context': {'default_res_model': 'moneta.transaction', 'default_res_id': self.id},
+        }
 
     @api.depends('amount')
     def _compute_payment_deposit(self):
@@ -461,6 +485,9 @@ class MonetaTransactionSplit(models.Model):
     amount = fields.Monetary(string='Amount', required=True, default=0.0)
     memo = fields.Char(string='Memo')
     tag_ids = fields.Many2many('moneta.tag', string='Tags')
+    receipt_attachment = fields.Binary(string='Receipt / Invoice', attachment=True)
+    receipt_filename = fields.Char(string='Receipt Filename')
+    attachment_count = fields.Integer(string='Attachments', compute='_compute_attachment_count')
 
     # Stored related owner so the per-user record rule resolves to the parent's owner.
     user_id = fields.Many2one('res.users', related='transaction_id.user_id', store=True, index=True)
