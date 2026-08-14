@@ -17,9 +17,8 @@
                                 Real-time balance sheet, cashflow, portfolio, home equity, and FIRE financial freedom
                             </p>
                         </div>
-                        <div class="d-flex gap-2">
-                            <button name="action_open_register" type="object" class="btn btn-primary shadow-sm moneta-pill-btn" icon="fa-plus-circle" string=" New Transaction"/>
-                            <button name="action_recompute" type="object" class="btn btn-outline-secondary shadow-sm moneta-pill-btn" icon="fa-refresh" string=" Refresh"/>
+                        <div>
+                            <button name="action_open_register" type="object" class="btn btn-primary shadow-sm moneta-pill-btn px-3" icon="fa-plus-circle" string=" Record Transaction"/>
                         </div>
                     </div>
 
