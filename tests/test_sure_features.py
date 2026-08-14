@@ -93,6 +93,18 @@ class TestSureFeatures(TransactionCase):
         self.assertEqual(prop.equity_value, 200000.0)
         self.assertAlmostEqual(prop.loan_to_value_ratio, 66.7, delta=0.5)
 
+        # Make a mortgage payment of ,000 to reduce debt
+        self.env['moneta.transaction'].create({
+            'account_id': mortgage.id,
+            'amount': 50000.0,
+            'state': 'cleared',
+        })
+        self.assertEqual(mortgage.current_balance, -350000.0)
+        # Property equity should dynamically update to ,000
+        self.assertEqual(prop.mortgage_balance, 350000.0)
+        self.assertEqual(prop.equity_value, 250000.0)
+        self.assertAlmostEqual(prop.loan_to_value_ratio, 58.3, delta=0.5)
+
     def test_vehicle_and_antique_tracking(self):
         """Test vehicle specifications, antique details, and valuation log."""
         car = self.env['moneta.property'].create({

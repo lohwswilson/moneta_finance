@@ -112,15 +112,21 @@ class MonetaProperty(models.Model):
         elif self.asset_category == 'real_estate':
             self.property_type = 'primary_residence'
 
-    @api.depends('current_market_value', 'mortgage_account_id', 'mortgage_account_id.current_balance')
+    @api.depends('current_market_value', 'currency_id', 'mortgage_account_id', 'mortgage_account_id.current_balance', 'mortgage_account_id.opening_balance', 'mortgage_account_id.currency_id')
     def _compute_equity(self):
         for prop in self:
             val = float(prop.current_market_value or 0.0)
             debt = 0.0
             if prop.mortgage_account_id:
-                debt = abs(float(prop.mortgage_account_id.current_balance or 0.0))
+                acc = prop.mortgage_account_id
+                acc_bal = float(acc.current_balance or acc.opening_balance or 0.0)
+                raw_debt = abs(acc_bal)
+                if acc.currency_id and prop.currency_id and acc.currency_id != prop.currency_id:
+                    debt = acc.currency_id._convert(raw_debt, prop.currency_id, self.env.company, fields.Date.context_today(self))
+                else:
+                    debt = raw_debt
             prop.mortgage_balance = round(debt, 4)
-            prop.equity_value = round(max(val - debt, 0.0), 4)
+            prop.equity_value = round(val - debt, 4)
             if val > 0:
                 prop.loan_to_value_ratio = round((debt / val) * 100.0, 1)
             else:

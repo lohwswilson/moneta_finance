@@ -174,6 +174,9 @@ class MonetaAccount(models.Model):
         self.env['moneta.account'].browse(account_id).invalidate_recordset(
             ['current_balance', 'cleared_balance']
         )
+        props = self.env['moneta.property'].search([('mortgage_account_id', '=', account_id)])
+        if props:
+            props._compute_equity()
 
     def _recompute_balance(self):
         """Full recompute from authoritative state: opening_balance + sum of
@@ -205,6 +208,9 @@ class MonetaAccount(models.Model):
                 (round(current, 4), round(cleared, 4), acc_id),
             )
         self.invalidate_recordset(['current_balance', 'cleared_balance'])
+        props = self.env['moneta.property'].search([('mortgage_account_id', 'in', self.ids)])
+        if props:
+            props._compute_equity()
 
     @api.model
     def _cron_roll_in_balances(self):

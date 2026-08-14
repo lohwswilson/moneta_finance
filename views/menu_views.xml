@@ -254,8 +254,14 @@
               action="action_moneta_emergency_contact"
               sequence="50"/>
 
+    <menuitem id="menu_moneta_currencies"
+              name="Currencies &amp; Exchange Rates"
+              parent="menu_moneta_config_root"
+              action="base.action_currency_form"
+              sequence="55"/>
+
     <menuitem id="menu_moneta_settings"
-              name="Moneta AI Settings"
+              name="Settings"
               parent="menu_moneta_config_root"
               action="action_moneta_config_settings"
               sequence="60"/>
