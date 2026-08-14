@@ -65,12 +65,37 @@ class MonetaRecurringTransaction(models.Model):
     occurrences_remaining = fields.Integer(string='Occurrences Remaining', default=0)
     last_posted_date = fields.Date(string='Last Posted Date', readonly=True)
     reminder_days_before = fields.Integer(string='Reminder Days Before', default=3)
+    is_bill = fields.Boolean(string='Is Bill / Expense', compute='_compute_due_status', store=True)
+    due_status = fields.Selection([
+        ('overdue', 'Overdue'),
+        ('today', 'Due Today'),
+        ('due_soon', 'Due in 7 Days'),
+        ('upcoming', 'Upcoming'),
+    ], string='Due Status', compute='_compute_due_status')
 
     user_id = fields.Many2one(
         'res.users', string='Owner',
         default=lambda self: self.env.user, required=True,
         index=True,
     )
+
+    @api.depends('next_date', 'amount')
+    def _compute_due_status(self):
+        today = fields.Date.context_today(self)
+        horizon = today + timedelta(days=7)
+        for rec in self:
+            rec.is_bill = (rec.amount or 0.0) < 0
+            nd = rec.next_date
+            if not nd:
+                rec.due_status = 'upcoming'
+            elif nd < today:
+                rec.due_status = 'overdue'
+            elif nd == today:
+                rec.due_status = 'today'
+            elif nd <= horizon:
+                rec.due_status = 'due_soon'
+            else:
+                rec.due_status = 'upcoming'
 
     # ------------------------------------------------------------------
     # Next-due-date arithmetic (ported from Moneta common/recurrence.ts)
@@ -168,6 +193,36 @@ class MonetaRecurringTransaction(models.Model):
             if sched.end_date and new_next and new_next > sched.end_date:
                 vals['active'] = False
             sched.write(vals)
+
+    def action_post_now(self):
+        """1-click button to enter directly into register."""
+        self.ensure_one()
+        self.post()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Entered in Register',
+                'message': f"Posted '{self.name}' on {self.last_posted_date}.",
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
+    def action_skip_occurrence(self):
+        """1-click button to skip this occurrence."""
+        self.ensure_one()
+        self.skip()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Skipped',
+                'message': f"Skipped occurrence for '{self.name}'. Next due: {self.next_date}.",
+                'type': 'info',
+                'sticky': False,
+            }
+        }
 
     def action_generate_transaction(self):
         """Manual button: post the due transaction now."""

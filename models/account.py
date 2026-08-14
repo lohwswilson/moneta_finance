@@ -201,6 +201,17 @@ class MonetaAccount(models.Model):
             'context': {'default_account_id': self.id},
         }
 
+    def action_reconcile_statement(self):
+        self.ensure_one()
+        return {
+            'name': f'Reconcile Statement - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'moneta.reconciliation.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_account_id': self.id, 'active_id': self.id, 'active_model': 'moneta.account'},
+        }
+
     def action_import_file(self):
         self.ensure_one()
         return {

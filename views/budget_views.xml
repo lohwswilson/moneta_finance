@@ -106,8 +106,10 @@
                                 <field name="rollover_in" widget="monetary"/>
                                 <field name="effective_budget" widget="monetary"/>
                                 <field name="actual_amount" widget="monetary"/>
-                                <field name="rollover_out" widget="monetary"/>
-                                <field name="alert_level" widget="badge"/>
+                                <field name="remaining_amount" widget="monetary" decoration-success="remaining_amount &gt;= 0" decoration-danger="remaining_amount &lt; 0"/>
+                                <field name="spent_percent" widget="progressbar" string="% Spent"/>
+                                <field name="rollover_out" widget="monetary" optional="hide"/>
+                                <field name="alert_level" widget="badge" decoration-success="alert_level == 'none'" decoration-warning="alert_level == 'warning'" decoration-danger="alert_level in ('critical', 'over_budget')"/>
                             </list>
                         </field>
                     </group>

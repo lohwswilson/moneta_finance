@@ -5,10 +5,10 @@
         <field name="name">moneta.recurring.transaction.form</field>
         <field name="model">moneta.recurring.transaction</field>
         <field name="arch" type="xml">
-            <form string="Scheduled Transaction">
+            <form string="Scheduled Bill / Income">
                 <header>
-                    <button name="action_generate_transaction" type="object" string="Post Now" class="btn-primary" icon="fa-plus"/>
-                    <button name="skip" type="object" string="Skip Next" class="btn-secondary" icon="fa-forward"/>
+                    <button name="action_post_now" type="object" string="Enter in Register" class="btn-primary" icon="fa-check"/>
+                    <button name="action_skip_occurrence" type="object" string="Skip Next" class="btn-secondary" icon="fa-forward"/>
                 </header>
                 <sheet>
                     <group>
@@ -29,6 +29,10 @@
                         <group name="schedule_info" string="Schedule &amp; Automation">
                             <field name="frequency"/>
                             <field name="next_date"/>
+                            <field name="due_status" widget="badge" 
+                                   decoration-danger="due_status == 'overdue'" 
+                                   decoration-warning="due_status in ('today', 'due_soon')" 
+                                   decoration-info="due_status == 'upcoming'"/>
                             <field name="auto_post" widget="boolean_toggle"/>
                             <field name="end_date"/>
                             <field name="total_occurrences"/>
@@ -42,28 +46,71 @@
         </field>
     </record>
 
-    <!-- Recurring Transaction List View -->
+    <!-- Premier Bills & Reminders List View (Odoo 18 uses list) -->
     <record id="view_moneta_recurring_tree" model="ir.ui.view">
         <field name="name">moneta.recurring.transaction.list</field>
         <field name="model">moneta.recurring.transaction</field>
         <field name="arch" type="xml">
-            <list string="Scheduled Transactions">
-                <field name="name"/>
-                <field name="account_id"/>
-                <field name="payee_id"/>
-                <field name="category_id"/>
-                <field name="amount" widget="monetary"/>
-                <field name="frequency"/>
-                <field name="next_date"/>
-                <field name="auto_post" widget="boolean_toggle"/>
-                <field name="active" widget="boolean_toggle"/>
+            <list string="Bills &amp; Scheduled Transactions" default_order="next_date asc">
+                <field name="next_date" string="Due Date"/>
+                <field name="due_status" string="Status" widget="badge" 
+                       decoration-danger="due_status == 'overdue'" 
+                       decoration-warning="due_status == 'today'" 
+                       decoration-info="due_status == 'due_soon'"/>
+                <field name="name" string="Bill / Schedule"/>
+                <field name="account_id" string="Account"/>
+                <field name="payee_id" string="Payee"/>
+                <field name="category_id" string="Category"/>
+                <field name="amount" widget="monetary" sum="Total Scheduled" decoration-danger="amount &lt; 0" decoration-success="amount &gt; 0"/>
+                <field name="frequency" string="Repeats"/>
+                <button name="action_post_now" type="object" string="Enter" 
+                        title="Click to enter into register immediately" 
+                        icon="fa-check-circle" 
+                        class="btn-success btn-sm"/>
+                <button name="action_skip_occurrence" type="object" string="Skip" 
+                        title="Click to advance to next occurrence without creating transaction" 
+                        icon="fa-step-forward" 
+                        class="btn-link btn-sm"/>
+                <field name="auto_post" widget="boolean_toggle" optional="show"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
             </list>
         </field>
     </record>
 
+    <!-- Recurring Transaction Search View -->
+    <record id="view_moneta_recurring_search" model="ir.ui.view">
+        <field name="name">moneta.recurring.transaction.search</field>
+        <field name="model">moneta.recurring.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Search Scheduled Transactions">
+                <field name="name"/>
+                <field name="payee_id"/>
+                <field name="account_id"/>
+                <field name="category_id"/>
+                
+                <filter name="filter_due_soon" string="Due in 7 Days" domain="[('next_date', '&lt;=', (context_today() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_overdue" string="Overdue" domain="[('next_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="filter_bills" string="Bills (Expenses)" domain="[('amount', '&lt;', 0)]"/>
+                <filter name="filter_income" string="Income Schedules" domain="[('amount', '&gt;', 0)]"/>
+                <separator/>
+                <filter name="filter_active" string="Active Only" domain="[('active', '=', True)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter name="group_by_account" string="Account" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_by_payee" string="Payee" context="{'group_by': 'payee_id'}"/>
+                    <filter name="group_by_frequency" string="Frequency" context="{'group_by': 'frequency'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_moneta_recurring" model="ir.actions.act_window">
-        <field name="name">Scheduled Transactions</field>
+        <field name="name">Bills &amp; Scheduled Transactions</field>
         <field name="res_model">moneta.recurring.transaction</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_moneta_recurring_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
     </record>
 </odoo>

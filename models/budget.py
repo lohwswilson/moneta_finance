@@ -311,6 +311,9 @@ class MonetaBudgetPeriodCategory(models.Model):
         ('over_budget', 'Over Budget'),
     ], string='Alert', compute='_compute_alert_level')
 
+    spent_percent = fields.Float(string='% Spent', compute='_compute_budget_progress', digits=(5, 2))
+    remaining_amount = fields.Monetary(string='Remaining', compute='_compute_budget_progress')
+
     currency_id = fields.Many2one('res.currency', related='budget_period_id.budget_id.currency_id', store=True, readonly=True)
     user_id = fields.Many2one('res.users', related='budget_period_id.budget_id.user_id', store=True, index=True)
 
@@ -364,6 +367,17 @@ class MonetaBudgetPeriodCategory(models.Model):
                 pc.actual_amount = round(max(total, 0.0), 4)
             else:
                 pc.actual_amount = round(max(-total, 0.0), 4)
+
+    @api.depends('effective_budget', 'actual_amount')
+    def _compute_budget_progress(self):
+        for pc in self:
+            eff = float(pc.effective_budget or 0.0)
+            act = float(pc.actual_amount or 0.0)
+            pc.remaining_amount = round(eff - act, 4)
+            if eff > 0:
+                pc.spent_percent = round((act / eff) * 100.0, 2)
+            else:
+                pc.spent_percent = 0.0
 
     @api.depends('effective_budget', 'actual_amount',
                  'budget_category_id.alert_warn_percent', 'budget_category_id.alert_critical_percent')

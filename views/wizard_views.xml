@@ -54,4 +54,64 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+
+    <!-- Premier Bank Statement Reconciliation Wizard View -->
+    <record id="view_moneta_reconciliation_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.reconciliation.wizard.form</field>
+        <field name="model">moneta.reconciliation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bank Statement Reconciliation">
+                <sheet>
+                    <group>
+                        <group string="Statement Summary">
+                            <field name="account_id" readonly="1"/>
+                            <field name="statement_date"/>
+                            <field name="statement_ending_balance" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Cleared Balance vs. Difference">
+                            <field name="cleared_payments_total" widget="monetary" readonly="1"/>
+                            <field name="cleared_deposits_total" widget="monetary" readonly="1"/>
+                            <field name="cleared_balance" widget="monetary" readonly="1" class="fw-bold"/>
+                            <field name="difference" widget="monetary" readonly="1" 
+                                   decoration-success="difference == 0" 
+                                   decoration-danger="difference != 0" 
+                                   class="fw-bold fs-4"/>
+                        </group>
+                    </group>
+                    <div class="mb-2">
+                        <button name="action_select_all" string="Select All" type="object" class="btn-secondary btn-sm me-2"/>
+                        <button name="action_unselect_all" string="Unselect All" type="object" class="btn-secondary btn-sm"/>
+                    </div>
+                    <notebook>
+                        <page string="Transactions to Match" name="lines_page">
+                            <field name="line_ids">
+                                <list editable="bottom" default_order="transaction_date asc">
+                                    <field name="is_cleared" string="Clr" widget="boolean"/>
+                                    <field name="transaction_date" string="Date" readonly="1"/>
+                                    <field name="check_number" string="Check #" readonly="1"/>
+                                    <field name="payee_id" string="Payee" readonly="1"/>
+                                    <field name="memo" string="Memo" readonly="1"/>
+                                    <field name="amount" string="Amount" widget="monetary" readonly="1" decoration-danger="amount &lt; 0" decoration-success="amount &gt; 0"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_reconcile_finish" string="Finish &amp; Reconcile" type="object" class="btn-primary" icon="fa-check"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Reconciliation Action -->
+    <record id="action_moneta_reconciliation_wizard" model="ir.actions.act_window">
+        <field name="name">Reconcile Account Statement</field>
+        <field name="res_model">moneta.reconciliation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 </odoo>

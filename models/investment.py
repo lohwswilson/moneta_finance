@@ -413,7 +413,11 @@ class MonetaHolding(models.Model):
     price_known = fields.Boolean(string='Price Known', compute='_compute_valuation')
     basis_known = fields.Boolean(string='Cost Basis Known', compute='_compute_valuation')
     market_value = fields.Monetary(string='Market Value', compute='_compute_valuation')
+    cost_basis = fields.Monetary(string='Cost Basis', compute='_compute_valuation')
     unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_valuation')
+    unrealized_gain_percent = fields.Float(string='Gain / Loss (%)', compute='_compute_valuation', digits=(5, 2))
+    asset_class = fields.Selection(related='security_id.asset_class', string='Asset Class', store=True)
+    symbol = fields.Char(related='security_id.symbol', string='Symbol', store=True)
 
     # Stored related owner so the per-user record rule resolves to the account owner.
     user_id = fields.Many2one('res.users', related='account_id.user_id', store=True, index=True)
@@ -421,22 +425,23 @@ class MonetaHolding(models.Model):
     @api.depends('quantity', 'average_cost', 'current_price')
     def _compute_valuation(self):
         for holding in self:
-            # price_known: the security has at least one price entry (the
-            # current_price field reads 0.0 when unknown -- Odoo coercion).
             price_known = self.env['moneta.security.price'].search_count([
                 ('security_id', '=', holding.security_id.id),
             ]) > 0
             basis_known = not _field_is_null(self.env, self, holding.id, 'average_cost')
             holding.price_known = price_known
             holding.basis_known = basis_known
-            holding.market_value = round(
-                (holding.quantity or 0.0) * (holding.current_price or 0.0), 4
-            )
-            holding.unrealized_gain = round(
-                holding.market_value
-                - (holding.quantity or 0.0) * (holding.average_cost or 0.0),
-                4,
-            ) if basis_known else 0.0
+            qty = holding.quantity or 0.0
+            price = holding.current_price or 0.0
+            avg = holding.average_cost or 0.0
+            holding.market_value = round(qty * price, 4)
+            holding.cost_basis = round(qty * avg, 4) if basis_known else 0.0
+            if basis_known:
+                holding.unrealized_gain = round(holding.market_value - holding.cost_basis, 4)
+                holding.unrealized_gain_percent = round(((holding.unrealized_gain / holding.cost_basis) * 100.0), 2) if holding.cost_basis > 0 else 0.0
+            else:
+                holding.unrealized_gain = 0.0
+                holding.unrealized_gain_percent = 0.0
 
     @api.model
     def _rebuild(self, account, security):

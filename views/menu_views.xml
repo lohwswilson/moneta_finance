@@ -14,54 +14,40 @@
               action="action_moneta_dashboard"
               sequence="5"/>
 
-    <!-- Accounts -->
+    <!-- Banking & Registers -->
+    <menuitem id="menu_moneta_banking_root"
+              name="Banking &amp; Registers"
+              parent="menu_moneta_root"
+              sequence="10"/>
+
     <menuitem id="menu_moneta_accounts"
               name="Accounts"
-              parent="menu_moneta_root"
+              parent="menu_moneta_banking_root"
               action="action_moneta_account"
               sequence="10"/>
 
-    <!-- Transactions -->
     <menuitem id="menu_moneta_transactions"
-              name="Transactions"
-              parent="menu_moneta_root"
+              name="Checkbook Register"
+              parent="menu_moneta_banking_root"
               action="action_moneta_transaction"
               sequence="20"/>
 
-    <!-- Budgets & Scheduled -->
-    <menuitem id="menu_moneta_planning_root"
-              name="Planning &amp; Budgets"
-              parent="menu_moneta_root"
-              sequence="25"/>
-
-    <menuitem id="menu_moneta_budgets"
-              name="Category Budgets"
-              parent="menu_moneta_planning_root"
-              action="action_moneta_budget"
-              sequence="10"/>
-
-    <menuitem id="menu_moneta_recurring"
-              name="Scheduled Transactions"
-              parent="menu_moneta_planning_root"
-              action="action_moneta_recurring"
-              sequence="20"/>
-
-    <!-- Investments -->
+    <!-- Investments & Portfolio -->
     <menuitem id="menu_moneta_investments_root"
               name="Investments"
               parent="menu_moneta_root"
-              sequence="30"/>
-
-    <menuitem id="menu_moneta_investment_transactions"
-              name="Investment Transactions"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_investment_transaction"
-              sequence="5"/>
+              sequence="20"/>
 
     <menuitem id="menu_moneta_holdings"
               name="Portfolio Holdings"
               parent="menu_moneta_investments_root"
               action="action_moneta_holding"
+              sequence="5"/>
+
+    <menuitem id="menu_moneta_investment_transactions"
+              name="Investment Trades"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_investment_transaction"
               sequence="10"/>
 
     <menuitem id="menu_moneta_securities"
@@ -71,35 +57,70 @@
               sequence="20"/>
 
     <menuitem id="menu_moneta_gem_strategies"
-              name="GEM Strategies"
+              name="GEM Momentum Strategy"
               parent="menu_moneta_investments_root"
               action="action_moneta_gem_strategy"
               sequence="30"/>
 
-    <!-- Net Worth -->
-    <menuitem id="menu_moneta_net_worth"
-              name="Net Worth"
+    <!-- Bills & Planning -->
+    <menuitem id="menu_moneta_planning_root"
+              name="Bills &amp; Budgets"
               parent="menu_moneta_root"
-              action="action_moneta_net_worth"
-              sequence="35"/>
+              sequence="30"/>
 
-    <!-- Tools & Imports -->
+    <menuitem id="menu_moneta_recurring"
+              name="Bills &amp; Reminders"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_recurring"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_budgets"
+              name="Category Budgets"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_budget"
+              sequence="20"/>
+
+    <!-- Net Worth & Analytics -->
+    <menuitem id="menu_moneta_reports_root"
+              name="Net Worth &amp; Reports"
+              parent="menu_moneta_root"
+              sequence="40"/>
+
+    <menuitem id="menu_moneta_net_worth"
+              name="Net Worth Trend"
+              parent="menu_moneta_reports_root"
+              action="action_moneta_net_worth"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_spending_pivot"
+              name="Spending Analysis"
+              parent="menu_moneta_reports_root"
+              action="action_moneta_transaction"
+              sequence="20"/>
+
+    <!-- Tools & Reconciliation -->
     <menuitem id="menu_moneta_tools_root"
               name="Tools &amp; Imports"
               parent="menu_moneta_root"
-              sequence="40"/>
+              sequence="50"/>
+
+    <menuitem id="menu_moneta_reconcile_wizard"
+              name="Reconcile Statement"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_reconciliation_wizard"
+              sequence="10"/>
 
     <menuitem id="menu_moneta_import_wizard"
               name="Import File (QIF / OFX / CSV)"
               parent="menu_moneta_tools_root"
               action="action_moneta_import_wizard"
-              sequence="10"/>
+              sequence="20"/>
 
     <!-- Configuration -->
     <menuitem id="menu_moneta_config_root"
               name="Configuration"
               parent="menu_moneta_root"
-              sequence="50"/>
+              sequence="60"/>
 
     <menuitem id="menu_moneta_categories"
               name="Categories"
@@ -108,7 +129,7 @@
               sequence="10"/>
 
     <menuitem id="menu_moneta_payees"
-              name="Payees"
+              name="Payees &amp; Aliases"
               parent="menu_moneta_config_root"
               action="action_moneta_payee"
               sequence="20"/>

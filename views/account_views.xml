@@ -7,7 +7,8 @@
         <field name="arch" type="xml">
             <form string="Account">
                 <header>
-                    <button name="action_import_file" type="object" string="Import CSV / QIF" class="btn-primary" icon="fa-upload"/>
+                    <button name="action_reconcile_statement" type="object" string="Reconcile Statement" class="btn-primary" icon="fa-check-square-o"/>
+                    <button name="action_import_file" type="object" string="Import CSV / QIF" class="btn-secondary" icon="fa-upload"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

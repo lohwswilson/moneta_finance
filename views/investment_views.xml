@@ -154,11 +154,13 @@
                         <group>
                             <field name="quantity" readonly="1" options="{'precision': 8}"/>
                             <field name="average_cost" widget="monetary" readonly="1"/>
+                            <field name="cost_basis" widget="monetary" readonly="1"/>
                         </group>
                         <group>
                             <field name="current_price" widget="monetary" readonly="1"/>
                             <field name="market_value" widget="monetary" readonly="1"/>
                             <field name="unrealized_gain" widget="monetary" readonly="1"/>
+                            <field name="unrealized_gain_percent" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -166,22 +168,57 @@
         </field>
     </record>
 
-    <!-- Holding List View -->
+    <!-- Premier Portfolio Holding List View -->
     <record id="view_moneta_holding_tree" model="ir.ui.view">
         <field name="name">moneta.holding.list</field>
         <field name="model">moneta.holding</field>
         <field name="arch" type="xml">
             <list string="Portfolio Holdings">
-                <field name="account_id"/>
-                <field name="security_id"/>
-                <field name="quantity" options="{'precision': 8}"/>
-                <field name="average_cost" widget="monetary"/>
-                <field name="current_price" widget="monetary"/>
+                <field name="symbol" string="Symbol"/>
+                <field name="security_id" string="Security Name"/>
+                <field name="account_id" string="Account"/>
+                <field name="asset_class" widget="badge"/>
+                <field name="quantity" string="Shares" options="{'precision': 8}"/>
+                <field name="average_cost" string="Avg Cost" widget="monetary"/>
+                <field name="current_price" string="Quote" widget="monetary"/>
+                <field name="cost_basis" string="Cost Basis" widget="monetary" sum="Total Basis"/>
+                <field name="market_value" string="Market Value" widget="monetary" sum="Total Market Value"/>
+                <field name="unrealized_gain" string="Gain / Loss ($)" widget="monetary" sum="Total Gain/Loss" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0"/>
+                <field name="unrealized_gain_percent" string="Gain (%)" decoration-success="unrealized_gain_percent &gt; 0" decoration-danger="unrealized_gain_percent &lt; 0"/>
                 <field name="price_known" widget="boolean" optional="hide"/>
                 <field name="basis_known" widget="boolean" optional="hide"/>
-                <field name="market_value" widget="monetary" sum="Total Market Value"/>
-                <field name="unrealized_gain" widget="monetary" sum="Total Unrealized Gain"/>
+                <field name="currency_id" column_invisible="1"/>
             </list>
+        </field>
+    </record>
+
+    <!-- Holding Search View -->
+    <record id="view_moneta_holding_search" model="ir.ui.view">
+        <field name="name">moneta.holding.search</field>
+        <field name="model">moneta.holding</field>
+        <field name="arch" type="xml">
+            <search string="Search Holdings">
+                <field name="symbol"/>
+                <field name="security_id"/>
+                <field name="account_id"/>
+                <field name="asset_class"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_account" string="Account" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_by_asset_class" string="Asset Class" context="{'group_by': 'asset_class'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Holding Graph View (Asset Allocation) -->
+    <record id="view_moneta_holding_graph" model="ir.ui.view">
+        <field name="name">moneta.holding.graph</field>
+        <field name="model">moneta.holding</field>
+        <field name="arch" type="xml">
+            <graph string="Portfolio Asset Allocation" type="pie">
+                <field name="asset_class"/>
+                <field name="market_value" type="measure"/>
+            </graph>
         </field>
     </record>
 
@@ -201,6 +238,7 @@
     <record id="action_moneta_holding" model="ir.actions.act_window">
         <field name="name">Portfolio Holdings</field>
         <field name="res_model">moneta.holding</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,graph</field>
+        <field name="search_view_id" ref="view_moneta_holding_search"/>
     </record>
 </odoo>
