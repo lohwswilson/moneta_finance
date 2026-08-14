@@ -9,7 +9,8 @@ class MonetaPortfolioRebalanceWizard(models.TransientModel):
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id, readonly=True)
     total_portfolio_value = fields.Monetary(string='Total Portfolio Value', compute='_compute_rebalance_plan')
-    line_ids = fields.One2many('moneta.portfolio.rebalance.line.wizard', 'wizard_id', string='Rebalance Recommendations')
+    line_ids = fields.One2many('moneta.portfolio.rebalance.line.wizard', 'wizard_id',
+                               string='Rebalance Recommendations', compute='_compute_rebalance_plan')
 
     @api.depends('user_id')
     def _compute_rebalance_plan(self):

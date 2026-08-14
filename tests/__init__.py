@@ -25,3 +25,4 @@ from . import test_insights
 from . import test_ai_features
 from . import test_wealthfolio_features
 from . import test_dashboard_action
+from . import test_benchmark

@@ -40,6 +40,13 @@ class TestWealthfolioFeatures(TransactionCase):
             'price': 150.0,
             'trade_date': date(2026, 8, 1),
         })
+        # Market value requires a price entry (valuation contract: no price =
+        # unknown, valued at 0).
+        self.env['moneta.security.price'].create({
+            'security_id': self.sec_aapl.id,
+            'price_date': date(2026, 8, 15),
+            'price_close': 150.0,
+        })
 
         # Set target allocation: 80% stock, 20% cash
         target_stock = self.env['moneta.target.allocation'].create({
