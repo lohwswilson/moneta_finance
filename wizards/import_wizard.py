@@ -73,6 +73,16 @@ class MonetaImportWizard(models.TransientModel):
         if not self.file_data:
             raise UserError("Please upload a file to import.")
 
+        if self.file_name and self.file_name.lower().endswith('.qdf'):
+            raise UserError(
+                "Quicken .QDF files are proprietary encrypted binary database files and cannot be read directly.\n\n"
+                "How to import your Quicken data into Moneta:\n"
+                "1. In Quicken, open your file and go to: File -> File Export -> QIF File...\n"
+                "2. Check 'Transactions', 'Account List', and 'Category List', then click Export.\n"
+                "3. Save the exported .QIF file on your computer.\n"
+                "4. Return here, select 'QIF (Quicken / MS Money)', and upload your .QIF file!"
+            )
+
         try:
             content = base64.b64decode(self.file_data).decode('utf-8-sig', errors='ignore')
         except Exception as e:
@@ -215,6 +225,7 @@ class MonetaImportWizard(models.TransientModel):
         lines = content.splitlines()
         count = 0
         current_tx = {}
+        current_split = None
 
         for line in lines:
             line = line.strip()
@@ -222,7 +233,7 @@ class MonetaImportWizard(models.TransientModel):
                 continue
 
             code = line[0]
-            val = line[1:]
+            val = line[1:].strip()
 
             if code == 'D':
                 current_tx['date'] = self._parse_date(val)
@@ -231,12 +242,35 @@ class MonetaImportWizard(models.TransientModel):
                     current_tx['amount'] = float(val.replace(',', ''))
                 except ValueError:
                     current_tx['amount'] = 0.0
+            elif code == 'N':
+                current_tx['check_number'] = val
+            elif code == 'C':
+                if val.upper() in ('X', 'R'):
+                    current_tx['state'] = 'reconciled'
+                elif val.upper() in ('*', 'C'):
+                    current_tx['state'] = 'cleared'
+                else:
+                    current_tx['state'] = 'unreconciled'
             elif code == 'P':
                 current_tx['payee'] = val
             elif code == 'L':
                 current_tx['category'] = val
             elif code == 'M':
                 current_tx['memo'] = val
+            elif code == 'S':
+                if 'splits' not in current_tx:
+                    current_tx['splits'] = []
+                current_split = {'category': val, 'memo': '', 'amount': 0.0}
+                current_tx['splits'].append(current_split)
+            elif code == 'E':
+                if current_split is not None:
+                    current_split['memo'] = val
+            elif code == '$':
+                if current_split is not None:
+                    try:
+                        current_split['amount'] = float(val.replace(',', ''))
+                    except ValueError:
+                        current_split['amount'] = 0.0
             elif line == '^':
                 if 'amount' in current_tx:
                     if self._maybe_apply_opening_balance(current_tx):
@@ -245,6 +279,7 @@ class MonetaImportWizard(models.TransientModel):
                         self._create_imported_transaction(current_tx)
                         count += 1
                 current_tx = {}
+                current_split = None
 
         return count
 
@@ -340,9 +375,6 @@ class MonetaImportWizard(models.TransientModel):
         payee_id = False
         if tx_dict.get('payee'):
             p_name = tx_dict['payee'].strip()
-            # Tiered resolution (exact -> wildcard alias -> normalized) lives on
-            # the payee model so the import wizard and any future caller share
-            # one matcher. Record rules scope it to this user.
             payee = PayeeEnv._resolve_by_name(p_name)
             if not payee:
                 payee = PayeeEnv.create({'name': p_name})
@@ -351,20 +383,53 @@ class MonetaImportWizard(models.TransientModel):
         category_id = False
         if tx_dict.get('category'):
             c_name = tx_dict['category'].strip()
-            cat = CategoryEnv.search([('name', '=ilike', c_name)], limit=1)
-            if not cat:
-                cat = CategoryEnv.create({'name': c_name, 'is_income': False})
-            category_id = cat.id
+            # Check for Quicken transfer notation [Account Name]
+            if c_name.startswith('[') and c_name.endswith(']'):
+                target_acc_name = c_name[1:-1].strip()
+                target_acc = self.env['moneta.account'].search([
+                    ('name', '=ilike', target_acc_name),
+                    ('id', '!=', self.account_id.id)
+                ], limit=1)
+                if target_acc:
+                    tx_dict['is_transfer'] = True
+                    tx_dict['transfer_account_id'] = target_acc.id
+            else:
+                cat = CategoryEnv.search([('name', '=ilike', c_name)], limit=1)
+                if not cat:
+                    cat = CategoryEnv.create({'name': c_name, 'is_income': False})
+                category_id = cat.id
         elif payee_id and PayeeEnv.browse(payee_id).default_category_id:
             category_id = PayeeEnv.browse(payee_id).default_category_id.id
 
-        self.env['moneta.transaction'].create({
+        vals = {
             'account_id': self.account_id.id,
             'transaction_date': tx_dict.get('date', fields.Date.context_today(self)),
+            'check_number': tx_dict.get('check_number', False),
             'payee_id': payee_id,
             'category_id': category_id,
             'amount': tx_dict.get('amount', 0.0),
             'memo': tx_dict.get('memo', ''),
             'is_transfer': tx_dict.get('is_transfer', False),
-            'state': 'cleared'
-        })
+            'transfer_account_id': tx_dict.get('transfer_account_id', False),
+            'state': tx_dict.get('state', 'cleared'),
+        }
+
+        splits = tx_dict.get('splits', [])
+        if splits:
+            vals['is_split'] = True
+            split_commands = []
+            for s in splits:
+                s_cat_id = False
+                if s.get('category'):
+                    scat = CategoryEnv.search([('name', '=ilike', s['category'].strip())], limit=1)
+                    if not scat:
+                        scat = CategoryEnv.create({'name': s['category'].strip(), 'is_income': False})
+                    s_cat_id = scat.id
+                split_commands.append((0, 0, {
+                    'category_id': s_cat_id,
+                    'memo': s.get('memo', ''),
+                    'amount': s.get('amount', 0.0),
+                }))
+            vals['split_ids'] = split_commands
+
+        return self.env['moneta.transaction'].create(vals)
