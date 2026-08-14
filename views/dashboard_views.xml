@@ -1,34 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Quicken Premier Modern Executive Dashboard -->
     <record id="view_moneta_dashboard_form" model="ir.ui.view">
         <field name="name">moneta.dashboard.form</field>
         <field name="model">moneta.dashboard</field>
         <field name="arch" type="xml">
-            <form string="Dashboard">
+            <form string="Personal Finance Command Center" class="o_moneta_dashboard">
                 <sheet>
-                    <div class="oe_button_box">
-                        <button name="action_recompute" type="object"
-                                class="oe_stat_button" icon="fa-refresh">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Refresh</span>
-                            </div>
-                        </button>
+                    <!-- Header Banner with Refresh -->
+                    <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
+                        <div>
+                            <h2 class="fw-bold mb-0 text-primary">
+                                <i class="fa fa-dashboard me-2"/>Moneta Premier Dashboard
+                            </h2>
+                            <p class="text-muted mb-0 small">
+                                Real-time summary of your Net Worth, Cash Flow, Investments, and Upcoming Bills
+                            </p>
+                        </div>
+                        <div>
+                            <button name="action_recompute" type="object" class="btn btn-outline-primary shadow-sm" icon="fa-refresh" string=" Refresh Data"/>
+                        </div>
                     </div>
-                    <group>
-                        <group string="Net Worth">
-                            <field name="net_worth" widget="monetary" class="o_stat_value"/>
-                        </group>
-                        <group string="This Month">
-                            <field name="month_income" widget="monetary" class="o_stat_value"/>
-                            <field name="month_expenses" widget="monetary" class="o_stat_value"/>
-                        </group>
-                    </group>
-                    <group>
-                        <group string="Upcoming Bills (14 days)">
-                            <field name="upcoming_bill_count"/>
-                            <field name="upcoming_bills_total" widget="monetary"/>
-                        </group>
-                    </group>
+
+                    <!-- 4 Hero KPI Cards -->
+                    <div class="row g-3 mb-4">
+                        <!-- Net Worth Card -->
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="text-muted fw-bold small text-uppercase">Net Worth</span>
+                                        <span class="badge rounded-pill bg-success-light text-success p-2">
+                                            <i class="fa fa-diamond fa-lg"/>
+                                        </span>
+                                    </div>
+                                    <h3 class="fw-bold text-success mb-2">
+                                        <field name="net_worth" widget="monetary"/>
+                                    </h3>
+                                    <div class="d-flex justify-content-between small text-muted pt-2 border-top">
+                                        <span>Assets: <field name="total_assets" widget="monetary"/></span>
+                                        <span>Debt: <field name="total_liabilities" widget="monetary"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cash Flow Card -->
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="text-muted fw-bold small text-uppercase">Monthly Cash Flow</span>
+                                        <span class="badge rounded-pill bg-info-light text-info p-2">
+                                            <i class="fa fa-exchange fa-lg"/>
+                                        </span>
+                                    </div>
+                                    <h3 class="fw-bold text-primary mb-2">
+                                        <field name="month_net_savings" widget="monetary"/>
+                                    </h3>
+                                    <div class="d-flex justify-content-between small pt-2 border-top">
+                                        <span class="text-success"><i class="fa fa-arrow-up me-1"/><field name="month_income" widget="monetary"/></span>
+                                        <span class="text-danger"><i class="fa fa-arrow-down me-1"/><field name="month_expenses" widget="monetary"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Portfolio Card -->
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="text-muted fw-bold small text-uppercase">Investment Portfolio</span>
+                                        <span class="badge rounded-pill bg-warning-light text-warning p-2">
+                                            <i class="fa fa-line-chart fa-lg"/>
+                                        </span>
+                                    </div>
+                                    <h3 class="fw-bold text-dark mb-2">
+                                        <field name="portfolio_market_value" widget="monetary"/>
+                                    </h3>
+                                    <div class="d-flex justify-content-between small pt-2 border-top">
+                                        <span>Gain: <field name="portfolio_unrealized_gain" widget="monetary" decoration-success="portfolio_unrealized_gain &gt;= 0" decoration-danger="portfolio_unrealized_gain &lt; 0"/></span>
+                                        <span class="badge bg-success" invisible="portfolio_gain_percent &lt; 0">+<field name="portfolio_gain_percent"/>%</span>
+                                        <span class="badge bg-danger" invisible="portfolio_gain_percent &gt;= 0"><field name="portfolio_gain_percent"/>%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bills Card -->
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="text-muted fw-bold small text-uppercase">Upcoming Bills (14d)</span>
+                                        <span class="badge rounded-pill bg-danger-light text-danger p-2">
+                                            <i class="fa fa-calendar-check-o fa-lg"/>
+                                        </span>
+                                    </div>
+                                    <h3 class="fw-bold text-danger mb-2">
+                                        <field name="upcoming_bills_total" widget="monetary"/>
+                                    </h3>
+                                    <div class="d-flex justify-content-between small text-muted pt-2 border-top">
+                                        <span><field name="upcoming_bill_count"/> bill(s) due soon</span>
+                                        <span class="text-primary fw-bold">Due in 14 days</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Launchpad -->
+                    <div class="card border-0 shadow-sm rounded-3 mb-4 bg-light">
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold text-muted text-uppercase small mb-3">
+                                <i class="fa fa-bolt me-1 text-warning"/>Quick Action Launchpad
+                            </h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button name="action_open_register" type="object" class="btn btn-primary" icon="fa-book" string="Checkbook Register"/>
+                                <button name="action_open_accounts" type="object" class="btn btn-outline-secondary" icon="fa-university" string="Manage Accounts"/>
+                                <button name="action_open_portfolio" type="object" class="btn btn-outline-success" icon="fa-pie-chart" string="View Portfolio"/>
+                                <button name="action_open_bills" type="object" class="btn btn-outline-danger" icon="fa-calendar" string="Bills &amp; Reminders"/>
+                                <button name="action_open_budgets" type="object" class="btn btn-outline-info" icon="fa-sliders" string="Category Budgets"/>
+                                <button name="action_open_reconciliation" type="object" class="btn btn-outline-dark" icon="fa-check-square-o" string="Reconcile Statement"/>
+                                <button name="action_open_import" type="object" class="btn btn-outline-secondary" icon="fa-upload" string="Import QIF / CSV"/>
+                                <button name="action_open_net_worth" type="object" class="btn btn-outline-primary" icon="fa-area-chart" string="Net Worth History"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden technical fields -->
+                    <field name="currency_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                 </sheet>
             </form>
         </field>
