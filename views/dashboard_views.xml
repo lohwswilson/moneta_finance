@@ -1,24 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Quicken Premier & Sure Wealth Management Command Center -->
+    <!-- Quicken Premier & Modern Wealth Command Center -->
     <record id="view_moneta_dashboard_form" model="ir.ui.view">
         <field name="name">moneta.dashboard.form</field>
         <field name="model">moneta.dashboard</field>
         <field name="arch" type="xml">
             <form string="Personal Finance Command Center" class="o_moneta_dashboard">
                 <sheet>
-
-
-                    <!-- Sure-Style Insights Alert Banner -->
-                    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%); border-left: 5px solid #4f46e5 !important;">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <!-- Top Command Center Hero Header -->
+                    <div class="moneta-hero-banner p-4 mb-4">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle bg-white p-3 shadow-sm text-primary">
+                                <div class="rounded-circle p-1 bg-white bg-opacity-25 shadow-sm">
+                                    <div class="rounded-circle bg-white p-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
+                                        <i class="fa fa-diamond fa-2x text-primary"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <span class="badge rounded-pill bg-white bg-opacity-20 text-white px-3 py-1 fw-bold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">
+                                            <i class="fa fa-circle text-success me-1" style="font-size: 0.6rem;"/>Live Command Center
+                                        </span>
+                                        <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.75rem;">
+                                            Base: <field name="currency_id"/>
+                                        </span>
+                                    </div>
+                                    <h3 class="fw-bold mb-0 text-white mt-1">
+                                        Personal Finance &amp; Wealth Dashboard
+                                    </h3>
+                                    <span class="text-white text-opacity-75 small">
+                                        Consolidated wealth, real-time portfolio valuations, cash flow, and debt resilience.
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Header Quick Action Triggers -->
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <button name="action_open_holdings" type="object" class="btn btn-light rounded-pill px-3 shadow-sm fw-semibold" style="font-size: 0.85rem;">
+                                    <i class="fa fa-line-chart text-primary me-1"/>Portfolio Center
+                                </button>
+                                <button name="action_open_insights" type="object" class="btn btn-outline-light rounded-pill px-3 fw-semibold" style="font-size: 0.85rem;">
+                                    <i class="fa fa-lightbulb-o me-1"/>AI Insights (<field name="insight_count"/>)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Smart Financial Insights Banner -->
+                    <div class="card moneta-card p-3 mb-4" style="background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%) !important; border-left: 5px solid #4f46e5 !important;">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-white p-3 shadow-xs text-primary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                     <i class="fa fa-lightbulb-o fa-2x text-primary"/>
                                 </div>
                                 <div>
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <span class="badge rounded-pill bg-primary px-3 py-1 text-white fw-bold">Smart Insight</span>
+                                        <span class="badge rounded-pill bg-primary px-3 py-1 text-white fw-bold" style="font-size: 0.72rem;">Smart Advisory</span>
                                         <h5 class="fw-bold mb-0 text-dark"><field name="top_insight_title"/></h5>
                                         <span class="badge bg-white text-primary border fw-semibold"><field name="top_insight_badge"/></span>
                                     </div>
@@ -26,22 +62,22 @@
                                 </div>
                             </div>
                             <div>
-                                <button name="action_open_insights" type="object" class="btn btn-primary rounded-pill px-4 shadow-sm">
-                                    <i class="fa fa-arrow-circle-right me-1"/> View All Insights (<field name="insight_count"/>)
+                                <button name="action_open_insights" type="object" class="btn btn-primary rounded-pill px-4 shadow-sm fw-semibold">
+                                    <i class="fa fa-arrow-circle-right me-1"/>Review Insights (<field name="insight_count"/>)
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Row 1: Primary Wealth & Cash Flow KPIs -->
-                    <div class="row g-3 mb-3">
+                    <div class="row g-3 mb-4">
                         <!-- Net Worth Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card moneta-kpi-card h-100">
+                            <div class="moneta-kpi-card moneta-kpi-card-networth h-100">
                                 <div class="moneta-kpi-header">
                                     <span class="moneta-kpi-title">Net Worth</span>
                                     <span class="moneta-kpi-icon-wrapper bg-success-light text-success">
-                                        <i class="fa fa-shield fa-lg"/>
+                                        <i class="fa fa-shield"/>
                                     </span>
                                 </div>
                                 <div class="moneta-kpi-value text-success">
@@ -56,14 +92,14 @@
 
                         <!-- Cash Flow Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card moneta-kpi-card h-100">
+                            <div class="moneta-kpi-card moneta-kpi-card-cashflow h-100">
                                 <div class="moneta-kpi-header">
                                     <span class="moneta-kpi-title">Cash Flow (<field name="month_label"/>)</span>
                                     <span class="badge bg-success" invisible="savings_rate &lt;= 0">
                                         <field name="savings_rate"/>% Saved
                                     </span>
                                     <span class="moneta-kpi-icon-wrapper bg-info-light text-primary" invisible="savings_rate &gt; 0">
-                                        <i class="fa fa-exchange fa-lg"/>
+                                        <i class="fa fa-exchange"/>
                                     </span>
                                 </div>
                                 <div class="moneta-kpi-value text-primary">
@@ -78,11 +114,11 @@
 
                         <!-- Portfolio Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card moneta-kpi-card h-100">
+                            <div class="moneta-kpi-card moneta-kpi-card-investments h-100">
                                 <div class="moneta-kpi-header">
-                                    <span class="moneta-kpi-title">Investments</span>
+                                    <span class="moneta-kpi-title">Stocks &amp; Portfolio</span>
                                     <span class="moneta-kpi-icon-wrapper bg-warning-light text-warning">
-                                        <i class="fa fa-line-chart fa-lg"/>
+                                        <i class="fa fa-line-chart"/>
                                     </span>
                                 </div>
                                 <div class="moneta-kpi-value text-dark">
@@ -98,11 +134,11 @@
 
                         <!-- Real Estate Equity Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card moneta-kpi-card h-100">
+                            <div class="moneta-kpi-card moneta-kpi-card-realestate h-100">
                                 <div class="moneta-kpi-header">
                                     <span class="moneta-kpi-title">Real Estate Equity</span>
                                     <span class="moneta-kpi-icon-wrapper bg-purple-light text-purple">
-                                        <i class="fa fa-home fa-lg"/>
+                                        <i class="fa fa-home"/>
                                     </span>
                                 </div>
                                 <div class="moneta-kpi-value text-dark">
@@ -116,57 +152,91 @@
                         </div>
                     </div>
 
-                    <!-- Row 2: Sure Balance Sheet Assets & Liabilities Breakdown -->
-                    <div class="row g-3 mb-3">
+                    <!-- Row 2: Wealthfolio Balance Sheet Breakdown -->
+                    <div class="row g-3 mb-4">
                         <!-- Assets Breakdown -->
                         <div class="col-12 col-md-6">
-                            <div class="card h-100 p-3">
+                            <div class="card moneta-card h-100 p-4">
                                 <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <h6 class="fw-bold text-dark mb-0">
-                                        <i class="fa fa-pie-chart text-success me-2"/>Asset Allocation Breakdown
-                                    </h6>
-                                    <span class="badge bg-success-light">
+                                    <div>
+                                        <h6 class="fw-bold text-dark mb-0">
+                                            <i class="fa fa-pie-chart text-success me-2"/>Asset Allocation Breakdown
+                                        </h6>
+                                        <span class="text-muted small">Liquid cash, investment portfolios, and real estate equity</span>
+                                    </div>
+                                    <span class="badge rounded-pill bg-success-subtle-glow px-3 py-1 fw-bold fs-6">
                                         Total: <field name="total_assets" widget="monetary"/>
                                     </span>
                                 </div>
-                                <button name="action_open_accounts" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-dark">🏦 Cash &amp; Bank Accounts</span>
-                                    <span class="fw-bold text-dark"><field name="cash_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
-                                </button>
-                                <button name="action_open_holdings" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-dark">📈 Stocks &amp; Brokerage</span>
-                                    <span class="fw-bold text-primary"><field name="investment_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
-                                </button>
-                                <button name="action_open_properties" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2">
-                                    <span class="text-dark">🏡 Real Estate &amp; Properties</span>
-                                    <span class="fw-bold text-dark"><field name="real_estate_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
-                                </button>
+
+                                <div class="d-flex flex-column gap-1">
+                                    <button name="action_open_accounts" type="object" class="moneta-breakdown-row w-100 text-start d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="moneta-indicator-dot" style="background-color: #2ecc71;"/>
+                                            <span class="fw-semibold text-dark">🏦 Cash &amp; Bank Accounts</span>
+                                        </div>
+                                        <span class="fw-bold text-dark"><field name="cash_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                    </button>
+
+                                    <button name="action_open_holdings" type="object" class="moneta-breakdown-row w-100 text-start d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="moneta-indicator-dot" style="background-color: #3498db;"/>
+                                            <span class="fw-semibold text-dark">📈 Stocks &amp; Brokerage</span>
+                                        </div>
+                                        <span class="fw-bold text-primary"><field name="investment_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                    </button>
+
+                                    <button name="action_open_properties" type="object" class="moneta-breakdown-row w-100 text-start d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="moneta-indicator-dot" style="background-color: #8b5cf6;"/>
+                                            <span class="fw-semibold text-dark">🏡 Real Estate &amp; Properties</span>
+                                        </div>
+                                        <span class="fw-bold text-dark"><field name="real_estate_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Liabilities Breakdown -->
                         <div class="col-12 col-md-6">
-                            <div class="card h-100 p-3">
+                            <div class="card moneta-card h-100 p-4">
                                 <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <h6 class="fw-bold text-dark mb-0">
-                                        <i class="fa fa-credit-card text-danger me-2"/>Debt &amp; Liabilities Breakdown
-                                    </h6>
-                                    <span class="badge bg-danger-light">
+                                    <div>
+                                        <h6 class="fw-bold text-dark mb-0">
+                                            <i class="fa fa-credit-card text-danger me-2"/>Debt &amp; Liabilities Breakdown
+                                        </h6>
+                                        <span class="text-muted small">Credit cards, mortgages, term loans, and upcoming bills</span>
+                                    </div>
+                                    <span class="badge rounded-pill bg-danger-subtle-glow px-3 py-1 fw-bold fs-6">
                                         Total: <field name="total_liabilities" widget="monetary"/>
                                     </span>
                                 </div>
-                                <button name="action_open_credit_cards" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-dark">💳 Credit Card Balances</span>
-                                    <span class="fw-bold text-danger"><field name="credit_card_debt" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
-                                </button>
-                                <button name="action_open_loans" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-dark">🏛️ Mortgages &amp; Term Loans</span>
-                                    <span class="fw-bold text-danger"><field name="loans_mortgages_debt" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
-                                </button>
-                                <button name="action_open_upcoming_bills" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2">
-                                    <span class="text-dark">📅 Upcoming Bills (14d)</span>
-                                    <span class="fw-bold text-primary"><field name="upcoming_bills_total" widget="monetary"/> (<field name="upcoming_bill_count"/> due) <i class="fa fa-angle-right ms-1 text-muted"/></span>
-                                </button>
+
+                                <div class="d-flex flex-column gap-1">
+                                    <button name="action_open_credit_cards" type="object" class="moneta-breakdown-row w-100 text-start d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="moneta-indicator-dot" style="background-color: #8e44ad;"/>
+                                            <span class="fw-semibold text-dark">💳 Credit Card Balances</span>
+                                        </div>
+                                        <span class="fw-bold text-danger"><field name="credit_card_debt" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                    </button>
+
+                                    <button name="action_open_loans" type="object" class="moneta-breakdown-row w-100 text-start d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="moneta-indicator-dot" style="background-color: #e74c3c;"/>
+                                            <span class="fw-semibold text-dark">🏛️ Mortgages &amp; Term Loans</span>
+                                        </div>
+                                        <span class="fw-bold text-danger"><field name="loans_mortgages_debt" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                    </button>
+
+                                    <button name="action_open_upcoming_bills" type="object" class="moneta-breakdown-row w-100 text-start d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="moneta-indicator-dot" style="background-color: #f59e0b;"/>
+                                            <span class="fw-semibold text-dark">📅 Upcoming Bills (14 Days)</span>
+                                        </div>
+                                        <span class="fw-bold text-warning"><field name="upcoming_bills_total" widget="monetary"/> (<field name="upcoming_bill_count"/> due) <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -175,42 +245,45 @@
                     <div class="row g-3 mb-4">
                         <!-- Emergency Runway Card -->
                         <div class="col-12 col-md-6">
-                            <div class="card h-100 p-3">
+                            <div class="card moneta-card h-100 p-4">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-shield me-1 text-success"/>Financial Runway</span>
-                                    <span class="badge bg-success"><field name="emergency_runway_months"/> Months</span>
+                                    <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-shield me-1 text-success"/>Financial Runway Buffer</span>
+                                    <span class="badge bg-success rounded-pill px-3 py-1 fs-6"><field name="emergency_runway_months"/> Months</span>
                                 </div>
-                                <p class="text-muted small mb-0">
-                                    Based on liquid cash assets vs. 3-month average burn rate. You can sustain your current lifestyle for <strong><field name="emergency_runway_months"/> months</strong> with zero active income.
+                                <p class="text-muted small mb-0 mt-1">
+                                    Calculated from your liquid cash and stocks vs. your 3-month average burn rate. You can sustain your current lifestyle for <strong class="text-dark"><field name="emergency_runway_months"/> months</strong> with zero active income.
                                 </p>
                             </div>
                         </div>
 
                         <!-- FIRE Milestone Card -->
                         <div class="col-12 col-md-6">
-                            <div class="card h-100 p-3">
+                            <div class="card moneta-card h-100 p-4">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-fire me-1 text-danger"/>FIRE Goal (4% Rule)</span>
-                                    <span class="fw-bold text-primary"><field name="fire_progress_pct"/>% Achieved</span>
+                                    <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-fire me-1 text-danger"/>FIRE Goal (4% Safe Withdrawal Rule)</span>
+                                    <span class="fw-bold text-primary fs-6"><field name="fire_progress_pct"/>% Achieved</span>
                                 </div>
                                 <div class="my-2">
                                     <field name="fire_progress_pct" widget="progressbar"/>
                                 </div>
                                 <div class="d-flex justify-content-between small text-muted">
-                                    <span>Target: <field name="fire_target_amount" widget="monetary"/></span>
-                                    <span>(25× Annual Expenses)</span>
+                                    <span>Target: <strong class="text-dark"><field name="fire_target_amount" widget="monetary"/></strong></span>
+                                    <span>(25× Annualized Expenses)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Dynamic Quick Action Launchpad (Customizable) -->
-                    <div class="card p-3 mb-4">
+                    <!-- Dynamic Quick Action Launchpad -->
+                    <div class="card moneta-card p-4 mb-4">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h6 class="fw-bold text-muted text-uppercase small mb-0">
-                                <i class="fa fa-bolt me-1 text-warning"/>Quick Action Launchpad
-                            </h6>
-                            <button name="action_customize_launchpad" type="object" class="btn btn-sm btn-outline-secondary rounded-pill px-3" string="⚙️ Customize Buttons" icon="fa-cog"/>
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0">
+                                    <i class="fa fa-bolt me-1 text-warning"/>Quick Action Launchpad
+                                </h6>
+                                <span class="text-muted small">One-click instant workflows and quick entries</span>
+                            </div>
+                            <button name="action_customize_launchpad" type="object" class="btn btn-sm btn-outline-secondary rounded-pill px-3" string="⚙️ Customize" icon="fa-cog"/>
                         </div>
                         <field name="action_launchpad_ids" mode="kanban" class="border-0 p-0 m-0" nolabel="1">
                             <kanban class="moneta-launchpad-kanban border-0 p-0 m-0" create="false">

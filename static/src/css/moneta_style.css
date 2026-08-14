@@ -1,71 +1,215 @@
-/* Moneta Finance - Sure Inspired Modern Design System */
+/* ==========================================================================
+   Moneta Personal Finance - Ultra-Modern Wealth & Banking Design System
+   Inspired by Copilot Money, Sure Wealth, and Modern Fintech Platforms
+   ========================================================================== */
 
 .o_moneta_dashboard {
-    background-color: #f8fafc;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8fafc !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    color: #0f172a;
 }
 
-.o_moneta_dashboard .card {
+/* --- Global Dashboard Sheet --- */
+.o_moneta_dashboard .o_form_sheet {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 1.5rem 1.5rem !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+}
+
+/* --- Modern Glassmorphic Hero Banner --- */
+.moneta-hero-banner {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%) !important;
+    border-radius: 20px !important;
+    color: #ffffff !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(49, 46, 129, 0.25), 0 8px 10px -6px rgba(49, 46, 129, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.moneta-hero-banner::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* --- Premium Stat & Metric Cards --- */
+.moneta-card {
     background: #ffffff !important;
-    border: 1px solid rgba(226, 232, 240, 0.8) !important;
-    border-radius: 14px !important;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02) !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(226, 232, 240, 0.85) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02), 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
 }
 
-.o_moneta_dashboard .card:hover {
-    border-color: rgba(203, 213, 225, 1) !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025) !important;
+.moneta-card:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.03) !important;
+    transform: translateY(-2px);
 }
 
-.o_moneta_dashboard .badge {
-    font-weight: 600;
-    letter-spacing: 0.025em;
-    padding: 0.35rem 0.65rem;
-    border-radius: 9999px;
+/* --- High-Visual Top KPI Stat Cards --- */
+.moneta-kpi-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(226, 232, 240, 0.85) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02), 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+    padding: 1.35rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 175px !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease !important;
+    position: relative;
+    overflow: hidden;
 }
 
-.bg-success-light {
+.moneta-kpi-card:hover {
+    transform: translateY(-3px) !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 14px 28px -4px rgba(15, 23, 42, 0.07), 0 6px 12px -2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.moneta-kpi-card-networth {
+    border-top: 4px solid #10b981 !important;
+}
+
+.moneta-kpi-card-cashflow {
+    border-top: 4px solid #3b82f6 !important;
+}
+
+.moneta-kpi-card-investments {
+    border-top: 4px solid #6366f1 !important;
+}
+
+.moneta-kpi-card-realestate {
+    border-top: 4px solid #8b5cf6 !important;
+}
+
+.moneta-kpi-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 0.65rem !important;
+    height: 36px !important;
+}
+
+.moneta-kpi-title {
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: #64748b !important;
+}
+
+.moneta-kpi-icon-wrapper {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.1rem !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.moneta-kpi-value {
+    font-size: 1.85rem !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: -0.03em !important;
+    display: flex !important;
+    align-items: baseline !important;
+}
+
+.moneta-kpi-footer {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding-top: 0.75rem !important;
+    border-top: 1px solid #f1f5f9 !important;
+    font-size: 0.82rem !important;
+    color: #64748b !important;
+    min-height: 32px !important;
+    margin-top: auto !important;
+}
+
+/* --- Interactive Breakdown Row Buttons --- */
+.moneta-breakdown-row {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 0.85rem 0.6rem !important;
+    border-radius: 12px !important;
+    transition: all 0.15s ease-in-out !important;
+    cursor: pointer !important;
+}
+
+.moneta-breakdown-row:hover {
+    background: #f8fafc !important;
+    transform: translateX(3px) !important;
+}
+
+.moneta-breakdown-row:last-child {
+    border-bottom: none !important;
+}
+
+.moneta-indicator-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* --- Smart Badges & Color Helpers --- */
+.bg-success-subtle-glow {
     background-color: #ecfdf5 !important;
     color: #059669 !important;
+    border: 1px solid rgba(16, 185, 129, 0.2) !important;
 }
 
-.bg-info-light {
+.bg-primary-subtle-glow {
     background-color: #eff6ff !important;
     color: #2563eb !important;
+    border: 1px solid rgba(37, 99, 235, 0.2) !important;
 }
 
-.bg-warning-light {
-    background-color: #fffbeb !important;
-    color: #d97706 !important;
-}
-
-.bg-primary-light {
+.bg-purple-subtle-glow {
     background-color: #f5f3ff !important;
     color: #7c3aed !important;
+    border: 1px solid rgba(124, 58, 237, 0.2) !important;
 }
 
-.bg-danger-light {
+.bg-danger-subtle-glow {
     background-color: #fef2f2 !important;
     color: #dc2626 !important;
+    border: 1px solid rgba(220, 38, 38, 0.2) !important;
 }
 
-.moneta-pill-btn {
-    border-radius: 10px;
-    font-weight: 500;
-    transition: all 0.15s ease-in-out;
+.bg-warning-subtle-glow {
+    background-color: #fffbeb !important;
+    color: #d97706 !important;
+    border: 1px solid rgba(217, 119, 6, 0.2) !important;
 }
 
-.moneta-pill-btn:hover {
-    transform: translateY(-1px);
-}
-
-/* Dynamic Launchpad Seamless Button Flow (No Box / No Cards) */
+/* --- Dynamic Quick Actions Launchpad --- */
 .moneta-launchpad-kanban.o_kanban_view,
 .moneta-launchpad-kanban .o_kanban_renderer {
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 8px !important;
+    gap: 10px !important;
     background: transparent !important;
     border: none !important;
     padding: 0 !important;
@@ -82,102 +226,20 @@
     flex: 0 0 auto !important;
 }
 
-.moneta-launchpad-kanban .o_kanban_record:hover {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
 .moneta-launchpad-btn {
     border-radius: 9999px !important;
-    padding: 0.45rem 1.1rem !important;
-    font-weight: 500 !important;
+    padding: 0.5rem 1.25rem !important;
+    font-weight: 600 !important;
     font-size: 0.875rem !important;
     display: inline-flex !important;
     align-items: center !important;
-    gap: 0.4rem !important;
-    transition: all 0.15s ease-in-out !important;
+    gap: 0.5rem !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     cursor: pointer !important;
-    border-width: 1.5px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
 }
 
 .moneta-launchpad-btn:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* --- Perfectly Aligned High-Visual KPI Stat Cards --- */
-.moneta-kpi-card {
-    background: #ffffff !important;
-    border: 1px solid rgba(226, 232, 240, 0.9) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-    padding: 1.25rem !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    min-height: 165px !important;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease !important;
-}
-
-.moneta-kpi-card:hover {
-    transform: translateY(-3px) !important;
-    border-color: #cbd5e1 !important;
-    box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03) !important;
-}
-
-.moneta-kpi-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    margin-bottom: 0.5rem !important;
-    height: 32px !important;
-}
-
-.moneta-kpi-title {
-    font-size: 0.78rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.06em !important;
-    color: #64748b !important;
-}
-
-.moneta-kpi-icon-wrapper {
-    width: 32px !important;
-    height: 32px !important;
-    border-radius: 8px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-.moneta-kpi-value {
-    font-size: 1.7rem !important;
-    font-weight: 800 !important;
-    line-height: 1.2 !important;
-    margin-bottom: 0.5rem !important;
-    letter-spacing: -0.02em !important;
-    display: flex !important;
-    align-items: baseline !important;
-}
-
-.moneta-kpi-footer {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding-top: 0.65rem !important;
-    border-top: 1px solid #f1f5f9 !important;
-    font-size: 0.82rem !important;
-    color: #64748b !important;
-    min-height: 30px !important;
-    margin-top: auto !important;
-}
-
-.text-purple {
-    color: #7c3aed !important;
-}
-
-.bg-purple-light {
-    background-color: #f5f3ff !important;
-    color: #7c3aed !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08) !important;
 }
