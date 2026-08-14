@@ -3,24 +3,51 @@
     'name': 'Moneta Personal Finance',
     'version': '18.0.4.0.0',
     'category': 'Accounting/Finance',
-    'summary': 'Personal finance manager: bank accounts, credit cards, investments, budgets & QIF/OFX imports.',
+    'summary': 'Personal finance & wealth OS: Quicken-style registers, investments, budgets, loans, Monte Carlo, real estate, vehicles, antiques & FIRE analytics.',
     'description': """
-Moneta Personal Finance for Odoo
-================================
-A comprehensive personal finance management module built for Odoo.
+Moneta Personal Finance for Odoo 18
+===================================
+A premier personal wealth management, budgeting, and investment operating system built for Odoo.
 
-Features:
----------
-* Multi-account management: Chequing, Savings, Credit Cards, Mortgages, Loans, Line of Credit, Brokerages.
-* Joint Accounts & Multi-user Sharing: Shared registers and cross-owner visibility with granular permissions.
-* Transactions, split transactions, auto-categorization & payee analytics (YoY spending & recurring cadence).
-* Multi-currency support for accounts, transactions, and scheduled recurring bills.
-* Investments: Ticker master, daily stock prices, portfolio holdings, multi-asset class weighting & fact sheets.
-* GEM Strategy: Global Equities Momentum dual-momentum allocation rule and signal generator.
-* Category budgets with planned vs. actual spent tracking.
-* Scheduled & recurring transaction automation with extended frequencies.
-* Import wizard: QIF, OFX/QFX, and CSV files.
-* Financial reports: Monthly spending, net worth history, pivot & graph analytics.
+Key Features & Capabilities:
+----------------------------
+* **Banking & Checkbook Registers**:
+  - Real-time cumulative running balances in register list views.
+  - 1-Click `Clr` status toggle directly on rows (Unreconciled / Cleared / Reconciled).
+  - Payee QuickFill (auto-fills category, amount, memo, and tags from history).
+  - Multi-line split transactions with mathematical sum verification.
+  - Interactive Bank Statement Reconciliation Wizard with live $0.00 difference target.
+  - Transaction bulk server actions: Batch Cleared, Reconcile, and Batch Categorize wizard.
+  - QIF / OFX / CSV file import and 1-click Checkbook Register QIF / CSV export wizard.
+
+* **Investments & Portfolio Management**:
+  - Ticker master, daily stock quotes, and multi-lot portfolio holdings.
+  - Average cost basis, realized capital gains, and unrealized gain/loss tracking.
+  - Multi-asset class weighting with visual allocation pie charts.
+  - Global Equities Momentum (GEM) 12-month dual-momentum allocation engine.
+
+* **Tangible Assets, Real Estate, Vehicles & Antiques**:
+  - Real estate properties with mortgage debt linkage, net home equity ($), and LTV %.
+  - Vehicle & automobile tracking: Make, Model, Year, VIN, Mileage, and depreciation.
+  - Antiques, fine art, luxury watches, jewelry, and collectibles with condition grades, provenance, and insurance policy tracking.
+  - Historical appraisal and valuation logs over time.
+
+* **Goals, Budgets & Cashflow**:
+  - Financial Goals & Sinking Funds with visual Kanban cards and required monthly savings targets.
+  - Visual Category Budgets with `% Spent` progress bar gauges and custom payday cycle start days.
+  - Scheduled bills and recurring outflow detector with 1-click bill schedule generation.
+  - 90-Day cashflow balance forecaster (30d / 60d / 90d projected balances).
+
+* **Advanced Financial Engines**:
+  - Loan & Mortgage Amortization engine with extra principal prepayments and total interest/time saved calculations.
+  - Monte Carlo Retirement Simulator with 1,000 stochastic geometric simulations (P10/P50/P90 percentiles).
+  - Emergency digital estate access protocol with trusted contacts and security waiting periods.
+  - Receipt and invoice image/PDF attachment previews.
+
+* **Sure-Inspired Executive Wealth Dashboard**:
+  - Modern card-based command center with Net Worth, Cashflow, Portfolio, and Real Estate Equity.
+  - Full Balance Sheet breakdown: Assets (Cash, Stocks, Properties) vs. Liabilities (Cards, Loans, Mortgages).
+  - Financial Runway (months of survival) and FIRE 4% rule progress bar.
     """,
     'author': 'Moneta Community',
     'website': 'https://github.com/lohwswilson/moneta_finance',
