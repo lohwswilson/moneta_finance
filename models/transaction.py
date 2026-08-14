@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError
 # Fields whose change alters a transaction's balance contribution. Editing
 # any of these requires recomputing the account delta in the write override.
 _BALANCE_FIELDS = frozenset(('amount', 'state', 'transaction_date', 'account_id'))
+_TRANSFER_FIELDS = frozenset(('category_id', 'is_transfer', 'transfer_account_id', 'payee_id', 'memo'))
+_PROPAGATE_FIELDS = _BALANCE_FIELDS | _TRANSFER_FIELDS
 
 
 class MonetaTransaction(models.Model):
@@ -18,7 +20,7 @@ class MonetaTransaction(models.Model):
 
     check_number = fields.Char(string='Check # / Ref')
     payee_id = fields.Many2one('moneta.payee', string='Payee')
-    category_id = fields.Many2one('moneta.category', string='Category', domain="[('user_id', '=', user_id)]")
+    category_id = fields.Many2one('moneta.category', string='Category', domain="['|', '|', ('user_id', '=', uid), ('user_id', '=', 1), ('is_system', '=', True)]")
 
     amount = fields.Monetary(string='Amount', required=True, default=0.0)
     payment_amount = fields.Monetary(string='Payment / Decrease', compute='_compute_payment_deposit', inverse='_inverse_payment_deposit')
@@ -239,11 +241,12 @@ class MonetaTransaction(models.Model):
             raise ValidationError(
                 "Cross-owner transfers are not supported in this MVP."
             )
+        cat_source = self.env['moneta.category'].search([('transfer_account_id', '=', source_account.id)], limit=1)
         counterpart = super().create([{
             'account_id': target.id,
             'transaction_date': source.transaction_date,
             'payee_id': source.payee_id.id if source.payee_id else False,
-            'category_id': False,
+            'category_id': cat_source.id if cat_source else False,
             'amount': round(-(source.amount or 0.0), 4),
             'memo': source.memo,
             'state': source.state,
@@ -259,14 +262,38 @@ class MonetaTransaction(models.Model):
 
     def _propagate_to_counterpart(self, vals, batch_ids):
         """Mirror structural edits onto the linked counterpart leg (amount
-        negated, date/state/memo copied). Uses super().write so the counterpart
+        negated, date/state/memo copied, target account moved). Uses super().write so the counterpart
         does not re-enter this override, then applies its balance delta
         manually. Skipped when the counterpart is in the same write batch
         (the user is editing both legs explicitly)."""
         counterpart = self.linked_transaction_id
         if not counterpart or counterpart.id in batch_ids:
             return
+        
+        # If this transaction was converted to a non-transfer, remove counterpart
+        if ('is_transfer' in vals and not vals['is_transfer']) or ('category_id' in vals and not self.is_transfer):
+            self.write({'linked_transaction_id': False})
+            counterpart.unlink()
+            return
+
         cp_vals = {}
+        Account = self.env['moneta.account']
+        
+        # 1. Target Account changed (moved transfer to another destination account)
+        if 'transfer_account_id' in vals or 'category_id' in vals:
+            new_target_acc_id = self.transfer_account_id.id
+            if new_target_acc_id and counterpart.account_id.id != new_target_acc_id:
+                cp_vals['account_id'] = new_target_acc_id
+                
+        # 2. Source Account changed (moved this transaction to another source account)
+        if 'account_id' in vals:
+            new_source_acc_id = self.account_id.id
+            if new_source_acc_id and counterpart.transfer_account_id.id != new_source_acc_id:
+                cp_vals['transfer_account_id'] = new_source_acc_id
+                cat_source = self.env['moneta.category'].search([('transfer_account_id', '=', new_source_acc_id)], limit=1)
+                if cat_source:
+                    cp_vals['category_id'] = cat_source.id
+
         if 'amount' in vals:
             cp_vals['amount'] = round(-(self.amount or 0.0), 4)
         if 'transaction_date' in vals:
@@ -275,11 +302,14 @@ class MonetaTransaction(models.Model):
             cp_vals['state'] = self.state
         if 'memo' in vals:
             cp_vals['memo'] = self.memo
+        if 'payee_id' in vals:
+            cp_vals['payee_id'] = self.payee_id.id if self.payee_id else False
+
         if not cp_vals:
             return
+
         cp_snap = counterpart._snapshot_balance()
         super(MonetaTransaction, counterpart).write(cp_vals)
-        Account = self.env['moneta.account']
         new_current = counterpart._balance_contribution()
         new_cleared = counterpart._cleared_contribution()
         if cp_snap['account_id'] != counterpart.account_id.id:
@@ -348,12 +378,19 @@ class MonetaTransaction(models.Model):
         if vals.get('is_split') and 'category_id' not in vals:
             vals = dict(vals)
             vals['category_id'] = False
-        if vals.get('category_id'):
-            cat = self.env['moneta.category'].browse(vals['category_id']).exists()
-            if cat and cat.transfer_account_id:
-                vals['is_transfer'] = True
-                vals['transfer_account_id'] = cat.transfer_account_id.id
-        needs_delta = any(f in vals for f in _BALANCE_FIELDS)
+        if 'category_id' in vals:
+            if vals['category_id']:
+                cat = self.env['moneta.category'].browse(vals['category_id']).exists()
+                if cat and cat.transfer_account_id:
+                    vals['is_transfer'] = True
+                    vals['transfer_account_id'] = cat.transfer_account_id.id
+                elif cat and not cat.transfer_account_id:
+                    vals['is_transfer'] = False
+                    vals['transfer_account_id'] = False
+            else:
+                vals['is_transfer'] = False
+                vals['transfer_account_id'] = False
+        needs_delta = any(f in vals for f in _PROPAGATE_FIELDS)
         batch_ids = set(self.ids)
         snapshots = {}
         if needs_delta:
@@ -380,6 +417,13 @@ class MonetaTransaction(models.Model):
                     )
                 if rec.linked_transaction_id:
                     rec._propagate_to_counterpart(vals, batch_ids)
+                elif rec.is_transfer and rec.transfer_account_id and rec.transfer_account_id != rec.account_id:
+                    counterpart = rec._create_transfer_counterpart(rec)
+                    Account._apply_balance_delta(
+                        counterpart.account_id.id,
+                        counterpart._balance_contribution(),
+                        counterpart._cleared_contribution(),
+                    )
         self._invalidate_budget_actuals(self._collect_category_ids())
         for rec in self:
             self.env['moneta.account.balance.monthly']._rebuild_for_account(rec.account_id)
@@ -604,7 +648,7 @@ class MonetaTransactionSplit(models.Model):
     transaction_id = fields.Many2one('moneta.transaction', string='Parent Transaction', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency', related='transaction_id.currency_id', readonly=True)
 
-    category_id = fields.Many2one('moneta.category', string='Category', required=True, domain="[('user_id', '=', user_id)]")
+    category_id = fields.Many2one('moneta.category', string='Category', required=True, domain="['|', '|', ('user_id', '=', uid), ('user_id', '=', 1), ('is_system', '=', True)]")
     amount = fields.Monetary(string='Amount', required=True, default=0.0)
     memo = fields.Char(string='Memo')
     tag_ids = fields.Many2many('moneta.tag', string='Tags')

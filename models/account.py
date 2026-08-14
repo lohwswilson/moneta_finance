@@ -216,9 +216,16 @@ class MonetaAccount(models.Model):
         for account in self:
             cat = Category.search([('transfer_account_id', '=', account.id)], limit=1)
             cat_name = f"[{account.name}]"
+            user_to_assign = (hasattr(account, 'user_id') and account.user_id.id) or (self.env.uid if self.env.uid != 1 else 2)
             if cat:
+                cat_vals = {}
                 if cat.name != cat_name:
-                    cat.write({'name': cat_name, 'icon': '🔁'})
+                    cat_vals['name'] = cat_name
+                    cat_vals['icon'] = '🔁'
+                if cat.user_id.id != user_to_assign:
+                    cat_vals['user_id'] = user_to_assign
+                if cat_vals:
+                    cat.write(cat_vals)
             else:
                 Category.create({
                     'name': cat_name,
@@ -226,7 +233,7 @@ class MonetaAccount(models.Model):
                     'transfer_account_id': account.id,
                     'is_income': False,
                     'category_type': 'transfer',
-                    'user_id': self.env.user.id,
+                    'user_id': user_to_assign,
                 })
 
     # ORM overrides

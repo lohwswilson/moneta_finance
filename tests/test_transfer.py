@@ -11,11 +11,15 @@ class TestTransfer(MonetaTestBase):
     def test_transfer_creates_two_linked_legs(self):
         acc1 = self._make_account(name='Checking', opening_balance=1000.0)
         acc2 = self._make_account(name='Savings', opening_balance=500.0)
+        acc1._sync_transfer_category()
+        acc2._sync_transfer_category()
+        
+        cat2 = self.env['moneta.category'].search([('transfer_account_id', '=', acc2.id)], limit=1)
+        
         tx = self.env['moneta.transaction'].create({
             'account_id': acc1.id,
             'amount': -200.0,
-            'is_transfer': True,
-            'transfer_account_id': acc2.id,
+            'category_id': cat2.id,
             'state': 'cleared',
         })
         # Counterpart exists in the target account with the opposite sign.
@@ -25,6 +29,7 @@ class TestTransfer(MonetaTestBase):
         self.assertEqual(round(cp.amount, 4), 200.0)
         self.assertEqual(cp.linked_transaction_id, tx)
         self.assertTrue(cp.is_transfer)
+        self.assertEqual(cp.category_id.transfer_account_id, acc1)
         # Both balances moved.
         self.assertEqual(self._current_balance(acc1), 800.0)
         self.assertEqual(self._current_balance(acc2), 700.0)
@@ -56,6 +61,35 @@ class TestTransfer(MonetaTestBase):
         tx.write({'amount': -300.0})
         self.assertEqual(self._current_balance(acc1), -300.0)
         self.assertEqual(self._current_balance(acc2), 300.0)
+
+    def test_transfer_move_target_account(self):
+        acc1 = self._make_account(name='Checking', opening_balance=1000.0)
+        acc2 = self._make_account(name='Savings', opening_balance=500.0)
+        acc3 = self._make_account(name='Investment Cash', opening_balance=200.0)
+        acc1._sync_transfer_category()
+        acc2._sync_transfer_category()
+        acc3._sync_transfer_category()
+        
+        cat2 = self.env['moneta.category'].search([('transfer_account_id', '=', acc2.id)], limit=1)
+        cat3 = self.env['moneta.category'].search([('transfer_account_id', '=', acc3.id)], limit=1)
+        
+        tx = self.env['moneta.transaction'].create({
+            'account_id': acc1.id,
+            'amount': -200.0,
+            'category_id': cat2.id,
+            'state': 'cleared',
+        })
+        cp = tx.linked_transaction_id
+        self.assertEqual(cp.account_id, acc2)
+        self.assertEqual(self._current_balance(acc2), 700.0)
+        self.assertEqual(self._current_balance(acc3), 200.0)
+        
+        # Move destination to acc3
+        tx.write({'category_id': cat3.id})
+        self.assertEqual(cp.account_id, acc3)
+        self.assertEqual(self._current_balance(acc1), 800.0)
+        self.assertEqual(self._current_balance(acc2), 500.0)
+        self.assertEqual(self._current_balance(acc3), 400.0)
 
     def test_unlink_transfer_removes_both_legs(self):
         acc1 = self._make_account(name='Checking', opening_balance=1000.0)
