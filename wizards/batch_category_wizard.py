@@ -7,7 +7,7 @@ class MonetaTransactionBatchCategoryWizard(models.TransientModel):
     _description = 'Batch Assign Category & Tags to Transactions'
 
     transaction_ids = fields.Many2many('moneta.transaction', string='Selected Transactions', required=True)
-    category_id = fields.Many2one('moneta.category', string='Assign Category', domain="[('user_id', '=', uid)]")
+    category_id = fields.Many2one('moneta.category', string='Assign Category', domain="['|', '|', ('user_id', '=', uid), ('user_id', '=', 1), ('is_system', '=', True)]")
     tag_ids = fields.Many2many('moneta.tag', string='Assign Tags')
 
     def action_apply(self):
