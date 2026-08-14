@@ -45,7 +45,7 @@
               sequence="5"/>
 
     <menuitem id="menu_moneta_properties"
-              name="Real Estate &amp; Physical Assets"
+              name="Real Estate, Vehicles &amp; Valuables"
               parent="menu_moneta_investments_root"
               action="action_moneta_property"
               sequence="8"/>

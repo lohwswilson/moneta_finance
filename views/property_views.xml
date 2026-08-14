@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Property Form View -->
+    <!-- Property, Vehicle & Valuables Form View -->
     <record id="view_moneta_property_form" model="ir.ui.view">
         <field name="name">moneta.property.form</field>
         <field name="model">moneta.property</field>
         <field name="arch" type="xml">
-            <form string="Real Estate &amp; Tangible Asset">
+            <form string="Real Estate, Vehicles &amp; Valuables">
                 <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'size': [120, 120]}"/>
                     <div class="oe_title">
-                        <label for="name" string="Asset / Property Name"/>
-                        <h1><field name="name" placeholder="e.g. 742 Evergreen Terrace (Primary Home)"/></h1>
+                        <label for="name" string="Asset / Item Name"/>
+                        <h1><field name="name" placeholder="e.g. 1967 Shelby GT500 or 19th Century Antique Grandfather Clock"/></h1>
+                        <div class="d-flex gap-2 my-2">
+                            <field name="asset_category" widget="badge"/>
+                            <field name="property_type" widget="badge"/>
+                        </div>
                     </div>
 
-                    <!-- Home Equity KPI Metrics Banner -->
+                    <!-- Valuation & Equity KPI Banner -->
                     <div class="row g-3 my-3">
                         <div class="col-md-3">
                             <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
-                                <span class="text-muted small fw-bold text-uppercase">Estimated Market Value</span>
+                                <span class="text-muted small fw-bold text-uppercase">Current Appraised Value</span>
                                 <h3 class="fw-bold text-dark mb-0"><field name="current_market_value" widget="monetary"/></h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
-                                <span class="text-muted small fw-bold text-uppercase">Mortgage Debt</span>
+                                <span class="text-muted small fw-bold text-uppercase">Financing / Debt</span>
                                 <h3 class="fw-bold text-danger mb-0"><field name="mortgage_balance" widget="monetary"/></h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
-                                <span class="text-muted small fw-bold text-uppercase">Net Home Equity</span>
+                                <span class="text-muted small fw-bold text-uppercase">Net Equity</span>
                                 <h3 class="fw-bold text-success mb-0"><field name="equity_value" widget="monetary"/></h3>
                             </div>
                         </div>
@@ -41,15 +46,40 @@
                     </div>
 
                     <group>
-                        <group string="Valuation &amp; Mortgage">
-                            <field name="property_type"/>
+                        <group string="Acquisition &amp; Valuation">
                             <field name="purchase_date"/>
                             <field name="purchase_price" widget="monetary"/>
+                            <field name="appraisal_date"/>
+                            <field name="appraiser_name"/>
                             <field name="mortgage_account_id"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="user_id" invisible="1"/>
                         </group>
-                        <group string="Monthly Expenses &amp; Rental Cashflow">
+                        
+                        <!-- Vehicle Details -->
+                        <group string="Vehicle Specifications" invisible="asset_category != 'vehicle'">
+                            <field name="vehicle_make"/>
+                            <field name="vehicle_model"/>
+                            <field name="vehicle_year"/>
+                            <field name="vehicle_vin"/>
+                            <field name="vehicle_license_plate"/>
+                            <field name="vehicle_mileage"/>
+                            <field name="annual_depreciation_rate"/>
+                        </group>
+
+                        <!-- Antiques, Jewelry & Collectibles Details -->
+                        <group string="Antique &amp; Valuables Details" invisible="asset_category not in ('antiques', 'jewelry', 'collectibles')">
+                            <field name="antique_era"/>
+                            <field name="maker_artist"/>
+                            <field name="condition_grade"/>
+                            <field name="authenticity_cert_number"/>
+                            <field name="storage_location"/>
+                            <field name="insured_value" widget="monetary"/>
+                            <field name="insurance_policy_number"/>
+                        </group>
+
+                        <!-- Real Estate & Rental Cashflow -->
+                        <group string="Real Estate &amp; Rental Cashflow" invisible="asset_category != 'real_estate'">
                             <field name="monthly_rental_income" widget="monetary"/>
                             <field name="monthly_property_tax" widget="monetary"/>
                             <field name="monthly_insurance" widget="monetary"/>
@@ -57,51 +87,72 @@
                             <field name="net_monthly_cashflow" widget="monetary" readonly="1" decoration-success="net_monthly_cashflow &gt; 0" decoration-danger="net_monthly_cashflow &lt; 0"/>
                         </group>
                     </group>
-                    <group string="Notes &amp; Details">
-                        <field name="notes" placeholder="Legal description, parcel number, property tax account ID, insurance policy details..."/>
-                    </group>
+
+                    <notebook>
+                        <page string="Appraisal &amp; Valuation History" name="valuations_page">
+                            <field name="valuation_line_ids">
+                                <list editable="bottom">
+                                    <field name="valuation_date"/>
+                                    <field name="appraised_value" widget="monetary"/>
+                                    <field name="appraiser"/>
+                                    <field name="notes"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Provenance &amp; Notes" name="notes_page">
+                            <field name="notes" placeholder="Detailed provenance history, bill of sale, restoration notes, certificates, or insurance policy details..."/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Property Kanban View -->
+    <!-- Property, Vehicle & Valuables Kanban View -->
     <record id="view_moneta_property_kanban" model="ir.ui.view">
         <field name="name">moneta.property.kanban</field>
         <field name="model">moneta.property</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard" default_order="name asc">
+            <kanban class="o_kanban_dashboard" default_order="asset_category asc, name asc">
                 <field name="name"/>
+                <field name="asset_category"/>
                 <field name="property_type"/>
                 <field name="current_market_value"/>
                 <field name="mortgage_balance"/>
                 <field name="equity_value"/>
                 <field name="loan_to_value_ratio"/>
+                <field name="image_128"/>
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="card">
                         <div class="card h-100 border-0 shadow-sm rounded-3 p-3">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h5 class="fw-bold mb-0"><field name="name"/></h5>
-                                <field name="property_type" widget="badge"/>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <t t-if="record.image_128.raw_value">
+                                    <img t-att-src="kanban_image('moneta.property', 'image_128', record.id.raw_value)" class="rounded-3 me-2" style="width: 48px; height: 48px; object-fit: cover;"/>
+                                </t>
+                                <div class="flex-grow-1">
+                                    <h5 class="fw-bold mb-0 text-truncate"><field name="name"/></h5>
+                                    <field name="asset_category" widget="badge"/>
+                                </div>
                             </div>
                             <div class="my-2">
                                 <span class="text-muted small">Estimated Value: </span>
-                                <span class="fw-bold text-dark"><field name="current_market_value" widget="monetary"/></span>
+                                <h4 class="fw-bold text-dark mb-0"><field name="current_market_value" widget="monetary"/></h4>
                             </div>
-                            <div class="d-flex justify-content-between my-2 p-2 bg-light rounded">
+                            <div class="d-flex justify-content-between my-2 p-2 bg-light rounded small">
                                 <div>
-                                    <span class="text-muted small">Debt: </span>
+                                    <span class="text-muted">Debt: </span>
                                     <span class="fw-bold text-danger"><field name="mortgage_balance" widget="monetary"/></span>
                                 </div>
                                 <div>
-                                    <span class="text-muted small">Equity: </span>
+                                    <span class="text-muted">Equity: </span>
                                     <span class="fw-bold text-success"><field name="equity_value" widget="monetary"/></span>
                                 </div>
                             </div>
                             <div class="pt-2 border-top small text-muted d-flex justify-content-between">
                                 <span>LTV: <field name="loan_to_value_ratio"/>%</span>
-                                <span class="text-success fw-bold">Active Asset</span>
+                                <span class="fw-bold text-primary"><field name="property_type"/></span>
                             </div>
                         </div>
                     </t>
@@ -115,29 +166,52 @@
         <field name="name">moneta.property.list</field>
         <field name="model">moneta.property</field>
         <field name="arch" type="xml">
-            <list string="Properties &amp; Real Estate">
+            <list string="Properties, Vehicles &amp; Valuables">
                 <field name="name"/>
+                <field name="asset_category" widget="badge"/>
                 <field name="property_type"/>
-                <field name="current_market_value" widget="monetary" sum="Total Market Value"/>
-                <field name="mortgage_balance" widget="monetary" sum="Total Mortgage Debt"/>
+                <field name="current_market_value" widget="monetary" sum="Total Appraised Value"/>
+                <field name="mortgage_balance" widget="monetary" sum="Total Financing Debt"/>
                 <field name="equity_value" widget="monetary" sum="Total Net Equity" decoration-success="equity_value &gt; 0"/>
                 <field name="loan_to_value_ratio" string="LTV (%)"/>
-                <field name="net_monthly_cashflow" widget="monetary" string="Net Cash Flow"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>
     </record>
 
+    <!-- Search & Filter View -->
+    <record id="view_moneta_property_search" model="ir.ui.view">
+        <field name="name">moneta.property.search</field>
+        <field name="model">moneta.property</field>
+        <field name="arch" type="xml">
+            <search string="Search Tangible Assets">
+                <field name="name"/>
+                <field name="maker_artist" string="Maker / Brand / Artist"/>
+                <field name="vehicle_vin" string="VIN / License Plate"/>
+                <filter name="filter_real_estate" string="Real Estate &amp; Homes" domain="[('asset_category', '=', 'real_estate')]"/>
+                <filter name="filter_vehicles" string="Vehicles &amp; Cars" domain="[('asset_category', '=', 'vehicle')]"/>
+                <filter name="filter_antiques" string="Antiques &amp; Fine Art" domain="[('asset_category', '=', 'antiques')]"/>
+                <filter name="filter_jewelry" string="Jewelry &amp; Luxury Watches" domain="[('asset_category', '=', 'jewelry')]"/>
+                <filter name="filter_collectibles" string="Collectibles &amp; Bullion" domain="[('asset_category', '=', 'collectibles')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_category" string="Asset Category" context="{'group_by': 'asset_category'}"/>
+                    <filter name="group_by_type" string="Asset Sub-Type" context="{'group_by': 'property_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_moneta_property" model="ir.actions.act_window">
-        <field name="name">Real Estate &amp; Physical Assets</field>
+        <field name="name">Real Estate, Vehicles &amp; Valuables</field>
         <field name="res_model">moneta.property</field>
         <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_moneta_property_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a Property, Real Estate Asset, or Vehicle
+                Track Real Estate, Vehicles, Antiques, Fine Art, or Jewelry
             </p>
             <p>
-                Track home valuations, linked mortgage debts, and net home equity automatically in your personal balance sheet.
+                Keep a complete inventory of physical assets, cars, luxury watches, antiques, and properties with appraisal tracking and net equity calculations.
             </p>
         </field>
     </record>

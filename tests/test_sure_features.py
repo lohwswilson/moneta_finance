@@ -92,3 +92,42 @@ class TestSureFeatures(TransactionCase):
         self.assertEqual(prop.mortgage_balance, 400000.0)
         self.assertEqual(prop.equity_value, 200000.0)
         self.assertAlmostEqual(prop.loan_to_value_ratio, 66.7, delta=0.5)
+
+    def test_vehicle_and_antique_tracking(self):
+        """Test vehicle specifications, antique details, and valuation log."""
+        car = self.env['moneta.property'].create({
+            'name': '2024 Tesla Model Y',
+            'asset_category': 'vehicle',
+            'property_type': 'automobile',
+            'vehicle_make': 'Tesla',
+            'vehicle_model': 'Model Y',
+            'vehicle_year': 2024,
+            'vehicle_vin': '5YJSA1E28HF123456',
+            'vehicle_mileage': 14500,
+            'current_market_value': 41000.0,
+        })
+        self.assertEqual(car.asset_category, 'vehicle')
+        self.assertEqual(car.vehicle_vin, '5YJSA1E28HF123456')
+
+        # Antique & Valuables
+        clock = self.env['moneta.property'].create({
+            'name': '19th Century French Ormolu Clock',
+            'asset_category': 'antiques',
+            'property_type': 'antique_furniture',
+            'antique_era': 'Victorian 1870',
+            'maker_artist': 'Raingo Frères',
+            'condition_grade': 'excellent',
+            'current_market_value': 8200.0,
+        })
+        self.assertEqual(clock.asset_category, 'antiques')
+        self.assertEqual(clock.condition_grade, 'excellent')
+
+        # Valuation log
+        self.env['moneta.property.valuation'].create({
+            'property_id': clock.id,
+            'valuation_date': date(2026, 8, 1),
+            'appraised_value': 8200.0,
+            'appraiser': "Sotheby's Appraisal Service",
+        })
+        self.assertEqual(len(clock.valuation_line_ids), 1)
+        self.assertEqual(clock.valuation_line_ids[0].appraised_value, 8200.0)
