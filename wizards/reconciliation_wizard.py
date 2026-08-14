@@ -25,21 +25,46 @@ class MonetaReconciliationWizard(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
-        active_account_id = self.env.context.get('default_account_id') or self.env.context.get('active_id')
-        if active_account_id and self.env.context.get('active_model') == 'moneta.account':
+        active_account_id = self.env.context.get('default_account_id') or (
+            self.env.context.get('active_id') if self.env.context.get('active_model') == 'moneta.account' else False
+        )
+        if active_account_id:
             account = self.env['moneta.account'].browse(active_account_id)
-            res['account_id'] = account.id
-            res['opening_cleared_balance'] = account.cleared_balance
+            if account.exists():
+                res['account_id'] = account.id
+                res['opening_cleared_balance'] = account.cleared_balance
 
-            # Populate lines from unreconciled / cleared transactions up to today
+                # Populate lines from unreconciled / cleared transactions
+                txs = self.env['moneta.transaction'].search([
+                    ('account_id', '=', account.id),
+                    ('state', 'in', ('unreconciled', 'cleared')),
+                ], order='transaction_date asc, id asc')
+
+                lines = []
+                for tx in txs:
+                    lines.append((0, 0, {
+                        'transaction_id': tx.id,
+                        'is_cleared': tx.state == 'cleared',
+                        'transaction_date': tx.transaction_date,
+                        'check_number': tx.check_number,
+                        'payee_id': tx.payee_id.id if tx.payee_id else False,
+                        'memo': tx.memo,
+                        'amount': tx.amount,
+                        'currency_id': tx.currency_id.id if tx.currency_id else False,
+                    }))
+                res['line_ids'] = lines
+        return res
+
+    @api.onchange('account_id')
+    def _onchange_account_id(self):
+        if self.account_id:
+            self.opening_cleared_balance = self.account_id.cleared_balance
             txs = self.env['moneta.transaction'].search([
-                ('account_id', '=', account.id),
+                ('account_id', '=', self.account_id.id),
                 ('state', 'in', ('unreconciled', 'cleared')),
             ], order='transaction_date asc, id asc')
-
-            lines = []
-            for tx in txs:
-                lines.append((0, 0, {
+            self.line_ids = [(5, 0, 0)] + [
+                (0, 0, {
                     'transaction_id': tx.id,
                     'is_cleared': tx.state == 'cleared',
                     'transaction_date': tx.transaction_date,
@@ -48,9 +73,8 @@ class MonetaReconciliationWizard(models.TransientModel):
                     'memo': tx.memo,
                     'amount': tx.amount,
                     'currency_id': tx.currency_id.id if tx.currency_id else False,
-                }))
-            res['line_ids'] = lines
-        return res
+                }) for tx in txs
+            ]
 
     @api.depends('statement_ending_balance', 'opening_cleared_balance', 'line_ids.is_cleared', 'line_ids.amount')
     def _compute_reconciliation_totals(self):
@@ -73,18 +97,30 @@ class MonetaReconciliationWizard(models.TransientModel):
             wiz.difference = round(float(wiz.statement_ending_balance or 0.0) - wiz.cleared_balance, 4)
 
     def action_select_all(self):
-        for line in self.line_ids:
-            line.is_cleared = True
-        return {'type': 'ir.actions.do_nothing'}
+        self.ensure_one()
+        self.line_ids.write({'is_cleared': True})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
 
     def action_unselect_all(self):
-        for line in self.line_ids:
-            line.is_cleared = False
-        return {'type': 'ir.actions.do_nothing'}
+        self.ensure_one()
+        self.line_ids.write({'is_cleared': False})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
 
     def action_reconcile_finish(self):
         self.ensure_one()
-        cleared_lines = self.line_ids.filtered(lambda l: l.is_cleared)
+        cleared_lines = self.line_ids.filtered(lambda l: l.is_cleared and l.transaction_id)
         if not cleared_lines:
             raise UserError("No transactions have been selected to reconcile.")
 
@@ -116,7 +152,7 @@ class MonetaReconciliationWizardLine(models.TransientModel):
     _order = 'transaction_date asc, id asc'
 
     wizard_id = fields.Many2one('moneta.reconciliation.wizard', string='Wizard', ondelete='cascade')
-    transaction_id = fields.Many2one('moneta.transaction', string='Transaction', required=True)
+    transaction_id = fields.Many2one('moneta.transaction', string='Transaction')
 
     is_cleared = fields.Boolean(string='Clr', default=False)
     transaction_date = fields.Date(string='Date')

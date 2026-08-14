@@ -52,5 +52,16 @@
             <field name="active">True</field>
         </record>
 
+
+        <!-- Hourly: fetch live quotes from Yahoo Finance for held securities -->
+        <record id="cron_moneta_fetch_security_quotes" model="ir.cron">
+            <field name="name">Moneta: fetch live stock quotes (Yahoo Finance)</field>
+            <field name="model_id" ref="model_moneta_security"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_fetch_live_quotes()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+        </record>
     </data>
 </odoo>

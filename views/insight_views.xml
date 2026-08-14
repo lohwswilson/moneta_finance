@@ -14,6 +14,7 @@
                 <field name="badge_subtext"/>
                 <field name="description"/>
                 <field name="action_type"/>
+                <field name="action_res_id"/>
                 <templates>
                     <t t-name="card">
                         <div class="card h-100 border-0 shadow-sm rounded-4 p-4 position-relative" style="background: #ffffff; min-height: 220px;">

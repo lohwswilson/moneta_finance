@@ -77,6 +77,63 @@ class MonetaAccount(models.Model):
         index=True,
     )
     transaction_ids = fields.One2many('moneta.transaction', 'account_id', string='Transactions')
+    # Brokerage & Investment Portfolio Integration
+    holding_ids = fields.One2many('moneta.holding', 'account_id', string='Securities & Holdings')
+    investment_transaction_ids = fields.One2many('moneta.investment.transaction', 'account_id', string='Investment Trades')
+    total_portfolio_market_value = fields.Monetary(string='Stock Market Value', compute='_compute_brokerage_totals')
+    total_portfolio_cost_basis = fields.Monetary(string='Stock Cost Basis', compute='_compute_brokerage_totals')
+    total_portfolio_gain = fields.Monetary(string='Stock Gain/Loss', compute='_compute_brokerage_totals')
+    total_portfolio_gain_percent = fields.Float(string='Stock Gain (%)', compute='_compute_brokerage_totals', digits=(5, 2))
+    holding_count = fields.Integer(string='Holdings Count', compute='_compute_brokerage_totals')
+    trade_count = fields.Integer(string='Trades Count', compute='_compute_brokerage_totals')
+
+    @api.depends('holding_ids.market_value', 'holding_ids.cost_basis', 'investment_transaction_ids')
+    def _compute_brokerage_totals(self):
+        for acc in self:
+            holdings = acc.holding_ids
+            trades = acc.investment_transaction_ids
+            mv = sum(float(h.market_value or 0.0) for h in holdings)
+            cb = sum(float(h.cost_basis or 0.0) for h in holdings)
+            acc.total_portfolio_market_value = mv
+            acc.total_portfolio_cost_basis = cb
+            acc.total_portfolio_gain = mv - cb
+            acc.total_portfolio_gain_percent = ((mv - cb) / cb * 100.0) if cb > 0 else 0.0
+            acc.holding_count = len(holdings)
+            acc.trade_count = len(trades)
+
+    def action_view_holdings(self):
+        self.ensure_one()
+        return {
+            'name': f'Holdings - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'moneta.holding',
+            'view_mode': 'list,form,graph',
+            'domain': [('account_id', '=', self.id)],
+            'context': {'default_account_id': self.id},
+        }
+
+    def action_view_trades(self):
+        self.ensure_one()
+        return {
+            'name': f'Investment Trades - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'moneta.investment.transaction',
+            'view_mode': 'list,form',
+            'domain': [('account_id', '=', self.id)],
+            'context': {'default_account_id': self.id},
+        }
+
+    def action_new_trade(self):
+        self.ensure_one()
+        return {
+            'name': f'New Trade - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'moneta.investment.transaction',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {'default_account_id': self.id},
+        }
+
 
     # Joint Accounts & Multi-User Sharing (v1.14.0)
     share_ids = fields.One2many('moneta.account.share', 'account_id', string='Shared Access Grants')

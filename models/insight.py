@@ -44,6 +44,33 @@ class MonetaInsight(models.TransientModel):
         return res
 
     @api.model
+    def refresh_user_insights(self):
+        """Generate and store current insights in TransientModel table so views display them."""
+        user = self.env.user
+        company = self.env.company
+        # 1. Clear existing transient insight records for current user
+        self.search([('user_id', '=', user.id)]).unlink()
+        
+        # 2. Compute fresh insights
+        insights_data = self.get_user_insights()
+        
+        # 3. Create records
+        created_records = self.env['moneta.insight']
+        for data in insights_data:
+            vals = dict(data)
+            vals['user_id'] = user.id
+            vals['currency_id'] = company.currency_id.id
+            created_records |= self.create(vals)
+            
+        return created_records
+
+    @api.model
+    def web_search_read(self, *args, **kwargs):
+        """Auto-populate insights dynamically before loading the kanban or list view."""
+        self.refresh_user_insights()
+        return super().web_search_read(*args, **kwargs)
+
+    @api.model
     def get_user_insights(self):
         """Generate and return real-time smart financial insights."""
         today = fields.Date.context_today(self)

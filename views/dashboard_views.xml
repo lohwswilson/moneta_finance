@@ -129,18 +129,18 @@
                                         Total: <field name="total_assets" widget="monetary"/>
                                     </span>
                                 </div>
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">🏦 Cash &amp; Bank Accounts</span>
-                                    <span class="fw-bold text-dark"><field name="cash_assets" widget="monetary"/></span>
-                                </div>
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">📈 Stocks &amp; Brokerage</span>
-                                    <span class="fw-bold text-dark"><field name="investment_assets" widget="monetary"/></span>
-                                </div>
-                                <div class="d-flex justify-content-between py-2">
-                                    <span class="text-muted">🏡 Real Estate &amp; Properties</span>
-                                    <span class="fw-bold text-dark"><field name="real_estate_assets" widget="monetary"/></span>
-                                </div>
+                                <button name="action_open_accounts" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-dark">🏦 Cash &amp; Bank Accounts</span>
+                                    <span class="fw-bold text-dark"><field name="cash_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                </button>
+                                <button name="action_open_holdings" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-dark">📈 Stocks &amp; Brokerage</span>
+                                    <span class="fw-bold text-primary"><field name="investment_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                </button>
+                                <button name="action_open_properties" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2">
+                                    <span class="text-dark">🏡 Real Estate &amp; Properties</span>
+                                    <span class="fw-bold text-dark"><field name="real_estate_assets" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                </button>
                             </div>
                         </div>
 
@@ -155,18 +155,18 @@
                                         Total: <field name="total_liabilities" widget="monetary"/>
                                     </span>
                                 </div>
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">💳 Credit Card Balances</span>
-                                    <span class="fw-bold text-danger"><field name="credit_card_debt" widget="monetary"/></span>
-                                </div>
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">🏛️ Mortgages &amp; Term Loans</span>
-                                    <span class="fw-bold text-danger"><field name="loans_mortgages_debt" widget="monetary"/></span>
-                                </div>
-                                <div class="d-flex justify-content-between py-2">
-                                    <span class="text-muted">📅 Upcoming Bills (14d)</span>
-                                    <span class="fw-bold text-primary"><field name="upcoming_bills_total" widget="monetary"/> (<field name="upcoming_bill_count"/> due)</span>
-                                </div>
+                                <button name="action_open_credit_cards" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-dark">💳 Credit Card Balances</span>
+                                    <span class="fw-bold text-danger"><field name="credit_card_debt" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                </button>
+                                <button name="action_open_loans" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-dark">🏛️ Mortgages &amp; Term Loans</span>
+                                    <span class="fw-bold text-danger"><field name="loans_mortgages_debt" widget="monetary"/> <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                </button>
+                                <button name="action_open_upcoming_bills" type="object" class="btn btn-link text-decoration-none w-100 p-0 text-start d-flex justify-content-between py-2">
+                                    <span class="text-dark">📅 Upcoming Bills (14d)</span>
+                                    <span class="fw-bold text-primary"><field name="upcoming_bills_total" widget="monetary"/> (<field name="upcoming_bill_count"/> due) <i class="fa fa-angle-right ms-1 text-muted"/></span>
+                                </button>
                             </div>
                         </div>
                     </div>

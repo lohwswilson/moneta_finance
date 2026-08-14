@@ -6,42 +6,67 @@
         <field name="model">moneta.security</field>
         <field name="arch" type="xml">
             <form string="Security / Asset">
+                <header>
+                    <button name="action_fetch_quote" type="object" string="🔍 Auto-Fetch Live Info &amp; Quote" class="btn btn-primary" icon="fa-cloud-download"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small"><field name="asset_class"/> · <field name="exchange"/></span>
                         <h1>
-                            <field name="symbol" placeholder="Ticker (e.g. AAPL)..."/>
+                            <field name="symbol" placeholder="Ticker (e.g. AAPL, VOO, NVDA, D05.SI)..."/>
                         </h1>
                         <h2>
-                            <field name="name" placeholder="Full Name..."/>
+                            <field name="name" placeholder="Full Company / Asset Name..."/>
                         </h2>
                     </div>
+
+                    <!-- Security Live Quote Metric Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8faff; border-left: 4px solid #198754 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-line-chart text-success me-1"/>Market Quote &amp; Valuation
+                            </span>
+                            <span class="badge rounded-pill bg-light text-dark border">
+                                <i class="fa fa-clock-o me-1"/>As of: <field name="quote_timestamp"/>
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-4">
+                                <span class="text-muted small">Latest Closing / Market Price</span>
+                                <h2 class="fw-bolder mb-0 text-dark">
+                                    <field name="current_price" widget="monetary"/>
+                                </h2>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Annual Dividend / Share</span>
+                                <h5 class="fw-bold mb-0 text-dark"><field name="annual_dividend_rate" widget="monetary"/></h5>
+                                <span class="text-muted small">Yield: <field name="dividend_yield_pct"/>% (<field name="dividend_frequency"/>)</span>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Target Allocation Weight</span>
+                                <h5 class="fw-bold mb-0 text-primary"><field name="total_allocation_weight"/>%</h5>
+                                <span class="text-muted small">Currency: <field name="currency_id"/></span>
+                            </div>
+                        </div>
+                    </div>
+
                     <group>
                         <group name="general_info" string="General Information">
                             <field name="asset_class"/>
                             <field name="exchange"/>
                             <field name="currency_id"/>
                             <field name="isin"/>
+                            <field name="is_benchmark" widget="boolean_toggle"/>
                         </group>
-                        <group name="market_info" string="Market &amp; Quote">
-                            <field name="current_price" widget="monetary"/>
-                            <field name="quote_timestamp"/>
-                            <field name="is_market_open" widget="boolean"/>
-                            <field name="total_allocation_weight" widget="percentage" readonly="1"/>
-                        </group>
-                    </group>
-                    <group name="dividend_info" string="Dividend &amp; Benchmark Profile (Wealthfolio Style)">
-                        <group>
+                        <group name="dividend_info" string="Dividend &amp; Distribution Profile">
                             <field name="annual_dividend_rate" widget="monetary"/>
                             <field name="dividend_yield_pct" widget="percentage"/>
                             <field name="dividend_frequency"/>
-                        </group>
-                        <group>
                             <field name="next_ex_dividend_date"/>
                             <field name="next_pay_date"/>
-                            <field name="is_benchmark" widget="boolean_toggle"/>
                         </group>
                     </group>
-                    <group name="links" string="Links &amp; Reference">
+                    <group name="links" string="Links &amp; Online References">
                         <group>
                             <field name="website_url" widget="url" placeholder="https://..."/>
                         </group>
@@ -50,16 +75,17 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Price History" name="price_history">
+                        <page string="📊 Price History" name="price_history">
                             <field name="price_ids">
-                                <list editable="bottom">
-                                    <field name="price_date"/>
-                                    <field name="price_close" widget="monetary"/>
-                                    <field name="source"/>
+                                <list editable="bottom" default_order="price_date desc">
+                                    <field name="price_date" string="Date"/>
+                                    <field name="price_close" string="Closing Price" widget="monetary"/>
+                                    <field name="source" string="Data Source" widget="badge"/>
+                                    <field name="currency_id" column_invisible="1"/>
                                 </list>
                             </field>
                         </page>
-                        <page string="Asset Allocations" name="asset_allocations">
+                        <page string="🌍 Asset Allocations" name="asset_allocations">
                             <field name="allocation_ids">
                                 <list editable="bottom">
                                     <field name="asset_class"/>
@@ -68,11 +94,11 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Documents &amp; Factsheets" name="documents">
+                        <page string="📁 Documents &amp; Factsheets" name="documents">
                             <field name="document_ids" widget="many2many_binary"/>
                         </page>
-                        <page string="Notes" name="notes">
-                            <field name="notes" placeholder="Investment notes, strategy rationale..."/>
+                        <page string="📝 Notes" name="notes">
+                            <field name="notes" placeholder="Investment thesis, strategy rationale, target buy price..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -80,70 +106,140 @@
         </field>
     </record>
 
-    <!-- Security List View (Odoo 18 uses list) -->
+    <!-- Security List View -->
     <record id="view_moneta_security_tree" model="ir.ui.view">
         <field name="name">moneta.security.list</field>
         <field name="model">moneta.security</field>
         <field name="arch" type="xml">
-            <list string="Securities">
-                <field name="symbol"/>
-                <field name="name"/>
+            <list string="Securities" default_order="symbol asc">
+                <field name="symbol" string="Ticker" class="fw-bold"/>
+                <field name="name" string="Company / ETF Name"/>
                 <field name="asset_class" widget="badge"/>
+                <field name="exchange" string="Exchange"/>
                 <field name="currency_id"/>
-                <field name="current_price" widget="monetary"/>
+                <field name="current_price" string="Latest Quote" widget="monetary"/>
+                <field name="dividend_yield_pct" string="Div Yield (%)" widget="percentage" optional="show"/>
+                <field name="annual_dividend_rate" string="Div / Share" widget="monetary" optional="hide"/>
+                <field name="quote_timestamp" string="Last Updated" optional="show"/>
             </list>
         </field>
     </record>
 
-    <!-- Investment Transaction Form View -->
+    <!-- Investment Transaction Form View (Premier Redesign) -->
     <record id="view_moneta_investment_transaction_form" model="ir.ui.view">
         <field name="name">moneta.investment.transaction.form</field>
         <field name="model">moneta.investment.transaction</field>
         <field name="arch" type="xml">
-            <form string="Investment Transaction">
+            <form string="Investment Trade">
                 <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">Trade Execution Entry</span>
+                        <div class="d-flex align-items-center gap-3 my-1">
+                            <field name="action" widget="radio" options="{'horizontal': true}"/>
+                        </div>
+                    </div>
+
+                    <!-- Trade Value Hero Banner -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" style="background: linear-gradient(135deg, #f8faff 0%, #eef3fc 100%); border-left: 5px solid #0d6efd !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase tracking-wider">
+                                <i class="fa fa-money text-primary me-1"/>Total Settlement Outlay / Proceeds
+                            </span>
+                            <span class="badge rounded-pill bg-success-subtle text-success px-3 py-1 fw-bold fs-6" invisible="action != 'buy'">🟢 BUY TRADE</span>
+                            <span class="badge rounded-pill bg-warning-subtle text-warning px-3 py-1 fw-bold fs-6" invisible="action != 'sell'">🟠 SELL TRADE</span>
+                            <span class="badge rounded-pill bg-info-subtle text-info px-3 py-1 fw-bold fs-6" invisible="action != 'dividend'">🟣 DIVIDEND</span>
+                            <span class="badge rounded-pill bg-secondary px-3 py-1 fw-bold fs-6" invisible="action != 'split'">STOCK SPLIT</span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-5">
+                                <h1 class="fw-bolder mb-0 text-dark">
+                                    <field name="total_amount" widget="monetary" readonly="1"/>
+                                </h1>
+                                <span class="text-muted small">Auto-debited/credited in linked brokerage cash account</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">Execution Unit Price</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="price" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Shares / Units</span>
+                                <h4 class="fw-bold mb-0 text-primary"><field name="quantity"/> Shares</h4>
+                            </div>
+                        </div>
+                    </div>
+
                     <group>
-                        <group>
+                        <group name="trade_header" string="Trade Details">
                             <field name="action"/>
-                            <field name="security_id"/>
-                            <field name="account_id"/>
+                            <field name="security_id" options="{'no_quick_create': False}"/>
+                            <field name="account_id" options="{'no_create': False}"/>
                             <field name="trade_date"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
-                        <group>
+                        <group name="trade_pricing" string="Pricing &amp; Settlement">
                             <field name="quantity" widget="float" options="{'precision': 8}"/>
-                            <field name="price" widget="float" options="{'precision': 10}"
+                            <field name="price" widget="monetary"
                                    help="Leave empty when the cost is unknown -- an unknown cost never reads as 0."/>
                             <field name="commission" widget="monetary"/>
                             <field name="total_amount" widget="monetary" readonly="1"/>
-                            <field name="realized_gain" widget="monetary" readonly="1"/>
+                            <field name="realized_gain" widget="monetary" readonly="1" invisible="action != 'sell'"/>
                         </group>
                     </group>
-                    <group>
-                        <field name="memo"/>
-                        <field name="linked_transaction_id" invisible="1"/>
-                        <field name="currency_id" invisible="1"/>
+
+                    <group name="notes_group" string="Memo &amp; Accounting">
+                        <field name="memo" placeholder="Trade rationale, limit order notes, dividend distribution info..."/>
+                        <field name="linked_transaction_id" readonly="1"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Investment Transaction List View -->
+    <!-- Investment Transaction List View (Premier Redesign) -->
     <record id="view_moneta_investment_transaction_tree" model="ir.ui.view">
         <field name="name">moneta.investment.transaction.list</field>
         <field name="model">moneta.investment.transaction</field>
         <field name="arch" type="xml">
-            <list string="Investment Transactions">
-                <field name="trade_date"/>
-                <field name="action" widget="badge"/>
+            <list string="Investment Trades" default_order="trade_date desc, id desc">
+                <field name="trade_date" string="Trade Date" class="fw-semibold"/>
+                <field name="action" string="Action" widget="badge" 
+                       decoration-success="action == 'buy'" 
+                       decoration-warning="action == 'sell'" 
+                       decoration-info="action == 'dividend'" 
+                       decoration-muted="action == 'split'"/>
+                <field name="security_id" string="Security / Ticker" class="fw-bold"/>
+                <field name="account_id" string="Brokerage Account"/>
+                <field name="quantity" string="Shares / Units" options="{'precision': 8}"/>
+                <field name="price" string="Execution Price" widget="monetary"/>
+                <field name="commission" string="Broker Fee" widget="monetary" optional="show"/>
+                <field name="total_amount" string="Net Amount ($)" widget="monetary" sum="Total Amount" class="fw-bold"/>
+                <field name="realized_gain" string="Realized Gain ($)" widget="monetary" sum="Realized Gain" optional="show"
+                       decoration-success="realized_gain &gt; 0" decoration-danger="realized_gain &lt; 0"/>
+                <field name="memo" string="Memo" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Investment Transaction Search View -->
+    <record id="view_moneta_investment_transaction_search" model="ir.ui.view">
+        <field name="name">moneta.investment.transaction.search</field>
+        <field name="model">moneta.investment.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Search Trades">
                 <field name="security_id"/>
                 <field name="account_id"/>
-                <field name="quantity" options="{'precision': 8}"/>
-                <field name="price" options="{'precision': 10}"/>
-                <field name="commission" widget="monetary"/>
-                <field name="total_amount" widget="monetary" sum="Total Amount"/>
-                <field name="realized_gain" widget="monetary" sum="Realized Gain"/>
-            </list>
+                <field name="memo"/>
+                <filter name="filter_buys" string="🟢 Buy Orders" domain="[('action', '=', 'buy')]"/>
+                <filter name="filter_sells" string="🟠 Sell Orders" domain="[('action', '=', 'sell')]"/>
+                <filter name="filter_dividends" string="🟣 Dividends" domain="[('action', '=', 'dividend')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_security" string="Security / Ticker" context="{'group_by': 'security_id'}"/>
+                    <filter name="group_by_account" string="Brokerage Account" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_by_action" string="Action Type" context="{'group_by': 'action'}"/>
+                    <filter name="group_by_date" string="Trade Month" context="{'group_by': 'trade_date:month'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -153,30 +249,55 @@
         <field name="model">moneta.holding</field>
         <field name="arch" type="xml">
             <form string="Portfolio Holding">
+                <header>
+                    <button name="action_refresh_all_quotes" type="object" string="🔄 Refresh All Live Quotes" class="btn btn-primary" icon="fa-refresh"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small"><field name="asset_class"/> · <field name="account_id"/></span>
                         <h1>
                             <field name="security_id" readonly="1"/>
                         </h1>
-                        <h2>
-                            <field name="account_id" readonly="1"/>
-                        </h2>
                     </div>
+
+                    <!-- Holding Live Performance Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" style="background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-left: 5px solid #0d6efd !important;">
+                        <div class="row g-3 align-items-center text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Total Market Value</span>
+                                <h3 class="fw-bolder mb-0 text-primary"><field name="market_value" widget="monetary" readonly="1"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Total Cost Basis</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="cost_basis" widget="monetary" readonly="1"/></h4>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Unrealized Gain / Loss</span>
+                                <h4 class="fw-bold mb-0" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0">
+                                    <field name="unrealized_gain" widget="monetary" readonly="1"/> (<field name="unrealized_gain_percent"/>%)
+                                </h4>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Est. Annual Dividends</span>
+                                <h4 class="fw-bold mb-0 text-success"><field name="annual_dividend_income" widget="monetary" readonly="1"/></h4>
+                            </div>
+                        </div>
+                    </div>
+
                     <group>
-                        <group>
+                        <group string="Holding Units &amp; Cost">
                             <field name="quantity" readonly="1" options="{'precision': 8}"/>
                             <field name="average_cost" widget="monetary" readonly="1"/>
                             <field name="cost_basis" widget="monetary" readonly="1"/>
+                            <field name="account_id" readonly="1"/>
                         </group>
-                        <group>
+                        <group string="Market Valuation &amp; Returns">
                             <field name="current_price" widget="monetary" readonly="1"/>
                             <field name="market_value" widget="monetary" readonly="1"/>
                             <field name="unrealized_gain" widget="monetary" readonly="1"/>
                             <field name="unrealized_gain_percent" readonly="1"/>
-                            <field name="annual_dividend_income" widget="monetary" readonly="1"/>
                             <field name="dividend_yield" widget="percentage" readonly="1"/>
                             <field name="twr_percent" widget="percentage" readonly="1"/>
-                            <field name="mwr_percent" widget="percentage" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -189,8 +310,11 @@
         <field name="name">moneta.holding.list</field>
         <field name="model">moneta.holding</field>
         <field name="arch" type="xml">
-            <list string="Portfolio Holdings">
-                <field name="symbol" string="Symbol"/>
+            <list string="Portfolio Holdings" default_order="market_value desc">
+                <header>
+                    <button name="action_refresh_all_quotes" type="object" string="🔄 Refresh All Live Quotes" class="btn btn-primary"/>
+                </header>
+                <field name="symbol" string="Ticker" class="fw-bold"/>
                 <field name="security_id" string="Security Name"/>
                 <field name="account_id" string="Account"/>
                 <field name="asset_class" widget="badge"/>
@@ -198,7 +322,7 @@
                 <field name="average_cost" string="Avg Cost" widget="monetary"/>
                 <field name="current_price" string="Quote" widget="monetary"/>
                 <field name="cost_basis" string="Cost Basis" widget="monetary" sum="Total Basis"/>
-                <field name="market_value" string="Market Value" widget="monetary" sum="Total Market Value"/>
+                <field name="market_value" string="Market Value" widget="monetary" sum="Total Market Value" class="fw-bold"/>
                 <field name="unrealized_gain" string="Gain / Loss ($)" widget="monetary" sum="Total Gain/Loss" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0"/>
                 <field name="unrealized_gain_percent" string="Gain (%)" decoration-success="unrealized_gain_percent &gt; 0" decoration-danger="unrealized_gain_percent &lt; 0"/>
                 <field name="annual_dividend_income" string="Est. Dividends" widget="monetary" sum="Total Dividends" optional="show"/>
@@ -243,13 +367,14 @@
 
     <!-- Actions -->
     <record id="action_moneta_investment_transaction" model="ir.actions.act_window">
-        <field name="name">Investment Transactions</field>
+        <field name="name">Investment Trades</field>
         <field name="res_model">moneta.investment.transaction</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_moneta_investment_transaction_search"/>
     </record>
 
     <record id="action_moneta_security" model="ir.actions.act_window">
-        <field name="name">Securities &amp; Tickers</field>
+        <field name="name">Securities &amp; Prices</field>
         <field name="res_model">moneta.security</field>
         <field name="view_mode">list,form</field>
     </record>

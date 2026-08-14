@@ -95,7 +95,8 @@
                     <notebook>
                         <page string="Transactions to Match" name="lines_page">
                             <field name="line_ids">
-                                <list editable="bottom" default_order="transaction_date asc">
+                                <list editable="bottom" default_order="transaction_date asc" create="false" delete="false">
+                                    <field name="transaction_id" column_invisible="1"/>
                                     <field name="is_cleared" string="Clr" widget="boolean"/>
                                     <field name="transaction_date" string="Date" readonly="1"/>
                                     <field name="check_number" string="Check #" readonly="1"/>

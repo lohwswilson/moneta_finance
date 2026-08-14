@@ -1,3 +1,5 @@
+import json
+import urllib.request
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
@@ -11,6 +13,15 @@ def _field_is_null(env, model, rec_id, fname):
     the column directly. ``fname`` and the table name are compile-time
     constants, never user input; the id is parameterized.
     """
+    if not rec_id:
+        return True
+    if isinstance(rec_id, models.NewId) or (isinstance(rec_id, str) and not rec_id.isdigit()):
+        return True
+    if hasattr(rec_id, 'origin') and rec_id.origin:
+        rec_id = rec_id.origin.id
+    if isinstance(rec_id, models.NewId) or not isinstance(rec_id, int):
+        return True
+
     env.cr.execute(
         "SELECT %s IS NULL FROM %s WHERE id = %%s" % (fname, model._table),
         (rec_id,),
@@ -23,6 +34,14 @@ class MonetaSecurity(models.Model):
     _name = 'moneta.security'
     _description = 'Moneta Investment Security / Asset'
     _order = 'symbol, name'
+    @api.depends('symbol', 'name')
+    def _compute_display_name(self):
+        for sec in self:
+            if sec.symbol and sec.name and sec.symbol != sec.name:
+                sec.display_name = f"[{sec.symbol}] {sec.name}"
+            else:
+                sec.display_name = sec.symbol or sec.name or 'Security'
+
 
     name = fields.Char(string='Security Name', required=True)
     symbol = fields.Char(string='Ticker Symbol', required=True, index=True)
@@ -88,6 +107,182 @@ class MonetaSecurity(models.Model):
         index=True,
     )
 
+
+    @api.model
+    def _lookup_symbol_info(self, symbol):
+        """Query public market quote endpoint to auto-discover ticker metadata."""
+        if not symbol:
+            return {}
+        sym = symbol.strip().upper()
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}?interval=1d&range=1d"
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+                meta = data.get('chart', {}).get('result', [{}])[0].get('meta', {})
+                if not meta:
+                    return {}
+
+                name = meta.get('shortName') or meta.get('longName') or sym
+                exchange = meta.get('fullExchangeName') or meta.get('exchangeName') or ''
+                curr_code = (meta.get('currency') or 'USD').upper()
+                if curr_code in ('GBP', 'GBP'):
+                    curr_code = 'GBP'
+                price = meta.get('regularMarketPrice')
+                inst_type = (meta.get('instrumentType') or '').lower()
+
+                asset_class = 'stock'
+                if 'etf' in inst_type:
+                    asset_class = 'etf'
+                elif 'crypto' in inst_type or sym.endswith('-USD'):
+                    asset_class = 'crypto'
+                elif 'fund' in inst_type:
+                    asset_class = 'mutual_fund'
+                elif 'bond' in inst_type:
+                    asset_class = 'bond'
+
+                curr = self.env['res.currency'].with_context(active_test=False).search([('name', '=', curr_code)], limit=1)
+                if curr and not curr.active:
+                    curr.active = True
+
+                return {
+                    'symbol': sym,
+                    'name': name,
+                    'exchange': exchange,
+                    'currency_id': curr.id if curr else self.env.company.currency_id.id,
+                    'asset_class': asset_class,
+                    'price': float(price) if price is not None else False,
+                }
+        except Exception:
+            return {}
+
+    @api.onchange('symbol')
+    def _onchange_symbol(self):
+        if self.symbol:
+            info = self._lookup_symbol_info(self.symbol)
+            if info:
+                self.symbol = info.get('symbol', self.symbol.upper())
+                self.name = info.get('name') or self.name or self.symbol
+                if info.get('exchange'):
+                    self.exchange = info.get('exchange')
+                if info.get('asset_class'):
+                    self.asset_class = info.get('asset_class')
+                if info.get('currency_id'):
+                    self.currency_id = info.get('currency_id')
+                if info.get('quote_timestamp'):
+                    self.quote_timestamp = info.get('quote_timestamp')
+                price = info.get('price')
+                if price:
+                    today = fields.Date.context_today(self)
+                    self.price_ids = [(5, 0, 0), (0, 0, {
+                        'price_date': today,
+                        'price_close': price,
+                        'source': 'yahoo',
+                    })]
+
+
+    @api.model
+    def name_create(self, name):
+        """Allow 1-click quick-creation from dropdowns (e.g. typing NVDA)."""
+        symbol = name.strip().upper()
+        info = self._lookup_symbol_info(symbol)
+        vals = {
+            'symbol': symbol,
+            'name': info.get('name') or name,
+            'exchange': info.get('exchange', ''),
+            'asset_class': info.get('asset_class', 'stock'),
+            'currency_id': info.get('currency_id', self.env.company.currency_id.id),
+        }
+        sec = self.create(vals)
+        return sec.id, sec.display_name
+
+
+    @api.model
+    def _cron_fetch_live_quotes(self):
+        """Automated Cron: fetch latest live market prices for all tracked securities in portfolio."""
+        holdings = self.env['moneta.holding'].search([('quantity', '>', 0)])
+        securities = holdings.mapped('security_id')
+        if not securities:
+            securities = self.search([('symbol', '!=', False)])
+        
+        today = fields.Date.context_today(self)
+        for sec in securities:
+            if not sec.symbol:
+                continue
+            try:
+                info = sec._lookup_symbol_info(sec.symbol)
+                price = info.get('price')
+                if price:
+                    existing = self.env['moneta.security.price'].search([
+                        ('security_id', '=', sec.id),
+                        ('price_date', '=', today),
+                    ], limit=1)
+                    if existing:
+                        existing.write({'price_close': price, 'source': 'yahoo'})
+                    else:
+                        self.env['moneta.security.price'].create({
+                            'security_id': sec.id,
+                            'price_date': today,
+                            'price_close': price,
+                            'source': 'yahoo',
+                        })
+            except Exception:
+                continue
+        
+        self.env['moneta.holding'].invalidate_model()
+        for acc in holdings.mapped('account_id'):
+            self.env['moneta.account.balance.monthly']._rebuild_for_account(acc)
+
+    def action_fetch_quote(self):
+        """Fetch live quote and auto-fill metadata on button click."""
+        self.ensure_one()
+        if not self.symbol:
+            raise ValidationError("Please enter a Ticker Symbol first (e.g. AAPL, VOO, NVDA, D05.SI).")
+        info = self._lookup_symbol_info(self.symbol)
+        if not info:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Lookup Notice',
+                    'message': f"No online quote data found for '{self.symbol}'. You can fill in the details manually.",
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        
+        vals = {
+            'symbol': info.get('symbol', self.symbol),
+            'name': info.get('name') or self.name or self.symbol,
+            'exchange': info.get('exchange') or self.exchange,
+            'asset_class': info.get('asset_class') or self.asset_class,
+            'currency_id': info.get('currency_id') or self.currency_id.id,
+        }
+        self.write(vals)
+
+        price = info.get('price')
+        if price:
+            today = fields.Date.context_today(self)
+            existing_price = self.env['moneta.security.price'].search([
+                ('security_id', '=', self.id),
+                ('price_date', '=', today),
+            ], limit=1)
+            if existing_price:
+                existing_price.write({'price_close': price, 'source': 'yahoo'})
+            else:
+                self.env['moneta.security.price'].create({
+                    'security_id': self.id,
+                    'price_date': today,
+                    'price_close': price,
+                    'source': 'yahoo',
+                })
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
     @api.depends('allocation_ids.weight')
     def _compute_total_allocation_weight(self):
         for sec in self:
@@ -151,6 +346,18 @@ class MonetaSecurityPrice(models.Model):
 
     security_id = fields.Many2one('moneta.security', string='Security', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency', related='security_id.currency_id', readonly=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        self.env['moneta.holding'].invalidate_model()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        self.env['moneta.holding'].invalidate_model()
+        return res
+
     # Stored related owner so the per-user record rule resolves to the security owner.
     user_id = fields.Many2one('res.users', related='security_id.user_id', store=True, index=True)
 
@@ -207,6 +414,16 @@ class MonetaInvestmentTransaction(models.Model):
     _description = 'Moneta Investment Transaction'
     _order = 'trade_date desc, id desc'
 
+    @api.depends('action', 'security_id.symbol', 'security_id.name', 'quantity', 'trade_date')
+    def _compute_display_name(self):
+        for tx in self:
+            action_str = (tx.action or 'trade').upper()
+            sym = tx.security_id.symbol or tx.security_id.name or 'Asset'
+            qty = f"{tx.quantity:g}" if tx.quantity else "0"
+            date_str = str(tx.trade_date) if tx.trade_date else ""
+            tx.display_name = f"{action_str} {qty} {sym} ({date_str})"
+
+
     action = fields.Selection([
         ('buy', 'Buy'),
         ('sell', 'Sell'),
@@ -217,7 +434,7 @@ class MonetaInvestmentTransaction(models.Model):
 
     account_id = fields.Many2one(
         'moneta.account', string='Brokerage Account',
-        domain="[('account_type', '=', 'brokerage')]",
+        domain="[('account_type', 'in', ('brokerage', 'retirement', 'crypto'))]",
         required=True, ondelete='cascade',
     )
     security_id = fields.Many2one('moneta.security', string='Security', required=True)
@@ -305,7 +522,7 @@ class MonetaInvestmentTransaction(models.Model):
         account -- inside the same override as the mutation (rejection before
         write)."""
         account = self.env['moneta.account'].browse(account_id)
-        if account.account_type != 'brokerage':
+        if account.account_type not in ('brokerage', 'retirement', 'crypto'):
             raise ValidationError("Investment transactions require a brokerage account.")
         projected = self._projected_quantity(account, security_id, exclude_ids, extra_sell)
         if projected < -1e-8:
@@ -409,9 +626,30 @@ class MonetaHolding(models.Model):
     _description = 'Moneta Portfolio Holding'
     _order = 'account_id, security_id'
 
-    account_id = fields.Many2one('moneta.account', string='Investment Account', domain="[('account_type', '=', 'brokerage')]", required=True, ondelete='cascade')
+    @api.depends('security_id.symbol', 'security_id.name', 'account_id.name', 'quantity')
+    def _compute_display_name(self):
+        for rec in self:
+            sym = rec.security_id.symbol or rec.security_id.name or 'Holding'
+            acc = rec.account_id.name or 'Account'
+            qty = f"{rec.quantity:g}" if rec.quantity else "0"
+            rec.display_name = f"{sym} ({qty} shs) · {acc}"
+
+
+    account_id = fields.Many2one('moneta.account', string='Investment Account', domain="[('account_type', 'in', ('brokerage', 'retirement', 'crypto'))]", required=True, ondelete='cascade')
     security_id = fields.Many2one('moneta.security', string='Security', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency', related='security_id.currency_id', readonly=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        self.env['moneta.holding'].invalidate_model()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        self.env['moneta.holding'].invalidate_model()
+        return res
+
 
     # Derived from investment transactions (average cost, commission in basis).
     # NULL average_cost = unknown cost basis (null propagation), never 0.
@@ -425,21 +663,66 @@ class MonetaHolding(models.Model):
     # Consumers treat the value as unknown when the flag is False.
     price_known = fields.Boolean(string='Price Known', compute='_compute_valuation')
     basis_known = fields.Boolean(string='Cost Basis Known', compute='_compute_valuation')
-    market_value = fields.Monetary(string='Market Value', compute='_compute_valuation', store=True, group_operator='sum')
-    cost_basis = fields.Monetary(string='Cost Basis', compute='_compute_valuation', store=True, group_operator='sum')
-    unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_valuation', store=True, group_operator='sum')
+    market_value = fields.Monetary(string='Market Value', compute='_compute_valuation', store=True, aggregator='sum')
+    cost_basis = fields.Monetary(string='Cost Basis', compute='_compute_valuation', store=True, aggregator='sum')
+    unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_valuation', store=True, aggregator='sum')
     unrealized_gain_percent = fields.Float(string='Gain / Loss (%)', compute='_compute_valuation', digits=(5, 2))
     asset_class = fields.Selection(related='security_id.asset_class', string='Asset Class', store=True)
     symbol = fields.Char(related='security_id.symbol', string='Symbol', store=True)
 
     # Advanced Return & Dividend Analytics (Wealthfolio Style)
-    annual_dividend_income = fields.Monetary(string='Est. Annual Dividends', compute='_compute_valuation', store=True, group_operator='sum')
+    annual_dividend_income = fields.Monetary(string='Est. Annual Dividends', compute='_compute_valuation', store=True, aggregator='sum')
     dividend_yield = fields.Float(string='Dividend Yield (%)', compute='_compute_valuation', digits=(5, 2))
     twr_percent = fields.Float(string='TWR (%)', compute='_compute_valuation', digits=(5, 2), help='Time-Weighted Return eliminating cash flow timing bias.')
     mwr_percent = fields.Float(string='MWR / IRR (%)', compute='_compute_valuation', digits=(5, 2), help='Money-Weighted Return / Annualized Internal Rate of Return.')
 
     # Stored related owner so the per-user record rule resolves to the account owner.
     user_id = fields.Many2one('res.users', related='account_id.user_id', store=True, index=True)
+
+
+
+
+    def action_refresh_all_quotes(self):
+        """Fetch fresh live quotes for all securities in portfolio and recompute gains."""
+        holdings = self.search([])
+        securities = holdings.mapped('security_id')
+        if not securities:
+            securities = self.env['moneta.security'].search([('symbol', '!=', False)])
+        
+        updated = 0
+        for sec in securities:
+            if not sec.symbol:
+                continue
+            info = sec._lookup_symbol_info(sec.symbol)
+            price = info.get('price')
+            if price:
+                today = fields.Date.context_today(self)
+                existing = self.env['moneta.security.price'].search([
+                    ('security_id', '=', sec.id),
+                    ('price_date', '=', today),
+                ], limit=1)
+                if existing:
+                    existing.write({'price_close': price, 'source': 'yahoo'})
+                else:
+                    self.env['moneta.security.price'].create({
+                        'security_id': sec.id,
+                        'price_date': today,
+                        'price_close': price,
+                        'source': 'yahoo',
+                    })
+                updated += 1
+
+        # Invalidate holding cache so all live quotes & gains recalculate
+        self.env['moneta.holding'].invalidate_model()
+        self.env['moneta.security'].invalidate_model()
+        accounts = holdings.mapped('account_id')
+        for acc in accounts:
+            self.env['moneta.account.balance.monthly']._rebuild_for_account(acc)
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     @api.depends('quantity', 'average_cost', 'current_price')
     def _compute_valuation(self):
@@ -510,14 +793,18 @@ class MonetaHolding(models.Model):
                     # is unknowable, so the blend cannot include them.
                     if qty_before > 0:
                         avg = False
-                    else:
+                    elif qty > 0:
                         avg = round(
                             ((tx.quantity or 0.0) * (tx.price or 0.0) + (tx.commission or 0.0)) / qty,
                             8,
                         )
-                else:
-                    total_cost = qty_before * avg + (tx.quantity or 0.0) * (tx.price or 0.0) + (tx.commission or 0.0)
+                    else:
+                        avg = 0.0
+                elif qty > 0:
+                    total_cost = (qty_before * (avg or 0.0)) + (tx.quantity or 0.0) * (tx.price or 0.0) + (tx.commission or 0.0)
                     avg = round(total_cost / qty, 8)
+                else:
+                    avg = 0.0
             elif tx.action == 'sell':
                 qty -= tx.quantity or 0.0
                 # Realized gain: proceeds (qty*price - commission) minus the

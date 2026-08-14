@@ -24,7 +24,7 @@ class MonetaAccountBalanceMonthly(models.Model):
     # their balance, liabilities their absolute value negated, respecting
     # exclude_from_net_worth. Computed on read (currency conversion at the
     # month's rate).
-    base_contribution = fields.Monetary(string='Base Currency Contribution', compute='_compute_base_contribution', store=True, group_operator='sum')
+    base_contribution = fields.Monetary(string='Base Currency Contribution', compute='_compute_base_contribution', store=True, aggregator='sum')
 
     currency_id = fields.Many2one('res.currency', related='account_id.currency_id', store=True, readonly=True)
     # Stored related owner so the per-user record rule resolves to the account owner.
@@ -71,7 +71,10 @@ class MonetaAccountBalanceMonthly(models.Model):
         the latest price on or before the date. False when any holding with a
         quantity lacks a price as of that date (null propagation); 0.0 for a
         brokerage with no holdings (known zero); False for non-brokerage."""
-        if account.account_type != 'brokerage':
+        if account.account_type not in ('brokerage', 'retirement', 'crypto'):
+            return False
+        acc_id = account._origin.id if hasattr(account, '_origin') and account._origin.id else account.id
+        if not acc_id or not isinstance(acc_id, int):
             return False
         holdings = self.env['moneta.holding'].search([('account_id', '=', acc_id)])
         if not holdings:

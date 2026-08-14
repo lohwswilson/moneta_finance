@@ -7,18 +7,58 @@
         <field name="arch" type="xml">
             <form string="Account">
                 <header>
-                    <button name="action_reconcile_statement" type="object" string="Reconcile Statement" class="btn-primary" icon="fa-check-square-o"/>
+                    <button name="action_new_trade" type="object" string="➕ New Investment Trade" class="btn-primary" icon="fa-line-chart" invisible="account_type not in ('brokerage', 'retirement', 'crypto')"/>
+                    <button name="action_reconcile_statement" type="object" string="Reconcile Statement" class="btn-primary" icon="fa-check-square-o" invisible="account_type in ('brokerage', 'retirement', 'crypto', 'loan', 'mortgage')"/>
                     <button name="action_import_file" type="object" string="Import CSV / QIF" class="btn-secondary" icon="fa-upload"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-list">
-                            <field name="current_balance" widget="statinfo" string="Balance"/>
+                        <button name="action_view_holdings" type="object" class="oe_stat_button" icon="fa-pie-chart" invisible="account_type not in ('brokerage', 'retirement', 'crypto')">
+                            <field name="total_portfolio_market_value" widget="statinfo" string="Stock Value"/>
+                        </button>
+                        <button name="action_view_trades" type="object" class="oe_stat_button" icon="fa-exchange" invisible="account_type not in ('brokerage', 'retirement', 'crypto')">
+                            <field name="trade_count" widget="statinfo" string="Trades"/>
+                        </button>
+                        <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-money">
+                            <field name="current_balance" widget="statinfo" string="Cash Balance"/>
                         </button>
                     </div>
+
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small"><field name="account_type"/> Account</span>
+                        <h1><field name="name" placeholder="e.g. Interactive Brokers Main, DBS Multi-Currency..."/></h1>
+                    </div>
+
+                    <!-- Brokerage & Investment Portfolio Hero Summary Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8faff; border-left: 4px solid #0d6efd !important;" invisible="account_type not in ('brokerage', 'retirement', 'crypto')">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="fw-bold text-dark mb-0"><i class="fa fa-line-chart text-primary me-2"/>Investment Portfolio Summary</h6>
+                            <span class="badge rounded-pill bg-primary px-3 py-1"><field name="holding_count"/> Securities Held</span>
+                        </div>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Uninvested Cash</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="current_balance" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Stock Market Value</span>
+                                <h4 class="fw-bold mb-0 text-primary"><field name="total_portfolio_market_value" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Cost Basis</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="total_portfolio_cost_basis" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Unrealized Gain / Loss</span>
+                                <h4 class="fw-bold mb-0" decoration-success="total_portfolio_gain &gt; 0" decoration-danger="total_portfolio_gain &lt; 0">
+                                    <field name="total_portfolio_gain" widget="monetary"/> (<field name="total_portfolio_gain_percent"/>%)
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
                     <group>
-                        <group>
-                            <field name="name"/>
+                        <group name="general_acc_info" string="General Details">
                             <field name="account_type"/>
                             <field name="currency_id"/>
                             <field name="institution_id"/>
@@ -26,7 +66,7 @@
                             <field name="account_number"/>
                             <field name="sequence"/>
                         </group>
-                        <group>
+                        <group name="balance_info" string="Balances &amp; Status">
                             <field name="opening_balance" widget="monetary"/>
                             <field name="opening_balance_date"/>
                             <field name="current_balance" widget="monetary" readonly="1"/>
@@ -40,8 +80,9 @@
                             <field name="exclude_from_net_worth"/>
                         </group>
                     </group>
+
                     <!-- 90-Day Cashflow Balance Forecast -->
-                    <div class="card border-0 shadow-sm rounded-3 bg-light p-3 my-3">
+                    <div class="card border-0 shadow-sm rounded-3 bg-light p-3 my-3" invisible="account_type in ('brokerage', 'retirement', 'crypto', 'loan', 'mortgage')">
                         <h6 class="fw-bold text-dark mb-2"><i class="fa fa-line-chart text-primary me-2"/>90-Day Balance Forecast (Based on Scheduled Bills &amp; Income)</h6>
                         <div class="row g-2">
                             <div class="col-4 text-center border-end">
@@ -70,8 +111,49 @@
                             <field name="current_cycle_spent" widget="monetary" readonly="1"/>
                         </group>
                     </group>
+
                     <notebook>
-                        <page string="Register &amp; Transactions" name="transactions_page">
+                        <page string="📈 Portfolio Holdings" name="holdings_page" invisible="account_type not in ('brokerage', 'retirement', 'crypto')">
+                            <field name="holding_ids">
+                                <list default_order="market_value desc" create="true">
+                                    <field name="symbol" string="Ticker"/>
+                                    <field name="security_id" string="Security Name"/>
+                                    <field name="asset_class" widget="badge"/>
+                                    <field name="quantity" string="Shares" options="{'precision': 8}"/>
+                                    <field name="average_cost" string="Avg Cost" widget="monetary"/>
+                                    <field name="current_price" string="Current Quote" widget="monetary"/>
+                                    <field name="cost_basis" string="Cost Basis" widget="monetary" sum="Total Cost Basis"/>
+                                    <field name="market_value" string="Market Value" widget="monetary" sum="Total Market Value"/>
+                                    <field name="unrealized_gain" string="Gain / Loss ($)" widget="monetary" sum="Total Gain/Loss" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0"/>
+                                    <field name="unrealized_gain_percent" string="Gain (%)" decoration-success="unrealized_gain_percent &gt; 0" decoration-danger="unrealized_gain_percent &lt; 0"/>
+                                    <field name="annual_dividend_income" string="Est. Dividends" widget="monetary" sum="Total Dividends" optional="show"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="🔄 Investment Trades" name="trades_page" invisible="account_type not in ('brokerage', 'retirement', 'crypto')">
+                            <field name="investment_transaction_ids">
+                                <list default_order="trade_date desc, id desc" create="true">
+                                    <field name="trade_date" string="Trade Date"/>
+                                    <field name="action" widget="badge" 
+                                           decoration-success="action == 'buy'" 
+                                           decoration-warning="action == 'sell'" 
+                                           decoration-info="action == 'dividend'" 
+                                           decoration-muted="action == 'split'"/>
+                                    <field name="security_id" string="Security"/>
+                                    <field name="quantity" string="Quantity" options="{'precision': 8}"/>
+                                    <field name="price" string="Price" options="{'precision': 10}"/>
+                                    <field name="commission" string="Fee" widget="monetary"/>
+                                    <field name="total_amount" string="Net Amount" widget="monetary" sum="Total Amount"/>
+                                    <field name="realized_gain" string="Realized Gain" widget="monetary" sum="Realized Gain"/>
+                                    <field name="memo" string="Memo" optional="show"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="💵 Cash Register &amp; Transactions" name="transactions_page">
                             <field name="transaction_ids">
                                 <list editable="bottom" default_order="transaction_date desc, id desc" decoration-muted="state == 'void'">
                                     <field name="transaction_date" string="Date"/>
@@ -94,6 +176,7 @@
                                 </list>
                             </field>
                         </page>
+
                         <page string="Sharing &amp; Joint Access" name="sharing_page">
                             <field name="share_ids">
                                 <list editable="bottom">
@@ -104,6 +187,7 @@
                                 </list>
                             </field>
                         </page>
+
                         <page string="Notes" name="notes_page">
                             <field name="notes" placeholder="Account notes or remarks..."/>
                         </page>
@@ -113,7 +197,7 @@
         </field>
     </record>
 
-    <!-- Account List View (Odoo 18 uses list) -->
+    <!-- Account List View -->
     <record id="view_moneta_account_tree" model="ir.ui.view">
         <field name="name">moneta.account.list</field>
         <field name="model">moneta.account</field>
@@ -121,7 +205,8 @@
             <list string="Accounts" 
                   decoration-danger="account_type in ('loan', 'mortgage')" 
                   decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')"
-                  decoration-info="account_type in ('credit_card', 'loc')">
+                  decoration-info="account_type in ('credit_card', 'loc')"
+                  decoration-primary="account_type in ('brokerage', 'retirement', 'crypto')">
                 <field name="sequence" widget="handle"/>
                 <field name="is_favourite" widget="boolean_toggle"/>
                 <field name="name"/>
@@ -130,72 +215,44 @@
                        decoration-danger="account_type in ('loan', 'mortgage')" 
                        decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')"
                        decoration-info="account_type in ('credit_card', 'loc')"
-                       decoration-primary="account_type == 'brokerage'"/>
+                       decoration-primary="account_type in ('brokerage', 'retirement', 'crypto')"/>
                 <field name="currency_id"/>
-                <field name="current_balance" widget="monetary" sum="Total Balance"
+                <field name="current_balance" string="Cash Balance" widget="monetary" sum="Total Cash Balance"
                        decoration-danger="account_type in ('loan', 'mortgage') or current_balance &lt; 0"
                        decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash') and current_balance &gt;= 0"
                        decoration-info="account_type in ('credit_card', 'loc')"/>
-                <field name="cleared_balance" widget="monetary"/>
+                <field name="total_portfolio_market_value" string="Stock Value" widget="monetary" sum="Total Stock Value" optional="show"/>
+                <field name="cleared_balance" widget="monetary" optional="hide"/>
             </list>
         </field>
     </record>
 
-    <!-- Account Kanban View with Color-Coded Boxes (Red for Mortgage/Loan, Green for Savings/Checking, Blue for Credit Card) -->
-    <record id="view_moneta_account_kanban" model="ir.ui.view">
-        <field name="name">moneta.account.kanban</field>
+    <!-- Account Search View -->
+    <record id="view_moneta_account_search" model="ir.ui.view">
+        <field name="name">moneta.account.search</field>
         <field name="model">moneta.account</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" default_order="sequence, is_favourite desc, name">
-                <field name="sequence"/>
+            <search string="Search Accounts">
                 <field name="name"/>
-                <field name="account_type"/>
-                <field name="currency_id"/>
-                <field name="current_balance"/>
                 <field name="institution_name"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <t t-set="is_mortgage_loan" t-value="['mortgage', 'loan'].includes(record.account_type.raw_value)"/>
-                        <t t-set="is_cash" t-value="['checking', 'chequing', 'savings', 'cash'].includes(record.account_type.raw_value)"/>
-                        <t t-set="is_card" t-value="['credit_card', 'loc'].includes(record.account_type.raw_value)"/>
-                        
-                        <t t-set="card_style" t-value="is_mortgage_loan ? 'border: 2px solid #E74C3C; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%);' : (is_cash ? 'border: 2px solid #2ECC71; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%);' : (is_card ? 'border: 2px solid #2980B9; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%);' : 'border: 2px solid #8E44AD; background: linear-gradient(180deg, #F4ECF7 0%, #FFFFFF 100%);'))"/>
-                        <t t-set="badge_class" t-value="is_mortgage_loan ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : (is_card ? 'bg-primary text-white' : 'bg-secondary text-white'))"/>
-                        <t t-set="balance_color" t-value="is_mortgage_loan ? 'text-danger' : (is_cash ? 'text-success' : (is_card ? 'text-primary' : 'text-dark'))"/>
-                        <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value == 'credit_card' ? 'fa-credit-card' : (record.account_type.raw_value == 'savings' ? 'fa-money' : (['checking', 'chequing'].includes(record.account_type.raw_value) ? 'fa-bank' : 'fa-line-chart'))))"/>
-
-                        <div class="oe_kanban_global_click o_kanban_card rounded-3 shadow-sm p-3 mb-2" t-att-style="card_style">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="d-flex align-items-center">
-                                    <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center #{badge_class}" style="width: 34px; height: 34px;">
-                                        <i t-attf-class="fa #{icon_name}"/>
-                                    </div>
-                                    <div>
-                                        <strong class="o_primary fs-6 text-dark"><field name="name"/></strong>
-                                        <div class="text-muted small"><field name="institution_name"/></div>
-                                    </div>
-                                </div>
-                                <span t-attf-class="badge rounded-pill text-uppercase px-2 py-1 #{badge_class}">
-                                    <field name="account_type"/>
-                                </span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-end mt-3 pt-2 border-top">
-                                <span class="text-muted small fw-semibold">Current Balance</span>
-                                <h3 t-attf-class="mb-0 fw-bold #{balance_color}">
-                                    <field name="current_balance" widget="monetary"/>
-                                </h3>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
+                <field name="account_type"/>
+                <filter name="filter_favourites" string="Favourites" domain="[('is_favourite', '=', True)]"/>
+                <filter name="filter_brokerage" string="Brokerage &amp; Investments" domain="[('account_type', 'in', ('brokerage', 'retirement', 'crypto'))]"/>
+                <filter name="filter_open" string="Active (Not Closed)" domain="[('is_closed', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_type" string="Account Type" context="{'group_by': 'account_type'}"/>
+                    <filter name="group_by_institution" string="Institution" context="{'group_by': 'institution_name'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
-    <!-- Account Action -->
+    <!-- Action -->
     <record id="action_moneta_account" model="ir.actions.act_window">
         <field name="name">Accounts</field>
         <field name="res_model">moneta.account</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_moneta_account_search"/>
+        <field name="context">{'search_default_filter_open': 1}</field>
     </record>
 </odoo>
