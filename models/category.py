@@ -7,10 +7,10 @@ class MonetaCategory(models.Model):
     _name = 'moneta.category'
     _description = 'Moneta Spending & Income Category'
     _rec_name = 'display_name'
-    _order = 'name'
+    _order = 'is_transfer asc, name asc'
 
     name = fields.Char(string='Category Name', required=True)
-    icon = fields.Char(string='Icon', default='📁', help='Emoji icon (e.g. 🍔, 🏠, 🚗, 💰)')
+    icon = fields.Char(string='Icon', default='📁', help='Emoji icon (e.g. 📁, 🔁, 🍔, 🏠, 🚗, 💰)')
     color = fields.Char(string='Color', default='#4A90E2')
     description = fields.Text(string='Description / Notes')
     is_system = fields.Boolean(string='System Default Template', default=False)
@@ -22,7 +22,17 @@ class MonetaCategory(models.Model):
     category_type = fields.Selection([
         ('income', 'Income'),
         ('expense', 'Expense'),
+        ('transfer', 'Account Transfer'),
     ], string='Type', compute='_compute_category_type', inverse='_inverse_category_type', store=True)
+
+    transfer_account_id = fields.Many2one(
+        'moneta.account', string='Linked Transfer Account',
+        ondelete='cascade', index=True,
+        help='If set, selecting this category will automatically treat the transaction as a transfer to/from this account.'
+    )
+    is_transfer = fields.Boolean(
+        string='Is Transfer', compute='_compute_is_transfer', store=True, index=True
+    )
 
     parent_id = fields.Many2one(
         'moneta.category', string='Parent Category',
@@ -44,21 +54,34 @@ class MonetaCategory(models.Model):
     )
     active = fields.Boolean(default=True)
 
-    @api.depends('is_income')
+    @api.depends('transfer_account_id')
+    def _compute_is_transfer(self):
+        for rec in self:
+            rec.is_transfer = bool(rec.transfer_account_id)
+
+    @api.depends('is_income', 'is_transfer', 'transfer_account_id')
     def _compute_category_type(self):
         for rec in self:
-            rec.category_type = 'income' if rec.is_income else 'expense'
+            if rec.transfer_account_id or rec.is_transfer:
+                rec.category_type = 'transfer'
+            else:
+                rec.category_type = 'income' if rec.is_income else 'expense'
 
     def _inverse_category_type(self):
         for rec in self:
-            is_inc = (rec.category_type == 'income')
-            if rec.is_income != is_inc:
-                rec.is_income = is_inc
+            if rec.category_type == 'transfer':
+                rec.is_income = False
+            else:
+                is_inc = (rec.category_type == 'income')
+                if rec.is_income != is_inc:
+                    rec.is_income = is_inc
 
-    @api.depends('name', 'parent_id.name')
+    @api.depends('name', 'parent_id.name', 'transfer_account_id.name')
     def _compute_display_name(self):
         for rec in self:
-            if rec.parent_id and rec.parent_id.name:
+            if rec.transfer_account_id:
+                rec.display_name = f"[{rec.transfer_account_id.name}]"
+            elif rec.parent_id and rec.parent_id.name:
                 rec.display_name = f"{rec.parent_id.name} / {rec.name or ''}"
             else:
                 rec.display_name = rec.name or ''
@@ -87,7 +110,12 @@ class MonetaCategory(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'category_type' not in vals:
+            if vals.get('transfer_account_id'):
+                vals['category_type'] = 'transfer'
+                vals['is_income'] = False
+                if not vals.get('icon'):
+                    vals['icon'] = '🔁'
+            elif 'category_type' not in vals:
                 vals['category_type'] = 'income' if vals.get('is_income') else 'expense'
             parent_id = vals.get('parent_id')
             if parent_id:
@@ -140,7 +168,7 @@ class MonetaCategory(models.Model):
     @api.model
     def _seed_user_defaults(self, user):
         """Seed a standard set of categories for a new user if none exist."""
-        if self.search_count([('user_id', '=', user.id)]) > 0:
+        if self.search_count([('user_id', '=', user.id), ('is_transfer', '=', False)]) > 0:
             return
         default_tree = [
             ('Income', '💰', True, ['Salary', 'Investment Income', 'Dividends', 'Other Income']),

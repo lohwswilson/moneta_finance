@@ -210,6 +210,25 @@ class MonetaAccount(models.Model):
         accounts._recompute_balance()
 
     # ------------------------------------------------------------------
+    def _sync_transfer_category(self):
+        """Create or update a Quicken/MS Money style transfer category [Account Name] for this account."""
+        Category = self.env['moneta.category']
+        for account in self:
+            cat = Category.search([('transfer_account_id', '=', account.id)], limit=1)
+            cat_name = f"[{account.name}]"
+            if cat:
+                if cat.name != cat_name:
+                    cat.write({'name': cat_name, 'icon': '🔁'})
+            else:
+                Category.create({
+                    'name': cat_name,
+                    'icon': '🔁',
+                    'transfer_account_id': account.id,
+                    'is_income': False,
+                    'category_type': 'transfer',
+                    'user_id': self.env.user.id,
+                })
+
     # ORM overrides
     # ------------------------------------------------------------------
 
@@ -224,6 +243,7 @@ class MonetaAccount(models.Model):
                 (seed, seed, account.id),
             )
             self.env['moneta.account.balance.monthly']._rebuild_for_account(account)
+        accounts._sync_transfer_category()
         accounts.invalidate_recordset(['current_balance', 'cleared_balance'])
         return accounts
 
@@ -232,6 +252,8 @@ class MonetaAccount(models.Model):
         # whether a recompute is needed.
         opening_changed = 'opening_balance' in vals
         res = super().write(vals)
+        if 'name' in vals:
+            self._sync_transfer_category()
         if opening_changed:
             # Opening balance changed -> authoritative recompute is simplest
             # and correct (the delta path does not own the opening base).

@@ -58,6 +58,24 @@ class MonetaTransaction(models.Model):
         index=True,
     )
 
+    @api.onchange('category_id')
+    def _onchange_category_id(self):
+        if self.category_id and self.category_id.transfer_account_id:
+            self.is_transfer = True
+            self.transfer_account_id = self.category_id.transfer_account_id.id
+        elif self.category_id and not self.category_id.is_transfer and self.is_transfer:
+            self.is_transfer = False
+            self.transfer_account_id = False
+
+    @api.onchange('transfer_account_id', 'is_transfer')
+    def _onchange_transfer_account(self):
+        if self.is_transfer and self.transfer_account_id:
+            t_cat = self.env['moneta.category'].search([('transfer_account_id', '=', self.transfer_account_id.id)], limit=1)
+            if t_cat:
+                self.category_id = t_cat.id
+        elif not self.is_transfer and self.category_id and self.category_id.is_transfer:
+            self.category_id = False
+
     def _compute_attachment_count(self):
         for rec in self:
             count = self.env['ir.attachment'].search_count([
@@ -270,6 +288,13 @@ class MonetaTransaction(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        CatEnv = self.env['moneta.category']
+        for vals in vals_list:
+            if vals.get('category_id'):
+                cat = CatEnv.browse(vals['category_id']).exists()
+                if cat and cat.transfer_account_id:
+                    vals['is_transfer'] = True
+                    vals['transfer_account_id'] = cat.transfer_account_id.id
         # A split parent carries no category on its own line.
         for vals in vals_list:
             if vals.get('is_split'):
@@ -313,6 +338,11 @@ class MonetaTransaction(models.Model):
         if vals.get('is_split') and 'category_id' not in vals:
             vals = dict(vals)
             vals['category_id'] = False
+        if vals.get('category_id'):
+            cat = self.env['moneta.category'].browse(vals['category_id']).exists()
+            if cat and cat.transfer_account_id:
+                vals['is_transfer'] = True
+                vals['transfer_account_id'] = cat.transfer_account_id.id
         needs_delta = any(f in vals for f in _BALANCE_FIELDS)
         batch_ids = set(self.ids)
         snapshots = {}
@@ -589,6 +619,13 @@ class MonetaTransactionSplit(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        CatEnv = self.env['moneta.category']
+        for vals in vals_list:
+            if vals.get('category_id'):
+                cat = CatEnv.browse(vals['category_id']).exists()
+                if cat and cat.transfer_account_id:
+                    vals['is_transfer'] = True
+                    vals['transfer_account_id'] = cat.transfer_account_id.id
         splits = super().create(vals_list)
         splits._invalidate_budget_actuals()
         return splits
