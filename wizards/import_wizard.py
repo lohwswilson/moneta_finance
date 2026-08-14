@@ -12,16 +12,34 @@ _OFX_FIELD_RE = re.compile(r'<([A-Z0-9.]+)>([^<\r\n]*)', re.IGNORECASE)
 
 class MonetaImportWizard(models.TransientModel):
     _name = 'moneta.import.wizard'
-    _description = 'Moneta Financial File Import Wizard (QIF / OFX / CSV / DBS / POSB)'
+    _description = 'Moneta Financial File Import Wizard (QIF / OFX / CSV / Bank Profiles)'
 
     account_id = fields.Many2one('moneta.account', string='Target Account', required=True)
     file_type = fields.Selection([
-        ('csv', 'CSV File (DBS, POSB, OCBC, UOB, Quicken, Bank Statements)'),
+        ('csv', 'CSV File (Bank Statements, DBS, OCBC, UOB, Quicken, Excel)'),
         ('qif', 'QIF (Quicken / MS Money)'),
         ('ofx', 'OFX / QFX (Open Financial Exchange)')
     ], string='File Type', default='csv', required=True)
 
-    file_data = fields.Binary(string='Upload File', required=True)
+    bank_profile = fields.Selection([
+        ('auto', 'Universal Smart Auto-Detect (Any Bank)'),
+        ('dbs_posb', 'DBS / POSB Bank (Singapore)'),
+        ('ocbc', 'OCBC Bank (Singapore)'),
+        ('uob', 'UOB United Overseas Bank (Singapore)'),
+        ('citi', 'Citibank (Singapore & Global)'),
+        ('sc', 'Standard Chartered Bank'),
+        ('hsbc', 'HSBC Bank'),
+        ('wise', 'Wise (TransferWise)'),
+        ('revolut', 'Revolut Multi-Currency'),
+        ('chase', 'Chase Bank (US)'),
+        ('bofa', 'Bank of America (US)'),
+        ('amex', 'American Express (Global)'),
+        ('maybank', 'Maybank / CIMB'),
+        ('custom', 'Custom CSV Mapping Preset'),
+    ], string='Bank Format Profile', default='auto', required=True,
+       help='Select your bank format profile or let Moneta automatically detect the statement columns.')
+
+    file_data = fields.Binary(string='Upload Statement File', required=True)
     file_name = fields.Char(string='File Name')
 
     skip_duplicates = fields.Boolean(string='Skip Duplicate Transactions', default=True, help='Skip transactions that match existing records on same account, date, and amount.')
@@ -49,14 +67,30 @@ class MonetaImportWizard(models.TransientModel):
         index=True,
     )
 
+    @api.onchange('account_id')
+    def _onchange_account_id(self):
+        """Auto-populate bank profile from linked institution or account name."""
+        if self.account_id:
+            if self.account_id.institution_id and self.account_id.institution_id.bank_profile:
+                self.bank_profile = self.account_id.institution_id.bank_profile
+            elif 'dbs' in self.account_id.name.lower() or 'posb' in self.account_id.name.lower():
+                self.bank_profile = 'dbs_posb'
+            elif 'ocbc' in self.account_id.name.lower():
+                self.bank_profile = 'ocbc'
+            elif 'uob' in self.account_id.name.lower():
+                self.bank_profile = 'uob'
+            elif 'wise' in self.account_id.name.lower():
+                self.bank_profile = 'wise'
+            elif 'revolut' in self.account_id.name.lower():
+                self.bank_profile = 'revolut'
+
     def action_detect_csv(self):
-        """Parse the uploaded CSV, auto-detect the header row and column
-        mapping, and fill the mapping fields for the user to adjust."""
+        """Parse the uploaded CSV, apply bank profile or auto-detect mapping, and fill fields."""
         self.ensure_one()
         if not self.file_data:
             raise UserError("Upload a CSV file first, then detect the columns.")
         content = base64.b64decode(self.file_data).decode('utf-8-sig', errors='ignore')
-        rows, has_header, mapping = self._detect_csv_mapping(content)
+        rows, has_header, mapping = self._detect_csv_mapping(content, profile=self.bank_profile)
         width = max((len(r) for r in rows), default=0)
         self.write({
             'csv_has_header': has_header,
@@ -120,9 +154,9 @@ class MonetaImportWizard(models.TransientModel):
         }
 
     @api.model
-    def _detect_csv_mapping(self, content):
+    def _detect_csv_mapping(self, content, profile='auto'):
         """Return (rows, has_header, mapping) for a CSV file.
-        Robustly supports DBS, POSB, OCBC, UOB, Standard Chartered, and international bank formats."""
+        Applies bank-specific profiles (DBS, OCBC, UOB, Wise, Revolut, etc.) or smart auto-detection."""
         reader = csv.reader(io.StringIO(content))
         rows = [r for r in reader if r]
         mapping = {'date': -1, 'payee': -1, 'amount': -1, 'debit': -1, 'credit': -1, 'category': -1, 'memo': -1}
@@ -132,18 +166,83 @@ class MonetaImportWizard(models.TransientModel):
         header = [c.lower().strip() for c in rows[0]]
         has_header = any(
             k in ' '.join(header)
-            for k in ['date', 'payee', 'description', 'amount', 'debit', 'credit', 'category', 'status', 'currency', 'reference']
+            for k in ['date', 'payee', 'description', 'amount', 'debit', 'credit', 'category', 'status', 'currency', 'reference', 'withdrawal', 'deposit']
         )
 
+        # 1. Bank Profile Specific Detection
+        if profile == 'dbs_posb' or (profile == 'auto' and 'statement code' in header and 'supplementary code' in header):
+            for idx, col in enumerate(header):
+                if 'transaction date' in col or ('date' in col and 'value' not in col and mapping['date'] == -1):
+                    mapping['date'] = idx
+                elif col == 'description' or (mapping['payee'] == -1 and 'description' in col and 'supplementary' not in col):
+                    mapping['payee'] = idx
+                elif 'debit amount' in col or col == 'debit':
+                    mapping['debit'] = idx
+                elif 'credit amount' in col or col == 'credit':
+                    mapping['credit'] = idx
+                elif 'additional reference' in col or 'client reference' in col:
+                    mapping['memo'] = idx
+            return rows, True, mapping
+
+        elif profile == 'ocbc' or (profile == 'auto' and any('withdrawals (' in h for h in header)):
+            for idx, col in enumerate(header):
+                if 'transaction date' in col or ('date' in col and 'value' not in col and mapping['date'] == -1):
+                    mapping['date'] = idx
+                elif 'description' in col:
+                    mapping['payee'] = idx
+                elif 'withdrawal' in col:
+                    mapping['debit'] = idx
+                elif 'deposit' in col:
+                    mapping['credit'] = idx
+            return rows, True, mapping
+
+        elif profile == 'uob' or (profile == 'auto' and 'transaction description' in header and 'available balance' in header):
+            for idx, col in enumerate(header):
+                if 'transaction date' in col or 'date' in col:
+                    mapping['date'] = idx
+                elif 'transaction description' in col or 'description' in col:
+                    mapping['payee'] = idx
+                elif 'withdrawal' in col or 'debit' in col:
+                    mapping['debit'] = idx
+                elif 'deposit' in col or 'credit' in col:
+                    mapping['credit'] = idx
+            return rows, True, mapping
+
+        elif profile == 'wise' or (profile == 'auto' and 'transferwise id' in header):
+            for idx, col in enumerate(header):
+                if 'date' in col:
+                    mapping['date'] = idx
+                elif 'description' in col or 'target name' in col:
+                    mapping['payee'] = idx
+                elif 'amount' in col and mapping['amount'] == -1:
+                    mapping['amount'] = idx
+                elif 'payment reference' in col:
+                    mapping['memo'] = idx
+            return rows, True, mapping
+
+        elif profile == 'revolut' or (profile == 'auto' and 'started date' in header and 'completed date' in header):
+            for idx, col in enumerate(header):
+                if 'completed date' in col or 'started date' in col:
+                    if mapping['date'] == -1 or 'completed' in col:
+                        mapping['date'] = idx
+                elif 'description' in col:
+                    mapping['payee'] = idx
+                elif 'amount' in col and mapping['amount'] == -1:
+                    mapping['amount'] = idx
+                elif 'fee' in col:
+                    mapping['memo'] = idx
+            return rows, True, mapping
+
+        # 2. Universal Auto-Detector Fallback
         if has_header:
-            # 1. Debit and Credit columns (check FIRST before general amount)
+            # Debit & Credit columns
             for idx, col in enumerate(header):
                 if any(x in col for x in ['debit amount', 'debit', 'outflow', 'withdrawal', 'dr', 'paid out', 'spent']):
                     mapping['debit'] = idx
                 elif any(x in col for x in ['credit amount', 'credit', 'inflow', 'deposit', 'cr', 'paid in', 'received']):
                     mapping['credit'] = idx
 
-            # 2. Date column (prioritize transaction date over empty value date)
+            # Date column
             for idx, col in enumerate(header):
                 if 'value date' in col and mapping['date'] != -1:
                     continue
@@ -151,7 +250,7 @@ class MonetaImportWizard(models.TransientModel):
                     if mapping['date'] == -1 or 'transaction' in col or 'trans' in col:
                         mapping['date'] = idx
 
-            # 3. Payee / Description column
+            # Payee / Description column
             for idx, col in enumerate(header):
                 if any(x in col for x in ['payee', 'merchant', 'beneficiary', 'party']):
                     mapping['payee'] = idx
@@ -160,20 +259,20 @@ class MonetaImportWizard(models.TransientModel):
                     if mapping['payee'] == -1 or 'supplementary' not in col:
                         mapping['payee'] = idx
 
-            # 4. Amount column (if not separate debit/credit)
+            # Amount column (if not separate debit/credit)
             if mapping['debit'] == -1 and mapping['credit'] == -1:
                 for idx, col in enumerate(header):
                     if any(x in col for x in ['amount', 'sum', 'total', 'net']):
                         mapping['amount'] = idx
                         break
 
-            # 5. Category column
+            # Category column
             for idx, col in enumerate(header):
                 if any(x in col for x in ['category', 'cat', 'classification']):
                     mapping['category'] = idx
                     break
 
-            # 6. Memo / Reference column
+            # Memo / Reference column
             for idx, col in enumerate(header):
                 if any(x in col for x in ['memo', 'notes', 'reference', 'client reference', 'additional reference', 'ref']):
                     if idx != mapping['payee'] and idx != mapping['date']:
@@ -201,7 +300,7 @@ class MonetaImportWizard(models.TransientModel):
                 mapping[key] = col - 1
         return mapping
 
-    def _clean_bank_payee(self, raw_payee, supplementary=''):
+    def _clean_bank_payee(self, raw_payee, supplementary='', profile='auto'):
         """Clean raw bank narration strings into recognizable merchant/payee names."""
         p = raw_payee.strip() if raw_payee else ''
         if not p and supplementary:
@@ -282,7 +381,7 @@ class MonetaImportWizard(models.TransientModel):
         return fields.Date.context_today(self)
 
     def _parse_csv(self, content):
-        rows, has_header, auto = self._detect_csv_mapping(content)
+        rows, has_header, auto = self._detect_csv_mapping(content, profile=self.bank_profile)
         if not rows:
             return 0, 0
         mapping = self._csv_mapping(auto)
@@ -310,7 +409,7 @@ class MonetaImportWizard(models.TransientModel):
 
                 raw_payee = row[payee_idx].strip() if 0 <= payee_idx < len(row) else ''
                 supplementary = row[5].strip() if len(row) > 5 else ''
-                payee_str = self._clean_bank_payee(raw_payee, supplementary)
+                payee_str = self._clean_bank_payee(raw_payee, supplementary, profile=self.bank_profile)
 
                 cat_str = row[cat_idx].strip() if 0 <= cat_idx < len(row) else ''
                 memo_str = row[memo_idx].strip() if 0 <= memo_idx < len(row) else ''

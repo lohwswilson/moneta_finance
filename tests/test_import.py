@@ -92,3 +92,32 @@ class TestImport(MonetaTestBase):
         self.assertTrue(paynow_tx)
         self.assertEqual(str(paynow_tx.transaction_date), '2026-07-20')
         self.assertEqual(paynow_tx.payee_id.name, 'LIEW WAI KUAN')
+
+    def test_ocbc_bank_csv_import(self):
+        acc = self._make_account(name='OCBC 360', opening_balance=0.0)
+        ocbc_csv = (
+            "Transaction date,Value date,Description,Withdrawals (SGD),Deposits (SGD)\n"
+            "01/08/2026,01/08/2026,SALARY CREDIT,,5000.00\n"
+            "02/08/2026,02/08/2026,NTUC FAIRPRICE,125.40,\n"
+        )
+        wiz = self._wizard(acc, 'csv', ocbc_csv)
+        wiz.bank_profile = 'ocbc'
+        wiz.action_import()
+        txs = self.env['moneta.transaction'].search([('account_id', '=', acc.id)])
+        self.assertEqual(len(txs), 2)
+        sal = txs.filtered(lambda t: t.amount == 5000.0)
+        self.assertTrue(sal)
+        self.assertEqual(str(sal.transaction_date), '2026-08-01')
+
+    def test_wise_csv_import(self):
+        acc = self._make_account(name='Wise SGD', opening_balance=0.0)
+        wise_csv = (
+            "TransferWise ID,Date,Amount,Currency,Description,Payment Reference\n"
+            "TRANSFER-12345,2026-08-05,-150.00,SGD,Wise Debit Card,Dinner with Friends\n"
+            "TRANSFER-12346,2026-08-06,1200.00,SGD,Inflow from Client,Project Milestone\n"
+        )
+        wiz = self._wizard(acc, 'csv', wise_csv)
+        wiz.bank_profile = 'wise'
+        wiz.action_import()
+        txs = self.env['moneta.transaction'].search([('account_id', '=', acc.id)])
+        self.assertEqual(len(txs), 2)

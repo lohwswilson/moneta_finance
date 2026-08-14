@@ -10,6 +10,7 @@
                     <group>
                         <group>
                             <field name="account_id"/>
+                            <field name="bank_profile" invisible="file_type != 'csv'"/>
                             <field name="file_type"/>
                         </group>
                         <group>

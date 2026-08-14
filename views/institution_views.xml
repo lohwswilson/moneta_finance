@@ -9,6 +9,7 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="bank_profile"/>
                             <field name="website" widget="url"/>
                             <field name="country"/>
                         </group>
@@ -28,6 +29,7 @@
         <field name="arch" type="xml">
             <list string="Institutions">
                 <field name="name"/>
+                <field name="bank_profile" widget="badge"/>
                 <field name="website" optional="show"/>
                 <field name="country" optional="hide"/>
             </list>
