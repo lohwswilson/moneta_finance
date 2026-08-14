@@ -117,24 +117,29 @@
         <field name="name">moneta.account.list</field>
         <field name="model">moneta.account</field>
         <field name="arch" type="xml">
-            <list string="Accounts">
+            <list string="Accounts" decoration-danger="account_type in ('loan', 'mortgage', 'credit_card', 'loc')" decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')">
                 <field name="is_favourite" widget="boolean_toggle"/>
                 <field name="name"/>
                 <field name="institution_name"/>
-                <field name="account_type" widget="badge"/>
+                <field name="account_type" widget="badge" 
+                       decoration-danger="account_type in ('loan', 'mortgage', 'credit_card', 'loc')" 
+                       decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')"
+                       decoration-primary="account_type == 'brokerage'"/>
                 <field name="currency_id"/>
-                <field name="current_balance" widget="monetary" sum="Total Balance"/>
+                <field name="current_balance" widget="monetary" sum="Total Balance"
+                       decoration-danger="account_type in ('loan', 'mortgage', 'credit_card', 'loc') or current_balance &lt; 0"
+                       decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash') and current_balance &gt;= 0"/>
                 <field name="cleared_balance" widget="monetary"/>
             </list>
         </field>
     </record>
 
-    <!-- Account Kanban View -->
+    <!-- Account Kanban View with Color-Coded Boxes (Red for Mortgage/Loan, Green for Savings/Checking) -->
     <record id="view_moneta_account_kanban" model="ir.ui.view">
         <field name="name">moneta.account.kanban</field>
         <field name="model">moneta.account</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" default_order="account_type, name">
                 <field name="name"/>
                 <field name="account_type"/>
                 <field name="currency_id"/>
@@ -142,16 +147,31 @@
                 <field name="institution_name"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click o_kanban_card">
-                            <div class="o_kanban_card_header">
-                                <div class="o_kanban_card_header_title">
-                                    <strong class="o_primary"><field name="name"/></strong>
-                                    <span class="text-muted"><field name="institution_name"/></span>
+                        <t t-set="is_debt" t-value="['mortgage', 'loan', 'credit_card', 'loc'].includes(record.account_type.raw_value)"/>
+                        <t t-set="is_cash" t-value="['checking', 'chequing', 'savings', 'cash'].includes(record.account_type.raw_value)"/>
+                        <t t-set="card_style" t-value="is_debt ? 'border: 2px solid #E74C3C; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%);' : (is_cash ? 'border: 2px solid #2ECC71; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%);' : 'border: 2px solid #3498DB; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%);')"/>
+                        <t t-set="badge_class" t-value="is_debt ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : 'bg-primary text-white')"/>
+                        <t t-set="balance_color" t-value="is_debt ? 'text-danger' : (is_cash ? 'text-success' : 'text-primary')"/>
+                        <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value == 'credit_card' ? 'fa-credit-card' : (record.account_type.raw_value == 'savings' ? 'fa-money' : 'fa-bank')))"/>
+
+                        <div class="oe_kanban_global_click o_kanban_card rounded-3 shadow-sm p-3 mb-2" t-att-style="card_style">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex align-items-center">
+                                    <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center #{badge_class}" style="width: 34px; height: 34px;">
+                                        <i t-attf-class="fa #{icon_name}"/>
+                                    </div>
+                                    <div>
+                                        <strong class="o_primary fs-6 text-dark"><field name="name"/></strong>
+                                        <div class="text-muted small"><field name="institution_name"/></div>
+                                    </div>
                                 </div>
+                                <span t-attf-class="badge rounded-pill text-uppercase px-2 py-1 #{badge_class}">
+                                    <field name="account_type"/>
+                                </span>
                             </div>
-                            <div class="o_kanban_card_content mt-2">
-                                <span class="badge rounded-pill bg-info"><field name="account_type"/></span>
-                                <h3 class="mt-2 text-end fw-bold">
+                            <div class="d-flex justify-content-between align-items-end mt-3 pt-2 border-top">
+                                <span class="text-muted small fw-semibold">Current Balance</span>
+                                <h3 t-attf-class="mb-0 fw-bold #{balance_color}">
                                     <field name="current_balance" widget="monetary"/>
                                 </h3>
                             </div>
