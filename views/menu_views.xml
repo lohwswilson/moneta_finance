@@ -44,6 +44,18 @@
               action="action_moneta_holding"
               sequence="5"/>
 
+    <menuitem id="menu_moneta_target_alloc"
+              name="Target Asset Allocation"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_target_allocation"
+              sequence="6"/>
+
+    <menuitem id="menu_moneta_benchmark"
+              name="Benchmark Analytics (vs S&amp;P 500)"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_benchmark"
+              sequence="7"/>
+
     <menuitem id="menu_moneta_properties"
               name="Real Estate, Vehicles &amp; Valuables"
               parent="menu_moneta_investments_root"
@@ -163,6 +175,18 @@
               parent="menu_moneta_tools_root"
               action="action_moneta_reconciliation_wizard"
               sequence="10"/>
+
+    <menuitem id="menu_moneta_rebalance_wiz"
+              name="1-Click Portfolio Rebalancer"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_rebalance_wizard"
+              sequence="15"/>
+
+    <menuitem id="menu_moneta_stock_split_wiz"
+              name="Stock Split Corporate Action"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_stock_split_wizard"
+              sequence="16"/>
 
     <menuitem id="menu_moneta_import_wizard"
               name="Import File (QIF / OFX / CSV)"

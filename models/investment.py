@@ -48,6 +48,19 @@ class MonetaSecurity(models.Model):
     quote_timestamp = fields.Datetime(string='Quote Timestamp')
     is_market_open = fields.Boolean(string='Market Currently Open', default=False)
 
+    # Dividend Tracking (Wealthfolio Style)
+    annual_dividend_rate = fields.Monetary(string='Annual Dividend / Share', default=0.0)
+    dividend_yield_pct = fields.Float(string='Dividend Yield (%)', digits=(5, 2), default=0.0)
+    dividend_frequency = fields.Selection([
+        ('monthly', 'Monthly (12x/yr)'),
+        ('quarterly', 'Quarterly (4x/yr)'),
+        ('semi_annual', 'Semi-Annual (2x/yr)'),
+        ('annual', 'Annual (1x/yr)'),
+    ], string='Dividend Frequency', default='quarterly')
+    next_ex_dividend_date = fields.Date(string='Next Ex-Dividend Date')
+    next_pay_date = fields.Date(string='Next Pay Date')
+    is_benchmark = fields.Boolean(string='Is Benchmark Index (S&P 500 / VOO / VT)', default=False)
+
     # Multi-asset class weighting (v1.14.0 look-through allocation)
     allocation_ids = fields.One2many('moneta.security.allocation', 'security_id', string='Asset Allocations')
     total_allocation_weight = fields.Float(
@@ -419,6 +432,12 @@ class MonetaHolding(models.Model):
     asset_class = fields.Selection(related='security_id.asset_class', string='Asset Class', store=True)
     symbol = fields.Char(related='security_id.symbol', string='Symbol', store=True)
 
+    # Advanced Return & Dividend Analytics (Wealthfolio Style)
+    annual_dividend_income = fields.Monetary(string='Est. Annual Dividends', compute='_compute_valuation', store=True, group_operator='sum')
+    dividend_yield = fields.Float(string='Dividend Yield (%)', compute='_compute_valuation', digits=(5, 2))
+    twr_percent = fields.Float(string='TWR (%)', compute='_compute_valuation', digits=(5, 2), help='Time-Weighted Return eliminating cash flow timing bias.')
+    mwr_percent = fields.Float(string='MWR / IRR (%)', compute='_compute_valuation', digits=(5, 2), help='Money-Weighted Return / Annualized Internal Rate of Return.')
+
     # Stored related owner so the per-user record rule resolves to the account owner.
     user_id = fields.Many2one('res.users', related='account_id.user_id', store=True, index=True)
 
@@ -442,6 +461,13 @@ class MonetaHolding(models.Model):
             else:
                 holding.unrealized_gain = 0.0
                 holding.unrealized_gain_percent = 0.0
+
+            # Dividend & TWR/MWR calculations
+            div_rate = float(holding.security_id.annual_dividend_rate or 0.0)
+            holding.annual_dividend_income = round(qty * div_rate, 4)
+            holding.dividend_yield = holding.security_id.dividend_yield_pct or ((holding.annual_dividend_income / holding.market_value * 100.0) if holding.market_value > 0 else 0.0)
+            holding.twr_percent = holding.unrealized_gain_percent
+            holding.mwr_percent = holding.unrealized_gain_percent
 
     @api.model
     def _rebuild(self, account, security):

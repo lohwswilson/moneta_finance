@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Target Allocation List & Form -->
+    <record id="view_moneta_target_allocation_tree" model="ir.ui.view">
+        <field name="name">moneta.target.allocation.list</field>
+        <field name="model">moneta.target.allocation</field>
+        <field name="arch" type="xml">
+            <list string="Target Asset Allocation Matrix" editable="bottom">
+                <field name="asset_class"/>
+                <field name="target_weight" string="Target %" sum="Total Target %"/>
+                <field name="actual_value" widget="monetary" readonly="1" sum="Total Value"/>
+                <field name="actual_weight" string="Actual %" readonly="1" sum="Total Actual %"/>
+                <field name="drift_percent" string="Drift (%)" readonly="1" 
+                       decoration-danger="drift_percent &gt; 5.0 or drift_percent &lt; -5.0"
+                       decoration-success="drift_percent &gt;= -2.0 and drift_percent &lt;= 2.0"/>
+                <field name="rebalance_amount" widget="monetary" readonly="1" string="Rebalance Needed"
+                       decoration-info="rebalance_amount &gt; 0" decoration-warning="rebalance_amount &lt; 0"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_target_allocation" model="ir.actions.act_window">
+        <field name="name">Target Asset Allocation &amp; Drift</field>
+        <field name="res_model">moneta.target.allocation</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define Your Target Asset Allocation Matrix
+            </p>
+            <p>
+                Set ideal weights for Equities, Bonds, Real Estate, Crypto, and Cash. Moneta monitors portfolio drift and generates 1-click rebalancing orders.
+            </p>
+        </field>
+    </record>
+
+    <!-- Benchmark Comparison View -->
+    <record id="view_moneta_benchmark_tree" model="ir.ui.view">
+        <field name="name">moneta.benchmark.comparison.list</field>
+        <field name="model">moneta.benchmark.comparison</field>
+        <field name="arch" type="xml">
+            <list string="Portfolio vs S&amp;P 500 Benchmark Comparison">
+                <field name="name"/>
+                <field name="period"/>
+                <field name="benchmark_security_id"/>
+                <field name="portfolio_return_pct" string="Portfolio Return (%)" decoration-success="portfolio_return_pct &gt; 0" decoration-danger="portfolio_return_pct &lt; 0"/>
+                <field name="benchmark_return_pct" string="Benchmark Return (%)"/>
+                <field name="alpha_pct" string="Alpha / Excess Return (%)" decoration-success="alpha_pct &gt; 0" decoration-danger="alpha_pct &lt; 0" class="fw-bold"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_moneta_benchmark_form" model="ir.ui.view">
+        <field name="name">moneta.benchmark.comparison.form</field>
+        <field name="model">moneta.benchmark.comparison</field>
+        <field name="arch" type="xml">
+            <form string="Benchmark Index Comparison">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Comparison Label"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="period"/>
+                            <field name="benchmark_security_id"/>
+                        </group>
+                        <group>
+                            <field name="portfolio_return_pct" widget="percentage"/>
+                            <field name="benchmark_return_pct" widget="percentage"/>
+                            <field name="alpha_pct" widget="percentage" class="fw-bold fs-4" decoration-success="alpha_pct &gt; 0" decoration-danger="alpha_pct &lt; 0"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_benchmark" model="ir.actions.act_window">
+        <field name="name">Benchmark Analytics (vs S&amp;P 500)</field>
+        <field name="res_model">moneta.benchmark.comparison</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Portfolio Rebalancer Wizard View -->
+    <record id="view_moneta_rebalance_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.portfolio.rebalance.wizard.form</field>
+        <field name="model">moneta.portfolio.rebalance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Portfolio Rebalance Advisor (Wealthfolio Style)">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-balance-scale me-2"/>
+                        Below is your automated rebalancing plan to restore your target asset allocation without friction. Buy underweighted assets and trim overweighted assets.
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <span class="text-muted small">Total Tracked Portfolio Value:</span>
+                            <h3 class="fw-bold text-dark"><field name="total_portfolio_value" widget="monetary"/></h3>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="Rebalance Trade Orders" name="orders_page">
+                            <field name="line_ids">
+                                <list no_label="1">
+                                    <field name="asset_class"/>
+                                    <field name="target_weight" string="Target %"/>
+                                    <field name="actual_weight" string="Actual %"/>
+                                    <field name="drift_percent" string="Drift %"/>
+                                    <field name="action" widget="badge" 
+                                           decoration-success="action == 'buy'" 
+                                           decoration-warning="action == 'sell'" 
+                                           decoration-info="action == 'hold'"/>
+                                    <field name="rebalance_amount" widget="monetary" string="Order Value"/>
+                                    <field name="notes" string="Recommendation"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_rebalance_wizard" model="ir.actions.act_window">
+        <field name="name">1-Click Portfolio Rebalancer</field>
+        <field name="res_model">moneta.portfolio.rebalance.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Stock Split Corporate Action Wizard View -->
+    <record id="view_moneta_stock_split_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.stock.split.wizard.form</field>
+        <field name="model">moneta.stock.split.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Execute Stock Split / Corporate Action">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-scissors me-2"/>
+                        Execute a stock split across all holding accounts for the selected security. Moneta will adjust historical share quantities and divide cost basis per share while preserving total basis.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="security_id"/>
+                            <field name="split_date"/>
+                        </group>
+                        <group>
+                            <field name="split_ratio_type"/>
+                            <field name="custom_multiplier" invisible="split_ratio_type != 'custom'"/>
+                            <field name="memo"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply_split" string="Apply Stock Split" type="object" class="btn-primary" icon="fa-check"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_stock_split_wizard" model="ir.actions.act_window">
+        <field name="name">Stock Split Corporate Action</field>
+        <field name="res_model">moneta.stock.split.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

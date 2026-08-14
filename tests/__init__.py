@@ -23,3 +23,4 @@ from . import test_sure_features
 from . import test_power_user_features
 from . import test_insights
 from . import test_ai_features
+from . import test_wealthfolio_features

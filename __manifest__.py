@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Moneta Personal Finance',
-    'version': '18.0.5.0.0',
+    'version': '18.0.6.0.0',
     'category': 'Accounting/Finance',
     'summary': 'Personal finance & wealth OS: Quicken-style registers, investments, budgets, loans, Monte Carlo, real estate, vehicles, antiques & FIRE analytics.',
     'description': """
@@ -20,10 +20,13 @@ Key Features & Capabilities:
   - Transaction bulk server actions: Batch Cleared, Reconcile, and Batch Categorize wizard.
   - QIF / OFX / CSV file import and 1-click Checkbook Register QIF / CSV export wizard.
 
-* **Investments & Portfolio Management**:
-  - Ticker master, daily stock quotes, and multi-lot portfolio holdings.
-  - Average cost basis, realized capital gains, and unrealized gain/loss tracking.
-  - Multi-asset class weighting with visual allocation pie charts.
+* **Investments & Wealthfolio Portfolio Analytics**:
+  - Ticker master, daily stock quotes, and multi-lot portfolio holdings with average cost basis.
+  - Time-Weighted Return (TWR %) and Money-Weighted Return (MWR / IRR %) performance metrics.
+  - Dividend calendar & yield forecaster with annual estimated dividend income.
+  - Target Asset Allocation matrix & 1-Click Portfolio Rebalancer wizard.
+  - Benchmark index comparison against S&P 500 / VOO with Alpha ($\alpha$) excess returns.
+  - Stock Split Corporate Action wizard (2:1, 3:1, 4:1, 10:1) with seamless basis preservation.
   - Global Equities Momentum (GEM) 12-month dual-momentum allocation engine.
 
 * **Tangible Assets, Real Estate, Vehicles & Antiques**:
@@ -84,6 +87,7 @@ Key Features & Capabilities:
         'views/insight_views.xml',
         'views/ai_advisor_views.xml',
         'views/ai_receipt_views.xml',
+        'views/portfolio_analytics_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

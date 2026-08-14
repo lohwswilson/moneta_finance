@@ -29,6 +29,18 @@
                             <field name="total_allocation_weight" widget="percentage" readonly="1"/>
                         </group>
                     </group>
+                    <group name="dividend_info" string="Dividend &amp; Benchmark Profile (Wealthfolio Style)">
+                        <group>
+                            <field name="annual_dividend_rate" widget="monetary"/>
+                            <field name="dividend_yield_pct" widget="percentage"/>
+                            <field name="dividend_frequency"/>
+                        </group>
+                        <group>
+                            <field name="next_ex_dividend_date"/>
+                            <field name="next_pay_date"/>
+                            <field name="is_benchmark" widget="boolean_toggle"/>
+                        </group>
+                    </group>
                     <group name="links" string="Links &amp; Reference">
                         <group>
                             <field name="website_url" widget="url" placeholder="https://..."/>
@@ -161,6 +173,10 @@
                             <field name="market_value" widget="monetary" readonly="1"/>
                             <field name="unrealized_gain" widget="monetary" readonly="1"/>
                             <field name="unrealized_gain_percent" readonly="1"/>
+                            <field name="annual_dividend_income" widget="monetary" readonly="1"/>
+                            <field name="dividend_yield" widget="percentage" readonly="1"/>
+                            <field name="twr_percent" widget="percentage" readonly="1"/>
+                            <field name="mwr_percent" widget="percentage" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -185,6 +201,9 @@
                 <field name="market_value" string="Market Value" widget="monetary" sum="Total Market Value"/>
                 <field name="unrealized_gain" string="Gain / Loss ($)" widget="monetary" sum="Total Gain/Loss" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0"/>
                 <field name="unrealized_gain_percent" string="Gain (%)" decoration-success="unrealized_gain_percent &gt; 0" decoration-danger="unrealized_gain_percent &lt; 0"/>
+                <field name="annual_dividend_income" string="Est. Dividends" widget="monetary" sum="Total Dividends" optional="show"/>
+                <field name="dividend_yield" string="Yield (%)" widget="percentage" optional="show"/>
+                <field name="twr_percent" string="TWR (%)" widget="percentage" optional="show"/>
                 <field name="price_known" widget="boolean" optional="hide"/>
                 <field name="basis_known" widget="boolean" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
