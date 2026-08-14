@@ -16,3 +16,7 @@ from . import res_users
 from . import loan
 from . import monte_carlo
 from . import emergency_access
+from . import transaction_rule
+from . import goal
+from . import property
+from . import subscription_detector

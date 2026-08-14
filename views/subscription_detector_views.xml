@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Subscription Detector Form View -->
+    <record id="view_moneta_subscription_detector_form" model="ir.ui.view">
+        <field name="name">moneta.subscription.detector.form</field>
+        <field name="model">moneta.subscription.detector</field>
+        <field name="arch" type="xml">
+            <form string="Smart Subscription &amp; Recurring Charge Detector">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-info-circle me-2"/>
+                        Moneta scanned your past transactions and identified the following potential recurring subscriptions, SaaS tools, streaming services, and utility bills. Click <strong>Track as Bill</strong> to create an automated recurring bill reminder with 1 click.
+                    </div>
+                    <field name="line_ids">
+                        <list create="0" delete="0">
+                            <field name="payee_id" string="Merchant / Service"/>
+                            <field name="frequency" string="Detected Cadence" widget="badge" decoration-info="frequency == 'monthly'" decoration-warning="frequency == 'yearly'"/>
+                            <field name="average_amount" widget="monetary" string="Average Charge"/>
+                            <field name="last_charge_date" string="Last Charged"/>
+                            <field name="charge_count" string="Occurrences"/>
+                            <button name="action_create_recurring_bill" type="object" string="Track as Bill" class="btn-success btn-sm" icon="fa-plus"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_subscription_detector" model="ir.actions.act_window">
+        <field name="name">Detect Subscriptions &amp; Recurring Bills</field>
+        <field name="res_model">moneta.subscription.detector</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,3 +1,4 @@
+from dateutil.relativedelta import relativedelta
 # -*- coding: utf-8 -*-
 import calendar
 from odoo import models, fields, api
@@ -14,6 +15,7 @@ class MonetaBudget(models.Model):
     # Faithful subset of Moneta's Budget entity. MVP consumes monthly/fixed;
     # the other enum values are stored but unused (annual/pay-period budgets
     # and non-fixed strategies are deferred).
+    budget_start_day = fields.Integer(string='Cycle Start Day (1-28)', default=1, required=True, help='Day of the month the budget period begins (e.g., 1 for calendar month, 15 for mid-month payday budgeting).')
     budget_type = fields.Selection([
         ('monthly', 'Monthly'),
         ('annual', 'Annual'),
@@ -206,8 +208,19 @@ class MonetaBudgetPeriod(models.Model):
         each line carries budgeted_amount and the close-time rollover_in
         (Moneta createPeriodForBudget + getCurrentMonthPeriodDates)."""
         today = fields.Date.context_today(self)
-        period_start = today.replace(day=1)
-        period_end = today.replace(day=calendar.monthrange(today.year, today.month)[1])
+        start_day = max(min(int(budget.budget_start_day or 1), 28), 1)
+        if start_day == 1:
+            period_start = today.replace(day=1)
+            period_end = today.replace(day=calendar.monthrange(today.year, today.month)[1])
+        else:
+            if today.day >= start_day:
+                period_start = today.replace(day=start_day)
+                next_month = (today.replace(day=1) + relativedelta(months=1))
+                period_end = next_month.replace(day=start_day - 1)
+            else:
+                prev_month = (today.replace(day=1) - relativedelta(months=1))
+                period_start = prev_month.replace(day=start_day)
+                period_end = today.replace(day=start_day - 1)
         rollover_map = rollover_map or {}
         total_budgeted = sum(
             round(float(bc.amount or 0.0), 4) for bc in budget.category_ids if not bc.is_income

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Transaction Rule Form View -->
+    <record id="view_moneta_transaction_rule_form" model="ir.ui.view">
+        <field name="name">moneta.transaction.rule.form</field>
+        <field name="model">moneta.transaction.rule</field>
+        <field name="arch" type="xml">
+            <form string="Automated Transaction Rule">
+                <header>
+                    <button name="action_apply_retroactive" type="object" string="Apply to Historical Transactions" class="btn-primary" icon="fa-flash"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Rule Name"/>
+                        <h1><field name="name" placeholder="e.g. Auto-categorize Amazon or Starbucks"/></h1>
+                    </div>
+                    <group>
+                        <group string="Rule Conditions (IF)">
+                            <field name="match_payee_type"/>
+                            <field name="match_payee_text" placeholder="e.g. starbucks or amzn"/>
+                            <field name="match_memo_type"/>
+                            <field name="match_memo_text" placeholder="e.g. subscription or recurring"/>
+                            <field name="match_account_ids" widget="many2many_tags"/>
+                            <field name="amount_min"/>
+                            <field name="amount_max"/>
+                        </group>
+                        <group string="Rule Actions (THEN APPLY)">
+                            <field name="set_category_id" options="{'no_create': True}"/>
+                            <field name="set_payee_id" options="{'no_create': True}"/>
+                            <field name="set_tag_ids" widget="many2many_tags"/>
+                            <field name="set_state"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Transaction Rule List View -->
+    <record id="view_moneta_transaction_rule_tree" model="ir.ui.view">
+        <field name="name">moneta.transaction.rule.list</field>
+        <field name="model">moneta.transaction.rule</field>
+        <field name="arch" type="xml">
+            <list string="Transaction Rules" default_order="sequence asc, id asc">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="match_payee_text" string="Payee Keyword"/>
+                <field name="match_memo_text" string="Memo Keyword"/>
+                <field name="set_category_id" string="Assign Category"/>
+                <field name="set_payee_id" string="Standard Payee"/>
+                <field name="set_state" string="Set Status"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_transaction_rule" model="ir.actions.act_window">
+        <field name="name">Transaction Rules</field>
+        <field name="res_model">moneta.transaction.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Automated Transaction Rule
+            </p>
+            <p>
+                Set up automated rules to clean up payees, auto-assign categories, and apply tags on newly imported or created transactions.
+            </p>
+        </field>
+    </record>
+</odoo>

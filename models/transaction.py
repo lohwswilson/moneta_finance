@@ -268,6 +268,15 @@ class MonetaTransaction(models.Model):
         # records (source + leg), so every follow-up write/lookup would hit
         # both -- e.g. tx.write({'amount': ...}) would set BOTH legs. The
         # counterpart remains reachable through linked_transaction_id.
+        # Evaluate and apply automated transaction rules
+        rules = self.env['moneta.transaction.rule'].search([('active', '=', True)], order='sequence asc, id asc')
+        if rules:
+            for rec in primary:
+                for rule in rules:
+                    if rule.matches_transaction(rec):
+                        rule.apply_to_transaction(rec)
+                        break
+
         created = self.env['moneta.transaction'].concat(*results)
         self._invalidate_budget_actuals(created._collect_category_ids())
         for account in created.mapped('account_id'):

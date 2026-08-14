@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Form View -->
+    <record id="view_moneta_property_form" model="ir.ui.view">
+        <field name="name">moneta.property.form</field>
+        <field name="model">moneta.property</field>
+        <field name="arch" type="xml">
+            <form string="Real Estate &amp; Tangible Asset">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Asset / Property Name"/>
+                        <h1><field name="name" placeholder="e.g. 742 Evergreen Terrace (Primary Home)"/></h1>
+                    </div>
+
+                    <!-- Home Equity KPI Metrics Banner -->
+                    <div class="row g-3 my-3">
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Estimated Market Value</span>
+                                <h3 class="fw-bold text-dark mb-0"><field name="current_market_value" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Mortgage Debt</span>
+                                <h3 class="fw-bold text-danger mb-0"><field name="mortgage_balance" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Net Home Equity</span>
+                                <h3 class="fw-bold text-success mb-0"><field name="equity_value" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Loan-to-Value (LTV)</span>
+                                <h3 class="fw-bold text-primary mb-0"><field name="loan_to_value_ratio"/>%</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Valuation &amp; Mortgage">
+                            <field name="property_type"/>
+                            <field name="purchase_date"/>
+                            <field name="purchase_price" widget="monetary"/>
+                            <field name="mortgage_account_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                        <group string="Monthly Expenses &amp; Rental Cashflow">
+                            <field name="monthly_rental_income" widget="monetary"/>
+                            <field name="monthly_property_tax" widget="monetary"/>
+                            <field name="monthly_insurance" widget="monetary"/>
+                            <field name="monthly_hoa_maintenance" widget="monetary"/>
+                            <field name="net_monthly_cashflow" widget="monetary" readonly="1" decoration-success="net_monthly_cashflow &gt; 0" decoration-danger="net_monthly_cashflow &lt; 0"/>
+                        </group>
+                    </group>
+                    <group string="Notes &amp; Details">
+                        <field name="notes" placeholder="Legal description, parcel number, property tax account ID, insurance policy details..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Property Kanban View -->
+    <record id="view_moneta_property_kanban" model="ir.ui.view">
+        <field name="name">moneta.property.kanban</field>
+        <field name="model">moneta.property</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" default_order="name asc">
+                <field name="name"/>
+                <field name="property_type"/>
+                <field name="current_market_value"/>
+                <field name="mortgage_balance"/>
+                <field name="equity_value"/>
+                <field name="loan_to_value_ratio"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="card h-100 border-0 shadow-sm rounded-3 p-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h5 class="fw-bold mb-0"><field name="name"/></h5>
+                                <field name="property_type" widget="badge"/>
+                            </div>
+                            <div class="my-2">
+                                <span class="text-muted small">Estimated Value: </span>
+                                <span class="fw-bold text-dark"><field name="current_market_value" widget="monetary"/></span>
+                            </div>
+                            <div class="d-flex justify-content-between my-2 p-2 bg-light rounded">
+                                <div>
+                                    <span class="text-muted small">Debt: </span>
+                                    <span class="fw-bold text-danger"><field name="mortgage_balance" widget="monetary"/></span>
+                                </div>
+                                <div>
+                                    <span class="text-muted small">Equity: </span>
+                                    <span class="fw-bold text-success"><field name="equity_value" widget="monetary"/></span>
+                                </div>
+                            </div>
+                            <div class="pt-2 border-top small text-muted d-flex justify-content-between">
+                                <span>LTV: <field name="loan_to_value_ratio"/>%</span>
+                                <span class="text-success fw-bold">Active Asset</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Property List View -->
+    <record id="view_moneta_property_tree" model="ir.ui.view">
+        <field name="name">moneta.property.list</field>
+        <field name="model">moneta.property</field>
+        <field name="arch" type="xml">
+            <list string="Properties &amp; Real Estate">
+                <field name="name"/>
+                <field name="property_type"/>
+                <field name="current_market_value" widget="monetary" sum="Total Market Value"/>
+                <field name="mortgage_balance" widget="monetary" sum="Total Mortgage Debt"/>
+                <field name="equity_value" widget="monetary" sum="Total Net Equity" decoration-success="equity_value &gt; 0"/>
+                <field name="loan_to_value_ratio" string="LTV (%)"/>
+                <field name="net_monthly_cashflow" widget="monetary" string="Net Cash Flow"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_property" model="ir.actions.act_window">
+        <field name="name">Real Estate &amp; Physical Assets</field>
+        <field name="res_model">moneta.property</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Property, Real Estate Asset, or Vehicle
+            </p>
+            <p>
+                Track home valuations, linked mortgage debts, and net home equity automatically in your personal balance sheet.
+            </p>
+        </field>
+    </record>
+</odoo>

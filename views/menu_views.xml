@@ -32,9 +32,9 @@
               action="action_moneta_transaction"
               sequence="20"/>
 
-    <!-- Investments & Portfolio -->
+    <!-- Investments & Assets -->
     <menuitem id="menu_moneta_investments_root"
-              name="Investments"
+              name="Investments &amp; Assets"
               parent="menu_moneta_root"
               sequence="20"/>
 
@@ -43,6 +43,12 @@
               parent="menu_moneta_investments_root"
               action="action_moneta_holding"
               sequence="5"/>
+
+    <menuitem id="menu_moneta_properties"
+              name="Real Estate &amp; Physical Assets"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_property"
+              sequence="8"/>
 
     <menuitem id="menu_moneta_investment_transactions"
               name="Investment Trades"
@@ -64,9 +70,15 @@
 
     <!-- Bills & Planning -->
     <menuitem id="menu_moneta_planning_root"
-              name="Bills &amp; Planning"
+              name="Goals &amp; Planning"
               parent="menu_moneta_root"
               sequence="30"/>
+
+    <menuitem id="menu_moneta_goals"
+              name="Financial Goals &amp; Sinking Funds"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_goal"
+              sequence="5"/>
 
     <menuitem id="menu_moneta_recurring"
               name="Bills &amp; Reminders"
@@ -110,11 +122,17 @@
               action="action_moneta_transaction"
               sequence="20"/>
 
-    <!-- Tools & Reconciliation -->
+    <!-- Tools & Imports -->
     <menuitem id="menu_moneta_tools_root"
               name="Tools &amp; Imports"
               parent="menu_moneta_root"
               sequence="50"/>
+
+    <menuitem id="menu_moneta_subscription_detector"
+              name="Detect Subscriptions"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_subscription_detector"
+              sequence="5"/>
 
     <menuitem id="menu_moneta_reconcile_wizard"
               name="Reconcile Statement"
@@ -133,6 +151,12 @@
               name="Configuration"
               parent="menu_moneta_root"
               sequence="60"/>
+
+    <menuitem id="menu_moneta_transaction_rules"
+              name="Transaction Rules"
+              parent="menu_moneta_config_root"
+              action="action_moneta_transaction_rule"
+              sequence="5"/>
 
     <menuitem id="menu_moneta_categories"
               name="Categories"

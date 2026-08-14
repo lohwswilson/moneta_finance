@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Goal Form View -->
+    <record id="view_moneta_goal_form" model="ir.ui.view">
+        <field name="name">moneta.goal.form</field>
+        <field name="model">moneta.goal</field>
+        <field name="arch" type="xml">
+            <form string="Financial Goal &amp; Sinking Fund">
+                <header>
+                    <button name="action_add_funds" type="object" string="Contribute Funds" class="btn-primary" icon="fa-plus-circle"/>
+                    <field name="status" widget="statusbar" statusbar_visible="in_progress,achieved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Goal Name"/>
+                        <h1>
+                            <field name="icon" class="oe_inline me-2"/>
+                            <field name="name" placeholder="e.g. 6-Month Emergency Fund" class="oe_inline"/>
+                        </h1>
+                    </div>
+
+                    <!-- Progress Header Metrics -->
+                    <div class="row g-3 my-3">
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Target Goal</span>
+                                <h3 class="fw-bold text-dark mb-0"><field name="target_amount" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Current Saved</span>
+                                <h3 class="fw-bold text-success mb-0"><field name="current_amount" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Remaining Needed</span>
+                                <h3 class="fw-bold text-primary mb-0"><field name="remaining_amount" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small fw-bold text-uppercase">Monthly Savings Needed</span>
+                                <h3 class="fw-bold text-danger mb-0"><field name="monthly_contribution_required" widget="monetary"/>/mo</h3>
+                                <span class="small text-muted"><field name="months_remaining"/> month(s) left</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="my-3">
+                        <label for="progress_percent" string="Goal Progress"/>
+                        <field name="progress_percent" widget="progressbar"/>
+                    </div>
+
+                    <group>
+                        <group string="Timeline &amp; Account">
+                            <field name="start_date"/>
+                            <field name="target_date"/>
+                            <field name="account_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                        <group string="Motivation &amp; Purpose">
+                            <field name="notes" placeholder="Why are you saving for this goal? What milestones celebrate success?"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Goal Kanban View (Card visual) -->
+    <record id="view_moneta_goal_kanban" model="ir.ui.view">
+        <field name="name">moneta.goal.kanban</field>
+        <field name="model">moneta.goal</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" default_order="target_date asc">
+                <field name="name"/>
+                <field name="icon"/>
+                <field name="target_amount"/>
+                <field name="current_amount"/>
+                <field name="progress_percent"/>
+                <field name="monthly_contribution_required"/>
+                <field name="target_date"/>
+                <field name="status"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="card h-100 border-0 shadow-sm rounded-3 p-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h5 class="fw-bold mb-0">
+                                    <span class="me-2"><field name="icon"/></span>
+                                    <field name="name"/>
+                                </h5>
+                                <field name="status" widget="badge" 
+                                       decoration-success="status == 'achieved'" 
+                                       decoration-info="status == 'in_progress'"/>
+                            </div>
+                            <div class="d-flex justify-content-between my-2">
+                                <div>
+                                    <span class="text-muted small">Saved: </span>
+                                    <span class="fw-bold text-success"><field name="current_amount" widget="monetary"/></span>
+                                </div>
+                                <div>
+                                    <span class="text-muted small">Target: </span>
+                                    <span class="fw-bold text-dark"><field name="target_amount" widget="monetary"/></span>
+                                </div>
+                            </div>
+                            <div class="my-2">
+                                <field name="progress_percent" widget="progressbar"/>
+                            </div>
+                            <div class="d-flex justify-content-between pt-2 border-top small text-muted">
+                                <span>Target: <field name="target_date"/></span>
+                                <span class="fw-bold text-primary"><field name="monthly_contribution_required" widget="monetary"/>/mo</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Goal List View -->
+    <record id="view_moneta_goal_tree" model="ir.ui.view">
+        <field name="name">moneta.goal.list</field>
+        <field name="model">moneta.goal</field>
+        <field name="arch" type="xml">
+            <list string="Financial Goals">
+                <field name="icon" string=""/>
+                <field name="name"/>
+                <field name="target_date"/>
+                <field name="current_amount" widget="monetary"/>
+                <field name="target_amount" widget="monetary"/>
+                <field name="progress_percent" widget="progressbar" string="Progress"/>
+                <field name="monthly_contribution_required" widget="monetary" string="Monthly Needed"/>
+                <field name="status" widget="badge" decoration-success="status == 'achieved'" decoration-info="status == 'in_progress'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Contribution Wizard View -->
+    <record id="view_moneta_goal_fund_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.goal.fund.wizard.form</field>
+        <field name="model">moneta.goal.fund.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Contribute to Goal">
+                <sheet>
+                    <group>
+                        <field name="goal_id" readonly="1"/>
+                        <field name="action_type"/>
+                        <field name="amount" widget="monetary"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply" string="Confirm Allocation" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_goal" model="ir.actions.act_window">
+        <field name="name">Financial Goals &amp; Sinking Funds</field>
+        <field name="res_model">moneta.goal</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Set a New Financial Goal or Sinking Fund
+            </p>
+            <p>
+                Track emergency funds, down payments, vacations, or major milestones with live progress and monthly savings targets.
+            </p>
+        </field>
+    </record>
+</odoo>

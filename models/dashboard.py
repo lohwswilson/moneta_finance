@@ -6,7 +6,7 @@ from odoo import models, fields, api
 
 class MonetaDashboard(models.TransientModel):
     _name = 'moneta.dashboard'
-    _description = 'Moneta Quicken Premier Dashboard'
+    _description = 'Moneta Quicken Premier & Wealth Dashboard'
     _rec_name = 'name'
 
     name = fields.Char(string='Name', default='Dashboard')
@@ -40,6 +40,12 @@ class MonetaDashboard(models.TransientModel):
     portfolio_unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_investment_totals')
     portfolio_gain_percent = fields.Float(string='Portfolio Gain (%)', compute='_compute_investment_totals', digits=(5, 2))
     holding_count = fields.Integer(string='Holdings Count', compute='_compute_investment_totals')
+
+    # FIRE & Financial Freedom Metrics (Sure Inspired)
+    emergency_runway_months = fields.Float(string='Runway (Months)', compute='_compute_fire_and_real_estate', digits=(5, 1))
+    fire_target_amount = fields.Monetary(string='FIRE Target ($)', compute='_compute_fire_and_real_estate')
+    fire_progress_pct = fields.Float(string='FIRE Progress (%)', compute='_compute_fire_and_real_estate', digits=(5, 1))
+    total_real_estate_equity = fields.Monetary(string='Real Estate Equity', compute='_compute_fire_and_real_estate')
 
     @api.depends('name')
     def _compute_display_name(self):
@@ -119,6 +125,44 @@ class MonetaDashboard(models.TransientModel):
             dash.portfolio_unrealized_gain = round(mkt_val - basis, 4)
             dash.portfolio_gain_percent = round(((dash.portfolio_unrealized_gain / basis) * 100.0), 2) if basis > 0 else 0.0
 
+    @api.depends()
+    def _compute_fire_and_real_estate(self):
+        today = fields.Date.context_today(self)
+        three_months_ago = today - timedelta(days=90)
+        for dash in self:
+            # 1. Real Estate Equity
+            props = self.env['moneta.property'].search([])
+            dash.total_real_estate_equity = round(sum(float(p.equity_value or 0.0) for p in props), 4)
+
+            # 2. Monthly Burn Rate (last 90 days average expenses)
+            txs = self.env['moneta.transaction'].search([
+                ('transaction_date', '>=', three_months_ago),
+                ('transaction_date', '<=', today),
+                ('amount', '<', 0),
+                ('state', '!=', 'void'),
+            ])
+            total_90d_exp = abs(sum(float(t.amount or 0.0) for t in txs))
+            monthly_burn = (total_90d_exp / 3.0) if total_90d_exp > 0 else float(dash.month_expenses or 3000.0)
+            if monthly_burn <= 0:
+                monthly_burn = 3000.0
+
+            # 3. Liquid Assets (Chequing, Savings, Cash, Brokerages)
+            liquid_accs = self.env['moneta.account'].search([
+                ('account_type', 'in', ('chequing', 'savings', 'cash', 'brokerage')),
+                ('is_closed', '=', False),
+            ])
+            liquid_total = sum(max(float(a.current_balance or 0.0), 0.0) for a in liquid_accs)
+            dash.emergency_runway_months = round(liquid_total / monthly_burn, 1)
+
+            # 4. FIRE Target = 25x Annual Expenses (or 300x Monthly Burn)
+            annual_exp = monthly_burn * 12.0
+            dash.fire_target_amount = round(annual_exp * 25.0, 4)
+            nw = float(dash.net_worth or 0.0) + float(dash.total_real_estate_equity or 0.0)
+            if dash.fire_target_amount > 0:
+                dash.fire_progress_pct = round(min(max((nw / dash.fire_target_amount) * 100.0, 0.0), 100.0), 1)
+            else:
+                dash.fire_progress_pct = 0.0
+
     def action_recompute(self):
         self.invalidate_recordset()
         return True
@@ -150,6 +194,21 @@ class MonetaDashboard(models.TransientModel):
 
     def action_open_net_worth(self):
         action = self.env.ref('moneta_finance.action_moneta_net_worth').read()[0]
+        action['target'] = 'current'
+        return action
+
+    def action_open_goals(self):
+        action = self.env.ref('moneta_finance.action_moneta_goal').read()[0]
+        action['target'] = 'current'
+        return action
+
+    def action_open_properties(self):
+        action = self.env.ref('moneta_finance.action_moneta_property').read()[0]
+        action['target'] = 'current'
+        return action
+
+    def action_open_rules(self):
+        action = self.env.ref('moneta_finance.action_moneta_transaction_rule').read()[0]
         action['target'] = 'current'
         return action
 

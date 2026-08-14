@@ -63,3 +63,15 @@ access_moneta_monte_carlo_path_user,moneta.monte.carlo.path.user,model_moneta_mo
 access_moneta_monte_carlo_path_manager,moneta.monte.carlo.path.manager,model_moneta_monte_carlo_path,group_moneta_manager,1,1,1,1
 access_moneta_emergency_contact_user,moneta.emergency.contact.user,model_moneta_emergency_contact,group_moneta_user,1,1,1,1
 access_moneta_emergency_contact_manager,moneta.emergency.contact.manager,model_moneta_emergency_contact,group_moneta_manager,1,1,1,1
+access_moneta_transaction_rule_user,moneta.transaction.rule.user,model_moneta_transaction_rule,group_moneta_user,1,1,1,1
+access_moneta_transaction_rule_manager,moneta.transaction.rule.manager,model_moneta_transaction_rule,group_moneta_manager,1,1,1,1
+access_moneta_goal_user,moneta.goal.user,model_moneta_goal,group_moneta_user,1,1,1,1
+access_moneta_goal_manager,moneta.goal.manager,model_moneta_goal,group_moneta_manager,1,1,1,1
+access_moneta_goal_fund_wizard_user,moneta.goal.fund.wizard.user,model_moneta_goal_fund_wizard,group_moneta_user,1,1,1,1
+access_moneta_goal_fund_wizard_manager,moneta.goal.fund.wizard.manager,model_moneta_goal_fund_wizard,group_moneta_manager,1,1,1,1
+access_moneta_property_user,moneta.property.user,model_moneta_property,group_moneta_user,1,1,1,1
+access_moneta_property_manager,moneta.property.manager,model_moneta_property,group_moneta_manager,1,1,1,1
+access_moneta_subscription_detector_user,moneta.subscription.detector.user,model_moneta_subscription_detector,group_moneta_user,1,1,1,1
+access_moneta_subscription_detector_manager,moneta.subscription.detector.manager,model_moneta_subscription_detector,group_moneta_manager,1,1,1,1
+access_moneta_subscription_detector_line_user,moneta.subscription.detector.line.user,model_moneta_subscription_detector_line,group_moneta_user,1,1,1,1
+access_moneta_subscription_detector_line_manager,moneta.subscription.detector.line.manager,model_moneta_subscription_detector_line,group_moneta_manager,1,1,1,1
