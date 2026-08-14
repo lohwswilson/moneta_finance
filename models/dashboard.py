@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import calendar
-from datetime import timedelta
+from datetime import date, timedelta
 from odoo import models, fields, api
 
 
@@ -69,29 +69,135 @@ class MonetaDashboard(models.TransientModel):
     # Dynamic Quick Action Launchpad (Customizable)
     action_launchpad_ids = fields.Many2many('moneta.dashboard.action', string='Dynamic Quick Actions', compute='_compute_launchpad_actions')
 
-    @api.depends('name')
-    def _compute_display_name(self):
-        for rec in self:
-            rec.display_name = 'Dashboard'
+    @api.model
+    def default_get(self, fields_list):
+        """Pre-populate all dashboard KPIs on initial form load so values are never 0.00."""
+        res = super().default_get(fields_list)
+        user = self.env.user
+        today = date.today()
+        month_start = today.replace(day=1)
+        month_end = today.replace(day=calendar.monthrange(today.year, today.month)[1])
+        three_months_ago = today - timedelta(days=90)
+        horizon = today + timedelta(days=14)
 
-    @api.depends()
+        # 1. Accounts & Balances
+        accounts = self.env['moneta.account'].search([
+            ('user_id', '=', user.id),
+            ('is_closed', '=', False),
+            ('exclude_from_net_worth', '=', False),
+        ])
+        res['account_count'] = len(accounts)
+        cash_tot, inv_tot, cc_tot, loan_tot = 0.0, 0.0, 0.0, 0.0
+
+        for acc in accounts:
+            bal = float(acc.current_balance or 0.0)
+            if acc.account_type in ('credit_card',):
+                cc_tot += abs(bal) if bal < 0 else bal
+            elif acc.account_type in ('loan', 'mortgage', 'loc'):
+                loan_tot += abs(bal) if bal < 0 else bal
+            elif acc.account_type in ('brokerage', 'retirement', 'crypto'):
+                inv_tot += bal if bal > 0 else bal
+            else:
+                cash_tot += bal if bal > 0 else bal
+
+        res['cash_assets'] = round(cash_tot, 4)
+        res['investment_assets'] = round(inv_tot, 4)
+        res['credit_card_debt'] = round(cc_tot, 4)
+        res['loans_mortgages_debt'] = round(loan_tot, 4)
+        total_liab = cc_tot + loan_tot
+        res['total_liabilities'] = round(total_liab, 4)
+
+        # 2. Real Estate & Tangible Assets
+        props = self.env['moneta.property'].search([('user_id', '=', user.id)])
+        re_mkt, re_eq = 0.0, 0.0
+        for p in props:
+            val = float(p.current_market_value or 0.0)
+            debt = abs(float(p.mortgage_account_id.current_balance or 0.0)) if p.mortgage_account_id else float(p.mortgage_balance or 0.0)
+            re_mkt += val
+            re_eq += max(val - debt, 0.0)
+
+        res['real_estate_assets'] = round(re_mkt, 4)
+        res['total_real_estate_equity'] = round(re_eq, 4)
+        total_ass = cash_tot + inv_tot + re_mkt
+        res['total_assets'] = round(total_ass, 4)
+        res['net_worth'] = round(total_ass - total_liab, 4)
+
+        # 3. Monthly Income & Expenses
+        txs = self.env['moneta.transaction'].search([
+            ('user_id', '=', user.id),
+            ('transaction_date', '>=', month_start),
+            ('transaction_date', '<=', month_end),
+            ('state', '!=', 'void'),
+        ])
+        inc, exp = 0.0, 0.0
+        for tx in txs:
+            if tx.amount > 0:
+                inc += float(tx.amount or 0.0)
+            else:
+                exp += float(tx.amount or 0.0)
+        res['month_income'] = round(inc, 4)
+        res['month_expenses'] = round(-exp, 4)
+        res['month_net_savings'] = round(inc + exp, 4)
+        res['savings_rate'] = round(((inc + exp) / inc * 100.0), 2) if inc > 0 else 0.0
+
+        # 4. Investment Holdings
+        holdings = self.env['moneta.holding'].search([('user_id', '=', user.id)])
+        res['holding_count'] = len(holdings)
+        mkt_v = sum(float(h.market_value or 0.0) for h in holdings)
+        c_bas = sum(float(h.cost_basis or 0.0) for h in holdings)
+        res['portfolio_market_value'] = round(mkt_v, 4)
+        res['portfolio_cost_basis'] = round(c_bas, 4)
+        res['portfolio_unrealized_gain'] = round(mkt_v - c_bas, 4)
+        res['portfolio_gain_percent'] = round(((mkt_v - c_bas) / c_bas * 100.0), 2) if c_bas > 0 else 0.0
+
+        # 5. Upcoming Bills
+        scheds = self.env['moneta.recurring.transaction'].search([
+            ('user_id', '=', user.id),
+            ('active', '=', True),
+            ('next_date', '>=', today),
+            ('next_date', '<=', horizon),
+            ('amount', '<', 0),
+        ])
+        res['upcoming_bill_count'] = len(scheds)
+        res['upcoming_bills_total'] = round(-sum(float(s.amount or 0.0) for s in scheds), 4)
+
+        # 6. Runway & FIRE
+        txs_90 = self.env['moneta.transaction'].search([
+            ('user_id', '=', user.id),
+            ('transaction_date', '>=', three_months_ago),
+            ('transaction_date', '<=', today),
+            ('amount', '<', 0),
+            ('state', '!=', 'void'),
+        ])
+        tot_90_exp = abs(sum(float(t.amount or 0.0) for t in txs_90))
+        m_burn = (tot_90_exp / 3.0) if tot_90_exp > 0 else float(-exp or 3000.0)
+        if m_burn <= 0:
+            m_burn = 3000.0
+        liquid_tot = cash_tot + inv_tot
+        res['emergency_runway_months'] = round(liquid_tot / m_burn, 1)
+        res['fire_target_amount'] = round(m_burn * 12.0 * 25.0, 4)
+        if res['fire_target_amount'] > 0:
+            res['fire_progress_pct'] = round(min(max((res['net_worth'] / res['fire_target_amount']) * 100.0, 0.0), 100.0), 1)
+        else:
+            res['fire_progress_pct'] = 0.0
+
+        return res
+
+    @api.depends('user_id', 'currency_id')
     def _compute_totals(self):
         today = fields.Date.context_today(self)
         month_start = today.replace(day=1)
         month_end = today.replace(day=calendar.monthrange(today.year, today.month)[1])
         for dash in self:
-            # Net worth and monthly balances
-            dash.net_worth = self.env['moneta.account.balance.monthly']._net_worth_for_month(month_start)
-            
-            # Active accounts breakdown
-            accounts = self.env['moneta.account'].search([('is_closed', '=', False), ('exclude_from_net_worth', '=', False)])
+            user = dash.user_id or self.env.user
+            accounts = self.env['moneta.account'].search([
+                ('user_id', '=', user.id),
+                ('is_closed', '=', False),
+                ('exclude_from_net_worth', '=', False),
+            ])
             dash.account_count = len(accounts)
-            assets = 0.0
-            liabilities = 0.0
-            cash_tot = 0.0
-            inv_tot = 0.0
-            cc_tot = 0.0
-            loan_tot = 0.0
+            assets, liabilities = 0.0, 0.0
+            cash_tot, inv_tot, cc_tot, loan_tot = 0.0, 0.0, 0.0, 0.0
 
             for acc in accounts:
                 bal = float(acc.current_balance or 0.0)
@@ -108,21 +214,27 @@ class MonetaDashboard(models.TransientModel):
                     cash_tot += bal if bal > 0 else bal
                     assets += bal if bal > 0 else bal
 
+            # Add Real Estate Assets into Total Assets & Net Worth
+            props = self.env['moneta.property'].search([('user_id', '=', user.id)])
+            re_mkt = sum(float(p.current_market_value or 0.0) for p in props)
+            assets += re_mkt
+
             dash.cash_assets = round(cash_tot, 4)
             dash.investment_assets = round(inv_tot, 4)
             dash.credit_card_debt = round(cc_tot, 4)
             dash.loans_mortgages_debt = round(loan_tot, 4)
             dash.total_assets = round(max(assets, 0.0), 4)
             dash.total_liabilities = round(max(liabilities, 0.0), 4)
+            dash.net_worth = round(assets - liabilities, 4)
 
             # Month income/expense from non-void transactions
             txs = self.env['moneta.transaction'].search([
+                ('user_id', '=', user.id),
                 ('transaction_date', '>=', month_start),
                 ('transaction_date', '<=', month_end),
                 ('state', '!=', 'void'),
             ])
-            income = 0.0
-            expenses = 0.0
+            income, expenses = 0.0, 0.0
             for tx in txs:
                 if tx.amount > 0:
                     income += float(tx.amount or 0.0)
@@ -133,12 +245,14 @@ class MonetaDashboard(models.TransientModel):
             dash.month_net_savings = round(income + expenses, 4)
             dash.savings_rate = round((dash.month_net_savings / income * 100.0), 2) if income > 0 else 0.0
 
-    @api.depends()
+    @api.depends('user_id', 'currency_id')
     def _compute_upcoming_bills(self):
         today = fields.Date.context_today(self)
         horizon = today + timedelta(days=14)
         for dash in self:
+            user = dash.user_id or self.env.user
             scheds = self.env['moneta.recurring.transaction'].search([
+                ('user_id', '=', user.id),
                 ('active', '=', True),
                 ('next_date', '>=', today),
                 ('next_date', '<=', horizon),
@@ -147,10 +261,11 @@ class MonetaDashboard(models.TransientModel):
             dash.upcoming_bill_count = len(scheds)
             dash.upcoming_bills_total = round(-sum(float(s.amount or 0.0) for s in scheds), 4)
 
-    @api.depends()
+    @api.depends('user_id', 'currency_id')
     def _compute_investment_totals(self):
         for dash in self:
-            holdings = self.env['moneta.holding'].search([])
+            user = dash.user_id or self.env.user
+            holdings = self.env['moneta.holding'].search([('user_id', '=', user.id)])
             dash.holding_count = len(holdings)
             mkt_val = sum(float(h.market_value or 0.0) for h in holdings)
             basis = sum(float(h.cost_basis or 0.0) for h in holdings)
@@ -159,18 +274,28 @@ class MonetaDashboard(models.TransientModel):
             dash.portfolio_unrealized_gain = round(mkt_val - basis, 4)
             dash.portfolio_gain_percent = round(((dash.portfolio_unrealized_gain / basis) * 100.0), 2) if basis > 0 else 0.0
 
-    @api.depends()
+    @api.depends('user_id', 'currency_id')
     def _compute_fire_and_real_estate(self):
         today = fields.Date.context_today(self)
         three_months_ago = today - timedelta(days=90)
         for dash in self:
+            user = dash.user_id or self.env.user
             # 1. Real Estate Equity & Valuation
-            props = self.env['moneta.property'].search([])
-            dash.real_estate_assets = round(sum(float(p.current_market_value or 0.0) for p in props), 4)
-            dash.total_real_estate_equity = round(sum(float(p.equity_value or 0.0) for p in props), 4)
+            props = self.env['moneta.property'].search([('user_id', '=', user.id)])
+            total_mkt = 0.0
+            total_eq = 0.0
+            for p in props:
+                val = float(p.current_market_value or 0.0)
+                debt = abs(float(p.mortgage_account_id.current_balance or 0.0)) if p.mortgage_account_id else float(p.mortgage_balance or 0.0)
+                total_mkt += val
+                total_eq += max(val - debt, 0.0)
+
+            dash.real_estate_assets = round(total_mkt, 4)
+            dash.total_real_estate_equity = round(total_eq, 4)
 
             # 2. Monthly Burn Rate (last 90 days average expenses)
             txs = self.env['moneta.transaction'].search([
+                ('user_id', '=', user.id),
                 ('transaction_date', '>=', three_months_ago),
                 ('transaction_date', '<=', today),
                 ('amount', '<', 0),
@@ -183,6 +308,7 @@ class MonetaDashboard(models.TransientModel):
 
             # 3. Liquid Assets (Checking, Savings, Cash, Brokerages)
             liquid_accs = self.env['moneta.account'].search([
+                ('user_id', '=', user.id),
                 ('account_type', 'in', ('checking', 'chequing', 'savings', 'cash', 'brokerage')),
                 ('is_closed', '=', False),
             ])
@@ -192,15 +318,19 @@ class MonetaDashboard(models.TransientModel):
             # 4. FIRE Target = 25x Annual Expenses (or 300x Monthly Burn)
             annual_exp = monthly_burn * 12.0
             dash.fire_target_amount = round(annual_exp * 25.0, 4)
-            nw = float(dash.net_worth or 0.0) + float(dash.total_real_estate_equity or 0.0)
+            nw = float(dash.net_worth or 0.0)
             if dash.fire_target_amount > 0:
                 dash.fire_progress_pct = round(min(max((nw / dash.fire_target_amount) * 100.0, 0.0), 100.0), 1)
             else:
                 dash.fire_progress_pct = 0.0
 
     def action_recompute(self):
+        """Force re-compute all dashboard KPIs."""
         self.invalidate_recordset()
-        return True
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     def action_open_accounts(self):
         action = self.env.ref('moneta_finance.action_moneta_account').read()[0]
@@ -257,7 +387,7 @@ class MonetaDashboard(models.TransientModel):
         action['target'] = 'new'
         return action
 
-    @api.depends()
+    @api.depends('user_id')
     def _compute_insights(self):
         for dash in self:
             insights = self.env['moneta.insight'].get_user_insights()
@@ -281,7 +411,7 @@ class MonetaDashboard(models.TransientModel):
         action['target'] = 'current'
         return action
 
-    @api.depends()
+    @api.depends('user_id')
     def _compute_launchpad_actions(self):
         ActionModel = self.env['moneta.dashboard.action']
         user = self.env.user

@@ -67,3 +67,12 @@ class TestDashboard(MonetaTestBase):
         dash = self._dash(user)
         self.assertEqual(dash.upcoming_bill_count, 1)
         self.assertEqual(dash.upcoming_bills_total, 1200.0)
+    def test_real_estate_equity_on_dashboard(self):
+        user = self._dash_user()
+        prop = self.env['moneta.property'].with_user(user).create({
+            'name': 'Luxury Condo',
+            'current_market_value': 750000.0,
+        })
+        dash = self._dash(user)
+        self.assertEqual(dash.real_estate_assets, 750000.0)
+        self.assertEqual(dash.total_real_estate_equity, 750000.0)
