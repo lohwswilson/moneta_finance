@@ -10,6 +10,11 @@ class MonetaCategory(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Category Name', required=True)
+    icon = fields.Char(string='Icon', default='📁', help='Emoji icon (e.g. 🍔, 🏠, 🚗, 💰)')
+    color = fields.Integer(string='Color Index', default=0)
+    description = fields.Text(string='Description / Notes')
+    is_system = fields.Boolean(string='System Default Template', default=False)
+
     is_income = fields.Boolean(
         string='Is Income', default=False,
         help='Checked if this category represents an income source (salary, dividends, etc.). Unchecked for expenses.',
@@ -131,3 +136,33 @@ class MonetaCategory(models.Model):
                     "Reassign or remove those transactions before deleting this category."
                 )
         return super().unlink()
+
+    @api.model
+    def _seed_user_defaults(self, user):
+        """Seed a standard set of categories for a new user if none exist."""
+        if self.search_count([('user_id', '=', user.id)]) > 0:
+            return
+        default_tree = [
+            ('Income', '💰', True, ['Salary', 'Investment Income', 'Dividends', 'Other Income']),
+            ('Housing', '🏠', False, ['Rent/Mortgage', 'Property Tax', 'Utilities', 'Maintenance']),
+            ('Transportation', '🚗', False, ['Auto Loan', 'Fuel', 'Public Transit', 'Parking & ERP', 'Car Insurance']),
+            ('Food & Dining', '🍔', False, ['Groceries', 'Restaurants', 'Coffee Shops']),
+            ('Personal & Family', '👨‍👩‍👧', False, ['Family Allowance', 'Education & Tuition', 'Clothing', 'Personal Care']),
+            ('Health & Medical', '🏥', False, ['Medical & Dental', 'Health Insurance', 'Pharmacy']),
+            ('Bills & Fees', '🧾', False, ['Phone & Internet', 'Bank Fees', 'Domestic Helper & Levy', 'Income Tax']),
+            ('Leisure & Recreation', '✈️', False, ['Travel & Vacation', 'Club Memberships', 'Entertainment']),
+        ]
+        for parent_name, icon, is_inc, children in default_tree:
+            parent = self.create({
+                'name': parent_name,
+                'icon': icon,
+                'is_income': is_inc,
+                'user_id': user.id,
+            })
+            for child_name in children:
+                self.create({
+                    'name': child_name,
+                    'is_income': is_inc,
+                    'parent_id': parent.id,
+                    'user_id': user.id,
+                })
