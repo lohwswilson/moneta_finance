@@ -32,6 +32,7 @@ class MonetaDashboard(models.TransientModel):
     loans_mortgages_debt = fields.Monetary(string='Loans & Mortgages', compute='_compute_totals')
 
     # Cash Flow & Savings
+    month_label = fields.Char(string='Cash Flow Period', compute='_compute_totals')
     month_income = fields.Monetary(string='This Month Income', compute='_compute_totals')
     month_expenses = fields.Monetary(string='This Month Expenses', compute='_compute_totals')
     month_net_savings = fields.Monetary(string='Net Savings', compute='_compute_totals')
@@ -123,6 +124,23 @@ class MonetaDashboard(models.TransientModel):
         res['net_worth'] = round(total_ass - total_liab, 4)
 
         # 3. Monthly Income & Expenses
+        tx_count = self.env['moneta.transaction'].search_count([
+            ('user_id', '=', user.id),
+            ('transaction_date', '>=', month_start),
+            ('transaction_date', '<=', month_end),
+            ('state', '!=', 'void'),
+        ])
+        if tx_count == 0:
+            latest_tx = self.env['moneta.transaction'].search([
+                ('user_id', '=', user.id),
+                ('state', '!=', 'void'),
+            ], order='transaction_date desc', limit=1)
+            if latest_tx and latest_tx.transaction_date:
+                latest_d = latest_tx.transaction_date
+                month_start = latest_d.replace(day=1)
+                month_end = latest_d.replace(day=calendar.monthrange(latest_d.year, latest_d.month)[1])
+
+        res['month_label'] = month_start.strftime('%B %Y')
         txs = self.env['moneta.transaction'].search([
             ('user_id', '=', user.id),
             ('transaction_date', '>=', month_start),
@@ -228,6 +246,23 @@ class MonetaDashboard(models.TransientModel):
             dash.net_worth = round(assets - liabilities, 4)
 
             # Month income/expense from non-void transactions
+            tx_count = self.env['moneta.transaction'].search_count([
+                ('user_id', '=', user.id),
+                ('transaction_date', '>=', month_start),
+                ('transaction_date', '<=', month_end),
+                ('state', '!=', 'void'),
+            ])
+            if tx_count == 0:
+                latest_tx = self.env['moneta.transaction'].search([
+                    ('user_id', '=', user.id),
+                    ('state', '!=', 'void'),
+                ], order='transaction_date desc', limit=1)
+                if latest_tx and latest_tx.transaction_date:
+                    latest_d = latest_tx.transaction_date
+                    month_start = latest_d.replace(day=1)
+                    month_end = latest_d.replace(day=calendar.monthrange(latest_d.year, latest_d.month)[1])
+
+            dash.month_label = month_start.strftime('%B %Y')
             txs = self.env['moneta.transaction'].search([
                 ('user_id', '=', user.id),
                 ('transaction_date', '>=', month_start),

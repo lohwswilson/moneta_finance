@@ -58,8 +58,11 @@
                         <div class="col-12 col-md-6 col-xl-3">
                             <div class="card h-100 p-3">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="text-muted fw-bold small text-uppercase">Monthly Cash Flow</span>
-                                    <span class="badge bg-info-light">
+                                    <span class="text-muted fw-bold small text-uppercase">Cash Flow (<field name="month_label"/>)</span>
+                                    <span class="badge bg-success" invisible="savings_rate &lt;= 0">
+                                        <field name="savings_rate"/>% Saved
+                                    </span>
+                                    <span class="badge bg-info-light" invisible="savings_rate &gt; 0">
                                         <i class="fa fa-exchange fa-lg"/>
                                     </span>
                                 </div>
@@ -67,8 +70,8 @@
                                     <field name="month_net_savings" widget="monetary"/>
                                 </h3>
                                 <div class="d-flex justify-content-between small pt-2 border-top">
-                                    <span class="text-success"><i class="fa fa-arrow-up me-1"/><field name="month_income" widget="monetary"/></span>
-                                    <span class="text-danger"><i class="fa fa-arrow-down me-1"/><field name="month_expenses" widget="monetary"/></span>
+                                    <span class="text-success" title="Total Monthly Inflow"><i class="fa fa-arrow-up me-1"/><field name="month_income" widget="monetary"/></span>
+                                    <span class="text-danger" title="Total Monthly Outflow"><i class="fa fa-arrow-down me-1"/><field name="month_expenses" widget="monetary"/></span>
                                 </div>
                             </div>
                         </div>
