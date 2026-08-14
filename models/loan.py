@@ -232,6 +232,7 @@ class MonetaLoanAmortizationLine(models.Model):
 
     scenario_id = fields.Many2one('moneta.loan.scenario', string='Loan Scenario', ondelete='cascade', required=True)
     currency_id = fields.Many2one('res.currency', related='scenario_id.currency_id', store=True, readonly=True)
+    user_id = fields.Many2one('res.users', related='scenario_id.user_id', store=True, index=True)
 
     payment_number = fields.Integer(string='#', required=True)
     payment_date = fields.Date(string='Payment Date', required=True)
@@ -250,6 +251,7 @@ class MonetaLoanRateChange(models.Model):
     _order = 'effective_date asc'
 
     scenario_id = fields.Many2one('moneta.loan.scenario', string='Loan Scenario', ondelete='cascade', required=True)
+    user_id = fields.Many2one('res.users', related='scenario_id.user_id', store=True, index=True)
     effective_date = fields.Date(string='Effective Date', required=True)
     annual_rate = fields.Float(string='New Annual Rate (%)', required=True, digits=(5, 3))
     note = fields.Char(string='Adjustment Note')

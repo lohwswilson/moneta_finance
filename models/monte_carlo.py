@@ -141,6 +141,7 @@ class MonetaMonteCarloPath(models.Model):
 
     simulation_id = fields.Many2one('moneta.monte.carlo', string='Simulation', ondelete='cascade', required=True)
     currency_id = fields.Many2one('res.currency', related='simulation_id.currency_id', store=True, readonly=True)
+    user_id = fields.Many2one('res.users', related='simulation_id.user_id', store=True, index=True)
 
     year_number = fields.Integer(string='Year', required=True)
     phase = fields.Selection([('Accumulation', 'Accumulation'), ('Retirement', 'Retirement')], string='Phase')

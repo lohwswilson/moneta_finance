@@ -150,6 +150,7 @@ class MonetaPropertyValuation(models.Model):
     property_id = fields.Many2one('moneta.property', string='Asset', required=True, ondelete='cascade')
     valuation_date = fields.Date(string='Appraisal Date', default=fields.Date.context_today, required=True)
     currency_id = fields.Many2one('res.currency', related='property_id.currency_id', readonly=True)
+    user_id = fields.Many2one('res.users', related='property_id.user_id', store=True, index=True)
     appraised_value = fields.Monetary(string='Appraised Value', required=True)
     appraiser = fields.Char(string='Appraiser / Source', placeholder='e.g. Kelley Blue Book, Sotheby\'s, Christie\'s, Zillow')
     notes = fields.Char(string='Valuation Notes / Market Condition')

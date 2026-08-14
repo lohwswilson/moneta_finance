@@ -253,6 +253,7 @@ class MonetaAIChatMessage(models.Model):
     _order = 'create_date asc, id asc'
 
     chat_id = fields.Many2one('moneta.ai.chat', string='Chat Session', required=True, ondelete='cascade')
+    user_id = fields.Many2one('res.users', related='chat_id.user_id', store=True, index=True)
     role = fields.Selection([('user', 'You'), ('assistant', 'Moneta AI')], string='Role', required=True)
     content = fields.Text(string='Message Content', required=True)
     create_date = fields.Datetime(string='Timestamp', readonly=True)

@@ -360,5 +360,259 @@
             <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
         </record>
 
+        <!-- moneta.goal -->
+        <record id="moneta_goal_rule_user" model="ir.rule">
+            <field name="name">Moneta Goal: own</field>
+            <field name="model_id" ref="model_moneta_goal"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_goal_rule_manager" model="ir.rule">
+            <field name="name">Moneta Goal: manager</field>
+            <field name="model_id" ref="model_moneta_goal"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.property -->
+        <record id="moneta_property_rule_user" model="ir.rule">
+            <field name="name">Moneta Property: own</field>
+            <field name="model_id" ref="model_moneta_property"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_property_rule_manager" model="ir.rule">
+            <field name="name">Moneta Property: manager</field>
+            <field name="model_id" ref="model_moneta_property"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.loan.scenario -->
+        <record id="moneta_loan_scenario_rule_user" model="ir.rule">
+            <field name="name">Moneta Loan Scenario: own</field>
+            <field name="model_id" ref="model_moneta_loan_scenario"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_loan_scenario_rule_manager" model="ir.rule">
+            <field name="name">Moneta Loan Scenario: manager</field>
+            <field name="model_id" ref="model_moneta_loan_scenario"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.monte.carlo -->
+        <record id="moneta_monte_carlo_rule_user" model="ir.rule">
+            <field name="name">Moneta Monte Carlo: own</field>
+            <field name="model_id" ref="model_moneta_monte_carlo"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_monte_carlo_rule_manager" model="ir.rule">
+            <field name="name">Moneta Monte Carlo: manager</field>
+            <field name="model_id" ref="model_moneta_monte_carlo"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.emergency.contact -->
+        <record id="moneta_emergency_contact_rule_user" model="ir.rule">
+            <field name="name">Moneta Emergency Contact: own</field>
+            <field name="model_id" ref="model_moneta_emergency_contact"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_emergency_contact_rule_manager" model="ir.rule">
+            <field name="name">Moneta Emergency Contact: manager</field>
+            <field name="model_id" ref="model_moneta_emergency_contact"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.transaction.rule -->
+        <record id="moneta_transaction_rule_rule_user" model="ir.rule">
+            <field name="name">Moneta Transaction Rule: own</field>
+            <field name="model_id" ref="model_moneta_transaction_rule"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_transaction_rule_rule_manager" model="ir.rule">
+            <field name="name">Moneta Transaction Rule: manager</field>
+            <field name="model_id" ref="model_moneta_transaction_rule"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.ai.chat -->
+        <record id="moneta_ai_chat_rule_user" model="ir.rule">
+            <field name="name">Moneta AI Chat: own</field>
+            <field name="model_id" ref="model_moneta_ai_chat"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_ai_chat_rule_manager" model="ir.rule">
+            <field name="name">Moneta AI Chat: manager</field>
+            <field name="model_id" ref="model_moneta_ai_chat"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.ai.summary -->
+        <record id="moneta_ai_summary_rule_user" model="ir.rule">
+            <field name="name">Moneta AI Summary: own</field>
+            <field name="model_id" ref="model_moneta_ai_summary"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_ai_summary_rule_manager" model="ir.rule">
+            <field name="name">Moneta AI Summary: manager</field>
+            <field name="model_id" ref="model_moneta_ai_summary"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.target.allocation -->
+        <record id="moneta_target_allocation_rule_user" model="ir.rule">
+            <field name="name">Moneta Target Allocation: own</field>
+            <field name="model_id" ref="model_moneta_target_allocation"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_target_allocation_rule_manager" model="ir.rule">
+            <field name="name">Moneta Target Allocation: manager</field>
+            <field name="model_id" ref="model_moneta_target_allocation"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.benchmark.comparison -->
+        <record id="moneta_benchmark_comparison_rule_user" model="ir.rule">
+            <field name="name">Moneta Benchmark Comparison: own</field>
+            <field name="model_id" ref="model_moneta_benchmark_comparison"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_benchmark_comparison_rule_manager" model="ir.rule">
+            <field name="name">Moneta Benchmark Comparison: manager</field>
+            <field name="model_id" ref="model_moneta_benchmark_comparison"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.dashboard.action -->
+        <record id="moneta_dashboard_action_rule_user" model="ir.rule">
+            <field name="name">Moneta Dashboard Action: own</field>
+            <field name="model_id" ref="model_moneta_dashboard_action"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_dashboard_action_rule_manager" model="ir.rule">
+            <field name="name">Moneta Dashboard Action: manager</field>
+            <field name="model_id" ref="model_moneta_dashboard_action"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.insight -->
+        <record id="moneta_insight_rule_user" model="ir.rule">
+            <field name="name">Moneta Insight: own</field>
+            <field name="model_id" ref="model_moneta_insight"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_insight_rule_manager" model="ir.rule">
+            <field name="name">Moneta Insight: manager</field>
+            <field name="model_id" ref="model_moneta_insight"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.subscription.detector -->
+        <record id="moneta_subscription_detector_rule_user" model="ir.rule">
+            <field name="name">Moneta Subscription Detector: own</field>
+            <field name="model_id" ref="model_moneta_subscription_detector"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_subscription_detector_rule_manager" model="ir.rule">
+            <field name="name">Moneta Subscription Detector: manager</field>
+            <field name="model_id" ref="model_moneta_subscription_detector"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- Child models carry a stored related user_id from their parent. -->
+
+        <!-- moneta.loan.amortization.line -->
+        <record id="moneta_loan_amortization_line_rule_user" model="ir.rule">
+            <field name="name">Moneta Loan Amortization Line: own</field>
+            <field name="model_id" ref="model_moneta_loan_amortization_line"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_loan_amortization_line_rule_manager" model="ir.rule">
+            <field name="name">Moneta Loan Amortization Line: manager</field>
+            <field name="model_id" ref="model_moneta_loan_amortization_line"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.loan.rate.change -->
+        <record id="moneta_loan_rate_change_rule_user" model="ir.rule">
+            <field name="name">Moneta Loan Rate Change: own</field>
+            <field name="model_id" ref="model_moneta_loan_rate_change"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_loan_rate_change_rule_manager" model="ir.rule">
+            <field name="name">Moneta Loan Rate Change: manager</field>
+            <field name="model_id" ref="model_moneta_loan_rate_change"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.monte.carlo.path -->
+        <record id="moneta_monte_carlo_path_rule_user" model="ir.rule">
+            <field name="name">Moneta Monte Carlo Path: own</field>
+            <field name="model_id" ref="model_moneta_monte_carlo_path"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_monte_carlo_path_rule_manager" model="ir.rule">
+            <field name="name">Moneta Monte Carlo Path: manager</field>
+            <field name="model_id" ref="model_moneta_monte_carlo_path"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.property.valuation -->
+        <record id="moneta_property_valuation_rule_user" model="ir.rule">
+            <field name="name">Moneta Property Valuation: own</field>
+            <field name="model_id" ref="model_moneta_property_valuation"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_property_valuation_rule_manager" model="ir.rule">
+            <field name="name">Moneta Property Valuation: manager</field>
+            <field name="model_id" ref="model_moneta_property_valuation"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.ai.chat.message -->
+        <record id="moneta_ai_chat_message_rule_user" model="ir.rule">
+            <field name="name">Moneta AI Chat Message: own</field>
+            <field name="model_id" ref="model_moneta_ai_chat_message"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_ai_chat_message_rule_manager" model="ir.rule">
+            <field name="name">Moneta AI Chat Message: manager</field>
+            <field name="model_id" ref="model_moneta_ai_chat_message"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
     </data>
 </odoo>
