@@ -36,7 +36,11 @@
         <field name="model">moneta.category</field>
         <field name="arch" type="xml">
             <search string="Search Categories">
-                <field name="name" string="Category" filter_domain="['|', ('name', 'ilike', self), ('parent_id.name', 'ilike', self)]"/>
+                <field name="display_name" string="Category"
+                       filter_domain="['|', '|', '|', ('display_name', 'ilike', self), ('name', 'ilike', self), ('parent_id.name', 'ilike', self), ('transfer_account_id.name', 'ilike', self)]"/>
+                <field name="name" string="Name"/>
+                <field name="parent_id" string="Parent Category"/>
+                <field name="transfer_account_id" string="Transfer Account"/>
                 <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
                 <field name="parent_id"/>
                 

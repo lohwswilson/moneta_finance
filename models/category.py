@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv.expression import AND
 
 
 class MonetaCategory(models.Model):
@@ -9,7 +10,10 @@ class MonetaCategory(models.Model):
     _rec_name = 'display_name'
     _order = 'is_transfer asc, name asc'
 
-    name = fields.Char(string='Category Name', required=True)
+    name = fields.Char(string='Category Name', required=True, index=True)
+    display_name = fields.Char(
+        string='Display Name', compute='_compute_display_name', store=True, index=True
+    )
     icon = fields.Char(string='Icon', default='📁', help='Emoji icon (e.g. 📁, 🔁, 🍔, 🏠, 🚗, 💰)')
     color = fields.Char(string='Color', default='#4A90E2')
     description = fields.Text(string='Description / Notes')
@@ -76,7 +80,7 @@ class MonetaCategory(models.Model):
                 if rec.is_income != is_inc:
                     rec.is_income = is_inc
 
-    @api.depends('name', 'parent_id.name', 'transfer_account_id.name')
+    @api.depends('name', 'icon', 'parent_id.name', 'transfer_account_id.name')
     def _compute_display_name(self):
         for rec in self:
             if rec.transfer_account_id:
@@ -106,6 +110,36 @@ class MonetaCategory(models.Model):
                 seen.add(current.id)
                 current = current.parent_id
         return True
+
+    @api.model
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        domain = list(domain or [])
+        if name:
+            search_domain = [
+                '|', '|', '|',
+                ('name', operator, name),
+                ('display_name', operator, name),
+                ('parent_id.name', operator, name),
+                ('transfer_account_id.name', operator, name),
+            ]
+            domain = AND([domain, search_domain])
+        return super()._name_search(name, domain=domain, operator=operator, limit=limit, order=order)
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = list(args or [])
+        if name:
+            name_domain = [
+                '|', '|', '|',
+                ('name', operator, name),
+                ('display_name', operator, name),
+                ('parent_id.name', operator, name),
+                ('transfer_account_id.name', operator, name),
+            ]
+            records = self.search(name_domain + args, limit=limit)
+        else:
+            records = self.search(args, limit=limit)
+        return [(r.id, r.display_name) for r in records]
 
     @api.model_create_multi
     def create(self, vals_list):
