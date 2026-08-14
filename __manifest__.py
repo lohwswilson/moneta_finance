@@ -55,7 +55,7 @@ Key Features & Capabilities:
     'author': 'Moneta Community',
     'website': 'https://github.com/lohwswilson/moneta_finance',
     'license': 'LGPL-3',
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'mail', 'account'],
     'pre_init_hook': '_pre_init_migrate_category_type',
     'post_init_hook': '_post_init_seed_defaults',
     'data': [
