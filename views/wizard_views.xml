@@ -164,7 +164,7 @@
         <field name="name">moneta.export.wizard.form</field>
         <field name="model">moneta.export.wizard</field>
         <field name="arch" type="xml">
-            <form string="Export Checkbook Register (QIF / CSV)">
+            <form string="Export Transaction Register (QIF / CSV)">
                 <sheet>
                     <field name="state" invisible="1"/>
                     <div invisible="state != 'choose'">
@@ -192,7 +192,7 @@
     </record>
 
     <record id="action_moneta_export_wizard" model="ir.actions.act_window">
-        <field name="name">Export Checkbook Register</field>
+        <field name="name">Export Transaction Register</field>
         <field name="res_model">moneta.export.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

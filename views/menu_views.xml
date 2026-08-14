@@ -27,7 +27,7 @@
               sequence="10"/>
 
     <menuitem id="menu_moneta_transactions"
-              name="Checkbook Register"
+              name="Transaction Register"
               parent="menu_moneta_banking_root"
               action="action_moneta_transaction"
               sequence="20"/>

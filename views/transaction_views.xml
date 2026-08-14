@@ -72,7 +72,7 @@
         <field name="name">moneta.transaction.list</field>
         <field name="model">moneta.transaction</field>
         <field name="arch" type="xml">
-            <list string="Checkbook Register" editable="bottom" default_order="transaction_date desc, id desc" decoration-muted="state == 'void'">
+            <list string="Transaction Register" editable="bottom" default_order="transaction_date desc, id desc" decoration-muted="state == 'void'">
                 <field name="transaction_date" string="Date"/>
                 <field name="check_number" string="Check #" optional="show"/>
                 <field name="account_id" string="Account"/>

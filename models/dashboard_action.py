@@ -8,14 +8,14 @@ class MonetaDashboardAction(models.Model):
     _description = 'Moneta Dynamic Dashboard Quick Action'
     _order = 'sequence asc, id asc'
 
-    name = fields.Char(string='Button Label', required=True, placeholder='e.g. Checkbook Register or Ask AI')
+    name = fields.Char(string='Button Label', required=True, placeholder='e.g. Transaction Register or Ask AI')
     sequence = fields.Integer(string='Order Sequence', default=10)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.user, required=True, index=True)
     active = fields.Boolean(string='Show on Dashboard', default=True)
 
     action_type = fields.Selection([
         ('accounts', 'Bank & Brokerage Accounts'),
-        ('register', 'Checkbook Register'),
+        ('register', 'Transaction Register'),
         ('ai_chat', 'Ask Moneta AI Advisor'),
         ('ai_receipt', 'Scan Receipt / Invoice (AI OCR)'),
         ('rebalance', '1-Click Portfolio Rebalancer'),
@@ -57,7 +57,7 @@ class MonetaDashboardAction(models.Model):
     def _onchange_action_type(self):
         defaults = {
             'accounts': ('Bank & Brokerage Accounts', 'fa-university', 'outline_primary'),
-            'register': ('Checkbook Register', 'fa-book', 'primary'),
+            'register': ('Transaction Register', 'fa-book', 'primary'),
             'ai_chat': ('Ask Moneta AI', 'fa-comments', 'outline_primary'),
             'ai_receipt': ('Scan Receipt OCR', 'fa-camera', 'outline_info'),
             'rebalance': ('1-Click Rebalancer', 'fa-balance-scale', 'outline_success'),
@@ -133,7 +133,7 @@ class MonetaDashboardAction(models.Model):
 
         defaults = [
             ('Accounts & Banks', 5, 'accounts', 'fa-university', 'outline_primary'),
-            ('Checkbook Register', 10, 'register', 'fa-book', 'primary'),
+            ('Transaction Register', 10, 'register', 'fa-book', 'primary'),
             ('Ask Moneta AI', 20, 'ai_chat', 'fa-comments', 'outline_primary'),
             ('Scan Receipt OCR', 30, 'ai_receipt', 'fa-camera', 'outline_info'),
             ('Financial Goals', 40, 'goals', 'fa-bullseye', 'outline_success'),

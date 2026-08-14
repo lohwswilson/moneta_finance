@@ -11,14 +11,14 @@ A premier personal wealth management, budgeting, and investment operating system
 
 Key Features & Capabilities:
 ----------------------------
-* **Banking & Checkbook Registers**:
+* **Banking & Transaction Registers**:
   - Real-time cumulative running balances in register list views.
   - 1-Click `Clr` status toggle directly on rows (Unreconciled / Cleared / Reconciled).
   - Payee QuickFill (auto-fills category, amount, memo, and tags from history).
   - Multi-line split transactions with mathematical sum verification.
   - Interactive Bank Statement Reconciliation Wizard with live $0.00 difference target.
   - Transaction bulk server actions: Batch Cleared, Reconcile, and Batch Categorize wizard.
-  - QIF / OFX / CSV file import and 1-click Checkbook Register QIF / CSV export wizard.
+  - QIF / OFX / CSV file import and 1-click Transaction Register QIF / CSV export wizard.
 
 * **Investments & Wealthfolio Portfolio Analytics**:
   - Ticker master, daily stock quotes, and multi-lot portfolio holdings with average cost basis.

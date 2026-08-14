@@ -9,7 +9,7 @@
                 <sheet>
                     <div class="oe_title">
                         <label for="name" string="Button Label"/>
-                        <h1><field name="name" placeholder="e.g. Checkbook Register or Ask Moneta AI"/></h1>
+                        <h1><field name="name" placeholder="e.g. Transaction Register or Ask Moneta AI"/></h1>
                     </div>
                     <group>
                         <group string="Action Target">

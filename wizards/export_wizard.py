@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 class MonetaExportWizard(models.TransientModel):
     _name = 'moneta.export.wizard'
-    _description = 'Moneta Account Checkbook Register Export Wizard'
+    _description = 'Moneta Account Transaction Register Export Wizard'
 
     account_ids = fields.Many2many('moneta.account', string='Accounts to Export', required=True)
     date_from = fields.Date(string='From Date')
