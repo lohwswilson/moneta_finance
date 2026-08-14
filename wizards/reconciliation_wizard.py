@@ -76,13 +76,23 @@ class MonetaReconciliationWizard(models.TransientModel):
                 }) for tx in txs
             ]
 
-    @api.depends('statement_ending_balance', 'opening_cleared_balance', 'line_ids.is_cleared', 'line_ids.amount')
+    @api.depends('statement_ending_balance', 'opening_cleared_balance',
+                 'line_ids.is_cleared', 'line_ids.amount', 'line_ids.transaction_id.state')
     def _compute_reconciliation_totals(self):
         for wiz in self:
-            cleared_lines = wiz.line_ids.filtered(lambda l: l.is_cleared)
             payments = 0.0
             deposits = 0.0
-            for line in cleared_lines:
+            # Only transactions that are *newly* cleared this session -- currently
+            # unreconciled and now ticked -- move the cleared balance. Moneta's
+            # account.cleared_balance already counts state in ('cleared',
+            # 'reconciled'), so the previously cleared / reconciled lines are
+            # already in `opening_cleared_balance`; summing every ticked line
+            # would double-count them, and basing the total on the raw
+            # opening_balance would drop the prior reconciled ones entirely.
+            for line in wiz.line_ids.filtered('is_cleared'):
+                tx = line.transaction_id
+                if not tx or tx.state != 'unreconciled':
+                    continue
                 amt = float(line.amount or 0.0)
                 if amt < 0:
                     payments += abs(amt)
@@ -90,11 +100,12 @@ class MonetaReconciliationWizard(models.TransientModel):
                     deposits += amt
             wiz.cleared_payments_total = round(payments, 4)
             wiz.cleared_deposits_total = round(deposits, 4)
-            
-            # Opening balance + sum of all cleared transactions
-            # (In Quicken, Cleared Balance = Opening Balance + Cleared Deposits - Cleared Payments)
-            wiz.cleared_balance = round(float(wiz.account_id.opening_balance or 0.0) + (deposits - payments), 4)
-            wiz.difference = round(float(wiz.statement_ending_balance or 0.0) - wiz.cleared_balance, 4)
+            # Cleared balance = opening cleared (prior cleared + reconciled baked
+            # in) + this session's newly-ticked deposits minus payments.
+            wiz.cleared_balance = round(
+                float(wiz.opening_cleared_balance or 0.0) + (deposits - payments), 4)
+            wiz.difference = round(
+                float(wiz.statement_ending_balance or 0.0) - wiz.cleared_balance, 4)
 
     def action_select_all(self):
         self.ensure_one()
