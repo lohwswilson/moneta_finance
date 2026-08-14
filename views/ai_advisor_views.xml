@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Advisor Chat Session Form View -->
+    <record id="view_moneta_ai_chat_form" model="ir.ui.view">
+        <field name="name">moneta.ai.chat.form</field>
+        <field name="model">moneta.ai.chat</field>
+        <field name="arch" type="xml">
+            <form string="Ask Moneta AI Wealth Advisor">
+                <sheet>
+                    <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+                        <div>
+                            <h2 class="fw-bold text-primary mb-0">
+                                <i class="fa fa-comments me-2"/>Ask Moneta AI Wealth Advisor
+                            </h2>
+                            <p class="text-muted small mb-0">Context-aware fiduciary financial advice powered by Gemini &amp; OpenAI.</p>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-3 mb-3 bg-light">
+                        <label for="pending_question" class="fw-bold text-dark mb-2">Ask anything about your money, budgets, or financial goals:</label>
+                        <div class="d-flex gap-2">
+                            <field name="pending_question" class="w-100" placeholder="e.g. Can I afford a $5,000 trip next summer? Or what are my top 3 areas to cut spending?"/>
+                            <button name="action_send_message" string="Send" type="object" class="btn btn-primary px-4 fw-bold shadow-sm" icon="fa-paper-plane"/>
+                        </div>
+                    </div>
+
+                    <div class="my-3">
+                        <h5 class="fw-bold text-dark mb-3"><i class="fa fa-history me-2 text-muted"/>Conversation History</h5>
+                        <field name="message_ids" readonly="1">
+                            <list no_label="1" default_order="create_date asc">
+                                <field name="create_date" string="Time" widget="datetime"/>
+                                <field name="role" widget="badge" decoration-primary="role == 'user'" decoration-success="role == 'assistant'"/>
+                                <field name="content" string="Message"/>
+                            </list>
+                        </field>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Advisor Chat List View -->
+    <record id="view_moneta_ai_chat_tree" model="ir.ui.view">
+        <field name="name">moneta.ai.chat.list</field>
+        <field name="model">moneta.ai.chat</field>
+        <field name="arch" type="xml">
+            <list string="AI Wealth Advisor Sessions">
+                <field name="name"/>
+                <field name="write_date" string="Last Active"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- AI Advisor Window Action -->
+    <record id="action_moneta_ai_chat" model="ir.actions.act_window">
+        <field name="name">Ask Moneta AI</field>
+        <field name="res_model">moneta.ai.chat</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Start a New AI Financial Advisory Session
+            </p>
+            <p>
+                Ask questions about your budget, savings rate, portfolio allocations, or future financial runway.
+            </p>
+        </field>
+    </record>
+
+    <!-- Executive Monthly AI Summary Form -->
+    <record id="view_moneta_ai_summary_form" model="ir.ui.view">
+        <field name="name">moneta.ai.summary.form</field>
+        <field name="model">moneta.ai.summary</field>
+        <field name="arch" type="xml">
+            <form string="Monthly Executive AI Financial Report">
+                <header>
+                    <button name="action_generate_narrative" string="Generate / Refresh AI Report" type="object" class="btn-primary" icon="fa-magic"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Report Title"/>
+                        <h1><field name="name" placeholder="e.g. August 2026 Financial Executive Summary"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="summary_month"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3 bg-white">
+                        <field name="executive_narrative" widget="html"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Monthly Summary Action -->
+    <record id="action_moneta_ai_summary" model="ir.actions.act_window">
+        <field name="name">Monthly AI Executive Reports</field>
+        <field name="res_model">moneta.ai.summary</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Res Config Settings View for Moneta AI -->
+    <record id="view_moneta_config_settings_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.moneta</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Moneta AI" string="Moneta Finance" name="moneta_finance">
+                    <block title="Generative AI Intelligence Engine (Gemini &amp; OpenAI)">
+                        <setting id="moneta_ai_setting" help="Configure Google Gemini or OpenAI API keys for AI Advisor Chat, Receipt Vision OCR, and Transaction Enrichment.">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="moneta_ai_provider" class="col-lg-3 o_light_label"/>
+                                    <field name="moneta_ai_provider" class="col-lg-9"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="moneta_ai_api_key" class="col-lg-3 o_light_label"/>
+                                    <field name="moneta_ai_api_key" password="True" class="col-lg-9" placeholder="AIzaSy... or sk-proj-..."/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="moneta_ai_model" class="col-lg-3 o_light_label"/>
+                                    <field name="moneta_ai_model" class="col-lg-9" placeholder="gemini-1.5-flash / gpt-4o-mini"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_moneta_config_settings" model="ir.actions.act_window">
+        <field name="name">Moneta Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'moneta_finance'}</field>
+    </record>
+</odoo>

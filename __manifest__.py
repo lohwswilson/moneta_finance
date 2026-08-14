@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Moneta Personal Finance',
-    'version': '18.0.4.1.0',
+    'version': '18.0.5.0.0',
     'category': 'Accounting/Finance',
     'summary': 'Personal finance & wealth OS: Quicken-style registers, investments, budgets, loans, Monte Carlo, real estate, vehicles, antiques & FIRE analytics.',
     'description': """
@@ -82,6 +82,8 @@ Key Features & Capabilities:
         'views/net_worth_views.xml',
         'views/wizard_views.xml',
         'views/insight_views.xml',
+        'views/ai_advisor_views.xml',
+        'views/ai_receipt_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

@@ -85,3 +85,13 @@ access_moneta_property_valuation_user,moneta.property.valuation.user,model_monet
 access_moneta_property_valuation_manager,moneta.property.valuation.manager,model_moneta_property_valuation,group_moneta_manager,1,1,1,1
 access_moneta_insight_user,moneta.insight.user,model_moneta_insight,group_moneta_user,1,1,1,1
 access_moneta_insight_manager,moneta.insight.manager,model_moneta_insight,group_moneta_manager,1,1,1,1
+access_moneta_ai_chat_user,moneta.ai.chat.user,model_moneta_ai_chat,group_moneta_user,1,1,1,1
+access_moneta_ai_chat_manager,moneta.ai.chat.manager,model_moneta_ai_chat,group_moneta_manager,1,1,1,1
+access_moneta_ai_chat_message_user,moneta.ai.chat.message.user,model_moneta_ai_chat_message,group_moneta_user,1,1,1,1
+access_moneta_ai_chat_message_manager,moneta.ai.chat.message.manager,model_moneta_ai_chat_message,group_moneta_manager,1,1,1,1
+access_moneta_ai_summary_user,moneta.ai.summary.user,model_moneta_ai_summary,group_moneta_user,1,1,1,1
+access_moneta_ai_summary_manager,moneta.ai.summary.manager,model_moneta_ai_summary,group_moneta_manager,1,1,1,1
+access_moneta_ai_receipt_wizard_user,moneta.ai.receipt.wizard.user,model_moneta_ai_receipt_wizard,group_moneta_user,1,1,1,1
+access_moneta_ai_receipt_wizard_manager,moneta.ai.receipt.wizard.manager,model_moneta_ai_receipt_wizard,group_moneta_manager,1,1,1,1
+access_moneta_ai_receipt_line_wizard_user,moneta.ai.receipt.line.wizard.user,model_moneta_ai_receipt_line_wizard,group_moneta_user,1,1,1,1
+access_moneta_ai_receipt_line_wizard_manager,moneta.ai.receipt.line.wizard.manager,model_moneta_ai_receipt_line_wizard,group_moneta_manager,1,1,1,1

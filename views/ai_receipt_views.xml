@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Receipt Vision OCR Wizard View -->
+    <record id="view_moneta_ai_receipt_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.ai.receipt.wizard.form</field>
+        <field name="model">moneta.ai.receipt.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Scan Receipt / Invoice with Vision AI">
+                <sheet>
+                    <field name="state" invisible="1"/>
+                    
+                    <!-- Upload State -->
+                    <div invisible="state != 'upload'">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-magic me-2"/>
+                            Upload a photo or PDF of your receipt or invoice. Moneta Vision AI will extract the merchant name, date, total amount, taxes, and itemized line items into split transactions.
+                        </div>
+                        <group>
+                            <field name="account_id" options="{'no_create': True}"/>
+                            <field name="receipt_file" filename="file_name" widget="binary"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                    </div>
+
+                    <!-- Review & Edit Parsed State -->
+                    <div invisible="state != 'review'">
+                        <div class="card border-0 shadow-sm rounded-3 bg-light p-3 mb-3">
+                            <h5 class="fw-bold text-success mb-2"><i class="fa fa-check-circle me-2"/>Receipt Scanned Successfully</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="merchant_name" class="fw-bold small text-muted">Merchant / Payee</label>
+                                    <field name="merchant_name" class="fw-bold fs-5"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="receipt_date" class="fw-bold small text-muted">Date</label>
+                                    <field name="receipt_date"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="total_amount" class="fw-bold small text-muted">Total Amount</label>
+                                    <field name="total_amount" widget="monetary" class="fw-bold text-danger fs-5"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <notebook>
+                            <page string="Itemized Split Lines" name="lines_page">
+                                <field name="line_ids">
+                                    <list editable="bottom">
+                                        <field name="description"/>
+                                        <field name="amount" widget="monetary"/>
+                                        <field name="category_suggestion"/>
+                                        <field name="currency_id" column_invisible="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_scan_receipt" string="Scan with Vision AI" type="object" class="btn-primary" invisible="state != 'upload'" icon="fa-eye"/>
+                    <button name="action_create_transaction" string="Create Checkbook Transaction" type="object" class="btn-primary" invisible="state != 'review'" icon="fa-check"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_ai_receipt_wizard" model="ir.actions.act_window">
+        <field name="name">Scan Receipt / Invoice (AI OCR)</field>
+        <field name="res_model">moneta.ai.receipt.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
