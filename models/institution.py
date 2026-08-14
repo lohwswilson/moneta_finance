@@ -31,6 +31,16 @@ class MonetaInstitution(models.Model):
     ], string='Statement CSV Profile', default='auto', required=True,
        help='Pre-configured parser profile for parsing statement exports and PayNow/GIRO narrations.')
 
+    # Custom Column Mapping Presets (1-based column indices; 0 = auto-detect)
+    csv_has_header = fields.Boolean(string='CSV Has Header Row', default=True)
+    csv_date_col = fields.Integer(string='Default Date Column', default=0)
+    csv_payee_col = fields.Integer(string='Default Payee Column', default=0)
+    csv_amount_col = fields.Integer(string='Default Amount Column', default=0)
+    csv_debit_col = fields.Integer(string='Default Debit Column', default=0)
+    csv_credit_col = fields.Integer(string='Default Credit Column', default=0)
+    csv_category_col = fields.Integer(string='Default Category Column', default=0)
+    csv_memo_col = fields.Integer(string='Default Memo Column', default=0)
+
     active = fields.Boolean(default=True)
 
     user_id = fields.Many2one(

@@ -18,6 +18,20 @@
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
+                    <group string="Custom CSV Column Mapping Presets" invisible="bank_profile != 'custom'">
+                        <group>
+                            <field name="csv_has_header"/>
+                            <field name="csv_date_col" help="1-based column number (e.g. 1)"/>
+                            <field name="csv_payee_col" help="1-based column number (e.g. 4)"/>
+                            <field name="csv_amount_col" help="1-based column number (0 if separate debit/credit)"/>
+                        </group>
+                        <group>
+                            <field name="csv_debit_col" help="1-based column number (e.g. 11)"/>
+                            <field name="csv_credit_col" help="1-based column number (e.g. 12)"/>
+                            <field name="csv_category_col" help="1-based column number"/>
+                            <field name="csv_memo_col" help="1-based column number"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>

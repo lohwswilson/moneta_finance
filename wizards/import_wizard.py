@@ -69,10 +69,20 @@ class MonetaImportWizard(models.TransientModel):
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
-        """Auto-populate bank profile from linked institution or account name."""
+        """Auto-populate bank profile & saved column presets from linked institution or account name."""
         if self.account_id:
-            if self.account_id.institution_id and self.account_id.institution_id.bank_profile:
-                self.bank_profile = self.account_id.institution_id.bank_profile
+            inst = self.account_id.institution_id
+            if inst and inst.bank_profile:
+                self.bank_profile = inst.bank_profile
+                if inst.bank_profile == 'custom' or (inst.csv_date_col or inst.csv_debit_col or inst.csv_amount_col):
+                    self.csv_has_header = inst.csv_has_header
+                    self.csv_date_col = inst.csv_date_col
+                    self.csv_payee_col = inst.csv_payee_col
+                    self.csv_amount_col = inst.csv_amount_col
+                    self.csv_debit_col = inst.csv_debit_col
+                    self.csv_credit_col = inst.csv_credit_col
+                    self.csv_category_col = inst.csv_category_col
+                    self.csv_memo_col = inst.csv_memo_col
             elif 'dbs' in self.account_id.name.lower() or 'posb' in self.account_id.name.lower():
                 self.bank_profile = 'dbs_posb'
             elif 'ocbc' in self.account_id.name.lower():
@@ -83,6 +93,42 @@ class MonetaImportWizard(models.TransientModel):
                 self.bank_profile = 'wise'
             elif 'revolut' in self.account_id.name.lower():
                 self.bank_profile = 'revolut'
+
+    def action_save_preset_to_institution(self):
+        """Save the currently modified column numbers permanently to the linked institution."""
+        self.ensure_one()
+        if not self.account_id:
+            raise UserError("Please select a target account first.")
+        inst = self.account_id.institution_id
+        if not inst:
+            # Create institution automatically if missing
+            inst = self.env['moneta.institution'].create({
+                'name': self.account_id.institution_name or self.account_id.name,
+                'bank_profile': 'custom',
+            })
+            self.account_id.institution_id = inst.id
+
+        inst.write({
+            'bank_profile': 'custom',
+            'csv_has_header': self.csv_has_header,
+            'csv_date_col': self.csv_date_col,
+            'csv_payee_col': self.csv_payee_col,
+            'csv_amount_col': self.csv_amount_col,
+            'csv_debit_col': self.csv_debit_col,
+            'csv_credit_col': self.csv_credit_col,
+            'csv_category_col': self.csv_category_col,
+            'csv_memo_col': self.csv_memo_col,
+        })
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Mapping Preset Saved',
+                'message': f"Custom column mapping saved permanently for {inst.name}.",
+                'type': 'success',
+                'sticky': False,
+            }
+        }
 
     def action_detect_csv(self):
         """Parse the uploaded CSV, apply bank profile or auto-detect mapping, and fill fields."""
