@@ -111,6 +111,24 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Moneta AI" string="Moneta Finance" name="moneta_finance">
+                    <block title="Currencies &amp; Exchange Rates" id="moneta_currency_block">
+                        <setting id="moneta_main_currency" string="Main Base Currency" help="Primary reporting currency for accounts, net worth calculations, and financial reports.">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="currency_id" string="Base Currency" class="col-lg-3 o_light_label"/>
+                                    <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}" class="col-lg-9"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="moneta_multi_currencies" string="Multi-Currencies" help="Enable foreign currency bank accounts, multi-currency transfers, and exchange rates.">
+                            <field name="group_multi_currency"/>
+                            <div class="content-group" invisible="not group_multi_currency">
+                                <div class="mt8">
+                                    <button name="%(base.action_currency_form)d" icon="fa-arrow-right" type="action" string="Manage Currencies &amp; Exchange Rates" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
                     <block title="Generative AI Intelligence Engine (Gemini &amp; OpenAI)">
                         <setting id="moneta_ai_setting" help="Configure Google Gemini or OpenAI API keys for AI Advisor Chat, Receipt Vision OCR, and Transaction Enrichment.">
                             <div class="content-group">
