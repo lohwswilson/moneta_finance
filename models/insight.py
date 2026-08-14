@@ -86,7 +86,7 @@ class MonetaInsight(models.TransientModel):
         ])
         for period in open_periods:
             for pc in period.period_category_ids:
-                if pc.is_income or pc.budgeted_amount <= 0:
+                if pc.budget_category_id.is_income or pc.budgeted_amount <= 0:
                     continue
                 spent = abs(float(pc.actual_amount or 0.0))
                 budgeted = float(pc.effective_budget or pc.budgeted_amount or 0.0)

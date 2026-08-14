@@ -105,6 +105,7 @@ class MonetaAIReceiptWizard(models.TransientModel):
         if not cat:
             cat = self.env['moneta.category'].search([('is_income', '=', False)], limit=1)
 
+        tx_amount = -abs(float(self.total_amount or 0.0))
         split_vals = []
         if self.line_ids:
             for l in self.line_ids:
@@ -115,8 +116,19 @@ class MonetaAIReceiptWizard(models.TransientModel):
                     'amount': -abs(float(l.amount or 0.0)),
                     'memo': l.description,
                 }))
+            # The parsed total usually includes tax while line items are
+            # pre-tax; the transaction split guard requires the splits to sum
+            # to the total, so a balancing line absorbs the difference
+            # (tax / rounding) instead of failing the create.
+            split_sum = sum(float(v[2]['amount']) for v in split_vals)
+            balance = round(tx_amount - split_sum, 4)
+            if abs(balance) > 0.01:
+                split_vals.append((0, 0, {
+                    'category_id': cat.id if cat else False,
+                    'amount': balance,
+                    'memo': 'Tax / Rounding',
+                }))
 
-        tx_amount = -abs(float(self.total_amount or 0.0))
         tx = self.env['moneta.transaction'].create({
             'account_id': self.account_id.id,
             'payee_id': payee.id if payee else False,

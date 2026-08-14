@@ -217,41 +217,65 @@ class MonetaCategory(models.Model):
     def unlink(self):
         Tx = self.env['moneta.transaction']
         for cat in self:
+            if cat.is_system:
+                raise ValidationError(
+                    f"Category '{cat.name}' is a system category and cannot be deleted."
+                )
+            if cat.child_ids:
+                raise ValidationError(
+                    f"Category '{cat.name}' has {len(cat.child_ids)} subcategor(ies). "
+                    "Delete or reassign them before deleting this category."
+                )
             cat_ids = (cat | cat._get_descendants()).ids
             in_use = Tx.search_count([('category_id', 'in', cat_ids)])
             if in_use:
-                raise UserError(
+                raise ValidationError(
                     f"Category '{cat.name}' is in use by {in_use} transaction(s). "
                     "Reassign or remove those transactions before deleting this category."
+                )
+            split_use = self.env['moneta.transaction.split'].search_count(
+                [('category_id', 'in', cat_ids)]
+            )
+            if split_use:
+                raise ValidationError(
+                    f"Category '{cat.name}' is used by {split_use} split line(s). "
+                    "Reassign or remove those split lines before deleting this category."
+                )
+            recurring_use = self.env['moneta.recurring.transaction'].search_count(
+                [('category_id', 'in', cat_ids)]
+            )
+            if recurring_use:
+                raise ValidationError(
+                    f"Category '{cat.name}' is used by {recurring_use} scheduled "
+                    "transaction(s). Reassign or remove them before deleting this category."
                 )
         return super().unlink()
 
     @api.model
     def _seed_user_defaults(self, user):
-        """Seed a standard set of categories for a new user if none exist."""
+        """Seed a standard set of categories for a new user if none exist.
+
+        Copies the install-time is_system template set (one copy per template,
+        preserving the parent/child structure) so every user starts from the
+        same tree. Templates are owned by the installer (SUPERUSER on a CLI
+        install), so the template search is not filtered by owner; the copies
+        themselves are owned by ``user`` and are not system categories.
+        """
         if self.search_count([('user_id', '=', user.id), ('is_transfer', '=', False)]) > 0:
             return
-        default_tree = [
-            ('Income', '💰', True, ['Salary', 'Investment Income', 'Dividends', 'Other Income']),
-            ('Housing', '🏠', False, ['Rent/Mortgage', 'Property Tax', 'Utilities', 'Maintenance']),
-            ('Transportation', '🚗', False, ['Auto Loan', 'Fuel', 'Public Transit', 'Parking & ERP', 'Car Insurance']),
-            ('Food & Dining', '🍔', False, ['Groceries', 'Restaurants', 'Coffee Shops']),
-            ('Personal & Family', '👨‍👩‍👧', False, ['Family Allowance', 'Education & Tuition', 'Clothing', 'Personal Care']),
-            ('Health & Medical', '🏥', False, ['Medical & Dental', 'Health Insurance', 'Pharmacy']),
-            ('Bills & Fees', '🧾', False, ['Phone & Internet', 'Bank Fees', 'Domestic Helper & Levy', 'Income Tax']),
-            ('Leisure & Recreation', '✈️', False, ['Travel & Vacation', 'Club Memberships', 'Entertainment']),
-        ]
-        for parent_name, icon, is_inc, children in default_tree:
-            parent = self.create({
-                'name': parent_name,
-                'icon': icon,
-                'is_income': is_inc,
+        templates = self.search([('is_system', '=', True)], order='id asc')
+        parent_map = {}
+        for tpl in templates:
+            vals = {
+                'name': tpl.name,
+                'icon': tpl.icon,
+                'color': tpl.color,
+                'is_income': tpl.is_income,
                 'user_id': user.id,
-            })
-            for child_name in children:
-                self.create({
-                    'name': child_name,
-                    'is_income': is_inc,
-                    'parent_id': parent.id,
-                    'user_id': user.id,
-                })
+            }
+            if tpl.parent_id:
+                parent_id = parent_map.get(tpl.parent_id.id)
+                if parent_id:
+                    vals['parent_id'] = parent_id
+            copy = self.create(vals)
+            parent_map[tpl.id] = copy.id
