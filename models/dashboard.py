@@ -112,7 +112,10 @@ class MonetaDashboard(models.TransientModel):
             elif acc.account_type in ('loan', 'mortgage', 'loc'):
                 loan_tot += abs(bal) if bal < 0 else bal
             elif acc.account_type in ('brokerage', 'retirement', 'crypto'):
-                inv_tot += bal if bal > 0 else bal
+                stock_mv = sum(float(h.market_value or 0.0) for h in acc.holding_ids)
+                tot_brokerage_raw = raw_bal + stock_mv
+                tot_brokerage_converted = acc_curr._convert(tot_brokerage_raw, base_curr, company, today) if acc_curr != base_curr else tot_brokerage_raw
+                inv_tot += tot_brokerage_converted
             else:
                 cash_tot += bal if bal > 0 else bal
 
@@ -285,8 +288,11 @@ class MonetaDashboard(models.TransientModel):
                     loan_tot += abs(bal) if bal < 0 else bal
                     liabilities += abs(bal) if bal < 0 else bal
                 elif acc.account_type in ('brokerage', 'retirement', 'crypto'):
-                    inv_tot += bal if bal > 0 else bal
-                    assets += bal if bal > 0 else bal
+                    stock_mv = sum(float(h.market_value or 0.0) for h in acc.holding_ids)
+                    tot_brokerage_raw = raw_bal + stock_mv
+                    tot_brokerage_converted = acc_curr._convert(tot_brokerage_raw, base_curr, company, today) if acc_curr != base_curr else tot_brokerage_raw
+                    inv_tot += tot_brokerage_converted
+                    assets += tot_brokerage_converted
                 else:
                     cash_tot += bal if bal > 0 else bal
                     assets += bal if bal > 0 else bal
@@ -457,7 +463,8 @@ class MonetaDashboard(models.TransientModel):
             ])
             liquid_total = 0.0
             for a in liquid_accs:
-                raw_b = max(float(a.current_balance or 0.0), 0.0)
+                stock_mv = sum(float(h.market_value or 0.0) for h in a.holding_ids) if a.account_type in ('brokerage', 'retirement', 'crypto') else 0.0
+                raw_b = max(float(a.current_balance or 0.0) + stock_mv, 0.0)
                 a_curr = a.currency_id or base_curr
                 b = a_curr._convert(raw_b, base_curr, company, today) if a_curr != base_curr else raw_b
                 liquid_total += b
