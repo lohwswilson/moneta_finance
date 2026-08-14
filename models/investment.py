@@ -1012,8 +1012,14 @@ class MonetaHolding(models.Model):
         today = fields.Date.context_today(self)
         # Touch the valuation fields so _compute_valuation runs once for the
         # whole batch and the per-holding values are cached for the loop.
-        _ = (self.market_value, self.cost_basis, self.basis_known,
-             self.price_known, self.unrealized_gain_percent)
+        # Use mapped(), not attribute access: self is a multi-record set here
+        # (a list view computes TWR / MWR for all holdings at once) and
+        # Field.__get__ raises "Expected singleton" on multi-record access.
+        self.mapped('market_value')
+        self.mapped('cost_basis')
+        self.mapped('basis_known')
+        self.mapped('price_known')
+        self.mapped('unrealized_gain_percent')
         for holding in self:
             fallback = holding.unrealized_gain_percent or 0.0
             qty = holding.quantity or 0.0

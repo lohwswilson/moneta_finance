@@ -225,3 +225,35 @@ class TestInvestment(MonetaTestBase):
         # 5 shares remain @ avg 100, priced 120 -> +20% unrealized -> fallback.
         self.assertAlmostEqual(round(h.mwr_percent, 2), 20.0, places=1)
         self.assertAlmostEqual(round(h.twr_percent, 2), 20.0, places=1)
+
+    def test_returns_compute_on_multi_record_batch(self):
+        # Regression: the dashboard list view reads TWR / MWR for all holdings
+        # at once, so the compute runs on the whole prefetch set. Touching the
+        # valuation fields via attribute access on that set raised
+        # "ValueError: Expected singleton: moneta.holding(1, 2, 3)".
+        acc = self._brokerage()
+        sec1 = self._security('AAPL')
+        sec2 = self._security('MSFT')
+        sec3 = self._security('GOOG')
+        today = fields.Date.context_today(self.env.user)
+        d0 = today - timedelta(days=365)
+        self._inv_tx(acc, sec1, 'buy', 10.0, 100.0, trade_date=d0)
+        self._inv_tx(acc, sec2, 'buy', 5.0, 200.0, trade_date=d0)
+        self._inv_tx(acc, sec3, 'buy', 2.0, 500.0, trade_date=d0)
+        self._price(sec1, 0, 120.0)
+        self._price(sec2, 0, 220.0)
+        self._price(sec3, 0, 550.0)
+        holdings = self.env['moneta.holding'].search([('account_id', '=', acc.id)])
+        self.assertEqual(len(holdings), 3)
+        holdings.invalidate_recordset()
+        # read() on the whole set is the list-view path: the first record's
+        # cache miss computes the field on the entire prefetch set at once.
+        # Expected returns: AAPL 10@100 -> 120 (+20%), MSFT 5@200 -> 220 (+10%),
+        # GOOG 2@500 -> 550 (+10%).
+        by_sec = {h.security_id.id: h.id for h in holdings}
+        expected = {by_sec[sec1.id]: 20.0, by_sec[sec2.id]: 10.0, by_sec[sec3.id]: 10.0}
+        vals = holdings.read(['twr_percent', 'mwr_percent'])
+        self.assertEqual(len(vals), 3)
+        for v in vals:
+            self.assertAlmostEqual(round(v['twr_percent'], 2), expected[v['id']], places=1)
+            self.assertAlmostEqual(round(v['mwr_percent'], 2), expected[v['id']], places=1)
