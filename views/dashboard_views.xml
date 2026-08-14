@@ -223,21 +223,19 @@
                             </h6>
                             <button name="action_customize_launchpad" type="object" class="btn btn-sm btn-outline-secondary rounded-pill px-3" string="⚙️ Customize Buttons" icon="fa-cog"/>
                         </div>
-                        <field name="action_launchpad_ids" mode="kanban" class="border-0" nolabel="1">
-                            <kanban class="o_kanban_dashboard border-0" create="false">
+                        <field name="action_launchpad_ids" mode="kanban" class="border-0 p-0 m-0" nolabel="1">
+                            <kanban class="moneta-launchpad-kanban border-0 p-0 m-0" create="false">
                                 <field name="name"/>
                                 <field name="icon"/>
                                 <field name="color_class"/>
                                 <field name="action_type"/>
                                 <templates>
                                     <t t-name="card">
-                                        <div class="p-1">
-                                            <button name="action_execute" type="object" 
-                                                    t-attf-class="btn w-100 text-start py-2 px-3 rounded-pill shadow-sm d-flex align-items-center gap-2 #{record.color_class.raw_value == 'primary' ? 'btn-primary text-white' : (record.color_class.raw_value == 'outline_success' ? 'btn-outline-success' : (record.color_class.raw_value == 'outline_danger' ? 'btn-outline-danger' : (record.color_class.raw_value == 'outline_warning' ? 'btn-outline-warning' : (record.color_class.raw_value == 'outline_info' ? 'btn-outline-info' : (record.color_class.raw_value == 'outline_dark' ? 'btn-outline-dark' : 'btn-outline-primary')))))}">
-                                                <i t-attf-class="fa #{record.icon.raw_value or 'fa-bolt'} fa-fw me-1"/>
-                                                <span class="fw-semibold"><field name="name"/></span>
-                                            </button>
-                                        </div>
+                                        <button name="action_execute" type="object" 
+                                                t-attf-class="btn moneta-launchpad-btn #{record.color_class.raw_value == 'primary' ? 'btn-primary text-white' : (record.color_class.raw_value == 'outline_success' ? 'btn-outline-success' : (record.color_class.raw_value == 'outline_danger' ? 'btn-outline-danger' : (record.color_class.raw_value == 'outline_warning' ? 'btn-outline-warning' : (record.color_class.raw_value == 'outline_info' ? 'btn-outline-info' : (record.color_class.raw_value == 'outline_dark' ? 'btn-outline-dark' : (record.color_class.raw_value == 'outline_secondary' ? 'btn-outline-secondary' : 'btn-outline-primary'))))))}">
+                                            <i t-attf-class="fa #{record.icon.raw_value or 'fa-bolt'} fa-fw"/>
+                                            <span class="fw-medium"><field name="name"/></span>
+                                        </button>
                                     </t>
                                 </templates>
                             </kanban>

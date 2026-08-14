@@ -59,3 +59,49 @@
 .moneta-pill-btn:hover {
     transform: translateY(-1px);
 }
+
+/* Dynamic Launchpad Seamless Button Flow (No Box / No Cards) */
+.moneta-launchpad-kanban.o_kanban_view,
+.moneta-launchpad-kanban .o_kanban_renderer {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.moneta-launchpad-kanban .o_kanban_record {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    min-width: unset !important;
+    flex: 0 0 auto !important;
+}
+
+.moneta-launchpad-kanban .o_kanban_record:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.moneta-launchpad-btn {
+    border-radius: 9999px !important;
+    padding: 0.45rem 1.1rem !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    transition: all 0.15s ease-in-out !important;
+    cursor: pointer !important;
+    border-width: 1.5px !important;
+}
+
+.moneta-launchpad-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
+}
