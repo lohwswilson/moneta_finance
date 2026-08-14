@@ -412,9 +412,9 @@ class MonetaHolding(models.Model):
     # Consumers treat the value as unknown when the flag is False.
     price_known = fields.Boolean(string='Price Known', compute='_compute_valuation')
     basis_known = fields.Boolean(string='Cost Basis Known', compute='_compute_valuation')
-    market_value = fields.Monetary(string='Market Value', compute='_compute_valuation')
-    cost_basis = fields.Monetary(string='Cost Basis', compute='_compute_valuation')
-    unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_valuation')
+    market_value = fields.Monetary(string='Market Value', compute='_compute_valuation', store=True, group_operator='sum')
+    cost_basis = fields.Monetary(string='Cost Basis', compute='_compute_valuation', store=True, group_operator='sum')
+    unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_valuation', store=True, group_operator='sum')
     unrealized_gain_percent = fields.Float(string='Gain / Loss (%)', compute='_compute_valuation', digits=(5, 2))
     asset_class = fields.Selection(related='security_id.asset_class', string='Asset Class', store=True)
     symbol = fields.Char(related='security_id.symbol', string='Symbol', store=True)

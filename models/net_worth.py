@@ -24,7 +24,7 @@ class MonetaAccountBalanceMonthly(models.Model):
     # their balance, liabilities their absolute value negated, respecting
     # exclude_from_net_worth. Computed on read (currency conversion at the
     # month's rate).
-    base_contribution = fields.Monetary(string='Base Currency Contribution', compute='_compute_base_contribution')
+    base_contribution = fields.Monetary(string='Base Currency Contribution', compute='_compute_base_contribution', store=True, group_operator='sum')
 
     currency_id = fields.Many2one('res.currency', related='account_id.currency_id', store=True, readonly=True)
     # Stored related owner so the per-user record rule resolves to the account owner.
