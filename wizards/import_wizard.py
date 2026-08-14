@@ -3,7 +3,7 @@ import base64
 import csv
 import io
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 
@@ -478,13 +478,27 @@ class MonetaImportWizard(models.TransientModel):
                             credit_val = float(c_c)
                     amount = credit_val - debit_val
 
-                # Deduplication check
+                # Deduplication check (Exact match & Fuzzy Transfer Counterpart match)
                 if self.skip_duplicates and amount != 0.0:
+                    rounded_amt = round(amount, 4)
                     existing = TxEnv.search([
                         ('account_id', '=', self.account_id.id),
                         ('transaction_date', '=', parsed_date),
-                        ('amount', '=', round(amount, 4)),
+                        ('amount', '=', rounded_amt),
                     ], limit=1)
+                    if not existing:
+                        # Check if a counterpart transfer was already created within +/- 3 days
+                        dt = datetime.strptime(parsed_date, '%Y-%m-%d').date() if isinstance(parsed_date, str) else parsed_date
+                        min_dt = (dt - timedelta(days=3)).strftime('%Y-%m-%d')
+                        max_dt = (dt + timedelta(days=3)).strftime('%Y-%m-%d')
+                        existing = TxEnv.search([
+                            ('account_id', '=', self.account_id.id),
+                            ('is_transfer', '=', True),
+                            ('amount', '=', rounded_amt),
+                            ('transaction_date', '>=', min_dt),
+                            ('transaction_date', '<=', max_dt),
+                        ], limit=1)
+
                     if existing:
                         skipped += 1
                         continue

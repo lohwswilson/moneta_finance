@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -242,12 +243,36 @@ class MonetaTransaction(models.Model):
                 "Cross-owner transfers are not supported in this MVP."
             )
         cat_source = self.env['moneta.category'].search([('transfer_account_id', '=', source_account.id)], limit=1)
-        counterpart = super().create([{
+        target_amount = round(-(source.amount or 0.0), 4)
+
+        # Smart Match: check if an unlinked transaction already exists in the target account
+        # (e.g. statements for both accounts were imported before setting the transfer category)
+        min_date = source.transaction_date - timedelta(days=3)
+        max_date = source.transaction_date + timedelta(days=3)
+        existing_match = self.search([
+            ('account_id', '=', target.id),
+            ('linked_transaction_id', '=', False),
+            ('amount', '=', target_amount),
+            ('transaction_date', '>=', min_date),
+            ('transaction_date', '<=', max_date),
+        ], order='transaction_date asc, id asc', limit=1)
+
+        if existing_match:
+            super(MonetaTransaction, existing_match).write({
+                'is_transfer': True,
+                'transfer_account_id': source_account.id,
+                'category_id': cat_source.id if cat_source else False,
+                'linked_transaction_id': source.id,
+            })
+            super(MonetaTransaction, source).write({'linked_transaction_id': existing_match.id})
+            return existing_match, False
+
+        counterpart = super(MonetaTransaction, self).create([{
             'account_id': target.id,
             'transaction_date': source.transaction_date,
             'payee_id': source.payee_id.id if source.payee_id else False,
             'category_id': cat_source.id if cat_source else False,
-            'amount': round(-(source.amount or 0.0), 4),
+            'amount': target_amount,
             'memo': source.memo,
             'state': source.state,
             'is_transfer': True,
@@ -255,10 +280,8 @@ class MonetaTransaction(models.Model):
             'linked_transaction_id': source.id,
             'user_id': target.user_id.id,
         }])
-        # Link the source back to its counterpart (super().write bypasses this
-        # override so no balance delta is re-triggered for the link itself).
-        super().write({'linked_transaction_id': counterpart.id})
-        return counterpart
+        super(MonetaTransaction, source).write({'linked_transaction_id': counterpart.id})
+        return counterpart, True
 
     def _propagate_to_counterpart(self, vals, batch_ids):
         """Mirror structural edits onto the linked counterpart leg (amount
@@ -344,8 +367,9 @@ class MonetaTransaction(models.Model):
         for rec, vals in zip(primary, vals_list):
             results.append(rec)
             if self._is_paired_transfer_vals(vals):
-                counterpart = rec._create_transfer_counterpart(rec)
-                results.append(counterpart)
+                counterpart, is_new = rec._create_transfer_counterpart(rec)
+                if is_new:
+                    results.append(counterpart)
         # Apply the balance delta for every created record (primary + counterpart).
         Account = self.env['moneta.account']
         for rec in results:
@@ -418,12 +442,13 @@ class MonetaTransaction(models.Model):
                 if rec.linked_transaction_id:
                     rec._propagate_to_counterpart(vals, batch_ids)
                 elif rec.is_transfer and rec.transfer_account_id and rec.transfer_account_id != rec.account_id:
-                    counterpart = rec._create_transfer_counterpart(rec)
-                    Account._apply_balance_delta(
-                        counterpart.account_id.id,
-                        counterpart._balance_contribution(),
-                        counterpart._cleared_contribution(),
-                    )
+                    counterpart, is_new = rec._create_transfer_counterpart(rec)
+                    if is_new:
+                        Account._apply_balance_delta(
+                            counterpart.account_id.id,
+                            counterpart._balance_contribution(),
+                            counterpart._cleared_contribution(),
+                        )
         self._invalidate_budget_actuals(self._collect_category_ids())
         for rec in self:
             self.env['moneta.account.balance.monthly']._rebuild_for_account(rec.account_id)

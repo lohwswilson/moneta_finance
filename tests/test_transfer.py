@@ -107,3 +107,37 @@ class TestTransfer(MonetaTestBase):
         # Both balances reverted.
         self.assertEqual(self._current_balance(acc1), 1000.0)
         self.assertEqual(self._current_balance(acc2), 0.0)
+
+    def test_transfer_orphan_matching(self):
+        acc1 = self._make_account(name='Checking', opening_balance=1000.0)
+        acc2 = self._make_account(name='Savings', opening_balance=500.0)
+        acc1._sync_transfer_category()
+        acc2._sync_transfer_category()
+        cat2 = self.env['moneta.category'].search([('transfer_account_id', '=', acc2.id)], limit=1)
+
+        # 1. Simulate CSV import where both accounts get their transactions first
+        tx1 = self.env['moneta.transaction'].create({
+            'account_id': acc1.id,
+            'amount': -350.0,
+            'memo': 'Bank Transfer to Savings',
+        })
+        tx2 = self.env['moneta.transaction'].create({
+            'account_id': acc2.id,
+            'amount': 350.0,
+            'memo': 'Deposit from Checking',
+        })
+
+        initial_tx_count = self.env['moneta.transaction'].search_count([('account_id', 'in', [acc1.id, acc2.id])])
+        self.assertEqual(initial_tx_count, 2)
+
+        # 2. Categorize tx1 as transfer to acc2
+        tx1.write({'category_id': cat2.id})
+
+        # Check that tx1 matched existing tx2 and no 3rd transaction was created!
+        final_tx_count = self.env['moneta.transaction'].search_count([('account_id', 'in', [acc1.id, acc2.id])])
+        self.assertEqual(final_tx_count, 2)
+        self.assertEqual(tx1.linked_transaction_id, tx2)
+        self.assertEqual(tx2.linked_transaction_id, tx1)
+        self.assertTrue(tx2.is_transfer)
+        self.assertEqual(self._current_balance(acc1), 650.0)
+        self.assertEqual(self._current_balance(acc2), 850.0)
