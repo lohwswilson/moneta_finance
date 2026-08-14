@@ -34,10 +34,63 @@ jobs:
   test:
     name: Odoo 18 Automated Unit Tests
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U odoo -d test_db"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Run Moneta Unit Tests in Docker
         run: |
-          docker run --rm -v $(pwd):/mnt/extra-addons/moneta_finance odoo:18.0 odoo             --addons-path=/mnt/extra-addons             --test-enable             --test-tags=moneta_finance             --stop-after-init             -d test_db || true
+          set -o pipefail
+          # GitHub Actions only blocks on service health when the job runs in a
+          # container; since these steps run on the host runner, wait for postgres
+          # ourselves before starting Odoo.
+          for i in $(seq 1 30); do
+            if docker run --rm --network host postgres:15 \
+              pg_isready -h 127.0.0.1 -p 5432 -U odoo -d test_db >/dev/null 2>&1; then
+              break
+            fi
+            echo "waiting for postgres to be ready... ($i)"
+            sleep 2
+          done
+          # NOTE: no `|| true` here — a failing test suite must fail the build.
+          # The repo root IS the module, so we mount it at a fixed
+          # /mnt/extra-addons/moneta_finance path and point addons_path at the
+          # parent so Odoo discovers it by name regardless of the repo name.
+          docker run --rm --network host \
+            -v "$PWD:/mnt/extra-addons/moneta_finance" \
+            -e HOST=127.0.0.1 \
+            -e PORT=5432 \
+            -e USER=odoo \
+            -e PASSWORD=odoo \
+            odoo:18.0 odoo \
+              --addons-path=/mnt/extra-addons \
+              -d test_db \
+              -i moneta_finance \
+              --test-enable \
+              --test-tags=/moneta_finance \
+              --stop-after-init \
+              --log-level=info \
+            2>&1 | tee /tmp/odoo-test.log
+
+      - name: Upload Odoo Test Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: odoo-test-log
+          path: /tmp/odoo-test.log
