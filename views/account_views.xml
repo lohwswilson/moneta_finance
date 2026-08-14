@@ -197,7 +197,7 @@
         </field>
     </record>
 
-    <!-- Premier Account Kanban View with Green, Blue, and Red Visual Cards -->
+    <!-- Premier Account Kanban View with Green, Blue, Purple (Credit Cards), and Red (Loans/Mortgages) -->
     <record id="view_moneta_account_kanban" model="ir.ui.view">
         <field name="name">moneta.account.kanban</field>
         <field name="model">moneta.account</field>
@@ -218,19 +218,21 @@
                 <field name="credit_limit"/>
                 <templates>
                     <t t-name="card">
-                        <t t-set="is_debt" t-value="['mortgage', 'loan', 'credit_card', 'loc'].includes(record.account_type.raw_value)"/>
+                        <t t-set="is_cc" t-value="['credit_card', 'loc'].includes(record.account_type.raw_value)"/>
+                        <t t-set="is_loan" t-value="['mortgage', 'loan'].includes(record.account_type.raw_value)"/>
                         <t t-set="is_cash" t-value="['checking', 'chequing', 'savings', 'cash'].includes(record.account_type.raw_value)"/>
                         <t t-set="is_inv" t-value="['brokerage', 'retirement', 'crypto'].includes(record.account_type.raw_value)"/>
                         
-                        <t t-set="card_style" t-value="is_debt ? 'border: 2px solid #E74C3C !important; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%); min-height: 190px;' : (is_cash ? 'border: 2px solid #2ECC71 !important; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%); min-height: 190px;' : 'border: 2px solid #3498DB !important; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%); min-height: 190px;')"/>
-                        <t t-set="badge_class" t-value="is_debt ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : 'bg-primary text-white')"/>
-                        <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value == 'credit_card' ? 'fa-credit-card' : (record.account_type.raw_value in ['brokerage', 'retirement', 'crypto'] ? 'fa-line-chart' : (record.account_type.raw_value == 'savings' ? 'fa-money' : 'fa-bank'))))"/>
+                        <t t-set="card_style" t-value="is_cc ? 'border: 2px solid #8E44AD !important; background: linear-gradient(180deg, #F4ECF7 0%, #FFFFFF 100%); min-height: 190px;' : (is_loan ? 'border: 2px solid #E74C3C !important; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%); min-height: 190px;' : (is_cash ? 'border: 2px solid #2ECC71 !important; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%); min-height: 190px;' : 'border: 2px solid #3498DB !important; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%); min-height: 190px;'))"/>
+                        <t t-set="badge_class" t-value="is_cc ? 'text-white' : (is_loan ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : 'bg-primary text-white'))"/>
+                        <t t-set="badge_style" t-value="is_cc ? 'background-color: #8E44AD !important;' : ''"/>
+                        <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value in ['credit_card', 'loc'] ? 'fa-credit-card' : (record.account_type.raw_value in ['brokerage', 'retirement', 'crypto'] ? 'fa-line-chart' : (record.account_type.raw_value == 'savings' ? 'fa-money' : 'fa-bank'))))"/>
 
                         <div class="oe_kanban_global_click o_kanban_card rounded-4 shadow-sm p-3 mb-2 d-flex flex-column justify-content-between h-100" t-att-style="card_style">
                             <!-- Card Top Header -->
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div class="d-flex align-items-center">
-                                    <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center #{badge_class} shadow-sm" style="width: 36px; height: 36px;">
+                                    <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center #{badge_class} shadow-sm" t-att-style="badge_style + ' width: 36px; height: 36px;'">
                                         <i t-attf-class="fa #{icon_name} fa-lg"/>
                                     </div>
                                     <div>
@@ -241,7 +243,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center gap-1">
-                                    <span t-attf-class="badge rounded-pill text-uppercase px-2 py-1 #{badge_class}">
+                                    <span t-attf-class="badge rounded-pill text-uppercase px-2 py-1 #{badge_class}" t-att-style="badge_style">
                                         <field name="account_type"/>
                                     </span>
                                     <field name="is_favourite" widget="boolean_favorite" nolabel="1"/>
@@ -270,11 +272,11 @@
                                         </span>
                                     </div>
                                 </t>
-                                <!-- If Credit Card & Debt (RED) -->
-                                <t t-elif="record.account_type.raw_value == 'credit_card'">
+                                <!-- If Credit Card (PURPLE) -->
+                                <t t-elif="is_cc">
                                     <div class="d-flex justify-content-between align-items-baseline mb-1">
                                         <span class="text-muted small fw-semibold">Card Balance:</span>
-                                        <h4 class="mb-0 fw-bold text-danger">
+                                        <h4 class="mb-0 fw-bold" style="color: #8E44AD !important;">
                                             <field name="current_balance" widget="monetary"/>
                                         </h4>
                                     </div>
@@ -284,7 +286,7 @@
                                     </div>
                                 </t>
                                 <!-- If Mortgage / Loans (RED) -->
-                                <t t-elif="is_debt">
+                                <t t-elif="is_loan">
                                     <div class="d-flex justify-content-between align-items-baseline mb-1">
                                         <span class="text-muted small fw-semibold">Principal Debt:</span>
                                         <h4 class="mb-0 fw-bold text-danger">
@@ -299,7 +301,7 @@
                                 <!-- Standard Bank Accounts & Cash (GREEN) -->
                                 <t t-else="">
                                     <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small fw-semibold">Current Balance:</span>
+                                        <span class="text-muted small fw-semibold">Available Cash:</span>
                                         <h4 class="mb-0 fw-bold text-success">
                                             <field name="current_balance" widget="monetary"/>
                                         </h4>
@@ -320,6 +322,12 @@
                                     <button name="action_view_transactions" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-muted">
                                         <i class="fa fa-list me-1"/>Cash Register
                                     </button>
+                                </t>
+                                <t t-elif="is_cc">
+                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold" style="border-color: #8E44AD; color: #8E44AD;">
+                                        <i class="fa fa-list me-1"/>Statement
+                                    </button>
+                                    <span class="text-muted small"><field name="next_payment_due_date" widget="date"/></span>
                                 </t>
                                 <t t-else="">
                                     <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold">
