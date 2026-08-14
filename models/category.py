@@ -57,6 +57,33 @@ class MonetaCategory(models.Model):
         default=lambda self: self.env.user, required=True, index=True,
     )
     active = fields.Boolean(default=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    transaction_count = fields.Integer(string='Transactions Count', compute='_compute_transaction_stats')
+    total_amount = fields.Monetary(string='Total Volume', currency_field='currency_id', compute='_compute_transaction_stats')
+
+    def _compute_transaction_stats(self):
+        for rec in self:
+            rec_id = rec._origin.id if hasattr(rec, '_origin') and rec._origin.id else rec.id
+            if not rec_id or not isinstance(rec_id, int):
+                rec.transaction_count = 0
+                rec.total_amount = 0.0
+                continue
+            cat_ids = self.search([('id', 'child_of', rec_id)]).ids
+            txs = self.env['moneta.transaction'].search([('category_id', 'in', cat_ids), ('state', '!=', 'void')])
+            rec.transaction_count = len(txs)
+            rec.total_amount = sum(txs.mapped('amount'))
+
+    def action_view_transactions(self):
+        self.ensure_one()
+        cat_ids = self.search([('id', 'child_of', self.id)]).ids
+        return {
+            'name': f'Transactions - {self.display_name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'moneta.transaction',
+            'view_mode': 'list,form',
+            'domain': [('category_id', 'in', cat_ids)],
+            'context': {'default_category_id': self.id},
+        }
 
     @api.depends('transfer_account_id')
     def _compute_is_transfer(self):

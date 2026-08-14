@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Category Form View -->
+    <!-- Category Form View with Transactions and Subcategories -->
     <record id="view_moneta_category_form" model="ir.ui.view">
         <field name="name">moneta.category.form</field>
         <field name="model">moneta.category</field>
         <field name="arch" type="xml">
             <form string="Transaction Category">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-list-alt">
+                            <field name="transaction_count" widget="statinfo" string="Transactions"/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="name"/>
@@ -22,9 +27,36 @@
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
-                    <group string="Details">
-                        <field name="description" nolabel="1" colspan="2"/>
-                    </group>
+                    
+                    <notebook>
+                        <page string="Transactions" name="transactions_page">
+                            <field name="transaction_ids" readonly="1">
+                                <list string="Transactions" default_order="transaction_date desc, id desc">
+                                    <field name="transaction_date"/>
+                                    <field name="account_id"/>
+                                    <field name="payee_id"/>
+                                    <field name="memo"/>
+                                    <field name="amount" widget="monetary" sum="Total"
+                                           decoration-danger="amount &lt; 0"
+                                           decoration-success="amount &gt; 0"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Subcategories" name="subcategories_page" invisible="not child_ids">
+                            <field name="child_ids" readonly="1">
+                                <list string="Subcategories">
+                                    <field name="icon" string=" " width="30px"/>
+                                    <field name="name"/>
+                                    <field name="category_type" widget="badge"/>
+                                    <field name="transaction_count" string="Transactions"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes_page">
+                            <field name="description" placeholder="Category notes or budgeting guidelines..."/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -71,7 +103,10 @@
                 <field name="icon" string=" " width="30px"/>
                 <field name="display_name" string="Category Name"/>
                 <field name="category_type" string="Type" widget="badge" decoration-success="category_type == 'income'" decoration-danger="category_type == 'expense'" decoration-info="category_type == 'transfer'"/>
+                <field name="transaction_count" string="Transactions"/>
+                <field name="total_amount" string="Total Volume" widget="monetary" optional="show"/>
                 <field name="is_income" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
                 <field name="user_id" optional="show" groups="moneta_finance.group_moneta_manager"/>
                 <field name="is_system" widget="boolean" optional="hide"/>
             </list>
