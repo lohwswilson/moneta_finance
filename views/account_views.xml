@@ -197,7 +197,7 @@
         </field>
     </record>
 
-    <!-- Premier Account Kanban View with Green, Blue, Purple (Credit Cards), and Red (Loans/Mortgages) -->
+    <!-- Premier Account Kanban View with Uniform Height & Symmetric Color-Coded Design -->
     <record id="view_moneta_account_kanban" model="ir.ui.view">
         <field name="name">moneta.account.kanban</field>
         <field name="model">moneta.account</field>
@@ -223,121 +223,115 @@
                         <t t-set="is_cash" t-value="['checking', 'chequing', 'savings', 'cash'].includes(record.account_type.raw_value)"/>
                         <t t-set="is_inv" t-value="['brokerage', 'retirement', 'crypto'].includes(record.account_type.raw_value)"/>
                         
-                        <t t-set="card_style" t-value="is_cc ? 'border: 2px solid #8E44AD !important; background: linear-gradient(180deg, #F4ECF7 0%, #FFFFFF 100%); min-height: 190px;' : (is_loan ? 'border: 2px solid #E74C3C !important; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%); min-height: 190px;' : (is_cash ? 'border: 2px solid #2ECC71 !important; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%); min-height: 190px;' : 'border: 2px solid #3498DB !important; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%); min-height: 190px;'))"/>
+                        <t t-set="card_border" t-value="is_cc ? '#8E44AD' : (is_loan ? '#E74C3C' : (is_cash ? '#2ECC71' : '#3498DB'))"/>
+                        <t t-set="card_bg" t-value="is_cc ? 'linear-gradient(180deg, #F4ECF7 0%, #FFFFFF 100%)' : (is_loan ? 'linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%)' : (is_cash ? 'linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%)' : 'linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%)'))"/>
                         <t t-set="badge_class" t-value="is_cc ? 'text-white' : (is_loan ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : 'bg-primary text-white'))"/>
                         <t t-set="badge_style" t-value="is_cc ? 'background-color: #8E44AD !important;' : ''"/>
                         <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value in ['credit_card', 'loc'] ? 'fa-credit-card' : (record.account_type.raw_value in ['brokerage', 'retirement', 'crypto'] ? 'fa-line-chart' : (record.account_type.raw_value == 'savings' ? 'fa-money' : 'fa-bank'))))"/>
 
-                        <div class="oe_kanban_global_click o_kanban_card rounded-4 shadow-sm p-3 mb-2 d-flex flex-column justify-content-between h-100" t-att-style="card_style">
-                            <!-- Card Top Header -->
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div class="d-flex align-items-center">
-                                    <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center #{badge_class} shadow-sm" t-att-style="badge_style + ' width: 36px; height: 36px;'">
-                                        <i t-attf-class="fa #{icon_name} fa-lg"/>
+                        <div class="oe_kanban_global_click o_kanban_card rounded-4 shadow-sm p-3 mb-3 d-flex flex-column justify-content-between" 
+                             t-att-style="'border: 2px solid ' + card_border + ' !important; background: ' + card_bg + ' !important; height: 185px; min-height: 185px; max-height: 185px; box-sizing: border-box;'">
+                            
+                            <!-- 1. Header (Fixed Height: 44px) -->
+                            <div class="d-flex justify-content-between align-items-start" style="height: 44px; overflow: hidden;">
+                                <div class="d-flex align-items-center me-2 text-truncate">
+                                    <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center flex-shrink-0 #{badge_class} shadow-xs" 
+                                         t-att-style="badge_style + ' width: 34px; height: 34px;'">
+                                        <i t-attf-class="fa #{icon_name}"/>
                                     </div>
-                                    <div>
-                                        <strong class="fs-6 text-dark fw-bold"><field name="name"/></strong>
-                                        <div class="text-muted small" t-if="record.institution_name.value">
-                                            <i class="fa fa-university me-1"/> <field name="institution_name"/>
+                                    <div class="text-truncate">
+                                        <strong class="fs-6 text-dark fw-bold d-block text-truncate" t-att-title="record.name.value"><field name="name"/></strong>
+                                        <div class="text-muted small text-truncate" style="font-size: 0.78rem;">
+                                            <i class="fa fa-university me-1" t-if="record.institution_name.value"/><field name="institution_name"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center gap-1">
-                                    <span t-attf-class="badge rounded-pill text-uppercase px-2 py-1 #{badge_class}" t-att-style="badge_style">
+                                <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                                    <span t-attf-class="badge rounded-pill text-uppercase px-2 py-1 #{badge_class}" t-att-style="badge_style + ' font-size: 0.68rem;'">
                                         <field name="account_type"/>
                                     </span>
                                     <field name="is_favourite" widget="boolean_favorite" nolabel="1"/>
                                 </div>
                             </div>
 
-                            <!-- Financial Numbers Hero -->
-                            <div class="my-2 p-2 rounded-3 bg-white bg-opacity-75 shadow-xs border">
-                                <!-- If Brokerage & Investments (BLUE) -->
+                            <!-- 2. Financial Value Hero (Fixed Height: 65px) -->
+                            <div class="px-3 py-2 rounded-3 bg-white bg-opacity-80 shadow-xs border d-flex flex-column justify-content-center" 
+                                 style="height: 65px; box-sizing: border-box;">
+                                <!-- Brokerage & Investments (BLUE) -->
                                 <t t-if="is_inv">
-                                    <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small fw-semibold">Stock Market Value:</span>
-                                        <h4 class="mb-0 fw-bold text-primary">
-                                            <field name="total_portfolio_market_value" widget="monetary"/>
-                                        </h4>
+                                    <div class="d-flex justify-content-between align-items-baseline">
+                                        <span class="text-muted small fw-semibold" style="font-size: 0.78rem;">Portfolio Value:</span>
+                                        <h4 class="mb-0 fw-bold text-primary fs-5"><field name="total_portfolio_market_value" widget="monetary"/></h4>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-baseline small text-muted">
-                                        <span>Cash Balance:</span>
-                                        <span class="fw-semibold text-dark"><field name="current_balance" widget="monetary"/></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-baseline small mt-1" t-if="record.total_portfolio_gain.raw_value">
-                                        <span>Total Return:</span>
-                                        <span t-attf-class="fw-bold {{ record.total_portfolio_gain.raw_value &gt;= 0 ? 'text-success' : 'text-danger' }}">
-                                            <t t-if="record.total_portfolio_gain.raw_value &gt; 0">+</t><field name="total_portfolio_gain" widget="monetary"/>
-                                            (<field name="total_portfolio_gain_percent"/>%)
+                                    <div class="d-flex justify-content-between align-items-center mt-1 text-muted" style="font-size: 0.75rem;">
+                                        <span>Cash: <strong class="text-dark"><field name="current_balance" widget="monetary"/></strong></span>
+                                        <span t-if="record.total_portfolio_gain.raw_value" 
+                                              t-attf-class="fw-bold {{ record.total_portfolio_gain.raw_value &gt;= 0 ? 'text-success' : 'text-danger' }}">
+                                            <t t-if="record.total_portfolio_gain.raw_value &gt; 0">+</t><field name="total_portfolio_gain_percent"/>%
                                         </span>
                                     </div>
                                 </t>
-                                <!-- If Credit Card (PURPLE) -->
+                                <!-- Credit Cards (PURPLE) -->
                                 <t t-elif="is_cc">
-                                    <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small fw-semibold">Card Balance:</span>
-                                        <h4 class="mb-0 fw-bold" style="color: #8E44AD !important;">
-                                            <field name="current_balance" widget="monetary"/>
-                                        </h4>
+                                    <div class="d-flex justify-content-between align-items-baseline">
+                                        <span class="text-muted small fw-semibold" style="font-size: 0.78rem;">Card Balance:</span>
+                                        <h4 class="mb-0 fw-bold fs-5" style="color: #8E44AD !important;"><field name="current_balance" widget="monetary"/></h4>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-baseline small text-muted" t-if="record.credit_limit.raw_value">
-                                        <span>Credit Limit:</span>
-                                        <span class="fw-semibold text-dark"><field name="credit_limit" widget="monetary"/></span>
+                                    <div class="d-flex justify-content-between align-items-center mt-1 text-muted" style="font-size: 0.75rem;">
+                                        <span>Limit: <strong class="text-dark"><field name="credit_limit" widget="monetary"/></strong></span>
+                                        <span class="badge rounded-pill bg-light text-dark border">Statement Cycle</span>
                                     </div>
                                 </t>
-                                <!-- If Mortgage / Loans (RED) -->
+                                <!-- Mortgages & Loans (RED) -->
                                 <t t-elif="is_loan">
-                                    <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small fw-semibold">Principal Debt:</span>
-                                        <h4 class="mb-0 fw-bold text-danger">
-                                            <field name="current_balance" widget="monetary"/>
-                                        </h4>
+                                    <div class="d-flex justify-content-between align-items-baseline">
+                                        <span class="text-muted small fw-semibold" style="font-size: 0.78rem;">Principal Debt:</span>
+                                        <h4 class="mb-0 fw-bold text-danger fs-5"><field name="current_balance" widget="monetary"/></h4>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-baseline small text-muted">
-                                        <span>Status:</span>
-                                        <span class="badge bg-danger-subtle text-danger">Active Loan</span>
+                                    <div class="d-flex justify-content-between align-items-center mt-1 text-muted" style="font-size: 0.75rem;">
+                                        <span>Liability Status:</span>
+                                        <span class="badge bg-danger-subtle text-danger fw-semibold">Active Loan</span>
                                     </div>
                                 </t>
-                                <!-- Standard Bank Accounts & Cash (GREEN) -->
+                                <!-- Cash & Bank Accounts (GREEN) -->
                                 <t t-else="">
-                                    <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small fw-semibold">Available Cash:</span>
-                                        <h4 class="mb-0 fw-bold text-success">
-                                            <field name="current_balance" widget="monetary"/>
-                                        </h4>
+                                    <div class="d-flex justify-content-between align-items-baseline">
+                                        <span class="text-muted small fw-semibold" style="font-size: 0.78rem;">Available Cash:</span>
+                                        <h4 class="mb-0 fw-bold text-success fs-5"><field name="current_balance" widget="monetary"/></h4>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-baseline small text-muted">
-                                        <span>Cleared Balance:</span>
-                                        <span class="fw-semibold text-dark"><field name="cleared_balance" widget="monetary"/></span>
+                                    <div class="d-flex justify-content-between align-items-center mt-1 text-muted" style="font-size: 0.75rem;">
+                                        <span>Cleared: <strong class="text-dark"><field name="cleared_balance" widget="monetary"/></strong></span>
+                                        <span class="badge bg-success-subtle text-success fw-semibold">Active Bank</span>
                                     </div>
                                 </t>
                             </div>
 
-                            <!-- Card Footer Quick Links -->
-                            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-auto">
+                            <!-- 3. Bottom Action Row (Fixed Height: 30px) -->
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="height: 30px;">
                                 <t t-if="is_inv">
-                                    <button name="action_view_holdings" type="object" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold">
+                                    <button name="action_view_holdings" type="object" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold" style="font-size: 0.78rem;">
                                         <i class="fa fa-pie-chart me-1"/>Holdings (<field name="holding_count"/>)
                                     </button>
-                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-muted">
-                                        <i class="fa fa-list me-1"/>Cash Register
+                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-muted" style="font-size: 0.78rem;">
+                                        <i class="fa fa-list me-1"/>Register
                                     </button>
                                 </t>
                                 <t t-elif="is_cc">
-                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold" style="border-color: #8E44AD; color: #8E44AD;">
-                                        <i class="fa fa-list me-1"/>Statement
+                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold" style="border-color: #8E44AD; color: #8E44AD; font-size: 0.78rem;">
+                                        <i class="fa fa-credit-card me-1"/>Transactions
                                     </button>
-                                    <span class="text-muted small"><field name="next_payment_due_date" widget="date"/></span>
+                                    <span class="text-muted" style="font-size: 0.75rem;"><field name="next_payment_due_date" widget="date"/></span>
                                 </t>
                                 <t t-else="">
-                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold">
+                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold" style="font-size: 0.78rem;">
                                         <i class="fa fa-list me-1"/>Transactions
                                     </button>
-                                    <button name="action_reconcile_statement" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-primary fw-semibold" t-if="is_cash">
+                                    <button name="action_reconcile_statement" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-primary fw-semibold" style="font-size: 0.78rem;" t-if="is_cash">
                                         <i class="fa fa-check-square-o me-1"/>Reconcile
                                     </button>
                                 </t>
                             </div>
+
                         </div>
                     </t>
                 </templates>
