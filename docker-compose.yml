@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    image: odoo:18.0
+    container_name: moneta_odoo18
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - .:/mnt/extra-addons/moneta_finance
+    command: -- --addons-path=/mnt/extra-addons -d moneta_dev -i moneta_finance --dev=all
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    container_name: moneta_db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    restart: unless-stopped
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:

@@ -6,11 +6,14 @@
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg?style=for-the-badge)](LICENSE)
 [![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
 [![Live Market Quotes](https://img.shields.io/badge/Market%20Quotes-Yahoo%20Finance-0284c7.svg?style=for-the-badge&logo=yahoo)](https://finance.yahoo.com)
-[![Test Suite](https://img.shields.io/badge/Test%20Suite-Passing%20(100%25)-success.svg?style=for-the-badge)](tests/)
+[![CI / Test Suite](https://github.com/lohwswilson/moneta_finance/actions/workflows/ci.yml/badge.svg?branch=18.0)](https://github.com/lohwswilson/moneta_finance/actions)
+[![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
 
 **A World-Class Personal Wealth, Banking, and Investment Operating System built natively for Odoo 18.**
 
 *Combining the financial depth of Quicken Premier, the modern design of Maybe & Copilot Money, and the enterprise power of Odoo.*
+
+[Explore Documentation](docs/01_GETTING_STARTED.md) · [View Roadmap](ROADMAP.md) · [Report Bug](https://github.com/lohwswilson/moneta_finance/issues) · [Request Feature](https://github.com/lohwswilson/moneta_finance/issues)
 
 </div>
 
@@ -26,6 +29,33 @@
 * 🤖 **AI Advisor & Smart Insights**: Automated financial health audits, cash flow leak detection, and actionable advisory recommendations.
 * 🎲 **1,000-Path Monte Carlo Wealth Simulator**: Stochastic retirement projections with $P_{10}/P_{50}/P_{90}$ percentile bands.
 * 🔒 **Multi-User Household Privacy**: Isolated records with granular joint account sharing and emergency digital estate access.
+
+---
+
+## ⚡ Quickstart (Choose One)
+
+### Option A: 30-Second Docker Setup (Fastest)
+```bash
+git clone https://github.com/lohwswilson/moneta_finance.git
+cd moneta_finance
+docker compose up -d
+```
+Access Odoo at `http://localhost:8069` (login: `admin` / `admin`).
+
+### Option B: Native Odoo 18 Addon
+1. Install Python dependencies:
+   ```bash
+   pip install yfinance pandas numpy matplotlib
+   ```
+2. Clone into your Odoo addons path:
+   ```bash
+   cd /path/to/your/custom_addons
+   git clone -b 18.0 https://github.com/lohwswilson/moneta_finance.git
+   ```
+3. Install or update the module in Odoo:
+   ```bash
+   ./odoo-bin -c odoo.conf -d <your_database> -i moneta_finance
+   ```
 
 ---
 
@@ -46,23 +76,27 @@ Explore our in-depth guides in the [`docs/`](docs/) directory:
 
 ---
 
-## ⚡ Quick Installation
+## 🗺️ Product Roadmap & Future Features
 
-### 1. Install Dependencies
-```bash
-pip install yfinance pandas numpy matplotlib
-```
+We have an active product roadmap with exciting upcoming milestones:
+* 🏦 **Phase 2**: Open Banking & Live Bank Sync (Plaid, Salt Edge, SimpleFIN)
+* 📊 **Phase 3**: Global Tax Packs (Singapore CPF/IRAS, US 1099, UK HMRC)
+* 🪙 **Phase 4**: Crypto Exchange API Sync & Commodities Tracking
+* 📱 **Phase 5**: Mobile Progressive Web App (PWA) & Offline Expense Logging
+* 🤖 **Phase 6**: Autonomous Financial Copilot & 90-Day Predictive Forecasting
 
-### 2. Clone into Odoo Addons
-```bash
-cd /path/to/your/custom_addons
-git clone -b 18.0 https://github.com/lohwswilson/moneta_finance.git
-```
+Check out [`ROADMAP.md`](ROADMAP.md) to see the full vision and contribute!
 
-### 3. Install Module in Odoo
-```bash
-./odoo-bin -c odoo.conf -d <your_database> -i moneta_finance
-```
+---
+
+## 🤝 Contributing & Community
+
+We love contributions! Check out [`CONTRIBUTING.md`](CONTRIBUTING.md) to learn how to:
+* Set up your local environment
+* Follow our Conventional Commits convention
+* Submit bug fixes and feature pull requests
+
+Please also review our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
 
