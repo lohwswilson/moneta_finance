@@ -7,20 +7,7 @@
         <field name="arch" type="xml">
             <form string="Personal Finance Command Center" class="o_moneta_dashboard">
                 <sheet>
-                    <!-- Header Banner with Refresh -->
-                    <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
-                        <div>
-                            <h2 class="fw-bold mb-0 text-dark">
-                                <span class="me-2">💎</span>Moneta Wealth &amp; Finance Command Center
-                            </h2>
-                            <p class="text-muted mb-0 small">
-                                Real-time balance sheet, cashflow, portfolio, home equity, and FIRE financial freedom
-                            </p>
-                        </div>
-                        <div>
-                            <button name="action_open_register" type="object" class="btn btn-primary shadow-sm moneta-pill-btn px-3" icon="fa-plus-circle" string=" Record Transaction"/>
-                        </div>
-                    </div>
+
 
                     <!-- Sure-Style Insights Alert Banner -->
                     <div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%); border-left: 5px solid #4f46e5 !important;">
