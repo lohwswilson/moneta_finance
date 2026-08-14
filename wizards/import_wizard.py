@@ -94,6 +94,27 @@ class MonetaImportWizard(models.TransientModel):
             elif 'revolut' in self.account_id.name.lower():
                 self.bank_profile = 'revolut'
 
+    @api.onchange('file_data', 'bank_profile')
+    def _onchange_file_data(self):
+        """Instantly auto-detect columns and populate preview as soon as file is selected."""
+        if self.file_data and self.file_type == 'csv':
+            try:
+                content = base64.b64decode(self.file_data).decode('utf-8-sig', errors='ignore')
+                rows, has_header, mapping = self._detect_csv_mapping(content, profile=self.bank_profile)
+                width = max((len(r) for r in rows), default=0)
+                self.csv_has_header = has_header
+                self.csv_date_col = mapping['date'] + 1 if mapping['date'] >= 0 else 0
+                self.csv_payee_col = mapping['payee'] + 1 if mapping['payee'] >= 0 else 0
+                self.csv_amount_col = mapping['amount'] + 1 if mapping['amount'] >= 0 else 0
+                self.csv_debit_col = mapping['debit'] + 1 if mapping['debit'] >= 0 else 0
+                self.csv_credit_col = mapping['credit'] + 1 if mapping['credit'] >= 0 else 0
+                self.csv_category_col = mapping['category'] + 1 if mapping['category'] >= 0 else 0
+                self.csv_memo_col = mapping['memo'] + 1 if mapping['memo'] >= 0 else 0
+                self.csv_column_count = width
+                self.csv_preview = '\n'.join(','.join(r) for r in rows[:6])
+            except Exception:
+                pass
+
     def action_save_preset_to_institution(self):
         """Save the currently modified column numbers permanently to the linked institution."""
         self.ensure_one()
@@ -101,7 +122,6 @@ class MonetaImportWizard(models.TransientModel):
             raise UserError("Please select a target account first.")
         inst = self.account_id.institution_id
         if not inst:
-            # Create institution automatically if missing
             inst = self.env['moneta.institution'].create({
                 'name': self.account_id.institution_name or self.account_id.name,
                 'bank_profile': 'custom',
@@ -129,28 +149,6 @@ class MonetaImportWizard(models.TransientModel):
                 'sticky': False,
             }
         }
-
-    def action_detect_csv(self):
-        """Parse the uploaded CSV, apply bank profile or auto-detect mapping, and fill fields."""
-        self.ensure_one()
-        if not self.file_data:
-            raise UserError("Upload a CSV file first, then detect the columns.")
-        content = base64.b64decode(self.file_data).decode('utf-8-sig', errors='ignore')
-        rows, has_header, mapping = self._detect_csv_mapping(content, profile=self.bank_profile)
-        width = max((len(r) for r in rows), default=0)
-        self.write({
-            'csv_has_header': has_header,
-            'csv_date_col': mapping['date'] + 1 if mapping['date'] >= 0 else 0,
-            'csv_payee_col': mapping['payee'] + 1 if mapping['payee'] >= 0 else 0,
-            'csv_amount_col': mapping['amount'] + 1 if mapping['amount'] >= 0 else 0,
-            'csv_debit_col': mapping['debit'] + 1 if mapping['debit'] >= 0 else 0,
-            'csv_credit_col': mapping['credit'] + 1 if mapping['credit'] >= 0 else 0,
-            'csv_category_col': mapping['category'] + 1 if mapping['category'] >= 0 else 0,
-            'csv_memo_col': mapping['memo'] + 1 if mapping['memo'] >= 0 else 0,
-            'csv_column_count': width,
-            'csv_preview': '\n'.join(','.join(r) for r in rows[:6]),
-        })
-        return True
 
     def action_import(self):
         self.ensure_one()

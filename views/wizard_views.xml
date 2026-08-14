@@ -46,11 +46,9 @@
                     </group>
                 </sheet>
                 <footer>
-                    <button name="action_detect_csv" string="🔍 Auto-Detect Columns"
-                            type="object" invisible="file_type != 'csv'" class="btn-secondary"/>
                     <button name="action_save_preset_to_institution" string="💾 Save Mapping for Bank"
                             type="object" invisible="file_type != 'csv'" class="btn-outline-secondary"
-                            help="Save the current column mappings permanently to this bank institution."/>
+                            help="Save the modified column mappings permanently for this financial institution."/>
                     <button name="action_import" string="🚀 Import Transactions" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
