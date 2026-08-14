@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Net Worth Graph: per-month base-currency contributions summed across
+         accounts (assets abs - liabilities abs). -->
+    <record id="view_moneta_net_worth_graph" model="ir.ui.view">
+        <field name="name">moneta.net_worth.graph</field>
+        <field name="model">moneta.account.balance.monthly</field>
+        <field name="arch" type="xml">
+            <graph string="Net Worth Over Time" type="bar">
+                <field name="month" interval="month"/>
+                <field name="base_contribution" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Per-account monthly snapshots -->
+    <record id="view_moneta_net_worth_list" model="ir.ui.view">
+        <field name="name">moneta.net_worth.list</field>
+        <field name="model">moneta.account.balance.monthly</field>
+        <field name="arch" type="xml">
+            <list string="Monthly Account Balances">
+                <field name="month"/>
+                <field name="account_id"/>
+                <field name="balance" widget="monetary" sum="Total Balance"/>
+                <field name="market_value" widget="monetary" optional="show"/>
+                <field name="base_contribution" widget="monetary" sum="Net Worth Contribution"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_net_worth" model="ir.actions.act_window">
+        <field name="name">Net Worth</field>
+        <field name="res_model">moneta.account.balance.monthly</field>
+        <field name="view_mode">graph,list</field>
+    </record>
+</odoo>

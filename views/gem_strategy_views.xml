@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- GEM Strategy Form View -->
+    <record id="view_moneta_gem_strategy_form" model="ir.ui.view">
+        <field name="name">moneta.gem.strategy.form</field>
+        <field name="model">moneta.gem.strategy</field>
+        <field name="arch" type="xml">
+            <form string="GEM Strategy">
+                <header>
+                    <button name="action_evaluate_signal" string="Evaluate Signal Now" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Strategy Name (e.g. My Core GEM)..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="params" string="Strategy Parameters">
+                            <field name="cadence"/>
+                            <field name="lookback_months"/>
+                            <field name="estimated_tax_rate"/>
+                            <field name="commission" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="account_ids" widget="many2many_tags"/>
+                        </group>
+                        <group name="status" string="Current Decision &amp; Signal">
+                            <field name="current_signal" widget="badge"/>
+                            <field name="target_security_id"/>
+                            <field name="last_evaluated_date"/>
+                        </group>
+                    </group>
+                    <group name="reasoning" string="Signal Reasoning">
+                        <field name="signal_reasoning" nolabel="1" colspan="2" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Asset Roles Mapping" name="roles">
+                            <group>
+                                <group string="Equity Roles">
+                                    <field name="us_equity_security_id"/>
+                                    <field name="world_equity_security_id"/>
+                                    <field name="emerging_equity_security_id"/>
+                                </group>
+                                <group string="Defensive &amp; Benchmark Roles">
+                                    <field name="safe_asset_security_id"/>
+                                    <field name="risk_free_security_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Historical Signals &amp; Rebalances" name="signals">
+                            <field name="signal_ids">
+                                <list editable="bottom">
+                                    <field name="period_date"/>
+                                    <field name="signal_type" widget="badge"/>
+                                    <field name="target_security_id"/>
+                                    <field name="us_equity_return" widget="percentage"/>
+                                    <field name="world_equity_return" widget="percentage"/>
+                                    <field name="safe_asset_return" widget="percentage"/>
+                                    <field name="is_executed"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- GEM Strategy List View -->
+    <record id="view_moneta_gem_strategy_tree" model="ir.ui.view">
+        <field name="name">moneta.gem.strategy.list</field>
+        <field name="model">moneta.gem.strategy</field>
+        <field name="arch" type="xml">
+            <list string="GEM Strategies">
+                <field name="name"/>
+                <field name="cadence"/>
+                <field name="lookback_months"/>
+                <field name="current_signal" widget="badge"/>
+                <field name="target_security_id"/>
+                <field name="last_evaluated_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- GEM Strategy Action -->
+    <record id="action_moneta_gem_strategy" model="ir.actions.act_window">
+        <field name="name">GEM Strategies</field>
+        <field name="res_model">moneta.gem.strategy</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

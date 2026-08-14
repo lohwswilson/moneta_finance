@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Transaction Form View -->
+    <record id="view_moneta_transaction_form" model="ir.ui.view">
+        <field name="name">moneta.transaction.form</field>
+        <field name="model">moneta.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Transaction">
+                <header>
+                    <button name="action_mark_cleared" type="object" string="Mark Cleared"
+                            class="btn-primary"
+                            invisible="state in ('cleared', 'reconciled', 'void')"/>
+                    <button name="action_reconcile" type="object" string="Reconcile"
+                            invisible="state in ('reconciled', 'void')"/>
+                    <button name="action_unreconcile" type="object" string="Unreconcile"
+                            invisible="state in ('unreconciled', 'void')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="unreconciled,cleared,reconciled,void" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="transaction_date"/>
+                            <field name="account_id"/>
+                            <field name="payee_id"/>
+                            <field name="category_id" invisible="is_split"/>
+                            <field name="is_split"/>
+                            <field name="reconciled_date" invisible="state != 'reconciled'"/>
+                        </group>
+                        <group>
+                            <field name="amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="memo"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="is_transfer"/>
+                            <field name="transfer_account_id" invisible="not is_transfer"/>
+                            <field name="linked_transaction_id" invisible="not is_transfer"/>
+                        </group>
+                    </group>
+                    <notebook invisible="not is_split">
+                        <page string="Split Line Items">
+                            <field name="split_ids">
+                                <list editable="bottom">
+                                    <field name="category_id"/>
+                                    <field name="memo"/>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                    <field name="amount" widget="monetary" sum="Total Splits"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Transaction List View (Odoo 18 uses list) -->
+    <record id="view_moneta_transaction_tree" model="ir.ui.view">
+        <field name="name">moneta.transaction.list</field>
+        <field name="model">moneta.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Transactions" editable="bottom">
+                <field name="transaction_date"/>
+                <field name="account_id"/>
+                <field name="payee_id"/>
+                <field name="category_id"/>
+                <field name="memo"/>
+                <field name="amount" widget="monetary" sum="Total Amount"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="is_transfer" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'cleared'" decoration-success="state == 'reconciled'" decoration-muted="state == 'void'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Transaction Pivot View -->
+    <record id="view_moneta_transaction_pivot" model="ir.ui.view">
+        <field name="name">moneta.transaction.pivot</field>
+        <field name="model">moneta.transaction</field>
+        <field name="arch" type="xml">
+            <pivot string="Spending Analysis">
+                <field name="category_id" type="row"/>
+                <field name="transaction_date" type="col" interval="month"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Transaction Graph View -->
+    <record id="view_moneta_transaction_graph" model="ir.ui.view">
+        <field name="name">moneta.transaction.graph</field>
+        <field name="model">moneta.transaction</field>
+        <field name="arch" type="xml">
+            <graph string="Monthly Income vs Expenses" type="bar">
+                <field name="transaction_date" interval="month"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Transaction Action -->
+    <record id="action_moneta_transaction" model="ir.actions.act_window">
+        <field name="name">Transactions</field>
+        <field name="res_model">moneta.transaction</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+    </record>
+
+    <!-- Reconciliation actions available from the list Action menu -->
+    <record id="action_moneta_tx_mark_cleared" model="ir.actions.server">
+        <field name="name">Mark Cleared</field>
+        <field name="model_id" ref="model_moneta_transaction"/>
+        <field name="state">code</field>
+        <field name="code">records.action_mark_cleared()</field>
+        <field name="binding_model_id" ref="model_moneta_transaction"/>
+        <field name="binding_view_types">list</field>
+    </record>
+    <record id="action_moneta_tx_reconcile" model="ir.actions.server">
+        <field name="name">Reconcile</field>
+        <field name="model_id" ref="model_moneta_transaction"/>
+        <field name="state">code</field>
+        <field name="code">records.action_reconcile()</field>
+        <field name="binding_model_id" ref="model_moneta_transaction"/>
+        <field name="binding_view_types">list</field>
+    </record>
+    <record id="action_moneta_tx_unreconcile" model="ir.actions.server">
+        <field name="name">Unreconcile</field>
+        <field name="model_id" ref="model_moneta_transaction"/>
+        <field name="state">code</field>
+        <field name="code">records.action_unreconcile()</field>
+        <field name="binding_model_id" ref="model_moneta_transaction"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

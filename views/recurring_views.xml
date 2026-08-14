@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Recurring Transaction Form View -->
+    <record id="view_moneta_recurring_form" model="ir.ui.view">
+        <field name="name">moneta.recurring.transaction.form</field>
+        <field name="model">moneta.recurring.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Scheduled Transaction">
+                <header>
+                    <button name="action_generate_transaction" type="object" string="Post Now" class="btn-primary" icon="fa-plus"/>
+                    <button name="skip" type="object" string="Skip Next" class="btn-secondary" icon="fa-forward"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="payee_id"/>
+                            <field name="category_id"/>
+                            <field name="memo"/>
+                        </group>
+                        <group name="amount_info" string="Amount &amp; Multi-Currency">
+                            <field name="entry_currency_id"/>
+                            <field name="foreign_amount" widget="monetary" options="{'currency_field': 'entry_currency_id'}"/>
+                            <field name="exchange_rate" invisible="entry_currency_id == currency_id"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group name="schedule_info" string="Schedule &amp; Automation">
+                            <field name="frequency"/>
+                            <field name="next_date"/>
+                            <field name="auto_post" widget="boolean_toggle"/>
+                            <field name="end_date"/>
+                            <field name="total_occurrences"/>
+                            <field name="occurrences_remaining"/>
+                            <field name="last_posted_date" readonly="1"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Recurring Transaction List View -->
+    <record id="view_moneta_recurring_tree" model="ir.ui.view">
+        <field name="name">moneta.recurring.transaction.list</field>
+        <field name="model">moneta.recurring.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Scheduled Transactions">
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="payee_id"/>
+                <field name="category_id"/>
+                <field name="amount" widget="monetary"/>
+                <field name="frequency"/>
+                <field name="next_date"/>
+                <field name="auto_post" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_recurring" model="ir.actions.act_window">
+        <field name="name">Scheduled Transactions</field>
+        <field name="res_model">moneta.recurring.transaction</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

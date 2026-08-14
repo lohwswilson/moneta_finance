@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Budget Form View -->
+    <record id="view_moneta_budget_form" model="ir.ui.view">
+        <field name="name">moneta.budget.form</field>
+        <field name="model">moneta.budget</field>
+        <field name="arch" type="xml">
+            <form string="Category Budget">
+                <header>
+                    <button name="action_close_current_period" type="object"
+                            string="Close Current Period" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="budget_type"/>
+                            <field name="strategy"/>
+                        </group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="base_income" widget="monetary"/>
+                            <field name="income_linked"/>
+                            <field name="user_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Categories" name="categories">
+                            <field name="category_ids">
+                                <list editable="bottom">
+                                    <field name="category_id"/>
+                                    <field name="is_income" widget="boolean"/>
+                                    <field name="amount" widget="monetary"/>
+                                    <field name="category_group" optional="show"/>
+                                    <field name="rollover_type" optional="show"/>
+                                    <field name="alert_warn_percent" optional="hide"/>
+                                    <field name="alert_critical_percent" optional="hide"/>
+                                    <field name="sort_order" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Periods" name="periods">
+                            <field name="period_ids">
+                                <list>
+                                    <field name="period_start"/>
+                                    <field name="period_end"/>
+                                    <field name="status"/>
+                                    <field name="total_budgeted" widget="monetary"/>
+                                    <field name="actual_income" widget="monetary"/>
+                                    <field name="actual_expenses" widget="monetary"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Budget List View -->
+    <record id="view_moneta_budget_tree" model="ir.ui.view">
+        <field name="name">moneta.budget.list</field>
+        <field name="model">moneta.budget</field>
+        <field name="arch" type="xml">
+            <list string="Budgets">
+                <field name="name"/>
+                <field name="budget_type"/>
+                <field name="strategy"/>
+                <field name="currency_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Budget Period Form View (opened from the budget form's Periods page) -->
+    <record id="view_moneta_budget_period_form" model="ir.ui.view">
+        <field name="name">moneta.budget.period.form</field>
+        <field name="model">moneta.budget.period</field>
+        <field name="arch" type="xml">
+            <form string="Budget Period">
+                <header>
+                    <button name="action_close_period" type="object"
+                            string="Close Period" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="budget_id"/>
+                            <field name="period_start"/>
+                            <field name="period_end"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="total_budgeted" widget="monetary" readonly="1"/>
+                            <field name="actual_income" widget="monetary" readonly="1"/>
+                            <field name="actual_expenses" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Category Detail">
+                        <field name="period_category_ids">
+                            <list>
+                                <field name="budget_category_id"/>
+                                <field name="category_id"/>
+                                <field name="budgeted_amount" widget="monetary"/>
+                                <field name="rollover_in" widget="monetary"/>
+                                <field name="effective_budget" widget="monetary"/>
+                                <field name="actual_amount" widget="monetary"/>
+                                <field name="rollover_out" widget="monetary"/>
+                                <field name="alert_level" widget="badge"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_budget" model="ir.actions.act_window">
+        <field name="name">Category Budgets</field>
+        <field name="res_model">moneta.budget</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_user_id': uid}</field>
+    </record>
+</odoo>

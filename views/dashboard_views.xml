@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_moneta_dashboard_form" model="ir.ui.view">
+        <field name="name">moneta.dashboard.form</field>
+        <field name="model">moneta.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard">
+                <sheet>
+                    <div class="oe_button_box">
+                        <button name="action_recompute" type="object"
+                                class="oe_stat_button" icon="fa-refresh">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Refresh</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Net Worth">
+                            <field name="net_worth" widget="monetary" class="o_stat_value"/>
+                        </group>
+                        <group string="This Month">
+                            <field name="month_income" widget="monetary" class="o_stat_value"/>
+                            <field name="month_expenses" widget="monetary" class="o_stat_value"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Upcoming Bills (14 days)">
+                            <field name="upcoming_bill_count"/>
+                            <field name="upcoming_bills_total" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">moneta.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

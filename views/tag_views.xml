@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tag Form View -->
+    <record id="view_moneta_tag_form" model="ir.ui.view">
+        <field name="name">moneta.tag.form</field>
+        <field name="model">moneta.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget="int_color"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tag List View -->
+    <record id="view_moneta_tag_list" model="ir.ui.view">
+        <field name="name">moneta.tag.list</field>
+        <field name="model">moneta.tag</field>
+        <field name="arch" type="xml">
+            <list string="Tags">
+                <field name="name"/>
+                <field name="color" widget="int_color"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">moneta.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

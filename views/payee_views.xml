@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payee Form View -->
+    <record id="view_moneta_payee_form" model="ir.ui.view">
+        <field name="name">moneta.payee.form</field>
+        <field name="model">moneta.payee</field>
+        <field name="arch" type="xml">
+            <form string="Payee">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Payee Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="general" string="General Information">
+                            <field name="default_category_id"/>
+                            <field name="suggested_category_id" readonly="1"/>
+                            <field name="website" widget="url" placeholder="https://..."/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group name="analytics" string="Spend Analytics &amp; Cadence">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="spent_this_year" widget="monetary"/>
+                            <field name="spent_prior_year" widget="monetary"/>
+                            <field name="spent_yoy_diff" widget="monetary"/>
+                            <field name="avg_transaction_amount" widget="monetary"/>
+                            <field name="last_transaction_date"/>
+                            <field name="detected_cadence" widget="badge"/>
+                            <field name="transaction_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Alias Matching Rules" name="aliases">
+                            <field name="alias_ids">
+                                <list editable="bottom">
+                                    <field name="pattern" placeholder="e.g. STARBUCKS*"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Payee notes, recurring payment context..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Payee List View -->
+    <record id="view_moneta_payee_tree" model="ir.ui.view">
+        <field name="name">moneta.payee.list</field>
+        <field name="model">moneta.payee</field>
+        <field name="arch" type="xml">
+            <list string="Payees">
+                <field name="name"/>
+                <field name="default_category_id"/>
+                <field name="spent_this_year" widget="monetary"/>
+                <field name="detected_cadence" widget="badge"/>
+                <field name="transaction_count"/>
+                <field name="last_transaction_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Payee Action -->
+    <record id="action_moneta_payee" model="ir.actions.act_window">
+        <field name="name">Payees</field>
+        <field name="res_model">moneta.payee</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

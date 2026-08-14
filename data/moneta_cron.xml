@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Daily: post scheduled transactions whose next_date has arrived. -->
+        <record id="cron_moneta_recurring_auto_post" model="ir.cron">
+            <field name="name">Moneta: auto-post scheduled transactions</field>
+            <field name="model_id" ref="model_moneta_recurring_transaction"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_auto_post()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Daily: roll future-dated transactions into balances once their
+             date arrives (authoritative recompute, also corrects any drift). -->
+        <record id="cron_moneta_roll_in_balances" model="ir.cron">
+            <field name="name">Moneta: roll in due balances</field>
+            <field name="model_id" ref="model_moneta_account"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_roll_in_balances()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Daily: close budget periods whose period_end has passed (snapshot
+             rollover, create the next open period) and ensure every active
+             budget has a current open period. Runs daily rather than monthly
+             so a missed first-of-month fire cannot strand an expired period. -->
+        <record id="cron_moneta_budget_close_periods" model="ir.cron">
+            <field name="name">Moneta: close expired budget periods</field>
+            <field name="model_id" ref="model_moneta_budget_period"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_close_expired_periods()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Daily: roll the monthly net-worth snapshots so the current month
+             exists for every active account (new-month rollover) and any
+             missed rebuild-on-write drift is corrected. -->
+        <record id="cron_moneta_roll_monthly_balances" model="ir.cron">
+            <field name="name">Moneta: roll monthly balance snapshots</field>
+            <field name="model_id" ref="model_moneta_account_balance_monthly"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_roll_monthly_balances()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

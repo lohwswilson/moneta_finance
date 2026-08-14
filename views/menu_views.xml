@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level Moneta Menu (visible to Moneta users; manager implies user) -->
+    <menuitem id="menu_moneta_root"
+              name="Moneta Finance"
+              groups="group_moneta_user"
+              sequence="10"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_moneta_dashboard"
+              name="Dashboard"
+              parent="menu_moneta_root"
+              action="action_moneta_dashboard"
+              sequence="5"/>
+
+    <!-- Accounts -->
+    <menuitem id="menu_moneta_accounts"
+              name="Accounts"
+              parent="menu_moneta_root"
+              action="action_moneta_account"
+              sequence="10"/>
+
+    <!-- Transactions -->
+    <menuitem id="menu_moneta_transactions"
+              name="Transactions"
+              parent="menu_moneta_root"
+              action="action_moneta_transaction"
+              sequence="20"/>
+
+    <!-- Budgets & Scheduled -->
+    <menuitem id="menu_moneta_planning_root"
+              name="Planning &amp; Budgets"
+              parent="menu_moneta_root"
+              sequence="25"/>
+
+    <menuitem id="menu_moneta_budgets"
+              name="Category Budgets"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_budget"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_recurring"
+              name="Scheduled Transactions"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_recurring"
+              sequence="20"/>
+
+    <!-- Investments -->
+    <menuitem id="menu_moneta_investments_root"
+              name="Investments"
+              parent="menu_moneta_root"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_investment_transactions"
+              name="Investment Transactions"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_investment_transaction"
+              sequence="5"/>
+
+    <menuitem id="menu_moneta_holdings"
+              name="Portfolio Holdings"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_holding"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_securities"
+              name="Securities &amp; Prices"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_security"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_gem_strategies"
+              name="GEM Strategies"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_gem_strategy"
+              sequence="30"/>
+
+    <!-- Net Worth -->
+    <menuitem id="menu_moneta_net_worth"
+              name="Net Worth"
+              parent="menu_moneta_root"
+              action="action_moneta_net_worth"
+              sequence="35"/>
+
+    <!-- Tools & Imports -->
+    <menuitem id="menu_moneta_tools_root"
+              name="Tools &amp; Imports"
+              parent="menu_moneta_root"
+              sequence="40"/>
+
+    <menuitem id="menu_moneta_import_wizard"
+              name="Import File (QIF / OFX / CSV)"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_import_wizard"
+              sequence="10"/>
+
+    <!-- Configuration -->
+    <menuitem id="menu_moneta_config_root"
+              name="Configuration"
+              parent="menu_moneta_root"
+              sequence="50"/>
+
+    <menuitem id="menu_moneta_categories"
+              name="Categories"
+              parent="menu_moneta_config_root"
+              action="action_moneta_category"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_payees"
+              name="Payees"
+              parent="menu_moneta_config_root"
+              action="action_moneta_payee"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_tags"
+              name="Tags"
+              parent="menu_moneta_config_root"
+              action="action_moneta_tag"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_institutions"
+              name="Institutions"
+              parent="menu_moneta_config_root"
+              action="action_moneta_institution"
+              sequence="40"/>
+</odoo>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Form View -->
+    <record id="view_moneta_security_form" model="ir.ui.view">
+        <field name="name">moneta.security.form</field>
+        <field name="model">moneta.security</field>
+        <field name="arch" type="xml">
+            <form string="Security / Asset">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="symbol" placeholder="Ticker (e.g. AAPL)..."/>
+                        </h1>
+                        <h2>
+                            <field name="name" placeholder="Full Name..."/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group name="general_info" string="General Information">
+                            <field name="asset_class"/>
+                            <field name="exchange"/>
+                            <field name="currency_id"/>
+                            <field name="isin"/>
+                        </group>
+                        <group name="market_info" string="Market &amp; Quote">
+                            <field name="current_price" widget="monetary"/>
+                            <field name="quote_timestamp"/>
+                            <field name="is_market_open" widget="boolean"/>
+                            <field name="total_allocation_weight" widget="percentage" readonly="1"/>
+                        </group>
+                    </group>
+                    <group name="links" string="Links &amp; Reference">
+                        <group>
+                            <field name="website_url" widget="url" placeholder="https://..."/>
+                        </group>
+                        <group>
+                            <field name="ir_url" widget="url" placeholder="https://investor..."/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Price History" name="price_history">
+                            <field name="price_ids">
+                                <list editable="bottom">
+                                    <field name="price_date"/>
+                                    <field name="price_close" widget="monetary"/>
+                                    <field name="source"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Asset Allocations" name="asset_allocations">
+                            <field name="allocation_ids">
+                                <list editable="bottom">
+                                    <field name="asset_class"/>
+                                    <field name="weight" widget="float" digits="[5, 2]"/>
+                                    <field name="country_code" placeholder="US"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Documents &amp; Factsheets" name="documents">
+                            <field name="document_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Investment notes, strategy rationale..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security List View (Odoo 18 uses list) -->
+    <record id="view_moneta_security_tree" model="ir.ui.view">
+        <field name="name">moneta.security.list</field>
+        <field name="model">moneta.security</field>
+        <field name="arch" type="xml">
+            <list string="Securities">
+                <field name="symbol"/>
+                <field name="name"/>
+                <field name="asset_class" widget="badge"/>
+                <field name="currency_id"/>
+                <field name="current_price" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Investment Transaction Form View -->
+    <record id="view_moneta_investment_transaction_form" model="ir.ui.view">
+        <field name="name">moneta.investment.transaction.form</field>
+        <field name="model">moneta.investment.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Investment Transaction">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="action"/>
+                            <field name="security_id"/>
+                            <field name="account_id"/>
+                            <field name="trade_date"/>
+                        </group>
+                        <group>
+                            <field name="quantity" widget="float" options="{'precision': 8}"/>
+                            <field name="price" widget="float" options="{'precision': 10}"
+                                   help="Leave empty when the cost is unknown -- an unknown cost never reads as 0."/>
+                            <field name="commission" widget="monetary"/>
+                            <field name="total_amount" widget="monetary" readonly="1"/>
+                            <field name="realized_gain" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="memo"/>
+                        <field name="linked_transaction_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Investment Transaction List View -->
+    <record id="view_moneta_investment_transaction_tree" model="ir.ui.view">
+        <field name="name">moneta.investment.transaction.list</field>
+        <field name="model">moneta.investment.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Investment Transactions">
+                <field name="trade_date"/>
+                <field name="action" widget="badge"/>
+                <field name="security_id"/>
+                <field name="account_id"/>
+                <field name="quantity" options="{'precision': 8}"/>
+                <field name="price" options="{'precision': 10}"/>
+                <field name="commission" widget="monetary"/>
+                <field name="total_amount" widget="monetary" sum="Total Amount"/>
+                <field name="realized_gain" widget="monetary" sum="Realized Gain"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Holding Form View -->
+    <record id="view_moneta_holding_form" model="ir.ui.view">
+        <field name="name">moneta.holding.form</field>
+        <field name="model">moneta.holding</field>
+        <field name="arch" type="xml">
+            <form string="Portfolio Holding">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="security_id" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="account_id" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="quantity" readonly="1" options="{'precision': 8}"/>
+                            <field name="average_cost" widget="monetary" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="current_price" widget="monetary" readonly="1"/>
+                            <field name="market_value" widget="monetary" readonly="1"/>
+                            <field name="unrealized_gain" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Holding List View -->
+    <record id="view_moneta_holding_tree" model="ir.ui.view">
+        <field name="name">moneta.holding.list</field>
+        <field name="model">moneta.holding</field>
+        <field name="arch" type="xml">
+            <list string="Portfolio Holdings">
+                <field name="account_id"/>
+                <field name="security_id"/>
+                <field name="quantity" options="{'precision': 8}"/>
+                <field name="average_cost" widget="monetary"/>
+                <field name="current_price" widget="monetary"/>
+                <field name="price_known" widget="boolean" optional="hide"/>
+                <field name="basis_known" widget="boolean" optional="hide"/>
+                <field name="market_value" widget="monetary" sum="Total Market Value"/>
+                <field name="unrealized_gain" widget="monetary" sum="Total Unrealized Gain"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_moneta_investment_transaction" model="ir.actions.act_window">
+        <field name="name">Investment Transactions</field>
+        <field name="res_model">moneta.investment.transaction</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_moneta_security" model="ir.actions.act_window">
+        <field name="name">Securities &amp; Tickers</field>
+        <field name="res_model">moneta.security</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_moneta_holding" model="ir.actions.act_window">
+        <field name="name">Portfolio Holdings</field>
+        <field name="res_model">moneta.holding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Import Wizard View -->
+    <record id="view_moneta_import_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.import.wizard.form</field>
+        <field name="model">moneta.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Financial File (QIF / OFX / CSV)">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="file_type"/>
+                        </group>
+                        <group>
+                            <field name="file_data" filename="file_name"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="CSV Column Mapping" invisible="file_type != 'csv'">
+                        <group>
+                            <field name="csv_has_header"/>
+                            <field name="csv_date_col"/>
+                            <field name="csv_payee_col"/>
+                            <field name="csv_amount_col"/>
+                            <field name="csv_debit_col"/>
+                            <field name="csv_credit_col"/>
+                            <field name="csv_category_col"/>
+                            <field name="csv_memo_col"/>
+                        </group>
+                        <group>
+                            <field name="csv_column_count"/>
+                            <field name="csv_preview" nolabel="1" colspan="2"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="imported_count" invisible="imported_count == 0" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_detect_csv" string="Detect CSV Columns"
+                            type="object" invisible="file_type != 'csv'"/>
+                    <button name="action_import" string="Import Transactions" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Import Wizard Action -->
+    <record id="action_moneta_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Financial Data</field>
+        <field name="res_model">moneta.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

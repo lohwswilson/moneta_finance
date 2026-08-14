@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sample Accounts -->
+        <record id="acc_chequing" model="moneta.account">
+            <field name="name">Primary Chequing</field>
+            <field name="account_type">chequing</field>
+            <field name="institution_name">First National Bank</field>
+            <field name="account_number">xxxx-1234</field>
+            <field name="is_favourite">True</field>
+        </record>
+
+        <record id="acc_savings" model="moneta.account">
+            <field name="name">Emergency Fund</field>
+            <field name="account_type">savings</field>
+            <field name="institution_name">First National Bank</field>
+            <field name="interest_rate">4.50</field>
+            <field name="is_favourite">True</field>
+        </record>
+
+        <record id="acc_credit_card" model="moneta.account">
+            <field name="name">Visa Rewards Card</field>
+            <field name="account_type">credit_card</field>
+            <field name="institution_name">Visa Financial</field>
+            <field name="credit_limit">10000.00</field>
+            <field name="interest_rate">19.99</field>
+            <field name="billing_cycle_day">15</field>
+            <field name="payment_due_day">5</field>
+            <field name="is_favourite">True</field>
+        </record>
+
+        <record id="acc_brokerage" model="moneta.account">
+            <field name="name">Stock Portfolio</field>
+            <field name="account_type">brokerage</field>
+            <field name="institution_name">Wealth Brokerage</field>
+            <field name="is_favourite">True</field>
+        </record>
+
+        <record id="acc_cash" model="moneta.account">
+            <field name="name">Household Cash</field>
+            <field name="account_type">cash</field>
+            <field name="opening_balance">200.00</field>
+        </record>
+
+        <!-- Second demo user: joining the Moneta group seeds their default
+             categories (res.users hook), so per-user isolation is visible. -->
+        <record id="demo_user" model="res.users">
+            <field name="name">Demo User</field>
+            <field name="login">demo_user</field>
+            <field name="email">demo_user@example.com</field>
+            <field name="groups_id" eval="[(6, 0, [ref('moneta_finance.group_moneta_user')])]"/>
+        </record>
+
+        <record id="demo_user_cash" model="moneta.account">
+            <field name="name">Demo Cash Wallet</field>
+            <field name="account_type">cash</field>
+            <field name="opening_balance">150.00</field>
+            <field name="user_id" ref="demo_user"/>
+        </record>
+
+        <!-- Sample Payees & Auto-Categorization -->
+        <record id="payee_employer" model="moneta.payee">
+            <field name="name">Employer Corp</field>
+            <field name="default_category_id" ref="moneta_finance.cat_salary"/>
+        </record>
+
+        <record id="payee_starbucks" model="moneta.payee">
+            <field name="name">Starbucks Coffee</field>
+            <field name="default_category_id" ref="moneta_finance.cat_coffee"/>
+        </record>
+        <record id="alias_starbucks" model="moneta.payee.alias">
+            <field name="payee_id" ref="payee_starbucks"/>
+            <field name="pattern">STARBUCKS*</field>
+        </record>
+
+        <record id="payee_amazon" model="moneta.payee">
+            <field name="name">Amazon Online</field>
+            <field name="default_category_id" ref="moneta_finance.cat_shopping"/>
+        </record>
+        <record id="alias_amazon" model="moneta.payee.alias">
+            <field name="payee_id" ref="payee_amazon"/>
+            <field name="pattern">AMZN*</field>
+        </record>
+
+        <record id="payee_shell" model="moneta.payee">
+            <field name="name">Shell Fuel</field>
+            <field name="default_category_id" ref="moneta_finance.cat_fuel"/>
+        </record>
+
+        <!-- Sample Securities -->
+        <record id="sec_aapl" model="moneta.security">
+            <field name="name">Apple Inc.</field>
+            <field name="symbol">AAPL</field>
+            <field name="asset_class">stock</field>
+            <field name="exchange">NASDAQ</field>
+        </record>
+        <record id="price_aapl_1" model="moneta.security.price">
+            <field name="security_id" ref="sec_aapl"/>
+            <field name="price_date">2026-08-01</field>
+            <field name="price_close">225.50</field>
+            <field name="source">yahoo</field>
+        </record>
+
+        <record id="sec_msft" model="moneta.security">
+            <field name="name">Microsoft Corporation</field>
+            <field name="symbol">MSFT</field>
+            <field name="asset_class">stock</field>
+            <field name="exchange">NASDAQ</field>
+        </record>
+        <record id="price_msft_1" model="moneta.security.price">
+            <field name="security_id" ref="sec_msft"/>
+            <field name="price_date">2026-08-01</field>
+            <field name="price_close">415.20</field>
+            <field name="source">yahoo</field>
+        </record>
+
+        <record id="sec_vti" model="moneta.security">
+            <field name="name">Vanguard Total Stock Market ETF</field>
+            <field name="symbol">VTI</field>
+            <field name="asset_class">etf</field>
+            <field name="exchange">NYSE</field>
+        </record>
+
+        <!-- Sample Investment Buys (holdings are derived from these: average
+             cost, commission in basis). -->
+        <record id="inv_tx_buy_aapl" model="moneta.investment.transaction">
+            <field name="action">buy</field>
+            <field name="account_id" ref="acc_brokerage"/>
+            <field name="security_id" ref="sec_aapl"/>
+            <field name="trade_date">2026-07-15</field>
+            <field name="quantity">25.0</field>
+            <field name="price">178.50</field>
+            <field name="commission">37.50</field>
+        </record>
+
+        <record id="inv_tx_buy_msft" model="moneta.investment.transaction">
+            <field name="action">buy</field>
+            <field name="account_id" ref="acc_brokerage"/>
+            <field name="security_id" ref="sec_msft"/>
+            <field name="trade_date">2026-07-20</field>
+            <field name="quantity">15.0</field>
+            <field name="price">345.25</field>
+            <field name="commission">25.00</field>
+        </record>
+
+        <!-- A sell with realized gain: AAPL average cost is 180.00
+             ((25 x 178.50 + 37.50) / 25); proceeds 5 x 225.50 - 10 ->
+             realized gain = 1,117.50 - 5 x 180.00 = 217.50. -->
+        <record id="inv_tx_sell_aapl" model="moneta.investment.transaction">
+            <field name="action">sell</field>
+            <field name="account_id" ref="acc_brokerage"/>
+            <field name="security_id" ref="sec_aapl"/>
+            <field name="trade_date">2026-08-02</field>
+            <field name="quantity">5.0</field>
+            <field name="price">225.50</field>
+            <field name="commission">10.00</field>
+        </record>
+
+        <!-- Sample Transactions -->
+        <record id="tx_salary_1" model="moneta.transaction">
+            <field name="account_id" ref="acc_chequing"/>
+            <field name="transaction_date">2026-08-01</field>
+            <field name="payee_id" ref="payee_employer"/>
+            <field name="category_id" ref="moneta_finance.cat_salary"/>
+            <field name="amount">3500.00</field>
+            <field name="memo">Bi-weekly Payroll</field>
+            <field name="state">reconciled</field>
+        </record>
+
+        <record id="tx_groceries_1" model="moneta.transaction">
+            <field name="account_id" ref="acc_chequing"/>
+            <field name="transaction_date">2026-08-02</field>
+            <field name="category_id" ref="moneta_finance.cat_groceries"/>
+            <field name="amount">-145.80</field>
+            <field name="memo">Weekly Supermarket</field>
+            <field name="state">cleared</field>
+        </record>
+
+        <record id="tx_starbucks_1" model="moneta.transaction">
+            <field name="account_id" ref="acc_credit_card"/>
+            <field name="transaction_date">2026-08-03</field>
+            <field name="payee_id" ref="payee_starbucks"/>
+            <field name="category_id" ref="moneta_finance.cat_coffee"/>
+            <field name="amount">-6.75</field>
+            <field name="memo">Morning Latte</field>
+            <field name="state">cleared</field>
+        </record>
+
+        <!-- Transfer: creates two linked legs with opposite signs. -->
+        <record id="tx_transfer_1" model="moneta.transaction">
+            <field name="account_id" ref="acc_chequing"/>
+            <field name="transaction_date">2026-08-04</field>
+            <field name="amount">-500.00</field>
+            <field name="is_transfer">True</field>
+            <field name="transfer_account_id" ref="acc_savings"/>
+            <field name="memo">Emergency fund top-up</field>
+            <field name="state">cleared</field>
+        </record>
+
+        <!-- Split transaction: parent carries the total, lines carry the
+             categories. -->
+        <record id="tx_split_1" model="moneta.transaction">
+            <field name="account_id" ref="acc_credit_card"/>
+            <field name="transaction_date">2026-08-05</field>
+            <field name="amount">-80.00</field>
+            <field name="is_split">True</field>
+            <field name="memo">Supermarket + lunch</field>
+            <field name="state">cleared</field>
+            <field name="split_ids" eval="[(0, 0, {'category_id': ref('moneta_finance.cat_groceries'), 'amount': -50.00, 'memo': 'Groceries'}),
+                                           (0, 0, {'category_id': ref('moneta_finance.cat_restaurants'), 'amount': -30.00, 'memo': 'Lunch'})]"/>
+        </record>
+
+        <!-- Void transaction: excluded from balances and reports. -->
+        <record id="tx_void_1" model="moneta.transaction">
+            <field name="account_id" ref="acc_chequing"/>
+            <field name="transaction_date">2026-08-06</field>
+            <field name="amount">-25.00</field>
+            <field name="memo">Cancelled purchase</field>
+            <field name="state">void</field>
+        </record>
+
+        <!-- Second user's own transactions (per-user isolation). -->
+        <record id="demo_user_tx_1" model="moneta.transaction">
+            <field name="account_id" ref="demo_user_cash"/>
+            <field name="transaction_date">2026-08-02</field>
+            <field name="amount">-12.50</field>
+            <field name="memo">Market snacks</field>
+            <field name="state">cleared</field>
+            <field name="user_id" ref="demo_user"/>
+        </record>
+        <record id="demo_user_tx_2" model="moneta.transaction">
+            <field name="account_id" ref="demo_user_cash"/>
+            <field name="transaction_date">2026-08-03</field>
+            <field name="amount">45.00</field>
+            <field name="memo">Found money</field>
+            <field name="state">cleared</field>
+            <field name="user_id" ref="demo_user"/>
+        </record>
+
+        <!-- Sample Category Budgets. Each budget auto-creates its current-month
+             open period; adding the category line below syncs that period
+             (moneta.budget.category create -> budget._sync_open_period). -->
+        <record id="budget_groceries" model="moneta.budget">
+            <field name="name">Monthly Groceries Budget</field>
+        </record>
+        <record id="budget_groceries_line" model="moneta.budget.category">
+            <field name="budget_id" ref="budget_groceries"/>
+            <field name="category_id" ref="moneta_finance.cat_groceries"/>
+            <field name="amount">600.00</field>
+        </record>
+
+        <record id="budget_restaurants" model="moneta.budget">
+            <field name="name">Dining Out Budget</field>
+        </record>
+        <record id="budget_restaurants_line" model="moneta.budget.category">
+            <field name="budget_id" ref="budget_restaurants"/>
+            <field name="category_id" ref="moneta_finance.cat_restaurants"/>
+            <field name="amount">300.00</field>
+        </record>
+
+        <record id="budget_entertainment" model="moneta.budget">
+            <field name="name">Monthly Entertainment</field>
+        </record>
+        <record id="budget_entertainment_line" model="moneta.budget.category">
+            <field name="budget_id" ref="budget_entertainment"/>
+            <field name="category_id" ref="moneta_finance.cat_entertainment"/>
+            <field name="amount">200.00</field>
+        </record>
+
+        <!-- Sample Scheduled Transactions -->
+        <record id="recurring_salary" model="moneta.recurring.transaction">
+            <field name="name">Bi-weekly Salary</field>
+            <field name="account_id" ref="acc_chequing"/>
+            <field name="payee_id" ref="payee_employer"/>
+            <field name="category_id" ref="moneta_finance.cat_salary"/>
+            <field name="amount">3500.00</field>
+            <field name="frequency">biweekly</field>
+            <field name="next_date">2026-08-15</field>
+        </record>
+
+        <record id="recurring_netflix" model="moneta.recurring.transaction">
+            <field name="name">Netflix Subscription</field>
+            <field name="account_id" ref="acc_credit_card"/>
+            <field name="category_id" ref="moneta_finance.cat_streaming"/>
+            <field name="amount">-19.99</field>
+            <field name="frequency">monthly</field>
+            <field name="auto_post">True</field>
+            <field name="next_date">2026-08-10</field>
+        </record>
+    </data>
+</odoo>

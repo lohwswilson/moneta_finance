@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Account Form View -->
+    <record id="view_moneta_account_form" model="ir.ui.view">
+        <field name="name">moneta.account.form</field>
+        <field name="model">moneta.account</field>
+        <field name="arch" type="xml">
+            <form string="Account">
+                <header>
+                    <button name="action_import_file" type="object" string="Import CSV / QIF" class="btn-primary" icon="fa-upload"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-list">
+                            <field name="current_balance" widget="statinfo" string="Balance"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="account_type"/>
+                            <field name="currency_id"/>
+                            <field name="institution_id"/>
+                            <field name="institution_name"/>
+                            <field name="account_number"/>
+                        </group>
+                        <group>
+                            <field name="opening_balance" widget="monetary"/>
+                            <field name="opening_balance_date"/>
+                            <field name="current_balance" widget="monetary" readonly="1"/>
+                            <field name="cleared_balance" widget="monetary" readonly="1"/>
+                            <field name="credit_limit" widget="monetary" invisible="account_type != 'credit_card'"/>
+                            <field name="interest_rate" invisible="account_type not in ('loan', 'mortgage', 'loc', 'savings')"/>
+                            <field name="fx_fee_percent" invisible="account_type not in ('chequing','savings','credit_card','loc','cash')"/>
+                            <field name="is_favourite"/>
+                            <field name="is_closed"/>
+                            <field name="closed_date" invisible="not is_closed"/>
+                            <field name="exclude_from_net_worth"/>
+                        </group>
+                    </group>
+                    <group string="Billing Cycle &amp; Payment Dates" invisible="account_type != 'credit_card'">
+                        <group>
+                            <field name="billing_cycle_day"/>
+                            <field name="payment_due_day"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Transactions" name="transactions_page">
+                            <field name="transaction_ids">
+                                <list editable="bottom" default_order="transaction_date desc">
+                                    <field name="transaction_date"/>
+                                    <field name="payee_id"/>
+                                    <field name="category_id"/>
+                                    <field name="memo"/>
+                                    <field name="amount" widget="monetary" sum="Total Amount"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'cleared'" decoration-success="state == 'reconciled'" decoration-muted="state == 'void'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Sharing &amp; Joint Access" name="sharing_page">
+                            <field name="share_ids">
+                                <list editable="bottom">
+                                    <field name="user_id"/>
+                                    <field name="permission" widget="badge"/>
+                                    <field name="is_joint"/>
+                                    <field name="exclude_from_net_worth"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes_page">
+                            <field name="notes" placeholder="Account notes or remarks..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Account List View (Odoo 18 uses list) -->
+    <record id="view_moneta_account_tree" model="ir.ui.view">
+        <field name="name">moneta.account.list</field>
+        <field name="model">moneta.account</field>
+        <field name="arch" type="xml">
+            <list string="Accounts">
+                <field name="is_favourite" widget="boolean_toggle"/>
+                <field name="name"/>
+                <field name="institution_name"/>
+                <field name="account_type" widget="badge"/>
+                <field name="currency_id"/>
+                <field name="current_balance" widget="monetary" sum="Total Balance"/>
+                <field name="cleared_balance" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Account Kanban View -->
+    <record id="view_moneta_account_kanban" model="ir.ui.view">
+        <field name="name">moneta.account.kanban</field>
+        <field name="model">moneta.account</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="account_type"/>
+                <field name="currency_id"/>
+                <field name="current_balance"/>
+                <field name="institution_name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_card">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <strong class="o_primary"><field name="name"/></strong>
+                                    <span class="text-muted"><field name="institution_name"/></span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content mt-2">
+                                <span class="badge rounded-pill bg-info"><field name="account_type"/></span>
+                                <h3 class="mt-2 text-end fw-bold">
+                                    <field name="current_balance" widget="monetary"/>
+                                </h3>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Account Action -->
+    <record id="action_moneta_account" model="ir.actions.act_window">
+        <field name="name">Financial Accounts</field>
+        <field name="res_model">moneta.account</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>

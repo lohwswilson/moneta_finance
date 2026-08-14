@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="module_moneta_category" model="ir.module.category">
+            <field name="name">Moneta Finance</field>
+            <field name="description">Personal finance management access roles</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="group_moneta_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_moneta_category"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Standard user access to personal accounts and transactions.</field>
+        </record>
+
+        <record id="group_moneta_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_moneta_category"/>
+            <field name="implied_ids" eval="[(4, ref('group_moneta_user'))]"/>
+            <field name="comment">Manager with full access to account setup, data resets, and system settings.</field>
+        </record>
+
+        <!-- The installing administrator must be able to manage the module and
+             assign the Moneta User role to other users. Without this, admin has
+             no ir.model.access grant and cannot even open the Moneta menu. -->
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+    </data>
+</odoo>

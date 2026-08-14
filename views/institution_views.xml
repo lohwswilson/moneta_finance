@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_moneta_institution_form" model="ir.ui.view">
+        <field name="name">moneta.institution.form</field>
+        <field name="model">moneta.institution</field>
+        <field name="arch" type="xml">
+            <form string="Financial Institution">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="website" widget="url"/>
+                            <field name="country"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_moneta_institution_list" model="ir.ui.view">
+        <field name="name">moneta.institution.list</field>
+        <field name="model">moneta.institution</field>
+        <field name="arch" type="xml">
+            <list string="Institutions">
+                <field name="name"/>
+                <field name="website" optional="show"/>
+                <field name="country" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_moneta_institution" model="ir.actions.act_window">
+        <field name="name">Institutions</field>
+        <field name="res_model">moneta.institution</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_user_id': uid}</field>
+    </record>
+</odoo>
