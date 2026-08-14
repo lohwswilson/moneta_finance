@@ -16,6 +16,18 @@ class TestDashboardAction(TransactionCase):
         actions = self.ActionModel.search([('user_id', '=', self.user.id)])
         self.assertTrue(len(actions) >= 10)
 
+    def test_accounts_action_execute(self):
+        """Test dispatching Accounts action from the launcher."""
+        action_rec = self.ActionModel.create({
+            'name': 'My Accounts',
+            'action_type': 'accounts',
+            'icon': 'fa-university',
+            'color_class': 'outline_primary',
+            'user_id': self.user.id,
+        })
+        res = action_rec.action_execute()
+        self.assertEqual(res.get('res_model'), 'moneta.account')
+
     def test_action_execute(self):
         """Test dispatching an action from the launcher."""
         action_rec = self.ActionModel.create({

@@ -14,6 +14,7 @@ class MonetaDashboardAction(models.Model):
     active = fields.Boolean(string='Show on Dashboard', default=True)
 
     action_type = fields.Selection([
+        ('accounts', 'Bank & Brokerage Accounts'),
         ('register', 'Checkbook Register'),
         ('ai_chat', 'Ask Moneta AI Advisor'),
         ('ai_receipt', 'Scan Receipt / Invoice (AI OCR)'),
@@ -55,6 +56,7 @@ class MonetaDashboardAction(models.Model):
     @api.onchange('action_type')
     def _onchange_action_type(self):
         defaults = {
+            'accounts': ('Bank & Brokerage Accounts', 'fa-university', 'outline_primary'),
             'register': ('Checkbook Register', 'fa-book', 'primary'),
             'ai_chat': ('Ask Moneta AI', 'fa-comments', 'outline_primary'),
             'ai_receipt': ('Scan Receipt OCR', 'fa-camera', 'outline_info'),
@@ -87,6 +89,7 @@ class MonetaDashboardAction(models.Model):
         """Dispatch the configured action dynamically."""
         self.ensure_one()
         mapping = {
+            'accounts': 'moneta_finance.action_moneta_account',
             'register': 'moneta_finance.action_moneta_transaction',
             'ai_chat': 'moneta_finance.action_moneta_ai_chat',
             'ai_receipt': 'moneta_finance.action_moneta_ai_receipt_wizard',
@@ -129,6 +132,7 @@ class MonetaDashboardAction(models.Model):
             return
 
         defaults = [
+            ('Accounts & Banks', 5, 'accounts', 'fa-university', 'outline_primary'),
             ('Checkbook Register', 10, 'register', 'fa-book', 'primary'),
             ('Ask Moneta AI', 20, 'ai_chat', 'fa-comments', 'outline_primary'),
             ('Scan Receipt OCR', 30, 'ai_receipt', 'fa-camera', 'outline_info'),
