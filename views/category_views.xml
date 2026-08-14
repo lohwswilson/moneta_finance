@@ -11,7 +11,8 @@
                         <group>
                             <field name="name"/>
                             <field name="parent_id" domain="[('id', '!=', id), ('user_id', '=', user_id)]"/>
-                            <field name="is_income" widget="boolean_toggle"/>
+                            <field name="category_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="is_income" invisible="1"/>
                             <field name="is_system" readonly="1"/>
                         </group>
                         <group>
@@ -41,15 +42,15 @@
                 
                 <filter name="my_categories" string="My Categories" domain="[('user_id', '=', uid)]"/>
                 <separator/>
-                <filter name="filter_expense" string="Expenses" domain="[('is_income', '=', False)]"/>
-                <filter name="filter_income" string="Income" domain="[('is_income', '=', True)]"/>
+                <filter name="filter_expense" string="Expenses" domain="[('category_type', '=', 'expense')]"/>
+                <filter name="filter_income" string="Income" domain="[('category_type', '=', 'income')]"/>
                 <separator/>
                 <filter name="filter_user_only" string="Exclude System Templates" domain="[('is_system', '=', False)]"/>
                 <filter name="filter_system_only" string="System Templates Only" domain="[('is_system', '=', True)]"/>
                 
                 <group expand="0" string="Group By">
                     <filter name="group_by_parent" string="Parent Category" context="{'group_by': 'parent_id'}"/>
-                    <filter name="group_by_type" string="Category Type" context="{'group_by': 'is_income'}"/>
+                    <filter name="group_by_type" string="Category Type" context="{'group_by': 'category_type'}"/>
                     <filter name="group_by_owner" string="Owner" context="{'group_by': 'user_id'}" groups="moneta_finance.group_moneta_manager"/>
                 </group>
             </search>
@@ -64,7 +65,8 @@
             <list string="Categories">
                 <field name="icon" string=" " width="30px"/>
                 <field name="display_name" string="Category Name"/>
-                <field name="is_income" string="Type" widget="badge" decoration-success="is_income" decoration-danger="not is_income"/>
+                <field name="category_type" string="Type" widget="badge" decoration-success="category_type == 'income'" decoration-danger="category_type == 'expense'"/>
+                <field name="is_income" column_invisible="1"/>
                 <field name="user_id" optional="show" groups="moneta_finance.group_moneta_manager"/>
                 <field name="is_system" widget="boolean" optional="hide"/>
             </list>

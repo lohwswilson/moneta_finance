@@ -13,6 +13,12 @@ class MonetaCategory(models.Model):
 
     name = fields.Char(string='Category Name', required=True)
     description = fields.Text(string='Description')
+
+    category_type = fields.Selection([
+        ('expense', 'Expense'),
+        ('income', 'Income'),
+    ], string='Category Type', compute='_compute_category_type', inverse='_inverse_category_type', store=True, default='expense', required=True)
+
     # Moneta uses a boolean is_income (not an enum type); a transfer has no
     # category at all, so there is no 'transfer' type to carry over.
     is_income = fields.Boolean(string='Is Income', default=False)
@@ -38,6 +44,15 @@ class MonetaCategory(models.Model):
     )
     active = fields.Boolean(default=True)
 
+    @api.depends('is_income')
+    def _compute_category_type(self):
+        for rec in self:
+            rec.category_type = 'income' if rec.is_income else 'expense'
+
+    def _inverse_category_type(self):
+        for rec in self:
+            rec.is_income = (rec.category_type == 'income')
+
     # display_name is a built-in computed field; override its compute to show
     # "Parent / Child" instead of declaring a stored Char that would shadow it.
     @api.depends('name', 'parent_id.name')
@@ -55,30 +70,41 @@ class MonetaCategory(models.Model):
 
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
-        # Convenience in the form: picking a parent flips is_income to match.
+        # Convenience in the form: picking a parent flips is_income and category_type to match.
         if self.parent_id:
+            self.category_type = self.parent_id.category_type
             self.is_income = self.parent_id.is_income
 
     @api.model_create_multi
     def create(self, vals_list):
-        # A child inherits is_income from its parent; the parent wins over any
+        # A child inherits is_income / category_type from its parent; the parent wins over any
         # explicit value supplied alongside it (matches Moneta's create path).
         for vals in vals_list:
+            if 'category_type' in vals and 'is_income' not in vals:
+                vals['is_income'] = (vals['category_type'] == 'income')
+            elif 'is_income' in vals and 'category_type' not in vals:
+                vals['category_type'] = 'income' if vals['is_income'] else 'expense'
             parent_id = vals.get('parent_id')
             if parent_id:
                 parent = self.browse(parent_id).exists()
                 if parent:
                     vals['is_income'] = parent.is_income
+                    vals['category_type'] = parent.category_type
         return super().create(vals_list)
 
     def write(self, vals):
-        # Re-parenting onto a new parent re-inherits is_income from it.
+        if 'category_type' in vals and 'is_income' not in vals:
+            vals['is_income'] = (vals['category_type'] == 'income')
+        elif 'is_income' in vals and 'category_type' not in vals:
+            vals['category_type'] = 'income' if vals['is_income'] else 'expense'
+        # Re-parenting onto a new parent re-inherits is_income / category_type from it.
         if 'parent_id' in vals:
             new_parent_id = vals.get('parent_id')
             if new_parent_id:
                 new_parent = self.browse(new_parent_id).exists()
                 if new_parent:
                     vals['is_income'] = new_parent.is_income
+                    vals['category_type'] = new_parent.category_type
         res = super().write(vals)
         # When is_income changes, cascade to every descendant (Moneta's
         # updateDescendantTypes). super().write on the descendant set avoids
@@ -87,7 +113,10 @@ class MonetaCategory(models.Model):
             for rec in self:
                 descendants = rec._get_descendants()
                 if descendants:
-                    super(MonetaCategory, descendants).write({'is_income': vals['is_income']})
+                    super(MonetaCategory, descendants).write({
+                        'is_income': vals['is_income'],
+                        'category_type': 'income' if vals['is_income'] else 'expense',
+                    })
         return res
 
     def _get_descendants(self):
@@ -179,6 +208,7 @@ class MonetaCategory(models.Model):
                     'name': tmpl.name,
                     'description': tmpl.description,
                     'is_income': tmpl.is_income,
+                    'category_type': tmpl.category_type or ('income' if tmpl.is_income else 'expense'),
                     'is_system': False,  # user copies are deletable
                     'icon': tmpl.icon,
                     'color': tmpl.color,
