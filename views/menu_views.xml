@@ -3,6 +3,7 @@
     <!-- Top-level Moneta Menu (visible to Moneta users; manager implies user) -->
     <menuitem id="menu_moneta_root"
               name="Moneta Finance"
+              web_icon="moneta_finance,static/description/icon.png"
               groups="group_moneta_user"
               sequence="10"/>
 
