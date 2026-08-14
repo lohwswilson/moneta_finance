@@ -58,7 +58,7 @@
                 </sheet>
                 <footer>
                     <button name="action_scan_receipt" string="Scan with Vision AI" type="object" class="btn-primary" invisible="state != 'upload'" icon="fa-eye"/>
-                    <button name="action_create_transaction" string="Create Checkbook Transaction" type="object" class="btn-primary" invisible="state != 'review'" icon="fa-check"/>
+                    <button name="action_create_transaction" string="Create Transaction" type="object" class="btn-primary" invisible="state != 'review'" icon="fa-check"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
