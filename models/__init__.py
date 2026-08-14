@@ -20,3 +20,4 @@ from . import transaction_rule
 from . import goal
 from . import property
 from . import subscription_detector
+from . import insight

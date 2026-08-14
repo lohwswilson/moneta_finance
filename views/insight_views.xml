@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Insights Kanban Card View (Sure.am Style) -->
+    <record id="view_moneta_insight_kanban" model="ir.ui.view">
+        <field name="name">moneta.insight.kanban</field>
+        <field name="model">moneta.insight</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" default_order="sequence asc, id asc" create="false">
+                <field name="name"/>
+                <field name="category_name"/>
+                <field name="insight_type"/>
+                <field name="level"/>
+                <field name="badge_text"/>
+                <field name="badge_subtext"/>
+                <field name="description"/>
+                <field name="action_type"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 position-relative" style="background: #ffffff; min-height: 220px;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small fw-bold text-uppercase tracking-wider">
+                                    <i class="fa fa-lightbulb-o text-warning me-1"/>
+                                    <field name="category_name"/>
+                                </span>
+                                <t t-if="record.level.raw_value == 'danger'">
+                                    <span class="badge rounded-pill bg-danger-subtle text-danger px-3 py-1">Attention</span>
+                                </t>
+                                <t t-elif="record.level.raw_value == 'warning'">
+                                    <span class="badge rounded-pill bg-warning-subtle text-warning px-3 py-1">Notice</span>
+                                </t>
+                                <t t-elif="record.level.raw_value == 'success'">
+                                    <span class="badge rounded-pill bg-success-subtle text-success px-3 py-1">Positive</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge rounded-pill bg-info-subtle text-info px-3 py-1">Insight</span>
+                                </t>
+                            </div>
+
+                            <h4 class="fw-bold text-dark my-2"><field name="name"/></h4>
+
+                            <div class="d-flex align-items-baseline gap-2 my-2">
+                                <t t-if="record.badge_text.raw_value">
+                                    <span class="fs-3 fw-bolder text-primary"><field name="badge_text"/></span>
+                                    <span class="text-muted small"><field name="badge_subtext"/></span>
+                                </t>
+                            </div>
+
+                            <p class="text-muted small flex-grow-1 mb-3"><field name="description"/></p>
+
+                            <div class="pt-3 border-top d-flex justify-content-end">
+                                <button name="action_execute_insight" type="object" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold">
+                                    Take Action <i class="fa fa-arrow-right ms-1"/>
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Insights List View -->
+    <record id="view_moneta_insight_tree" model="ir.ui.view">
+        <field name="name">moneta.insight.list</field>
+        <field name="model">moneta.insight</field>
+        <field name="arch" type="xml">
+            <list string="Smart Financial Insights" default_order="sequence asc" create="false">
+                <field name="sequence" widget="handle"/>
+                <field name="category_name" string="Domain"/>
+                <field name="name" string="Insight Alert"/>
+                <field name="level" widget="badge" 
+                       decoration-danger="level == 'danger'" 
+                       decoration-warning="level == 'warning'" 
+                       decoration-success="level == 'success'" 
+                       decoration-info="level == 'info'"/>
+                <field name="badge_text" string="Metric"/>
+                <field name="badge_subtext" string="Context"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Insights Search View -->
+    <record id="view_moneta_insight_search" model="ir.ui.view">
+        <field name="name">moneta.insight.search</field>
+        <field name="model">moneta.insight</field>
+        <field name="arch" type="xml">
+            <search string="Search Insights">
+                <field name="name"/>
+                <field name="category_name"/>
+                <filter name="filter_danger" string="Critical Attention" domain="[('level', '=', 'danger')]"/>
+                <filter name="filter_warning" string="Notices &amp; Warnings" domain="[('level', '=', 'warning')]"/>
+                <filter name="filter_success" string="Positive Milestones" domain="[('level', '=', 'success')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_type" string="Insight Type" context="{'group_by': 'insight_type'}"/>
+                    <filter name="group_by_level" string="Severity Level" context="{'group_by': 'level'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Insights Window Action -->
+    <record id="action_moneta_insight" model="ir.actions.act_window">
+        <field name="name">Smart Financial Insights</field>
+        <field name="res_model">moneta.insight</field>
+        <field name="view_mode">kanban,list</field>
+        <field name="search_view_id" ref="view_moneta_insight_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Real-Time Smart Financial Insights
+            </p>
+            <p>
+                Moneta automatically analyzes your budget velocity, savings rate trends, 30-day liquidity risks, and spending category anomalies.
+            </p>
+        </field>
+    </record>
+</odoo>

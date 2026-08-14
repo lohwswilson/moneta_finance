@@ -81,6 +81,7 @@ Key Features & Capabilities:
         'views/subscription_detector_views.xml',
         'views/net_worth_views.xml',
         'views/wizard_views.xml',
+        'views/insight_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

@@ -83,3 +83,5 @@ access_moneta_transaction_batch_category_wizard_user,moneta.transaction.batch.ca
 access_moneta_transaction_batch_category_wizard_manager,moneta.transaction.batch.category.wizard.manager,model_moneta_transaction_batch_category_wizard,group_moneta_manager,1,1,1,1
 access_moneta_property_valuation_user,moneta.property.valuation.user,model_moneta_property_valuation,group_moneta_user,1,1,1,1
 access_moneta_property_valuation_manager,moneta.property.valuation.manager,model_moneta_property_valuation,group_moneta_manager,1,1,1,1
+access_moneta_insight_user,moneta.insight.user,model_moneta_insight,group_moneta_user,1,1,1,1
+access_moneta_insight_manager,moneta.insight.manager,model_moneta_insight,group_moneta_manager,1,1,1,1

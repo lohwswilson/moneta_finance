@@ -110,6 +110,12 @@
               parent="menu_moneta_root"
               sequence="40"/>
 
+    <menuitem id="menu_moneta_insights"
+              name="Smart Financial Insights"
+              parent="menu_moneta_reports_root"
+              action="action_moneta_insight"
+              sequence="5"/>
+
     <menuitem id="menu_moneta_net_worth"
               name="Net Worth Trend"
               parent="menu_moneta_reports_root"

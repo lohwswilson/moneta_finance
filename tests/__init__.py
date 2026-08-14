@@ -21,3 +21,4 @@ from . import test_account_share
 from . import test_loan_and_simulations
 from . import test_sure_features
 from . import test_power_user_features
+from . import test_insights

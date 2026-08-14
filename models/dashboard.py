@@ -54,6 +54,18 @@ class MonetaDashboard(models.TransientModel):
     fire_progress_pct = fields.Float(string='FIRE Progress (%)', compute='_compute_fire_and_real_estate', digits=(5, 1))
     total_real_estate_equity = fields.Monetary(string='Real Estate Equity', compute='_compute_fire_and_real_estate')
 
+    # Smart Financial Insights (Sure-Style)
+    insight_count = fields.Integer(string='Insights Count', compute='_compute_insights')
+    top_insight_title = fields.Char(string='Top Insight', compute='_compute_insights')
+    top_insight_badge = fields.Char(string='Top Insight Badge', compute='_compute_insights')
+    top_insight_desc = fields.Text(string='Top Insight Recommendation', compute='_compute_insights')
+    top_insight_level = fields.Selection([
+        ('danger', 'Critical Attention'),
+        ('warning', 'Notice / Warning'),
+        ('info', 'Observation'),
+        ('success', 'Positive Milestone'),
+    ], string='Top Insight Severity', compute='_compute_insights')
+
     @api.depends('name')
     def _compute_display_name(self):
         for rec in self:
@@ -240,4 +252,28 @@ class MonetaDashboard(models.TransientModel):
     def action_open_import(self):
         action = self.env.ref('moneta_finance.action_moneta_import_wizard').read()[0]
         action['target'] = 'new'
+        return action
+
+    @api.depends()
+    def _compute_insights(self):
+        for dash in self:
+            insights = self.env['moneta.insight'].get_user_insights()
+            dash.insight_count = len(insights)
+            if insights:
+                top = insights[0]
+                dash.top_insight_title = top.get('name')
+                badge_txt = top.get('badge_text', '')
+                badge_sub = top.get('badge_subtext', '')
+                dash.top_insight_badge = f"{badge_txt} {badge_sub}".strip()
+                dash.top_insight_desc = top.get('description')
+                dash.top_insight_level = top.get('level', 'info')
+            else:
+                dash.top_insight_title = 'All systems healthy'
+                dash.top_insight_badge = 'On Track'
+                dash.top_insight_desc = 'No budget overspends, cashflow dips, or anomalous spending spikes detected.'
+                dash.top_insight_level = 'success'
+
+    def action_open_insights(self):
+        action = self.env.ref('moneta_finance.action_moneta_insight').read()[0]
+        action['target'] = 'current'
         return action

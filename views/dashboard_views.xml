@@ -23,6 +23,30 @@
                         </div>
                     </div>
 
+                    <!-- Sure-Style Insights Alert Banner -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%); border-left: 5px solid #4f46e5 !important;">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-white p-3 shadow-sm text-primary">
+                                    <i class="fa fa-lightbulb-o fa-2x text-primary"/>
+                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <span class="badge rounded-pill bg-primary px-3 py-1 text-white fw-bold">Smart Insight</span>
+                                        <h5 class="fw-bold mb-0 text-dark"><field name="top_insight_title"/></h5>
+                                        <span class="badge bg-white text-primary border fw-semibold"><field name="top_insight_badge"/></span>
+                                    </div>
+                                    <p class="text-muted small mb-0 mt-1"><field name="top_insight_desc"/></p>
+                                </div>
+                            </div>
+                            <div>
+                                <button name="action_open_insights" type="object" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                    <i class="fa fa-arrow-circle-right me-1"/> View All Insights (<field name="insight_count"/>)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Row 1: Primary Wealth & Cash Flow KPIs -->
                     <div class="row g-3 mb-3">
                         <!-- Net Worth Card -->
