@@ -26,7 +26,7 @@ class MonetaRecurringTransaction(models.Model):
     name = fields.Char(string='Description / Title', required=True)
     account_id = fields.Many2one('moneta.account', string='Account', required=True)
     payee_id = fields.Many2one('moneta.payee', string='Payee')
-    category_id = fields.Many2one('moneta.category', string='Category')
+    category_id = fields.Many2one('moneta.category', string='Category', domain="[('user_id', '=', user_id)]")
 
     # Base Account Currency & Amount
     amount = fields.Monetary(string='Account Amount', required=True)

@@ -110,7 +110,7 @@ class MonetaBudgetCategory(models.Model):
     budget_id = fields.Many2one('moneta.budget', string='Budget', required=True, ondelete='cascade')
     # Category-based lines only this MVP; transfer budget categories are
     # deferred, so the category is required.
-    category_id = fields.Many2one('moneta.category', string='Category', required=True)
+    category_id = fields.Many2one('moneta.category', string='Category', required=True, domain="[('user_id', '=', user_id)]")
     amount = fields.Monetary(string='Planned Amount', required=True)
     is_income = fields.Boolean(string='Is Income', default=False)
     category_group = fields.Selection([

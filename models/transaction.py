@@ -17,7 +17,7 @@ class MonetaTransaction(models.Model):
     currency_id = fields.Many2one('res.currency', related='account_id.currency_id', store=True, readonly=True)
 
     payee_id = fields.Many2one('moneta.payee', string='Payee')
-    category_id = fields.Many2one('moneta.category', string='Category')
+    category_id = fields.Many2one('moneta.category', string='Category', domain="[('user_id', '=', user_id)]")
 
     amount = fields.Monetary(string='Amount', required=True, default=0.0)
     memo = fields.Char(string='Memo / Description')
@@ -374,7 +374,7 @@ class MonetaTransactionSplit(models.Model):
     transaction_id = fields.Many2one('moneta.transaction', string='Parent Transaction', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency', related='transaction_id.currency_id', readonly=True)
 
-    category_id = fields.Many2one('moneta.category', string='Category', required=True)
+    category_id = fields.Many2one('moneta.category', string='Category', required=True, domain="[('user_id', '=', user_id)]")
     amount = fields.Monetary(string='Amount', required=True, default=0.0)
     memo = fields.Char(string='Memo')
     tag_ids = fields.Many2many('moneta.tag', string='Tags')

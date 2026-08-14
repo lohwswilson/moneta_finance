@@ -10,14 +10,14 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="parent_id"/>
+                            <field name="parent_id" domain="[('id', '!=', id), ('user_id', '=', user_id)]"/>
                             <field name="is_income" widget="boolean_toggle"/>
                             <field name="is_system" readonly="1"/>
                         </group>
                         <group>
                             <field name="icon"/>
                             <field name="color" widget="color"/>
-                            <field name="user_id"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
@@ -29,16 +29,44 @@
         </field>
     </record>
 
+    <!-- Category Search View -->
+    <record id="view_moneta_category_search" model="ir.ui.view">
+        <field name="name">moneta.category.search</field>
+        <field name="model">moneta.category</field>
+        <field name="arch" type="xml">
+            <search string="Search Categories">
+                <field name="name" string="Category" filter_domain="['|', ('name', 'ilike', self), ('parent_id.name', 'ilike', self)]"/>
+                <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                <field name="parent_id"/>
+                
+                <filter name="my_categories" string="My Categories" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="filter_expense" string="Expenses" domain="[('is_income', '=', False)]"/>
+                <filter name="filter_income" string="Income" domain="[('is_income', '=', True)]"/>
+                <separator/>
+                <filter name="filter_user_only" string="Exclude System Templates" domain="[('is_system', '=', False)]"/>
+                <filter name="filter_system_only" string="System Templates Only" domain="[('is_system', '=', True)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter name="group_by_parent" string="Parent Category" context="{'group_by': 'parent_id'}"/>
+                    <filter name="group_by_type" string="Category Type" context="{'group_by': 'is_income'}"/>
+                    <filter name="group_by_owner" string="Owner" context="{'group_by': 'user_id'}" groups="moneta_finance.group_moneta_manager"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Category List View (Odoo 18 uses list tag) -->
     <record id="view_moneta_category_tree" model="ir.ui.view">
         <field name="name">moneta.category.list</field>
         <field name="model">moneta.category</field>
         <field name="arch" type="xml">
             <list string="Categories">
-                <field name="display_name"/>
-                <field name="is_income" widget="boolean" optional="show"/>
+                <field name="icon" string=" " width="30px"/>
+                <field name="display_name" string="Category Name"/>
+                <field name="is_income" string="Type" widget="badge" decoration-success="is_income" decoration-danger="not is_income"/>
+                <field name="user_id" optional="show" groups="moneta_finance.group_moneta_manager"/>
                 <field name="is_system" widget="boolean" optional="hide"/>
-                <field name="icon" optional="hide"/>
             </list>
         </field>
     </record>
@@ -48,7 +76,8 @@
         <field name="name">Categories</field>
         <field name="res_model">moneta.category</field>
         <field name="view_mode">list,form</field>
-        <field name="context">{'default_user_id': uid}</field>
+        <field name="search_view_id" ref="view_moneta_category_search"/>
+        <field name="context">{'search_default_my_categories': 1, 'default_user_id': uid}</field>
     </record>
 
     <!-- One-time per-user seeding, reachable from the category list Action menu.
