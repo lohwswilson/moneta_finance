@@ -105,3 +105,79 @@
     transform: translateY(-1px) !important;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
 }
+
+/* --- Perfectly Aligned High-Visual KPI Stat Cards --- */
+.moneta-kpi-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    padding: 1.25rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 165px !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease !important;
+}
+
+.moneta-kpi-card:hover {
+    transform: translateY(-3px) !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.moneta-kpi-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 0.5rem !important;
+    height: 32px !important;
+}
+
+.moneta-kpi-title {
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: #64748b !important;
+}
+
+.moneta-kpi-icon-wrapper {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.moneta-kpi-value {
+    font-size: 1.7rem !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: -0.02em !important;
+    display: flex !important;
+    align-items: baseline !important;
+}
+
+.moneta-kpi-footer {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding-top: 0.65rem !important;
+    border-top: 1px solid #f1f5f9 !important;
+    font-size: 0.82rem !important;
+    color: #64748b !important;
+    min-height: 30px !important;
+    margin-top: auto !important;
+}
+
+.text-purple {
+    color: #7c3aed !important;
+}
+
+.bg-purple-light {
+    background-color: #f5f3ff !important;
+    color: #7c3aed !important;
+}

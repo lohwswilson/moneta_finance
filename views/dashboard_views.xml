@@ -37,59 +37,59 @@
                     <div class="row g-3 mb-3">
                         <!-- Net Worth Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="text-muted fw-bold small text-uppercase">Net Worth</span>
-                                    <span class="badge bg-success-light">
-                                        <i class="fa fa-diamond fa-lg"/>
+                            <div class="card moneta-kpi-card h-100">
+                                <div class="moneta-kpi-header">
+                                    <span class="moneta-kpi-title">Net Worth</span>
+                                    <span class="moneta-kpi-icon-wrapper bg-success-light text-success">
+                                        <i class="fa fa-shield fa-lg"/>
                                     </span>
                                 </div>
-                                <h3 class="fw-bold text-success mb-2">
+                                <div class="moneta-kpi-value text-success">
                                     <field name="net_worth" widget="monetary"/>
-                                </h3>
-                                <div class="d-flex justify-content-between small text-muted pt-2 border-top">
-                                    <span>Assets: <field name="total_assets" widget="monetary"/></span>
-                                    <span>Debt: <field name="total_liabilities" widget="monetary"/></span>
+                                </div>
+                                <div class="moneta-kpi-footer">
+                                    <span>Assets: <strong class="text-dark"><field name="total_assets" widget="monetary"/></strong></span>
+                                    <span>Debt: <strong class="text-danger"><field name="total_liabilities" widget="monetary"/></strong></span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Cash Flow Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="text-muted fw-bold small text-uppercase">Cash Flow (<field name="month_label"/>)</span>
+                            <div class="card moneta-kpi-card h-100">
+                                <div class="moneta-kpi-header">
+                                    <span class="moneta-kpi-title">Cash Flow (<field name="month_label"/>)</span>
                                     <span class="badge bg-success" invisible="savings_rate &lt;= 0">
                                         <field name="savings_rate"/>% Saved
                                     </span>
-                                    <span class="badge bg-info-light" invisible="savings_rate &gt; 0">
+                                    <span class="moneta-kpi-icon-wrapper bg-info-light text-primary" invisible="savings_rate &gt; 0">
                                         <i class="fa fa-exchange fa-lg"/>
                                     </span>
                                 </div>
-                                <h3 class="fw-bold text-primary mb-2">
+                                <div class="moneta-kpi-value text-primary">
                                     <field name="month_net_savings" widget="monetary"/>
-                                </h3>
-                                <div class="d-flex justify-content-between small pt-2 border-top">
-                                    <span class="text-success" title="Total Monthly Inflow"><i class="fa fa-arrow-up me-1"/><field name="month_income" widget="monetary"/></span>
-                                    <span class="text-danger" title="Total Monthly Outflow"><i class="fa fa-arrow-down me-1"/><field name="month_expenses" widget="monetary"/></span>
+                                </div>
+                                <div class="moneta-kpi-footer">
+                                    <span class="text-success fw-semibold" title="Monthly Inflow"><i class="fa fa-arrow-up me-1"/><field name="month_income" widget="monetary"/></span>
+                                    <span class="text-danger fw-semibold" title="Monthly Outflow"><i class="fa fa-arrow-down me-1"/><field name="month_expenses" widget="monetary"/></span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Portfolio Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="text-muted fw-bold small text-uppercase">Investment Portfolio</span>
-                                    <span class="badge bg-warning-light">
+                            <div class="card moneta-kpi-card h-100">
+                                <div class="moneta-kpi-header">
+                                    <span class="moneta-kpi-title">Investments</span>
+                                    <span class="moneta-kpi-icon-wrapper bg-warning-light text-warning">
                                         <i class="fa fa-line-chart fa-lg"/>
                                     </span>
                                 </div>
-                                <h3 class="fw-bold text-dark mb-2">
+                                <div class="moneta-kpi-value text-dark">
                                     <field name="portfolio_market_value" widget="monetary"/>
-                                </h3>
-                                <div class="d-flex justify-content-between small pt-2 border-top">
-                                    <span>Gain: <field name="portfolio_unrealized_gain" widget="monetary" decoration-success="portfolio_unrealized_gain &gt;= 0" decoration-danger="portfolio_unrealized_gain &lt; 0"/></span>
+                                </div>
+                                <div class="moneta-kpi-footer">
+                                    <span>Gain: <strong class="text-success" invisible="portfolio_unrealized_gain &lt; 0">+<field name="portfolio_unrealized_gain" widget="monetary"/></strong><strong class="text-danger" invisible="portfolio_unrealized_gain &gt;= 0"><field name="portfolio_unrealized_gain" widget="monetary"/></strong></span>
                                     <span class="badge bg-success" invisible="portfolio_gain_percent &lt; 0">+<field name="portfolio_gain_percent"/>%</span>
                                     <span class="badge bg-danger" invisible="portfolio_gain_percent &gt;= 0"><field name="portfolio_gain_percent"/>%</span>
                                 </div>
@@ -98,19 +98,19 @@
 
                         <!-- Real Estate Equity Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="text-muted fw-bold small text-uppercase">Real Estate Equity</span>
-                                    <span class="badge bg-primary-light">
+                            <div class="card moneta-kpi-card h-100">
+                                <div class="moneta-kpi-header">
+                                    <span class="moneta-kpi-title">Real Estate Equity</span>
+                                    <span class="moneta-kpi-icon-wrapper bg-purple-light text-purple">
                                         <i class="fa fa-home fa-lg"/>
                                     </span>
                                 </div>
-                                <h3 class="fw-bold text-dark mb-2">
+                                <div class="moneta-kpi-value text-dark">
                                     <field name="total_real_estate_equity" widget="monetary"/>
-                                </h3>
-                                <div class="d-flex justify-content-between small text-muted pt-2 border-top">
-                                    <span>Valuation: <field name="real_estate_assets" widget="monetary"/></span>
-                                    <span class="text-success fw-bold">Active Equity</span>
+                                </div>
+                                <div class="moneta-kpi-footer">
+                                    <span>Valuation: <strong class="text-dark"><field name="real_estate_assets" widget="monetary"/></strong></span>
+                                    <span class="badge bg-primary-light text-primary fw-semibold">Active Equity</span>
                                 </div>
                             </div>
                         </div>
