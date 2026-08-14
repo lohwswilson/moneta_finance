@@ -146,6 +146,12 @@
               action="action_moneta_import_wizard"
               sequence="20"/>
 
+    <menuitem id="menu_moneta_export_wizard"
+              name="Export Register (QIF / CSV)"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_export_wizard"
+              sequence="30"/>
+
     <!-- Configuration & Estate -->
     <menuitem id="menu_moneta_config_root"
               name="Configuration"
@@ -169,6 +175,12 @@
               parent="menu_moneta_config_root"
               action="action_moneta_payee"
               sequence="20"/>
+
+    <menuitem id="menu_moneta_payee_merge"
+              name="Merge Duplicate Payees"
+              parent="menu_moneta_config_root"
+              action="action_moneta_payee_merge_wizard"
+              sequence="25"/>
 
     <menuitem id="menu_moneta_tags"
               name="Tags"

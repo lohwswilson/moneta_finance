@@ -190,4 +190,37 @@
         <field name="binding_model_id" ref="model_moneta_transaction"/>
         <field name="binding_view_types">list</field>
     </record>
+
+
+    <!-- Batch Category Assignment Wizard View -->
+    <record id="view_moneta_transaction_batch_category_form" model="ir.ui.view">
+        <field name="name">moneta.transaction.batch.category.wizard.form</field>
+        <field name="model">moneta.transaction.batch.category.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Batch Categorize Transactions">
+                <sheet>
+                    <group>
+                        <field name="category_id" options="{'no_create': True}"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                    <field name="transaction_ids" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_apply" string="Apply Category to Selected" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Batch Categorize Server Action in Action Dropdown -->
+    <record id="action_moneta_tx_batch_category" model="ir.actions.server">
+        <field name="name">Batch Assign Category &amp; Tags</field>
+        <field name="model_id" ref="model_moneta_transaction"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_batch_set_category()</field>
+        <field name="binding_model_id" ref="model_moneta_transaction"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
 </odoo>

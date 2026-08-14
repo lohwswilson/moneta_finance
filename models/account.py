@@ -1,3 +1,5 @@
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
@@ -47,6 +49,12 @@ class MonetaAccount(models.Model):
     payment_due_day = fields.Integer(string='Payment Due Day', help='Day of month when payment is due (1-31)')
 
     account_number = fields.Char(string='Account Number / Mask')
+    forecast_balance_30d = fields.Monetary(string='Projected (30d)', compute='_compute_forecast_and_statement_cycle')
+    forecast_balance_60d = fields.Monetary(string='Projected (60d)', compute='_compute_forecast_and_statement_cycle')
+    forecast_balance_90d = fields.Monetary(string='Projected (90d)', compute='_compute_forecast_and_statement_cycle')
+    next_statement_date = fields.Date(string='Next Statement Date', compute='_compute_forecast_and_statement_cycle')
+    next_payment_due_date = fields.Date(string='Next Due Date', compute='_compute_forecast_and_statement_cycle')
+    current_cycle_spent = fields.Monetary(string='Current Cycle Spending', compute='_compute_forecast_and_statement_cycle')
     # Linked institution record (Phase 1); institution_name remains as a
     # free-text fallback for accounts that predate an institution record.
     institution_id = fields.Many2one('moneta.institution', string='Institution')
@@ -81,6 +89,51 @@ class MonetaAccount(models.Model):
     )
     is_shared = fields.Boolean(string='Is Shared', compute='_compute_shared_users', store=True)
     shared_count = fields.Integer(string='Shared Users Count', compute='_compute_shared_users')
+
+    @api.depends('current_balance', 'billing_cycle_day', 'payment_due_day', 'account_type')
+    def _compute_forecast_and_statement_cycle(self):
+        today = fields.Date.context_today(self)
+        for acc in self:
+            cur_bal = float(acc.current_balance or 0.0)
+            d30 = today + timedelta(days=30)
+            d60 = today + timedelta(days=60)
+            d90 = today + timedelta(days=90)
+            
+            scheds = self.env['moneta.recurring.transaction'].search([
+                ('account_id', '=', acc.id),
+                ('active', '=', True),
+                ('next_date', '>=', today),
+            ])
+            delta_30 = sum(float(s.amount or 0.0) for s in scheds if s.next_date <= d30)
+            delta_60 = sum(float(s.amount or 0.0) for s in scheds if s.next_date <= d60)
+            delta_90 = sum(float(s.amount or 0.0) for s in scheds if s.next_date <= d90)
+            
+            acc.forecast_balance_30d = round(cur_bal + delta_30, 4)
+            acc.forecast_balance_60d = round(cur_bal + delta_60, 4)
+            acc.forecast_balance_90d = round(cur_bal + delta_90, 4)
+            
+            if acc.account_type == 'credit_card' and acc.billing_cycle_day:
+                c_day = max(min(int(acc.billing_cycle_day), 28), 1)
+                due_day = max(min(int(acc.payment_due_day or 15), 28), 1)
+                if today.day <= c_day:
+                    acc.next_statement_date = today.replace(day=c_day)
+                    cycle_start = (today.replace(day=1) - relativedelta(months=1)).replace(day=c_day)
+                else:
+                    acc.next_statement_date = (today.replace(day=1) + relativedelta(months=1)).replace(day=c_day)
+                    cycle_start = today.replace(day=c_day)
+                
+                acc.next_payment_due_date = (acc.next_statement_date.replace(day=1) + relativedelta(months=1)).replace(day=due_day)
+                txs = self.env['moneta.transaction'].search([
+                    ('account_id', '=', acc.id),
+                    ('transaction_date', '>=', cycle_start),
+                    ('amount', '<', 0),
+                    ('state', '!=', 'void'),
+                ])
+                acc.current_cycle_spent = round(abs(sum(float(t.amount or 0.0) for t in txs)), 4)
+            else:
+                acc.next_statement_date = False
+                acc.next_payment_due_date = False
+                acc.current_cycle_spent = 0.0
 
     @api.depends('share_ids', 'share_ids.user_id')
     def _compute_shared_users(self):

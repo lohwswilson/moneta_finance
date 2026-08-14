@@ -68,6 +68,32 @@ class MonetaTransaction(models.Model):
                 count = max(count, 1)
             rec.attachment_count = count
 
+    def action_batch_mark_cleared(self):
+        """Server action: Mark all selected transactions as Cleared."""
+        self.write({'state': 'cleared'})
+        return True
+
+    def action_batch_mark_reconciled(self):
+        """Server action: Mark all selected transactions as Reconciled."""
+        self.write({'state': 'reconciled'})
+        return True
+
+    def action_batch_mark_unreconciled(self):
+        """Server action: Mark all selected transactions as Unreconciled."""
+        self.write({'state': 'unreconciled'})
+        return True
+
+    def action_batch_set_category(self):
+        """Server action: Open batch category assignment wizard."""
+        return {
+            'name': 'Batch Assign Category',
+            'type': 'ir.actions.act_window',
+            'res_model': 'moneta.transaction.batch.category.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_transaction_ids': [(6, 0, self.ids)]},
+        }
+
     def action_view_attachments(self):
         self.ensure_one()
         return {

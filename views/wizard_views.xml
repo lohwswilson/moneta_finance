@@ -114,4 +114,79 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+
+
+    <!-- Payee Smart Deduplication & Merge Wizard View -->
+    <record id="view_moneta_payee_merge_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.payee.merge.wizard.form</field>
+        <field name="model">moneta.payee.merge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Merge Duplicate Payees">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-info-circle me-2"/>
+                        Select a primary canonical payee and the duplicate payee names to merge. All historical transactions and recurring bill schedules will be safely moved to the primary payee, and duplicate names will be registered as search aliases.
+                    </div>
+                    <group>
+                        <field name="primary_payee_id" options="{'no_create': True}"/>
+                        <field name="create_aliases" widget="boolean_toggle"/>
+                    </group>
+                    <group string="Duplicate Payees to Absorb">
+                        <field name="duplicate_payee_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_merge" string="Merge Payees" type="object" class="btn-primary" icon="fa-compress"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_payee_merge_wizard" model="ir.actions.act_window">
+        <field name="name">Merge Duplicate Payees</field>
+        <field name="res_model">moneta.payee.merge.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Account Checkbook Register Export Wizard View -->
+    <record id="view_moneta_export_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.export.wizard.form</field>
+        <field name="model">moneta.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Checkbook Register (QIF / CSV)">
+                <sheet>
+                    <field name="state" invisible="1"/>
+                    <div invisible="state != 'choose'">
+                        <group string="Export Scope &amp; Format">
+                            <field name="account_ids" widget="many2many_tags"/>
+                            <field name="export_format" widget="radio"/>
+                        </group>
+                        <group string="Date Filter (Optional)">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </div>
+                    <div invisible="state != 'get'" class="text-center py-4">
+                        <h4 class="fw-bold text-success mb-3"><i class="fa fa-check-circle me-2"/>Export Ready for Download</h4>
+                        <field name="file_data" filename="file_name" widget="binary"/>
+                        <p class="text-muted small mt-2">Click above to save your backup file (<field name="file_name" readonly="1"/>).</p>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_export" string="Generate Export File" type="object" class="btn-primary" invisible="state != 'choose'" icon="fa-download"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_moneta_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Checkbook Register</field>
+        <field name="res_model">moneta.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
 </odoo>

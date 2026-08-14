@@ -39,10 +39,34 @@
                             <field name="exclude_from_net_worth"/>
                         </group>
                     </group>
-                    <group string="Billing Cycle &amp; Payment Dates" invisible="account_type != 'credit_card'">
+                    <!-- 90-Day Cashflow Balance Forecast -->
+                    <div class="card border-0 shadow-sm rounded-3 bg-light p-3 my-3">
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa fa-line-chart text-primary me-2"/>90-Day Balance Forecast (Based on Scheduled Bills &amp; Income)</h6>
+                        <div class="row g-2">
+                            <div class="col-4 text-center border-end">
+                                <span class="text-muted small">In 30 Days</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="forecast_balance_30d" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-4 text-center border-end">
+                                <span class="text-muted small">In 60 Days</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="forecast_balance_60d" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-4 text-center">
+                                <span class="text-muted small">In 90 Days</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="forecast_balance_90d" widget="monetary"/></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group string="Credit Card Statement Cycle &amp; Due Dates" invisible="account_type != 'credit_card'">
                         <group>
                             <field name="billing_cycle_day"/>
                             <field name="payment_due_day"/>
+                        </group>
+                        <group>
+                            <field name="next_statement_date" readonly="1"/>
+                            <field name="next_payment_due_date" readonly="1"/>
+                            <field name="current_cycle_spent" widget="monetary" readonly="1"/>
                         </group>
                     </group>
                     <notebook>

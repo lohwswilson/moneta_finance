@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Moneta Personal Finance',
-    'version': '18.0.3.1.0',
+    'version': '18.0.4.0.0',
     'category': 'Accounting/Finance',
     'summary': 'Personal finance manager: bank accounts, credit cards, investments, budgets & QIF/OFX imports.',
     'description': """
