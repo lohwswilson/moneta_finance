@@ -9,7 +9,7 @@
 [![CI / Test Suite](https://github.com/lohwswilson/moneta_finance/actions/workflows/ci.yml/badge.svg?branch=18.0)](https://github.com/lohwswilson/moneta_finance/actions)
 [![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
 
-**A World-Class Personal Wealth, Banking, and Investment Operating System built natively for Odoo 18.**
+**An Open-Source Personal Finance, Banking & Wealth Management Module for Odoo 18.**
 
 *Combining the financial depth of Quicken Premier, the modern design of Maybe & Copilot Money, and the enterprise power of Odoo.*
 
@@ -32,19 +32,19 @@
 
 ---
 
-## 💡 The Story Behind Moneta
+## 💡 Why This Module Exists
 
-> *"Years ago, I was a dedicated user of **Microsoft Money**. It was reliable, comprehensive, and gave me complete visibility over my personal finances. But when Microsoft discontinued it, I had to migrate to **Quicken**.*
+> *"Years ago, I was a dedicated user of **Microsoft Money**. It was reliable, simple, and gave me complete visibility over my personal finances. But after Microsoft discontinued it, I had to move to **Quicken**.*
 >
-> *Over time, commercial tools became either clunky, burdened with recurring subscription fees, or trapped behind closed cloud platforms that didn't give me full control over my data. My finances were scattered across banks, multi-currency international stock brokers, and spreadsheets.*
+> *Over time, commercial apps became either bloated, locked behind monthly subscriptions, or trapped in closed cloud platforms that didn't give me direct access to my data. Meanwhile, my finances were scattered across bank accounts, foreign stock brokers, and spreadsheets.*
 >
-> *Having developed enterprise solutions on **Odoo** for several years, I realized something: **Odoo’s robust framework, multi-currency engine, and relational database are the perfect foundation for a modern personal wealth management system.***
+> *Having worked with and developed on **Odoo** for several years, I realized: **Why not build a personal finance module inside Odoo?** Odoo already has the best multi-currency engine, robust ORM, and PostgreSQL backing—everything needed for solid checkbook registers and portfolio tracking.*
 >
-> *One weekend, I decided to sit down and kickstart the project. What began as a personal tool to regain the power of Microsoft Money with the elegance of modern fintech is now **Moneta**.*
+> *So one weekend, I sat down and built this module to bring back the clean checkbook experience of Microsoft Money right inside my Odoo environment.*
 >
-> *I’ve open-sourced Moneta because financial clarity and data sovereignty belong to everyone. If you share this vision, I’d love for you to join me in shaping the future of open-source personal finance."*
+> *I've open-sourced this module so anyone running Odoo can easily manage their personal wealth and investments on their own database."*
 >
-> — **Wilson Loh** ([@lohwswilson](https://github.com/lohwswilson)) · *Creator of Moneta*
+> — **Wilson Loh** ([@lohwswilson](https://github.com/lohwswilson))
 
 ---
 

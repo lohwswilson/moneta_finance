@@ -1,33 +1,28 @@
-# The Story Behind Moneta Personal Finance
+# The Story Behind the Moneta Odoo Module
 
 ### From Microsoft Money to Quicken to Odoo 18
 
-Years ago, I was a dedicated user of **Microsoft Money**. It was reliable, comprehensive, and gave me complete visibility over my personal finances. But when Microsoft discontinued it, I had to migrate to **Quicken**.
+Years ago, I was a dedicated user of **Microsoft Money**. It was reliable, simple, and gave me complete visibility over my personal finances. But when Microsoft discontinued it, I had to migrate to **Quicken**.
 
-Over time, commercial financial software shifted towards closed cloud ecosystems, steep monthly subscription models, and bloated interfaces. My personal wealth was scattered:
-* Checking and high-yield savings in local banks
-* International equities and ETFs in USD/SGD brokerage accounts
+Over time, commercial financial software shifted toward closed cloud ecosystems and steep monthly subscription models. My personal finances were scattered:
+* Checking and savings in local banks
+* International equities in foreign currency brokerage accounts
 * Real estate and mortgages in spreadsheets
-* FIRE calculations on scratchpads
 
 ### The Developer's Realization
 
-Having spent several years developing enterprise business systems on **Odoo**, I realized that the Odoo framework provides the exact architecture required for the ultimate personal finance system:
+Having spent several years developing business solutions on **Odoo**, I realized that Odoo already provides the exact foundation needed for personal money management:
 
-1. **Enterprise-Grade Double-Entry & Running Balance Math**: Exact point-in-time balances without floating-point drift.
-2. **True Multi-Currency Support**: Real-time conversion of foreign stocks (USD) to home currency (SGD) with historical exchange rates.
-3. **100% Data Sovereignty**: Running on your own PostgreSQL database, with zero telemetry, zero advertising, and zero subscription paywalls.
+1. **Robust Relational Data**: Exact running balance ledger calculations with zero floating-point errors.
+2. **True Multi-Currency Engine**: Converting foreign stock holdings (USD) to home currency (SGD) with historical exchange rates.
+3. **Self-Hosted & Private**: Running directly on your own Odoo instance and PostgreSQL database without third-party subscriptions.
 
-### The Weekend Kickoff
+### A Weekend Project
 
-One weekend, I sat down and began coding the foundation: bringing back the beloved checkbook registers and split transactions of Microsoft Money, combined with Quicken's investment tracking, and wrapped in the visual elegance of modern fintech platforms like Copilot Money and Maybe.
+One weekend, I sat down and started building this Odoo module: combining the straightforward checkbook registers of Microsoft Money with live stock quote syncing and a clean modern dashboard.
 
-What started as a weekend project to solve my own financial tracking needs has grown into **Moneta Personal Finance**.
+What started as a weekend project for my own day-to-day finances is now **Moneta Personal Finance**.
 
-### Why Open Source?
-
-Financial data is the most personal data you own. You shouldn't have to surrender your privacy or pay a perpetual subscription just to know your net worth or balance a checkbook.
-
-I’ve open-sourced Moneta for the global community. Whether you're an ex-Microsoft Money user, a Quicken migrant, an Odoo enthusiast, or someone working toward Financial Independence (FIRE), you are warmly invited to contribute, suggest features, or simply enjoy using it.
+If you're already running Odoo for your business, homelab, or personal projects, you can simply drop this module into your addons folder and manage your personal finances in the same environment.
 
 — **Wilson Loh** ([@lohwswilson](https://github.com/lohwswilson))
