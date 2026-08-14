@@ -16,10 +16,14 @@ class MonetaTransaction(models.Model):
     account_id = fields.Many2one('moneta.account', string='Account', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency', related='account_id.currency_id', store=True, readonly=True)
 
+    check_number = fields.Char(string='Check # / Ref')
     payee_id = fields.Many2one('moneta.payee', string='Payee')
     category_id = fields.Many2one('moneta.category', string='Category', domain="[('user_id', '=', user_id)]")
 
     amount = fields.Monetary(string='Amount', required=True, default=0.0)
+    payment_amount = fields.Monetary(string='Payment / Decrease', compute='_compute_payment_deposit', inverse='_inverse_payment_deposit')
+    deposit_amount = fields.Monetary(string='Deposit / Increase', compute='_compute_payment_deposit', inverse='_inverse_payment_deposit')
+    running_balance = fields.Monetary(string='Balance', compute='_compute_running_balance')
     memo = fields.Char(string='Memo / Description')
 
     state = fields.Selection([
@@ -50,6 +54,46 @@ class MonetaTransaction(models.Model):
         default=lambda self: self.env.user, required=True,
         index=True,
     )
+
+    @api.depends('amount')
+    def _compute_payment_deposit(self):
+        for rec in self:
+            amt = rec.amount or 0.0
+            if amt < 0:
+                rec.payment_amount = round(abs(amt), 4)
+                rec.deposit_amount = 0.0
+            elif amt > 0:
+                rec.deposit_amount = round(amt, 4)
+                rec.payment_amount = 0.0
+            else:
+                rec.payment_amount = 0.0
+                rec.deposit_amount = 0.0
+
+    def _inverse_payment_deposit(self):
+        for rec in self:
+            if rec.payment_amount and not rec.deposit_amount:
+                rec.amount = -round(abs(rec.payment_amount), 4)
+            elif rec.deposit_amount and not rec.payment_amount:
+                rec.amount = round(abs(rec.deposit_amount), 4)
+
+    @api.depends('amount', 'account_id', 'transaction_date', 'state')
+    def _compute_running_balance(self):
+        for account in self.mapped('account_id'):
+            account_txs = self.filtered(lambda t: t.account_id == account)
+            if not account_txs:
+                continue
+            self.env.cr.execute("""
+                SELECT id, 
+                       (COALESCE(%s, 0) + SUM(CASE WHEN state <> 'void' THEN amount ELSE 0 END) 
+                        OVER (PARTITION BY account_id ORDER BY transaction_date ASC, id ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW))::float
+                FROM moneta_transaction
+                WHERE account_id = %s
+            """, (float(account.opening_balance or 0.0), account.id))
+            res_map = dict(self.env.cr.fetchall())
+            for tx in account_txs:
+                tx.running_balance = res_map.get(tx.id, 0.0)
+        for tx in self.filtered(lambda t: not t.account_id):
+            tx.running_balance = 0.0
 
     # ------------------------------------------------------------------
     # Balance contribution
@@ -310,8 +354,31 @@ class MonetaTransaction(models.Model):
 
     @api.onchange('payee_id')
     def _onchange_payee_id(self):
-        if self.payee_id and self.payee_id.default_category_id and not self.category_id:
+        if not self.payee_id:
+            return
+        # 1. Configured default category on Payee
+        if self.payee_id.default_category_id and not self.category_id:
             self.category_id = self.payee_id.default_category_id
+
+        # 2. Quicken QuickFill: Autocomplete from last transaction with this payee
+        domain = [
+            ('payee_id', '=', self.payee_id.id),
+            ('user_id', '=', self.user_id.id or self.env.uid),
+            ('state', '!=', 'void'),
+        ]
+        if self._origin.id:
+            domain.append(('id', '!=', self._origin.id))
+
+        last_tx = self.env['moneta.transaction'].search(domain, order='transaction_date desc, id desc', limit=1)
+        if last_tx:
+            if not self.category_id and last_tx.category_id:
+                self.category_id = last_tx.category_id
+            if not self.amount and last_tx.amount:
+                self.amount = last_tx.amount
+            if not self.memo and last_tx.memo:
+                self.memo = last_tx.memo
+            if last_tx.tag_ids and not self.tag_ids:
+                self.tag_ids = last_tx.tag_ids
 
     @api.constrains('is_transfer', 'transfer_account_id', 'account_id')
     def _check_transfer_target(self):
@@ -331,6 +398,22 @@ class MonetaTransaction(models.Model):
             raise ValidationError(
                 "Void transactions cannot be reconciled; un-void them first."
             )
+
+    def action_toggle_cleared(self):
+        """1-click toggle for Quicken 'Clr' column:
+        unreconciled -> cleared -> reconciled -> unreconciled.
+        Void transactions cannot be toggled."""
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.state == 'void':
+                continue
+            if rec.state == 'unreconciled':
+                rec.write({'state': 'cleared'})
+            elif rec.state == 'cleared':
+                rec.write({'state': 'reconciled', 'reconciled_date': rec.reconciled_date or today})
+            elif rec.state == 'reconciled':
+                rec.write({'state': 'unreconciled', 'reconciled_date': False})
+        return True
 
     def action_mark_cleared(self):
         """unreconciled -> cleared (the intermediate statement-match step)."""
