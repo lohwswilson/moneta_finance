@@ -164,7 +164,7 @@
 
     <!-- Account Action -->
     <record id="action_moneta_account" model="ir.actions.act_window">
-        <field name="name">Financial Accounts</field>
+        <field name="name">Accounts</field>
         <field name="res_model">moneta.account</field>
         <field name="view_mode">kanban,list,form</field>
     </record>

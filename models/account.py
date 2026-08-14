@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 class MonetaAccount(models.Model):
     _name = 'moneta.account'
-    _description = 'Moneta Financial Account'
+    _description = 'Moneta Account'
     _order = 'is_favourite desc, name'
 
     name = fields.Char(string='Account Name', required=True)
