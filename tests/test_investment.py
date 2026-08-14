@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
+
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
@@ -14,7 +17,7 @@ class TestInvestment(MonetaTestBase):
     def _security(self, symbol='AAPL'):
         return self.env['moneta.security'].create({'name': '%s Inc' % symbol, 'symbol': symbol})
 
-    def _inv_tx(self, account, security, action, qty, price=None, commission=0.0):
+    def _inv_tx(self, account, security, action, qty, price=None, commission=0.0, **kw):
         vals = {
             'action': action,
             'account_id': account.id,
@@ -25,6 +28,7 @@ class TestInvestment(MonetaTestBase):
             vals['price'] = price
         if commission:
             vals['commission'] = commission
+        vals.update(kw)
         return self.env['moneta.investment.transaction'].create(vals)
 
     def _holding(self, account, security):
@@ -153,3 +157,71 @@ class TestInvestment(MonetaTestBase):
         self.assertTrue(self._holding(acc, sec))
         tx.unlink()
         self.assertFalse(self._holding(acc, sec))
+
+    # ------------------------------------------------------------------
+    # TWR (Modified Dietz) & MWR (XIRR) -- regression tests for the real
+    # return algorithms that replaced the unrealized-gain-percent stub.
+    # ------------------------------------------------------------------
+
+    def _price(self, security, days_ago, close):
+        """Seed a daily price entry ``days_ago`` days before today."""
+        d = fields.Date.context_today(self.env.user) - timedelta(days=days_ago)
+        return self.env['moneta.security.price'].create({
+            'security_id': security.id, 'price_date': d, 'price_close': close,
+        })
+
+    def test_returns_single_buy_held_one_year(self):
+        # Buy 10 @ 100 exactly one year ago; price today is 120 (+20%).
+        acc = self._brokerage()
+        sec = self._security()
+        today = fields.Date.context_today(self.env.user)
+        d0 = today - timedelta(days=365)
+        self._inv_tx(acc, sec, 'buy', 10.0, 100.0, trade_date=d0)
+        self._price(sec, 0, 120.0)
+        h = self._holding(acc, sec)
+        h.invalidate_recordset()
+        # MWR (XIRR) annualizes the +20% total return over exactly one year.
+        self.assertAlmostEqual(round(h.mwr_percent, 2), 20.0, places=1)
+        # TWR (Modified Dietz) is the period return over the same window.
+        self.assertAlmostEqual(round(h.twr_percent, 2), 20.0, places=1)
+
+    def test_returns_fully_sold_one_year(self):
+        # Buy 10 @ 100 one year ago, sell 10 @ 120 today: realized +20%/yr.
+        acc = self._brokerage()
+        sec = self._security()
+        today = fields.Date.context_today(self.env.user)
+        d0 = today - timedelta(days=365)
+        self._inv_tx(acc, sec, 'buy', 10.0, 100.0, trade_date=d0)
+        self._inv_tx(acc, sec, 'sell', 10.0, 120.0, trade_date=today)
+        h = self._holding(acc, sec)
+        h.invalidate_recordset()
+        self.assertAlmostEqual(round(h.mwr_percent, 2), 20.0, places=1)
+        self.assertAlmostEqual(round(h.twr_percent, 2), 20.0, places=1)
+
+    def test_returns_fallback_unknown_basis(self):
+        # Buy with no price -> unknown cost basis -> returns fall back to the
+        # unrealized-gain percent (0.0 while the basis is unknown).
+        acc = self._brokerage()
+        sec = self._security()
+        self._inv_tx(acc, sec, 'buy', 10.0)  # price unset: cost unknown
+        self._price(sec, 0, 120.0)
+        h = self._holding(acc, sec)
+        h.invalidate_recordset()
+        self.assertEqual(round(h.mwr_percent, 4), 0.0)
+        self.assertEqual(round(h.twr_percent, 4), 0.0)
+
+    def test_returns_fallback_unknown_sell_price(self):
+        # A sell with a NULL price has unknowable proceeds -> cannot compute a
+        # money-weighted return; falls back to the unrealized-gain percent.
+        acc = self._brokerage()
+        sec = self._security()
+        today = fields.Date.context_today(self.env.user)
+        d0 = today - timedelta(days=365)
+        self._inv_tx(acc, sec, 'buy', 10.0, 100.0, trade_date=d0)
+        self._inv_tx(acc, sec, 'sell', 5.0, trade_date=today)  # price NULL
+        self._price(sec, 0, 120.0)
+        h = self._holding(acc, sec)
+        h.invalidate_recordset()
+        # 5 shares remain @ avg 100, priced 120 -> +20% unrealized -> fallback.
+        self.assertAlmostEqual(round(h.mwr_percent, 2), 20.0, places=1)
+        self.assertAlmostEqual(round(h.twr_percent, 2), 20.0, places=1)

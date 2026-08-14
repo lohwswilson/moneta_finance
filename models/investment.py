@@ -30,6 +30,83 @@ def _field_is_null(env, model, rec_id, fname):
     return bool(row and row[0])
 
 
+def _xirr(cashflows, max_rate=10.0, tol=1e-7, iters=200):
+    """Annualized money-weighted return (XIRR) for dated cash flows.
+
+    ``cashflows`` is a list of ``(datetime.date, float)`` tuples in the
+    investor's convention: outflows negative (buys), inflows positive (sells,
+    dividends, terminal market value). Returns the annualized rate ``r`` that
+    solves ``sum(cf / (1 + r) ** ((d - d0) / 365)) == 0`` via bisection, or
+    ``None`` when no real root is bracketed (all cash flows share a sign -- no
+    outflow or no inflow).
+    """
+    if not cashflows or len(cashflows) < 2:
+        return None
+    amounts = [cf for _, cf in cashflows]
+    if all(a >= 0 for a in amounts) or all(a <= 0 for a in amounts):
+        return None
+    d0 = min(d for d, _ in cashflows)
+
+    def npv(rate):
+        total = 0.0
+        for d, cf in cashflows:
+            years = (d - d0).days / 365.0
+            total += cf / ((1.0 + rate) ** years)
+        return total
+
+    lo, hi = -0.999999, max_rate
+    f_lo, f_hi = npv(lo), npv(hi)
+    # A very large late inflow can push the root past the default ceiling;
+    # expand the upper bound while NPV is still positive there.
+    while f_hi > 0 and hi < 1e6:
+        hi *= 4.0
+        f_hi = npv(hi)
+    if f_lo * f_hi > 0:
+        return None  # no sign change in the bracket -> no real root
+    for _ in range(iters):
+        mid = (lo + hi) / 2.0
+        f_mid = npv(mid)
+        if abs(f_mid) < tol or (hi - lo) < tol:
+            return mid
+        if f_lo * f_mid <= 0:
+            hi, f_hi = mid, f_mid
+        else:
+            lo, f_lo = mid, f_mid
+    return (lo + hi) / 2.0
+
+
+def _modified_dietz(cashflows, end_value, end_date):
+    """Time-weighted return (Modified Dietz) for dated cash flows.
+
+    ``cashflows`` is in the *portfolio* convention: contributions (buys)
+    positive, withdrawals (sells / dividends) negative. ``end_value`` is the
+    market value still invested at ``end_date``; the beginning value is taken
+    as 0 (the holding starts empty). Returns the period return (e.g. ``0.10``
+    for +10%), or ``None`` when the weighted-capital denominator is zero (no
+    invested capital over the period).
+    """
+    if not cashflows or end_date is None:
+        return None
+    d0 = min(d for d, _ in cashflows)
+    total_days = (end_date - d0).days
+    net_cf = 0.0
+    weighted = 0.0
+    if total_days <= 0:
+        # Everything happened on one day: a plain total return over the single
+        # contribution (no time weighting is possible, or needed).
+        for _, cf in cashflows:
+            net_cf += cf
+        weighted = net_cf
+    else:
+        for d, cf in cashflows:
+            net_cf += cf
+            w = (total_days - (d - d0).days) / float(total_days)
+            weighted += cf * w
+    if weighted == 0:
+        return None
+    return (end_value - net_cf) / weighted
+
+
 class MonetaSecurity(models.Model):
     _name = 'moneta.security'
     _description = 'Moneta Investment Security / Asset'
@@ -338,6 +415,19 @@ class MonetaSecurityAllocation(models.Model):
             if rec.weight < 0.0 or rec.weight > 100.0:
                 raise ValidationError('Weight must be between 0% and 100%.')
 
+    @api.constrains('security_id', 'weight')
+    def _check_allocation_total(self):
+        # The parent security's own constraint only fires when the security
+        # record is written; creating/updating allocation lines directly must
+        # enforce the same 100% ceiling here.
+        for rec in self:
+            if rec.security_id:
+                total = sum(rec.security_id.allocation_ids.mapped('weight'))
+                if total > 100.001:
+                    raise ValidationError(
+                        f"Total allocation weights for security '{rec.security_id.name}' cannot exceed 100% (currently {total:.2f}%)."
+                    )
+
 
 class MonetaSecurityPrice(models.Model):
     _name = 'moneta.security.price'
@@ -346,17 +436,6 @@ class MonetaSecurityPrice(models.Model):
 
     security_id = fields.Many2one('moneta.security', string='Security', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency', related='security_id.currency_id', readonly=True)
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super().create(vals_list)
-        self.env['moneta.holding'].invalidate_model()
-        return records
-
-    def write(self, vals):
-        res = super().write(vals)
-        self.env['moneta.holding'].invalidate_model()
-        return res
 
     # Stored related owner so the per-user record rule resolves to the security owner.
     user_id = fields.Many2one('res.users', related='security_id.user_id', store=True, index=True)
@@ -387,12 +466,18 @@ class MonetaSecurityPrice(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         prices = super().create(vals_list)
+        # A new price changes every holding's market value; drop the ORM cache so
+        # stored valuations (market_value / cost_basis / unrealized_gain)
+        # recompute on next read instead of showing a stale figure. The monthly
+        # account snapshots are rebuilt below per affected account.
+        self.env['moneta.holding'].invalidate_model()
         for price in prices:
             price._rebuild_holding_accounts()
         return prices
 
     def write(self, vals):
         res = super().write(vals)
+        self.env['moneta.holding'].invalidate_model()
         for price in self:
             price._rebuild_holding_accounts()
         return res
@@ -673,8 +758,8 @@ class MonetaHolding(models.Model):
     # Advanced Return & Dividend Analytics (Wealthfolio Style)
     annual_dividend_income = fields.Monetary(string='Est. Annual Dividends', compute='_compute_valuation', store=True, aggregator='sum')
     dividend_yield = fields.Float(string='Dividend Yield (%)', compute='_compute_valuation', digits=(5, 2))
-    twr_percent = fields.Float(string='TWR (%)', compute='_compute_valuation', digits=(5, 2), help='Time-Weighted Return eliminating cash flow timing bias.')
-    mwr_percent = fields.Float(string='MWR / IRR (%)', compute='_compute_valuation', digits=(5, 2), help='Money-Weighted Return / Annualized Internal Rate of Return.')
+    twr_percent = fields.Float(string='TWR (%)', compute='_compute_returns', digits=(5, 2), help='Time-Weighted Return (Modified Dietz): period return with cash-flow timing weight.')
+    mwr_percent = fields.Float(string='MWR / IRR (%)', compute='_compute_returns', digits=(5, 2), help='Money-Weighted Return: annualized internal rate of return (XIRR) on dated cash flows.')
 
     # Stored related owner so the per-user record rule resolves to the account owner.
     user_id = fields.Many2one('res.users', related='account_id.user_id', store=True, index=True)
@@ -745,12 +830,12 @@ class MonetaHolding(models.Model):
                 holding.unrealized_gain = 0.0
                 holding.unrealized_gain_percent = 0.0
 
-            # Dividend & TWR/MWR calculations
+            # Dividend analytics. TWR/MWR are computed separately by
+            # _compute_returns (they need the dated trade cash flows, which are
+            # too costly to rebuild on every list-view read).
             div_rate = float(holding.security_id.annual_dividend_rate or 0.0)
             holding.annual_dividend_income = round(qty * div_rate, 4)
             holding.dividend_yield = holding.security_id.dividend_yield_pct or ((holding.annual_dividend_income / holding.market_value * 100.0) if holding.market_value > 0 else 0.0)
-            holding.twr_percent = holding.unrealized_gain_percent
-            holding.mwr_percent = holding.unrealized_gain_percent
 
     @api.model
     def _rebuild(self, account, security):
@@ -841,9 +926,124 @@ class MonetaHolding(models.Model):
                 'account_id': account.id,
                 'security_id': security.id,
             })
-        # Writing False stores NULL for an unknown average (verified: Odoo 18
-        # maps False -> NULL on numeric columns).
-        holding.write({
-            'quantity': round(qty, 8),
-            'average_cost': avg,
-        })
+        holding.write({'quantity': round(qty, 8)})
+        if avg is False:
+            # The ORM coerces False/None to 0.0 for numeric columns
+            # (Float.convert_to_column), so an unknown basis cannot be expressed
+            # through a normal write -- store NULL directly to honour the
+            # null-propagation contract (NULL = unknown, never 0).
+            self.env.cr.execute(
+                "UPDATE moneta_holding SET average_cost = NULL WHERE id = %s",
+                (holding.id,),
+            )
+            holding.invalidate_recordset()
+        else:
+            holding.write({'average_cost': avg})
+
+    def _get_return_cashflows(self):
+        """Dated cash flows for this holding's investment transactions, fetched
+        in a single query (avoids one _field_is_null round-trip per trade).
+
+        Returns ``(xirr_cfs, dietz_cfs, has_unknown)``:
+
+          * ``xirr_cfs`` -- investor convention (buys negative, sells / dividends
+            positive); the terminal market value is appended by the caller.
+          * ``dietz_cfs`` -- portfolio convention (contributions positive,
+            withdrawals negative); the end value is passed separately.
+          * ``has_unknown`` -- a buy or sell carried a NULL price, so the cost
+            or proceeds are unknowable and the returns cannot be computed.
+
+        Splits carry no cash flow and are skipped.
+        """
+        acc_id = self.account_id.id
+        sec_id = self.security_id.id
+        if not isinstance(acc_id, int) or not isinstance(sec_id, int):
+            return [], [], True
+        self.env.cr.execute(
+            "SELECT action, trade_date, quantity, price, commission "
+            "FROM moneta_investment_transaction "
+            "WHERE account_id = %s AND security_id = %s "
+            "ORDER BY trade_date, id",
+            (acc_id, sec_id),
+        )
+        xirr, dietz = [], []
+        unknown = False
+        for action, tdate, qty, price, comm in self.env.cr.fetchall():
+            if tdate is None:
+                continue
+            qty = qty or 0.0
+            comm = comm or 0.0
+            if action == 'buy':
+                if price is None:
+                    unknown = True
+                    continue
+                amt = qty * price + comm
+                xirr.append((tdate, -amt))
+                dietz.append((tdate, +amt))
+            elif action == 'sell':
+                if price is None:
+                    unknown = True
+                    continue
+                amt = qty * price - comm
+                xirr.append((tdate, +amt))
+                dietz.append((tdate, -amt))
+            elif action in ('dividend', 'interest'):
+                if price is None:
+                    continue  # unknown dividend amount: skip, don't poison
+                amt = (qty or 1.0) * price
+                xirr.append((tdate, +amt))
+                dietz.append((tdate, -amt))
+            # 'split' carries no cash flow
+        return xirr, dietz, unknown
+
+    @api.depends('quantity', 'average_cost', 'current_price')
+    def _compute_returns(self):
+        """Time-Weighted (Modified Dietz) and Money-Weighted (XIRR) returns.
+
+        Both need the dated trade cash flows, so they live in a dedicated method
+        rather than ``_compute_valuation`` -- a list view that does not display
+        TWR / MWR then pays nothing for them.
+
+        Falls back to the simple unrealized-gain percent whenever a real return
+        cannot be computed: unknown cost basis, unknown current price while
+        shares are still held, a buy / sell with a NULL price, or insufficient
+        cash flows (no sign change for XIRR, no invested capital for Dietz).
+        """
+        today = fields.Date.context_today(self)
+        # Touch the valuation fields so _compute_valuation runs once for the
+        # whole batch and the per-holding values are cached for the loop.
+        _ = (self.market_value, self.cost_basis, self.basis_known,
+             self.price_known, self.unrealized_gain_percent)
+        for holding in self:
+            fallback = holding.unrealized_gain_percent or 0.0
+            qty = holding.quantity or 0.0
+            xirr_cfs, dietz_cfs, unknown = holding._get_return_cashflows()
+            # Shares still held need a known basis AND a current price to value
+            # the terminal position; without either the return is unknowable.
+            if unknown or (qty > 0 and (not holding.basis_known or not holding.price_known)):
+                holding.twr_percent = fallback
+                holding.mwr_percent = fallback
+                continue
+            if not xirr_cfs:
+                holding.twr_percent = fallback
+                holding.mwr_percent = fallback
+                continue
+            mv = float(holding.market_value or 0.0)
+            if qty > 0:
+                # Terminal market value as the final inflow / end value, today.
+                if mv <= 0:
+                    holding.twr_percent = fallback
+                    holding.mwr_percent = fallback
+                    continue
+                xirr_cfs.append((today, mv))
+                end_value, end_date = mv, today
+            else:
+                # Fully sold out: the last trade is the terminal cash flow, and
+                # the holding period ends there (not today, so post-sell idle time
+                # does not dilute the return).
+                end_date = max(d for d, _ in xirr_cfs)
+                end_value = 0.0
+            mwr = _xirr(xirr_cfs)
+            twr = _modified_dietz(dietz_cfs, end_value, end_date)
+            holding.mwr_percent = round(mwr * 100.0, 2) if mwr is not None else fallback
+            holding.twr_percent = round(twr * 100.0, 2) if twr is not None else fallback
