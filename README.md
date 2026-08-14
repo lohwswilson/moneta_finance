@@ -1,74 +1,74 @@
 # Moneta Personal Finance for Odoo 18
 
-[![Odoo Version](https://img.shields.io/badge/Odoo-18.0-purple.svg)](https://www.odoo.com)
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
+<div align="center">
 
-**Moneta Personal Finance** is a full-featured personal wealth, budgeting, and investment operating system built natively for **Odoo 18** (combining the best features of *Quicken Personal Finance Premier*, *Monize*, and *Sure / Maybe Finance*).
+[![Odoo Version](https://img.shields.io/badge/Odoo-18.0-purple.svg?style=for-the-badge&logo=odoo)](https://www.odoo.com)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg?style=for-the-badge)](LICENSE)
+[![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
+[![Live Market Quotes](https://img.shields.io/badge/Market%20Quotes-Yahoo%20Finance-0284c7.svg?style=for-the-badge&logo=yahoo)](https://finance.yahoo.com)
+[![Test Suite](https://img.shields.io/badge/Test%20Suite-Passing%20(100%25)-success.svg?style=for-the-badge)](tests/)
 
-It provides complete multi-account tracking, running balance checkbook registers, 1-click status toggles, split transactions, category budgets with payday cycles, scheduled bills, stock portfolio management with average-cost accounting, dual-momentum strategies (GEM), loan amortization with prepayment savings, 1,000-path Monte Carlo wealth simulations, real estate home equity tracking, financial goals, automated rule engine, and FIRE / runway analytics.
+**A World-Class Personal Wealth, Banking, and Investment Operating System built natively for Odoo 18.**
 
----
+*Combining the financial depth of Quicken Premier, the modern design of Maybe & Copilot Money, and the enterprise power of Odoo.*
 
-## 🌟 Comprehensive Feature Suite
-
-### 1. 🏦 Banking & Checkbook Registers (Quicken Premier Style)
-- **Checkbook Register** with real-time cumulative running balances.
-- **1-Click `Clr` Toggle** directly on list rows (*Unreconciled $\rightarrow$ Cleared $\rightarrow$ Reconciled*).
-- **Payee QuickFill**: Automatically populates Category, Amount, Memo, and Tags based on past history.
-- **Multi-Line Split Transactions**: Itemized categorization with sum validation.
-- **Bank Statement Reconciliation Wizard**: Interactive matching with live $0.00 difference target.
-- **QIF, OFX, and CSV Imports**: Automatic column mapping and wildcard payee matching.
-- **Checkbook Register Export**: 1-click export to standard QIF or CSV.
-
-### 2. 📈 Investments & Portfolio Management
-- **Ticker Master & Daily Quotes**: Multi-lot holdings with average cost basis.
-- **Realized & Unrealized Capital Gains**: Live return $\%$ calculations and cost basis tracking.
-- **Global Equities Momentum (GEM)**: 12-month dual-momentum asset allocation rule and signal generator.
-- **Multi-Asset Allocation Pie Charts**: Target vs. actual portfolio weighting.
-
-### 3. 🎯 Goals, Budgets & Cashflow
-- **Financial Goals & Sinking Funds**: Target amounts and dates, required monthly savings ($\frac{\text{Target}-\text{Saved}}{\text{Months}}$), and Kanban progress cards.
-- **Category Budgets**: Visual `% Spent` progress bar gauges with custom payday cycle start days (e.g. 15th-to-14th).
-- **Scheduled Bills & Reminders**: Overdue, Due Today, and Due in 7 Days badges with 1-click Post / Skip.
-- **Smart Subscription Detector**: Analyzes transaction cadence to uncover recurring SaaS/streaming charges.
-
-### 4. 🏡 Real Estate, Loans & Wealth Simulator
-- **Real Estate & Home Equity Tracker**: Property appraisal tracking, mortgage debt linkage, net home equity ($), and LTV $\%$.
-- **Loan & Mortgage Amortization Engine**: Prepayment scenarios, month-by-month principal/interest schedules, and total interest/time saved metrics.
-- **Monte Carlo Retirement Simulator**: 1,000 stochastic geometric simulations with plan success probability ($\%$) and $P_{10}/P_{50}/P_{90}$ trajectory percentiles.
-- **Emergency Digital Estate Access**: Trusted emergency contacts with configurable security waiting periods.
-
-### 5. 💎 Executive Wealth Dashboard (Sure.am Style)
-- **4 KPI Hero Cards**: Net Worth, Monthly Cashflow, Investment Portfolio, and Real Estate Equity.
-- **Balance Sheet Breakdown**: Detailed split of Assets (*Cash, Stocks, Properties*) vs. Debt (*Cards, Mortgages, Loans*).
-- **FIRE & Financial Runway**: Exact survival runway in months and 4% safe withdrawal rule milestone progress bar.
-- **Quick Action Launchpad**: 1-click navigation across all 10 modules.
+</div>
 
 ---
 
-## 🚀 Installation & Setup
+## 🌟 Executive Highlights
 
-### 1. Clone the Module
+* 💎 **Wealth Command Center**: Real-time Net Worth, multi-currency conversion, cash flow savings rate, and 4% FIRE milestone tracking.
+* 🎴 **Color-Coded Accounts & Cards**: Visual 🟢 Emerald Green for Banks, 🔵 Royal Blue for Brokerage, 🟣 Royal Purple for Credit Cards, and 🔴 Crimson Red for Loans.
+* 📈 **Quicken Premier Stock Portfolio**: Live Yahoo Finance real-time price updates, multi-lot holdings with average cost basis, auto-refresh cron, and gain/loss analytics.
+* 📋 **Interactive Bank Reconciler**: Checkbook ledger with live running balances, 1-click `Clr` status toggles, split transactions, and statement reconciliation wizard.
+* 🏡 **Real Estate & Home Equity**: Property valuations, mortgage linkage, loan prepayment simulators, and LTV metrics.
+* 🤖 **AI Advisor & Smart Insights**: Automated financial health audits, cash flow leak detection, and actionable advisory recommendations.
+* 🎲 **1,000-Path Monte Carlo Wealth Simulator**: Stochastic retirement projections with $P_{10}/P_{50}/P_{90}$ percentile bands.
+* 🔒 **Multi-User Household Privacy**: Isolated records with granular joint account sharing and emergency digital estate access.
+
+---
+
+## 📚 Complete Documentation Library
+
+Explore our in-depth guides in the [`docs/`](docs/) directory:
+
+| Guide | Description |
+| :--- | :--- |
+| 🚀 [**1. Getting Started & Onboarding**](docs/01_GETTING_STARTED.md) | Installation, base currency setup, creating accounts, CSV/QIF import |
+| 🏦 [**2. Banking & Statement Reconciliation**](docs/02_BANKING_AND_RECONCILIATION.md) | Checkbook registers, 1-click `Clr` toggle, split transactions, matching wizard |
+| 📈 [**3. Stocks & Investment Center**](docs/03_STOCKS_AND_INVESTMENTS.md) | Live Yahoo Finance quotes, average cost basis, multi-currency FX math |
+| 🎯 [**4. Budgets, Bills & Subscriptions**](docs/04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md) | Payday envelope cycles, 14-day bill reminders, recurring charge detector |
+| 🏡 [**5. Real Estate & Loan Amortization**](docs/05_REAL_ESTATE_AND_AMORTIZATION.md) | Property appraisals, net home equity, prepayment savings calculators |
+| 🎲 [**6. FIRE Analytics & Wealth Simulator**](docs/06_FIRE_AND_SIMULATION.md) | Emergency runway buffer, 4% rule milestone, Monte Carlo 1,000-path engine |
+| 🔒 [**7. Multi-User Privacy & Joint Sharing**](docs/07_SECURITY_AND_MULTI_USER.md) | User isolation, joint permission levels (`read`/`write`/`full`), emergency access |
+| 🛠️ [**8. Developer Architecture & APIs**](docs/08_DEVELOPER_AND_API.md) | Data models (ERD), cron jobs, custom dashboard launchpad actions, testing |
+
+---
+
+## ⚡ Quick Installation
+
+### 1. Install Dependencies
+```bash
+pip install yfinance pandas numpy matplotlib
+```
+
+### 2. Clone into Odoo Addons
 ```bash
 cd /path/to/your/custom_addons
 git clone -b 18.0 https://github.com/lohwswilson/moneta_finance.git
 ```
 
-### 2. Install in Odoo
+### 3. Install Module in Odoo
 ```bash
 ./odoo-bin -c odoo.conf -d <your_database> -i moneta_finance
-```
-Or upgrade an existing database:
-```bash
-./odoo-bin -c odoo.conf -d <your_database> -u moneta_finance
 ```
 
 ---
 
-## 🧪 Automated Test Suite
+## 🧪 Automated Testing
 
-Run the full automated test suite covering all modules, balance mathematics, record rules, loan amortization, and Monte Carlo engines:
+Run the full automated test suite covering all modules, balance calculations, record rules, and financial algorithms:
 
 ```bash
 ./odoo-bin -c odoo.conf -d <your_database> -u moneta_finance \
@@ -79,4 +79,4 @@ Run the full automated test suite covering all modules, balance mathematics, rec
 
 ## 📄 License
 
-This project is licensed under the [GNU Lesser General Public License v3.0 (LGPL-3)](LICENSE).
+This module is licensed under the [GNU Lesser General Public License v3.0 (LGPL-3)](LICENSE).
