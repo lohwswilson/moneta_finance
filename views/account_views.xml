@@ -117,24 +117,29 @@
         <field name="name">moneta.account.list</field>
         <field name="model">moneta.account</field>
         <field name="arch" type="xml">
-            <list string="Accounts" decoration-danger="account_type in ('loan', 'mortgage', 'credit_card', 'loc')" decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')">
+            <list string="Accounts" 
+                  decoration-danger="account_type in ('loan', 'mortgage')" 
+                  decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')"
+                  decoration-info="account_type in ('credit_card', 'loc')">
                 <field name="is_favourite" widget="boolean_toggle"/>
                 <field name="name"/>
                 <field name="institution_name"/>
                 <field name="account_type" widget="badge" 
-                       decoration-danger="account_type in ('loan', 'mortgage', 'credit_card', 'loc')" 
+                       decoration-danger="account_type in ('loan', 'mortgage')" 
                        decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')"
+                       decoration-info="account_type in ('credit_card', 'loc')"
                        decoration-primary="account_type == 'brokerage'"/>
                 <field name="currency_id"/>
                 <field name="current_balance" widget="monetary" sum="Total Balance"
-                       decoration-danger="account_type in ('loan', 'mortgage', 'credit_card', 'loc') or current_balance &lt; 0"
-                       decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash') and current_balance &gt;= 0"/>
+                       decoration-danger="account_type in ('loan', 'mortgage') or current_balance &lt; 0"
+                       decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash') and current_balance &gt;= 0"
+                       decoration-info="account_type in ('credit_card', 'loc')"/>
                 <field name="cleared_balance" widget="monetary"/>
             </list>
         </field>
     </record>
 
-    <!-- Account Kanban View with Color-Coded Boxes (Red for Mortgage/Loan, Green for Savings/Checking) -->
+    <!-- Account Kanban View with Color-Coded Boxes (Red for Mortgage/Loan, Green for Savings/Checking, Blue for Credit Card) -->
     <record id="view_moneta_account_kanban" model="ir.ui.view">
         <field name="name">moneta.account.kanban</field>
         <field name="model">moneta.account</field>
@@ -147,12 +152,14 @@
                 <field name="institution_name"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="is_debt" t-value="['mortgage', 'loan', 'credit_card', 'loc'].includes(record.account_type.raw_value)"/>
+                        <t t-set="is_mortgage_loan" t-value="['mortgage', 'loan'].includes(record.account_type.raw_value)"/>
                         <t t-set="is_cash" t-value="['checking', 'chequing', 'savings', 'cash'].includes(record.account_type.raw_value)"/>
-                        <t t-set="card_style" t-value="is_debt ? 'border: 2px solid #E74C3C; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%);' : (is_cash ? 'border: 2px solid #2ECC71; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%);' : 'border: 2px solid #3498DB; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%);')"/>
-                        <t t-set="badge_class" t-value="is_debt ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : 'bg-primary text-white')"/>
-                        <t t-set="balance_color" t-value="is_debt ? 'text-danger' : (is_cash ? 'text-success' : 'text-primary')"/>
-                        <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value == 'credit_card' ? 'fa-credit-card' : (record.account_type.raw_value == 'savings' ? 'fa-money' : 'fa-bank')))"/>
+                        <t t-set="is_card" t-value="['credit_card', 'loc'].includes(record.account_type.raw_value)"/>
+                        
+                        <t t-set="card_style" t-value="is_mortgage_loan ? 'border: 2px solid #E74C3C; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%);' : (is_cash ? 'border: 2px solid #2ECC71; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%);' : (is_card ? 'border: 2px solid #2980B9; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%);' : 'border: 2px solid #8E44AD; background: linear-gradient(180deg, #F4ECF7 0%, #FFFFFF 100%);'))"/>
+                        <t t-set="badge_class" t-value="is_mortgage_loan ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : (is_card ? 'bg-primary text-white' : 'bg-secondary text-white'))"/>
+                        <t t-set="balance_color" t-value="is_mortgage_loan ? 'text-danger' : (is_cash ? 'text-success' : (is_card ? 'text-primary' : 'text-dark'))"/>
+                        <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value == 'credit_card' ? 'fa-credit-card' : (record.account_type.raw_value == 'savings' ? 'fa-money' : (record.account_type.raw_value in ('checking', 'chequing') ? 'fa-bank' : 'fa-line-chart'))))"/>
 
                         <div class="oe_kanban_global_click o_kanban_card rounded-3 shadow-sm p-3 mb-2" t-att-style="card_style">
                             <div class="d-flex justify-content-between align-items-start">
