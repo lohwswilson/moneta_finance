@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Category Form View with Transactions and Subcategories -->
+    <!-- Category Form View with Transactions, Total Amount, and Subcategories -->
     <record id="view_moneta_category_form" model="ir.ui.view">
         <field name="name">moneta.category.form</field>
         <field name="model">moneta.category</field>
@@ -8,8 +8,11 @@
             <form string="Transaction Category">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-list-alt">
+                        <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-list">
                             <field name="transaction_count" widget="statinfo" string="Transactions"/>
+                        </button>
+                        <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-money">
+                            <field name="total_amount" widget="statinfo" string="Total Amount"/>
                         </button>
                     </div>
                     <group>
@@ -17,6 +20,7 @@
                             <field name="name"/>
                             <field name="parent_id" domain="[('id', '!=', id), ('user_id', '=', user_id)]"/>
                             <field name="category_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="currency_id" invisible="1"/>
                             <field name="is_income" invisible="1"/>
                             <field name="is_system" readonly="1"/>
                         </group>
@@ -30,13 +34,25 @@
                     
                     <notebook>
                         <page string="Transactions" name="transactions_page">
+                            <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                                <span class="text-muted fw-bold"><i class="fa fa-history me-1"/>Category Transactions Ledger</span>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-muted me-2 fw-semibold">Total Amount:</span>
+                                    <h5 class="mb-0 fw-bold">
+                                        <field name="total_amount" widget="monetary" readonly="1" 
+                                               decoration-danger="category_type == 'expense'" 
+                                               decoration-success="category_type == 'income'"/>
+                                    </h5>
+                                </div>
+                            </div>
                             <field name="transaction_ids" readonly="1">
                                 <list string="Transactions" default_order="transaction_date desc, id desc">
+                                    <field name="currency_id" column_invisible="1"/>
                                     <field name="transaction_date"/>
                                     <field name="account_id"/>
                                     <field name="payee_id"/>
                                     <field name="memo"/>
-                                    <field name="amount" widget="monetary" sum="Total"
+                                    <field name="amount" widget="monetary" sum="Total Amount"
                                            decoration-danger="amount &lt; 0"
                                            decoration-success="amount &gt; 0"/>
                                     <field name="state" widget="badge"/>

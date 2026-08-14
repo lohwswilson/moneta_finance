@@ -59,7 +59,7 @@ class MonetaCategory(models.Model):
     active = fields.Boolean(default=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     transaction_count = fields.Integer(string='Transactions Count', compute='_compute_transaction_stats')
-    total_amount = fields.Monetary(string='Total Volume', currency_field='currency_id', compute='_compute_transaction_stats')
+    total_amount = fields.Monetary(string='Total Amount', currency_field='currency_id', compute='_compute_transaction_stats')
 
     def _compute_transaction_stats(self):
         for rec in self:
