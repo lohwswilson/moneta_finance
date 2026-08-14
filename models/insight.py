@@ -96,7 +96,7 @@ class MonetaInsight(models.TransientModel):
         # 2. 30-Day Cashflow Liquidity & Overdraft Warning
         # -------------------------------------------------------------
         checking_accs = self.env['moneta.account'].search([
-            ('account_type', 'in', ('chequing', 'cash')),
+            ('account_type', 'in', ('checking', 'chequing', 'cash')),
             ('user_id', '=', user.id),
             ('is_closed', '=', False),
         ])

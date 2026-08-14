@@ -9,7 +9,7 @@ from .common import MonetaTestBase
 class TestTransfer(MonetaTestBase):
 
     def test_transfer_creates_two_linked_legs(self):
-        acc1 = self._make_account(name='Chequing', opening_balance=1000.0)
+        acc1 = self._make_account(name='Checking', opening_balance=1000.0)
         acc2 = self._make_account(name='Savings', opening_balance=500.0)
         tx = self.env['moneta.transaction'].create({
             'account_id': acc1.id,
@@ -41,7 +41,7 @@ class TestTransfer(MonetaTestBase):
             })
 
     def test_transfer_amount_change_propagates_to_counterpart(self):
-        acc1 = self._make_account(name='Chequing', opening_balance=0.0)
+        acc1 = self._make_account(name='Checking', opening_balance=0.0)
         acc2 = self._make_account(name='Savings', opening_balance=0.0)
         tx = self.env['moneta.transaction'].create({
             'account_id': acc1.id,
@@ -58,7 +58,7 @@ class TestTransfer(MonetaTestBase):
         self.assertEqual(self._current_balance(acc2), 300.0)
 
     def test_unlink_transfer_removes_both_legs(self):
-        acc1 = self._make_account(name='Chequing', opening_balance=1000.0)
+        acc1 = self._make_account(name='Checking', opening_balance=1000.0)
         acc2 = self._make_account(name='Savings', opening_balance=0.0)
         tx = self.env['moneta.transaction'].create({
             'account_id': acc1.id,

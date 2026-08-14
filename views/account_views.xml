@@ -32,7 +32,7 @@
                             <field name="cleared_balance" widget="monetary" readonly="1"/>
                             <field name="credit_limit" widget="monetary" invisible="account_type != 'credit_card'"/>
                             <field name="interest_rate" invisible="account_type not in ('loan', 'mortgage', 'loc', 'savings')"/>
-                            <field name="fx_fee_percent" invisible="account_type not in ('chequing','savings','credit_card','loc','cash')"/>
+                            <field name="fx_fee_percent" invisible="account_type not in ('checking', 'chequing','savings','credit_card','loc','cash')"/>
                             <field name="is_favourite"/>
                             <field name="is_closed"/>
                             <field name="closed_date" invisible="not is_closed"/>

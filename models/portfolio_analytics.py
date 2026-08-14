@@ -43,7 +43,7 @@ class MonetaTargetAllocation(models.Model):
         # Include liquid cash
         cash_accs = self.env['moneta.account'].search([
             ('user_id', '=', user.id),
-            ('account_type', 'in', ('chequing', 'savings', 'cash')),
+            ('account_type', 'in', ('checking', 'chequing', 'savings', 'cash')),
             ('is_closed', '=', False),
         ])
         cash_total = sum(max(float(a.current_balance or 0.0), 0.0) for a in cash_accs)

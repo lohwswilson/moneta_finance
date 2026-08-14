@@ -181,9 +181,9 @@ class MonetaDashboard(models.TransientModel):
             if monthly_burn <= 0:
                 monthly_burn = 3000.0
 
-            # 3. Liquid Assets (Chequing, Savings, Cash, Brokerages)
+            # 3. Liquid Assets (Checking, Savings, Cash, Brokerages)
             liquid_accs = self.env['moneta.account'].search([
-                ('account_type', 'in', ('chequing', 'savings', 'cash', 'brokerage')),
+                ('account_type', 'in', ('checking', 'chequing', 'savings', 'cash', 'brokerage')),
                 ('is_closed', '=', False),
             ])
             liquid_total = sum(max(float(a.current_balance or 0.0), 0.0) for a in liquid_accs)

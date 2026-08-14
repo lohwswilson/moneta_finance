@@ -11,7 +11,7 @@ class TestAIFeatures(TransactionCase):
         self.user = self.env.user
         self.account = self.env['moneta.account'].create({
             'name': 'Primary Checking',
-            'account_type': 'chequing',
+            'account_type': 'checking',
             'opening_balance': 2500.0,
         })
         self.category = self.env['moneta.category'].create({

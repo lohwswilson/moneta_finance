@@ -65,7 +65,7 @@ class TestNetWorth(MonetaTestBase):
         self.assertEqual(round(july.market_value or 0.0, 4), 500.0)
 
     def test_net_worth_aggregation(self):
-        self._make_account(name='Chequing', account_type='chequing', opening_balance=1000.0)
+        self._make_account(name='Checking', account_type='checking', opening_balance=1000.0)
         self._make_account(name='Visa', account_type='credit_card', opening_balance=-500.0)
         self._make_account(name='Loan', account_type='loan', opening_balance=-2500.0)
         today = fields.Date.context_today(self.env.user)
@@ -73,7 +73,7 @@ class TestNetWorth(MonetaTestBase):
         self.assertEqual(net, -2000.0)
 
     def test_exclude_from_net_worth(self):
-        self._make_account(name='Chequing', account_type='chequing', opening_balance=1000.0)
+        self._make_account(name='Checking', account_type='checking', opening_balance=1000.0)
         hidden = self._make_account(name='Hidden', account_type='asset', opening_balance=9999.0)
         hidden.write({'exclude_from_net_worth': True})
         today = fields.Date.context_today(self.env.user)

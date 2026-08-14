@@ -12,7 +12,7 @@ class TestSureFeatures(TransactionCase):
 
         self.account = self.env['moneta.account'].create({
             'name': 'Checking Account',
-            'account_type': 'chequing',
+            'account_type': 'checking',
             'opening_balance': 5000.0,
         })
 

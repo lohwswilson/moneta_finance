@@ -12,7 +12,8 @@ class MonetaAccount(models.Model):
 
     name = fields.Char(string='Account Name', required=True)
     account_type = fields.Selection([
-        ('chequing', 'Chequing'),
+        ('checking', 'Checking'),
+        ('chequing', 'Checking'),
         ('savings', 'Savings'),
         ('credit_card', 'Credit Card'),
         ('loan', 'Loan'),
@@ -22,7 +23,7 @@ class MonetaAccount(models.Model):
         ('asset', 'Asset'),
         ('cash', 'Cash'),
         ('other', 'Other'),
-    ], string='Account Type', default='chequing', required=True)
+    ], string='Account Type', default='checking', required=True)
 
     currency_id = fields.Many2one(
         'res.currency', string='Currency',

@@ -3,8 +3,8 @@
     <data noupdate="1">
         <!-- Sample Accounts -->
         <record id="acc_chequing" model="moneta.account">
-            <field name="name">Primary Chequing</field>
-            <field name="account_type">chequing</field>
+            <field name="name">Primary Checking</field>
+            <field name="account_type">checking</field>
             <field name="institution_name">First National Bank</field>
             <field name="account_number">xxxx-1234</field>
             <field name="is_favourite">True</field>

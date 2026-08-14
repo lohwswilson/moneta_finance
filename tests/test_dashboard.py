@@ -20,14 +20,14 @@ class TestDashboard(MonetaTestBase):
 
     def test_net_worth_assets_minus_liabilities(self):
         user = self._dash_user()
-        self._make_account(user=user, name='Chequing', account_type='chequing', opening_balance=1000.0)
+        self._make_account(user=user, name='Checking', account_type='checking', opening_balance=1000.0)
         self._make_account(user=user, name='Visa', account_type='credit_card', opening_balance=-500.0)
         self._make_account(user=user, name='Car Loan', account_type='loan', opening_balance=-2500.0)
         self.assertEqual(self._dash(user).net_worth, -2000.0)
 
     def test_net_worth_respects_exclude_flag(self):
         user = self._dash_user()
-        self._make_account(user=user, name='Chequing', account_type='chequing', opening_balance=1000.0)
+        self._make_account(user=user, name='Checking', account_type='checking', opening_balance=1000.0)
         hidden = self._make_account(user=user, name='Hidden', account_type='asset', opening_balance=9999.0)
         hidden.write({'exclude_from_net_worth': True})
         self.assertEqual(self._dash(user).net_worth, 1000.0)

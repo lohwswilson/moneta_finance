@@ -44,7 +44,7 @@ class MonetaTestBase(TransactionCase):
     def _make_account(cls, user=None, **kw):
         vals = {
             'name': kw.pop('name', 'Test Account'),
-            'account_type': kw.pop('account_type', 'chequing'),
+            'account_type': kw.pop('account_type', 'checking'),
             'currency_id': kw.pop('currency_id', cls.currency.id),
             'opening_balance': kw.pop('opening_balance', 0.0),
         }

@@ -53,7 +53,7 @@ class TestReconciliation(MonetaTestBase):
         self.assertEqual(tx.state, 'void')
 
     def test_reconcile_propagates_to_transfer_counterpart(self):
-        acc1 = self._make_account(name='Chequing', opening_balance=0.0)
+        acc1 = self._make_account(name='Checking', opening_balance=0.0)
         acc2 = self._make_account(name='Savings', opening_balance=0.0)
         tx = self._make_transaction(acc1, -200.0, is_transfer=True, transfer_account_id=acc2.id)
         cp = tx.linked_transaction_id

@@ -14,8 +14,8 @@ class TestRecordRuleIsolation(MonetaTestBase):
         cls.user_a = cls._make_user('Moneta User A', 'moneta_a')
         cls.user_b = cls._make_user('Moneta User B', 'moneta_b')
         # Each user owns one account.
-        cls.account_a = cls._make_account(user=cls.user_a, name='A Chequing')
-        cls.account_b = cls._make_account(user=cls.user_b, name='B Chequing')
+        cls.account_a = cls._make_account(user=cls.user_a, name='A Checking')
+        cls.account_b = cls._make_account(user=cls.user_b, name='B Checking')
 
     def test_user_a_sees_only_own_account(self):
         accounts = self.env['moneta.account'].with_user(self.user_a.id).search([])
