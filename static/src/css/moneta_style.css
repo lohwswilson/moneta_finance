@@ -1,0 +1,61 @@
+/* Moneta Finance - Sure Inspired Modern Design System */
+
+.o_moneta_dashboard {
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.o_moneta_dashboard .card {
+    background: #ffffff !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.o_moneta_dashboard .card:hover {
+    border-color: rgba(203, 213, 225, 1) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025) !important;
+}
+
+.o_moneta_dashboard .badge {
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    padding: 0.35rem 0.65rem;
+    border-radius: 9999px;
+}
+
+.bg-success-light {
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
+}
+
+.bg-info-light {
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+}
+
+.bg-warning-light {
+    background-color: #fffbeb !important;
+    color: #d97706 !important;
+}
+
+.bg-primary-light {
+    background-color: #f5f3ff !important;
+    color: #7c3aed !important;
+}
+
+.bg-danger-light {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+}
+
+.moneta-pill-btn {
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+}
+
+.moneta-pill-btn:hover {
+    transform: translateY(-1px);
+}

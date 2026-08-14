@@ -24,6 +24,13 @@ class MonetaDashboard(models.TransientModel):
     total_liabilities = fields.Monetary(string='Total Liabilities', compute='_compute_totals')
     account_count = fields.Integer(string='Active Accounts', compute='_compute_totals')
 
+    # Asset Breakdown (Sure Style)
+    cash_assets = fields.Monetary(string='Cash & Banks', compute='_compute_totals')
+    investment_assets = fields.Monetary(string='Investments & Stocks', compute='_compute_totals')
+    real_estate_assets = fields.Monetary(string='Real Estate & Property', compute='_compute_fire_and_real_estate')
+    credit_card_debt = fields.Monetary(string='Credit Cards', compute='_compute_totals')
+    loans_mortgages_debt = fields.Monetary(string='Loans & Mortgages', compute='_compute_totals')
+
     # Cash Flow & Savings
     month_income = fields.Monetary(string='This Month Income', compute='_compute_totals')
     month_expenses = fields.Monetary(string='This Month Expenses', compute='_compute_totals')
@@ -66,18 +73,30 @@ class MonetaDashboard(models.TransientModel):
             dash.account_count = len(accounts)
             assets = 0.0
             liabilities = 0.0
+            cash_tot = 0.0
+            inv_tot = 0.0
+            cc_tot = 0.0
+            loan_tot = 0.0
+
             for acc in accounts:
                 bal = float(acc.current_balance or 0.0)
-                if acc.account_type in ('credit_card', 'loan', 'mortgage', 'loc'):
-                    if bal < 0:
-                        liabilities += abs(bal)
-                    else:
-                        liabilities += bal
+                if acc.account_type in ('credit_card',):
+                    cc_tot += abs(bal) if bal < 0 else bal
+                    liabilities += abs(bal) if bal < 0 else bal
+                elif acc.account_type in ('loan', 'mortgage', 'loc'):
+                    loan_tot += abs(bal) if bal < 0 else bal
+                    liabilities += abs(bal) if bal < 0 else bal
+                elif acc.account_type in ('brokerage', 'retirement', 'crypto'):
+                    inv_tot += bal if bal > 0 else bal
+                    assets += bal if bal > 0 else bal
                 else:
-                    if bal > 0:
-                        assets += bal
-                    else:
-                        assets += bal
+                    cash_tot += bal if bal > 0 else bal
+                    assets += bal if bal > 0 else bal
+
+            dash.cash_assets = round(cash_tot, 4)
+            dash.investment_assets = round(inv_tot, 4)
+            dash.credit_card_debt = round(cc_tot, 4)
+            dash.loans_mortgages_debt = round(loan_tot, 4)
             dash.total_assets = round(max(assets, 0.0), 4)
             dash.total_liabilities = round(max(liabilities, 0.0), 4)
 
@@ -130,8 +149,9 @@ class MonetaDashboard(models.TransientModel):
         today = fields.Date.context_today(self)
         three_months_ago = today - timedelta(days=90)
         for dash in self:
-            # 1. Real Estate Equity
+            # 1. Real Estate Equity & Valuation
             props = self.env['moneta.property'].search([])
+            dash.real_estate_assets = round(sum(float(p.current_market_value or 0.0) for p in props), 4)
             dash.total_real_estate_equity = round(sum(float(p.equity_value or 0.0) for p in props), 4)
 
             # 2. Monthly Burn Rate (last 90 days average expenses)

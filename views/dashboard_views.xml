@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Quicken Premier & Wealth Management Command Center -->
+    <!-- Quicken Premier & Sure Wealth Management Command Center -->
     <record id="view_moneta_dashboard_form" model="ir.ui.view">
         <field name="name">moneta.dashboard.form</field>
         <field name="model">moneta.dashboard</field>
@@ -10,15 +10,16 @@
                     <!-- Header Banner with Refresh -->
                     <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
                         <div>
-                            <h2 class="fw-bold mb-0 text-primary">
-                                <i class="fa fa-dashboard me-2"/>Moneta Wealth &amp; Finance Command Center
+                            <h2 class="fw-bold mb-0 text-dark">
+                                <span class="me-2">💎</span>Moneta Wealth &amp; Finance Command Center
                             </h2>
                             <p class="text-muted mb-0 small">
-                                Real-time net worth, cash flow, investments, home equity, and FIRE financial freedom tracking
+                                Real-time balance sheet, cashflow, portfolio, home equity, and FIRE financial freedom
                             </p>
                         </div>
-                        <div>
-                            <button name="action_recompute" type="object" class="btn btn-outline-primary shadow-sm" icon="fa-refresh" string=" Refresh Data"/>
+                        <div class="d-flex gap-2">
+                            <button name="action_open_register" type="object" class="btn btn-primary shadow-sm moneta-pill-btn" icon="fa-plus-circle" string=" New Transaction"/>
+                            <button name="action_recompute" type="object" class="btn btn-outline-secondary shadow-sm moneta-pill-btn" icon="fa-refresh" string=" Refresh"/>
                         </div>
                     </div>
 
@@ -26,145 +27,186 @@
                     <div class="row g-3 mb-3">
                         <!-- Net Worth Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
-                                <div class="card-body p-3">
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted fw-bold small text-uppercase">Net Worth</span>
-                                        <span class="badge rounded-pill bg-success-light text-success p-2">
-                                            <i class="fa fa-diamond fa-lg"/>
-                                        </span>
-                                    </div>
-                                    <h3 class="fw-bold text-success mb-2">
-                                        <field name="net_worth" widget="monetary"/>
-                                    </h3>
-                                    <div class="d-flex justify-content-between small text-muted pt-2 border-top">
-                                        <span>Assets: <field name="total_assets" widget="monetary"/></span>
-                                        <span>Debt: <field name="total_liabilities" widget="monetary"/></span>
-                                    </div>
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted fw-bold small text-uppercase">Net Worth</span>
+                                    <span class="badge bg-success-light">
+                                        <i class="fa fa-diamond fa-lg"/>
+                                    </span>
+                                </div>
+                                <h3 class="fw-bold text-success mb-2">
+                                    <field name="net_worth" widget="monetary"/>
+                                </h3>
+                                <div class="d-flex justify-content-between small text-muted pt-2 border-top">
+                                    <span>Assets: <field name="total_assets" widget="monetary"/></span>
+                                    <span>Debt: <field name="total_liabilities" widget="monetary"/></span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Cash Flow Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
-                                <div class="card-body p-3">
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted fw-bold small text-uppercase">Monthly Cash Flow</span>
-                                        <span class="badge rounded-pill bg-info-light text-info p-2">
-                                            <i class="fa fa-exchange fa-lg"/>
-                                        </span>
-                                    </div>
-                                    <h3 class="fw-bold text-primary mb-2">
-                                        <field name="month_net_savings" widget="monetary"/>
-                                    </h3>
-                                    <div class="d-flex justify-content-between small pt-2 border-top">
-                                        <span class="text-success"><i class="fa fa-arrow-up me-1"/><field name="month_income" widget="monetary"/></span>
-                                        <span class="text-danger"><i class="fa fa-arrow-down me-1"/><field name="month_expenses" widget="monetary"/></span>
-                                    </div>
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted fw-bold small text-uppercase">Monthly Cash Flow</span>
+                                    <span class="badge bg-info-light">
+                                        <i class="fa fa-exchange fa-lg"/>
+                                    </span>
+                                </div>
+                                <h3 class="fw-bold text-primary mb-2">
+                                    <field name="month_net_savings" widget="monetary"/>
+                                </h3>
+                                <div class="d-flex justify-content-between small pt-2 border-top">
+                                    <span class="text-success"><i class="fa fa-arrow-up me-1"/><field name="month_income" widget="monetary"/></span>
+                                    <span class="text-danger"><i class="fa fa-arrow-down me-1"/><field name="month_expenses" widget="monetary"/></span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Portfolio Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
-                                <div class="card-body p-3">
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted fw-bold small text-uppercase">Investment Portfolio</span>
-                                        <span class="badge rounded-pill bg-warning-light text-warning p-2">
-                                            <i class="fa fa-line-chart fa-lg"/>
-                                        </span>
-                                    </div>
-                                    <h3 class="fw-bold text-dark mb-2">
-                                        <field name="portfolio_market_value" widget="monetary"/>
-                                    </h3>
-                                    <div class="d-flex justify-content-between small pt-2 border-top">
-                                        <span>Gain: <field name="portfolio_unrealized_gain" widget="monetary" decoration-success="portfolio_unrealized_gain &gt;= 0" decoration-danger="portfolio_unrealized_gain &lt; 0"/></span>
-                                        <span class="badge bg-success" invisible="portfolio_gain_percent &lt; 0">+<field name="portfolio_gain_percent"/>%</span>
-                                        <span class="badge bg-danger" invisible="portfolio_gain_percent &gt;= 0"><field name="portfolio_gain_percent"/>%</span>
-                                    </div>
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted fw-bold small text-uppercase">Investment Portfolio</span>
+                                    <span class="badge bg-warning-light">
+                                        <i class="fa fa-line-chart fa-lg"/>
+                                    </span>
+                                </div>
+                                <h3 class="fw-bold text-dark mb-2">
+                                    <field name="portfolio_market_value" widget="monetary"/>
+                                </h3>
+                                <div class="d-flex justify-content-between small pt-2 border-top">
+                                    <span>Gain: <field name="portfolio_unrealized_gain" widget="monetary" decoration-success="portfolio_unrealized_gain &gt;= 0" decoration-danger="portfolio_unrealized_gain &lt; 0"/></span>
+                                    <span class="badge bg-success" invisible="portfolio_gain_percent &lt; 0">+<field name="portfolio_gain_percent"/>%</span>
+                                    <span class="badge bg-danger" invisible="portfolio_gain_percent &gt;= 0"><field name="portfolio_gain_percent"/>%</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Real Estate Equity Card -->
                         <div class="col-12 col-md-6 col-xl-3">
-                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
-                                <div class="card-body p-3">
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted fw-bold small text-uppercase">Real Estate Equity</span>
-                                        <span class="badge rounded-pill bg-primary-light text-primary p-2">
-                                            <i class="fa fa-home fa-lg"/>
-                                        </span>
-                                    </div>
-                                    <h3 class="fw-bold text-dark mb-2">
-                                        <field name="total_real_estate_equity" widget="monetary"/>
-                                    </h3>
-                                    <div class="d-flex justify-content-between small text-muted pt-2 border-top">
-                                        <span>Home &amp; Tangible Assets</span>
-                                        <span class="text-success fw-bold">Active Equity</span>
-                                    </div>
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted fw-bold small text-uppercase">Real Estate Equity</span>
+                                    <span class="badge bg-primary-light">
+                                        <i class="fa fa-home fa-lg"/>
+                                    </span>
+                                </div>
+                                <h3 class="fw-bold text-dark mb-2">
+                                    <field name="total_real_estate_equity" widget="monetary"/>
+                                </h3>
+                                <div class="d-flex justify-content-between small text-muted pt-2 border-top">
+                                    <span>Valuation: <field name="real_estate_assets" widget="monetary"/></span>
+                                    <span class="text-success fw-bold">Active Equity</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Row 2: Financial Freedom & Resilience (FIRE & Runway) -->
+                    <!-- Row 2: Sure Balance Sheet Assets & Liabilities Breakdown -->
+                    <div class="row g-3 mb-3">
+                        <!-- Assets Breakdown -->
+                        <div class="col-12 col-md-6">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <h6 class="fw-bold text-dark mb-0">
+                                        <i class="fa fa-pie-chart text-success me-2"/>Asset Allocation Breakdown
+                                    </h6>
+                                    <span class="badge bg-success-light">
+                                        Total: <field name="total_assets" widget="monetary"/>
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">🏦 Cash &amp; Bank Accounts</span>
+                                    <span class="fw-bold text-dark"><field name="cash_assets" widget="monetary"/></span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">📈 Stocks &amp; Brokerage</span>
+                                    <span class="fw-bold text-dark"><field name="investment_assets" widget="monetary"/></span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">🏡 Real Estate &amp; Properties</span>
+                                    <span class="fw-bold text-dark"><field name="real_estate_assets" widget="monetary"/></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Liabilities Breakdown -->
+                        <div class="col-12 col-md-6">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <h6 class="fw-bold text-dark mb-0">
+                                        <i class="fa fa-credit-card text-danger me-2"/>Debt &amp; Liabilities Breakdown
+                                    </h6>
+                                    <span class="badge bg-danger-light">
+                                        Total: <field name="total_liabilities" widget="monetary"/>
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">💳 Credit Card Balances</span>
+                                    <span class="fw-bold text-danger"><field name="credit_card_debt" widget="monetary"/></span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">🏛️ Mortgages &amp; Term Loans</span>
+                                    <span class="fw-bold text-danger"><field name="loans_mortgages_debt" widget="monetary"/></span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">📅 Upcoming Bills (14d)</span>
+                                    <span class="fw-bold text-primary"><field name="upcoming_bills_total" widget="monetary"/> (<field name="upcoming_bill_count"/> due)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Financial Freedom & Resilience (FIRE & Runway) -->
                     <div class="row g-3 mb-4">
                         <!-- Emergency Runway Card -->
                         <div class="col-12 col-md-6">
-                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
-                                <div class="card-body p-3">
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-shield me-1 text-success"/>Financial Runway</span>
-                                        <span class="badge bg-success"><field name="emergency_runway_months"/> Months</span>
-                                    </div>
-                                    <p class="text-muted small mb-0">
-                                        Based on liquid cash assets vs. 3-month average burn rate. You can sustain your current lifestyle for <strong><field name="emergency_runway_months"/> months</strong> with zero active income.
-                                    </p>
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-shield me-1 text-success"/>Financial Runway</span>
+                                    <span class="badge bg-success"><field name="emergency_runway_months"/> Months</span>
                                 </div>
+                                <p class="text-muted small mb-0">
+                                    Based on liquid cash assets vs. 3-month average burn rate. You can sustain your current lifestyle for <strong><field name="emergency_runway_months"/> months</strong> with zero active income.
+                                </p>
                             </div>
                         </div>
 
                         <!-- FIRE Milestone Card -->
                         <div class="col-12 col-md-6">
-                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
-                                <div class="card-body p-3">
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-fire me-1 text-danger"/>FIRE Goal (4% Rule)</span>
-                                        <span class="fw-bold text-primary"><field name="fire_progress_pct"/>% Achieved</span>
-                                    </div>
-                                    <div class="my-2">
-                                        <field name="fire_progress_pct" widget="progressbar"/>
-                                    </div>
-                                    <div class="d-flex justify-content-between small text-muted">
-                                        <span>Target: <field name="fire_target_amount" widget="monetary"/></span>
-                                        <span>(25× Annual Expenses)</span>
-                                    </div>
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted fw-bold small text-uppercase"><i class="fa fa-fire me-1 text-danger"/>FIRE Goal (4% Rule)</span>
+                                    <span class="fw-bold text-primary"><field name="fire_progress_pct"/>% Achieved</span>
+                                </div>
+                                <div class="my-2">
+                                    <field name="fire_progress_pct" widget="progressbar"/>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span>Target: <field name="fire_target_amount" widget="monetary"/></span>
+                                    <span>(25× Annual Expenses)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Quick Action Launchpad -->
-                    <div class="card border-0 shadow-sm rounded-3 mb-4 bg-light">
-                        <div class="card-body p-3">
-                            <h6 class="fw-bold text-muted text-uppercase small mb-3">
-                                <i class="fa fa-bolt me-1 text-warning"/>Quick Action Launchpad
-                            </h6>
-                            <div class="d-flex flex-wrap gap-2">
-                                <button name="action_open_register" type="object" class="btn btn-primary" icon="fa-book" string="Checkbook Register"/>
-                                <button name="action_open_goals" type="object" class="btn btn-outline-success" icon="fa-bullseye" string="Financial Goals"/>
-                                <button name="action_open_properties" type="object" class="btn btn-outline-info" icon="fa-home" string="Real Estate Assets"/>
-                                <button name="action_open_portfolio" type="object" class="btn btn-outline-dark" icon="fa-pie-chart" string="Investment Portfolio"/>
-                                <button name="action_open_bills" type="object" class="btn btn-outline-danger" icon="fa-calendar" string="Bills &amp; Reminders"/>
-                                <button name="action_open_budgets" type="object" class="btn btn-outline-warning" icon="fa-sliders" string="Category Budgets"/>
-                                <button name="action_open_rules" type="object" class="btn btn-outline-secondary" icon="fa-magic" string="Transaction Rules"/>
-                                <button name="action_open_reconciliation" type="object" class="btn btn-outline-dark" icon="fa-check-square-o" string="Reconcile Statement"/>
-                                <button name="action_open_import" type="object" class="btn btn-outline-secondary" icon="fa-upload" string="Import QIF / CSV"/>
-                                <button name="action_open_net_worth" type="object" class="btn btn-outline-primary" icon="fa-area-chart" string="Net Worth History"/>
-                            </div>
+                    <div class="card p-3 mb-4">
+                        <h6 class="fw-bold text-muted text-uppercase small mb-3">
+                            <i class="fa fa-bolt me-1 text-warning"/>Quick Action Launchpad
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button name="action_open_register" type="object" class="btn btn-primary moneta-pill-btn" icon="fa-book" string="Checkbook Register"/>
+                            <button name="action_open_goals" type="object" class="btn btn-outline-success moneta-pill-btn" icon="fa-bullseye" string="Financial Goals"/>
+                            <button name="action_open_properties" type="object" class="btn btn-outline-info moneta-pill-btn" icon="fa-home" string="Real Estate Assets"/>
+                            <button name="action_open_portfolio" type="object" class="btn btn-outline-dark moneta-pill-btn" icon="fa-pie-chart" string="Investment Portfolio"/>
+                            <button name="action_open_bills" type="object" class="btn btn-outline-danger moneta-pill-btn" icon="fa-calendar" string="Bills &amp; Reminders"/>
+                            <button name="action_open_budgets" type="object" class="btn btn-outline-warning moneta-pill-btn" icon="fa-sliders" string="Category Budgets"/>
+                            <button name="action_open_rules" type="object" class="btn btn-outline-secondary moneta-pill-btn" icon="fa-magic" string="Transaction Rules"/>
+                            <button name="action_open_reconciliation" type="object" class="btn btn-outline-dark moneta-pill-btn" icon="fa-check-square-o" string="Reconcile Statement"/>
+                            <button name="action_open_import" type="object" class="btn btn-outline-secondary moneta-pill-btn" icon="fa-upload" string="Import QIF / CSV"/>
+                            <button name="action_open_net_worth" type="object" class="btn btn-outline-primary moneta-pill-btn" icon="fa-area-chart" string="Net Worth History"/>
                         </div>
                     </div>
 

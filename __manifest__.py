@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Moneta Personal Finance',
-    'version': '18.0.3.0.0',
+    'version': '18.0.3.1.0',
     'category': 'Accounting/Finance',
     'summary': 'Personal finance manager: bank accounts, credit cards, investments, budgets & QIF/OFX imports.',
     'description': """
@@ -56,6 +56,11 @@ Features:
         'views/wizard_views.xml',
         'views/menu_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'moneta_finance/static/src/css/moneta_style.css',
+        ],
+    },
     'demo': [
         'demo/demo_data.xml',
     ],
