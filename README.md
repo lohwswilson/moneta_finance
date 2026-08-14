@@ -32,6 +32,22 @@
 
 ---
 
+## 💡 The Story Behind Moneta
+
+> *"Years ago, I was a dedicated user of **Microsoft Money**. It was reliable, comprehensive, and gave me complete visibility over my personal finances. But when Microsoft discontinued it, I had to migrate to **Quicken**.*
+>
+> *Over time, commercial tools became either clunky, burdened with recurring subscription fees, or trapped behind closed cloud platforms that didn't give me full control over my data. My finances were scattered across banks, multi-currency international stock brokers, and spreadsheets.*
+>
+> *Having developed enterprise solutions on **Odoo** for several years, I realized something: **Odoo’s robust framework, multi-currency engine, and relational database are the perfect foundation for a modern personal wealth management system.***
+>
+> *One weekend, I decided to sit down and kickstart the project. What began as a personal tool to regain the power of Microsoft Money with the elegance of modern fintech is now **Moneta**.*
+>
+> *I’ve open-sourced Moneta because financial clarity and data sovereignty belong to everyone. If you share this vision, I’d love for you to join me in shaping the future of open-source personal finance."*
+>
+> — **Wilson Loh** ([@lohwswilson](https://github.com/lohwswilson)) · *Creator of Moneta*
+
+---
+
 ## ⚡ Quickstart (Choose One)
 
 ### Option A: 30-Second Docker Setup (Fastest)
