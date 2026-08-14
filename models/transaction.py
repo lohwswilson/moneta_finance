@@ -234,28 +234,43 @@ class MonetaTransaction(models.Model):
         source_account = source.account_id
         if not target.exists():
             raise ValidationError("Transfer target account does not exist.")
-        if target.currency_id != source_account.currency_id:
-            raise ValidationError(
-                "Cross-currency transfers are not supported in this MVP."
-            )
         if target.user_id != source_account.user_id:
             raise ValidationError(
                 "Cross-owner transfers are not supported in this MVP."
             )
         cat_source = self.env['moneta.category'].search([('transfer_account_id', '=', source_account.id)], limit=1)
-        target_amount = round(-(source.amount or 0.0), 4)
+
+        # Calculate target amount in target account's native currency
+        if target.currency_id == source_account.currency_id:
+            target_amount = round(-(source.amount or 0.0), 4)
+        else:
+            converted = source_account.currency_id._convert(
+                abs(source.amount or 0.0),
+                target.currency_id,
+                self.env.company,
+                source.transaction_date or fields.Date.context_today(self),
+            )
+            target_amount = round(-converted if (source.amount or 0.0) > 0 else converted, 4)
 
         # Smart Match: check if an unlinked transaction already exists in the target account
         # (e.g. statements for both accounts were imported before setting the transfer category)
         min_date = source.transaction_date - timedelta(days=3)
         max_date = source.transaction_date + timedelta(days=3)
-        existing_match = self.search([
+        domain = [
             ('account_id', '=', target.id),
             ('linked_transaction_id', '=', False),
-            ('amount', '=', target_amount),
             ('transaction_date', '>=', min_date),
             ('transaction_date', '<=', max_date),
-        ], order='transaction_date asc, id asc', limit=1)
+        ]
+        if target.currency_id == source_account.currency_id:
+            domain.append(('amount', '=', target_amount))
+        else:
+            if target_amount > 0:
+                domain.append(('amount', '>', 0))
+            else:
+                domain.append(('amount', '<', 0))
+
+        existing_match = self.search(domain, order='transaction_date asc, id asc', limit=1)
 
         if existing_match:
             super(MonetaTransaction, existing_match).write({
@@ -345,7 +360,8 @@ class MonetaTransaction(models.Model):
                     cp_vals['category_id'] = cat_source.id
 
         if 'amount' in vals:
-            cp_vals['amount'] = round(-(self.amount or 0.0), 4)
+            if counterpart.currency_id == self.currency_id:
+                cp_vals['amount'] = round(-(self.amount or 0.0), 4)
         if 'transaction_date' in vals:
             cp_vals['transaction_date'] = self.transaction_date
         if 'state' in vals:

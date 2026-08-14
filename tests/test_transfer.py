@@ -184,3 +184,41 @@ class TestTransfer(MonetaTestBase):
         self.assertEqual(self._current_balance(acc1), 600.0)
         self.assertEqual(self._current_balance(acc2), 500.0) # Restored
         self.assertEqual(self._current_balance(acc3), 600.0) # Accurate, not 1000.0
+
+    def test_cross_currency_transfer(self):
+        usd = self.env['res.currency'].with_context(active_test=False).search([('name', '=', 'USD')], limit=1)
+        if not usd.active:
+            usd.active = True
+        eur = self.env['res.currency'].with_context(active_test=False).search([('name', '=', 'EUR')], limit=1)
+        if not eur:
+            eur = self.env['res.currency'].create({'name': 'EUR', 'symbol': '€', 'rounding': 0.01})
+        elif not eur.active:
+            eur.active = True
+
+        acc_usd = self._make_account(name='USD Checking', currency_id=usd.id, opening_balance=5000.0)
+        acc_eur = self._make_account(name='EUR Savings', currency_id=eur.id, opening_balance=1000.0)
+        acc_usd._sync_transfer_category()
+        acc_eur._sync_transfer_category()
+
+        cat_eur = self.env['moneta.category'].search([('transfer_account_id', '=', acc_eur.id)], limit=1)
+
+        # Transfer USD 1000 to EUR account
+        tx = self.env['moneta.transaction'].create({
+            'account_id': acc_usd.id,
+            'amount': -1000.0,
+            'category_id': cat_eur.id,
+            'state': 'cleared',
+        })
+
+        cp = tx.linked_transaction_id
+        self.assertTrue(cp)
+        self.assertEqual(cp.account_id, acc_eur)
+        self.assertEqual(cp.currency_id, eur)
+        self.assertGreater(cp.amount, 0.0)
+        self.assertEqual(self._current_balance(acc_usd), 4000.0)
+
+        # Test adjusting EUR leg to exact bank settlement rate (e.g. 920.50 EUR)
+        cp.write({'amount': 920.50})
+        self.assertEqual(self._current_balance(acc_eur), 1920.50)
+        # USD leg remains 1000.00
+        self.assertEqual(self._current_balance(acc_usd), 4000.0)
