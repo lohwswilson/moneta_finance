@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Income Categories (is_income=True). The whole set is is_system=True so
-             it is a stable template for per-user seeding (see category._seed_user_defaults)
-             and protected from deletion. -->
+        <!-- Income Categories (is_income=True / category_type='income') -->
         <record id="cat_salary" model="moneta.category">
             <field name="name">Salary</field>
             <field name="is_income" eval="True"/>
@@ -46,16 +44,22 @@
         <record id="cat_rent_mortgage" model="moneta.category">
             <field name="name">Rent/Mortgage</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🏡</field>
+            <field name="color">#E74C3C</field>
             <field name="parent_id" ref="cat_housing"/>
         </record>
         <record id="cat_housing_utilities" model="moneta.category">
             <field name="name">Utilities</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">💡</field>
+            <field name="color">#E74C3C</field>
             <field name="parent_id" ref="cat_housing"/>
         </record>
         <record id="cat_property_tax" model="moneta.category">
             <field name="name">Property Tax</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🏛️</field>
+            <field name="color">#E74C3C</field>
             <field name="parent_id" ref="cat_housing"/>
         </record>
 
@@ -69,16 +73,22 @@
         <record id="cat_fuel" model="moneta.category">
             <field name="name">Fuel</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">⛽</field>
+            <field name="color">#3498DB</field>
             <field name="parent_id" ref="cat_transportation"/>
         </record>
         <record id="cat_public_transit" model="moneta.category">
             <field name="name">Public Transit</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🚆</field>
+            <field name="color">#3498DB</field>
             <field name="parent_id" ref="cat_transportation"/>
         </record>
         <record id="cat_car_insurance" model="moneta.category">
             <field name="name">Car Insurance</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🛡️</field>
+            <field name="color">#3498DB</field>
             <field name="parent_id" ref="cat_transportation"/>
         </record>
 
@@ -92,16 +102,22 @@
         <record id="cat_groceries" model="moneta.category">
             <field name="name">Groceries</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🛒</field>
+            <field name="color">#E67E22</field>
             <field name="parent_id" ref="cat_food"/>
         </record>
         <record id="cat_restaurants" model="moneta.category">
             <field name="name">Restaurants</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🍔</field>
+            <field name="color">#E67E22</field>
             <field name="parent_id" ref="cat_food"/>
         </record>
         <record id="cat_coffee" model="moneta.category">
             <field name="name">Coffee Shops</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">☕</field>
+            <field name="color">#E67E22</field>
             <field name="parent_id" ref="cat_food"/>
         </record>
 
@@ -115,16 +131,22 @@
         <record id="cat_clothing" model="moneta.category">
             <field name="name">Clothing</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">👕</field>
+            <field name="color">#9B59B6</field>
             <field name="parent_id" ref="cat_shopping"/>
         </record>
         <record id="cat_electronics" model="moneta.category">
             <field name="name">Electronics</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">💻</field>
+            <field name="color">#9B59B6</field>
             <field name="parent_id" ref="cat_shopping"/>
         </record>
         <record id="cat_home_goods" model="moneta.category">
             <field name="name">Home Goods</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🛋️</field>
+            <field name="color">#9B59B6</field>
             <field name="parent_id" ref="cat_shopping"/>
         </record>
 
@@ -138,16 +160,22 @@
         <record id="cat_movies" model="moneta.category">
             <field name="name">Movies &amp; Concerts</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🍿</field>
+            <field name="color">#F39C12</field>
             <field name="parent_id" ref="cat_entertainment"/>
         </record>
         <record id="cat_streaming" model="moneta.category">
             <field name="name">Streaming Services</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">📺</field>
+            <field name="color">#F39C12</field>
             <field name="parent_id" ref="cat_entertainment"/>
         </record>
         <record id="cat_games" model="moneta.category">
             <field name="name">Games</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🎮</field>
+            <field name="color">#F39C12</field>
             <field name="parent_id" ref="cat_entertainment"/>
         </record>
 
@@ -185,11 +213,15 @@
         <record id="cat_phone" model="moneta.category">
             <field name="name">Phone</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">📱</field>
+            <field name="color">#C0392B</field>
             <field name="parent_id" ref="cat_bills"/>
         </record>
         <record id="cat_internet" model="moneta.category">
             <field name="name">Internet</field>
             <field name="is_system" eval="True"/>
+            <field name="icon">🌐</field>
+            <field name="color">#C0392B</field>
             <field name="parent_id" ref="cat_bills"/>
         </record>
 

@@ -57,3 +57,12 @@ def _post_init_seed_defaults(env):
             Category._seed_user_defaults(user)
         except Exception as exc:  # noqa: BLE001 - install must not abort on a seed error
             _logger.exception("post_init: failed seeding categories for user %s: %s", user.id, exc)
+
+    # Backfill missing icons/colors on existing subcategories from their parents
+    try:
+        empty_icon_categories = Category.search([('icon', 'in', (False, '')), ('parent_id', '!=', False)])
+        for cat in empty_icon_categories:
+            if cat.parent_id.icon:
+                cat.write({'icon': cat.parent_id.icon, 'color': cat.parent_id.color or '#3498db'})
+    except Exception as exc:
+        _logger.exception("post_init: failed backfilling category icons: %s", exc)

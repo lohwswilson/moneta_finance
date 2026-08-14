@@ -70,10 +70,14 @@ class MonetaCategory(models.Model):
 
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
-        # Convenience in the form: picking a parent flips is_income and category_type to match.
+        # Convenience in the form: picking a parent flips is_income, category_type, icon and color to match.
         if self.parent_id:
             self.category_type = self.parent_id.category_type
             self.is_income = self.parent_id.is_income
+            if not self.icon:
+                self.icon = self.parent_id.icon
+            if not self.color or self.color == '#3498db':
+                self.color = self.parent_id.color
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -90,6 +94,10 @@ class MonetaCategory(models.Model):
                 if parent:
                     vals['is_income'] = parent.is_income
                     vals['category_type'] = parent.category_type
+                    if not vals.get('icon'):
+                        vals['icon'] = parent.icon
+                    if not vals.get('color') or vals.get('color') == '#3498db':
+                        vals['color'] = parent.color
         return super().create(vals_list)
 
     def write(self, vals):
