@@ -197,12 +197,12 @@
         </field>
     </record>
 
-    <!-- Premier Account Kanban View -->
+    <!-- Premier Account Kanban View with Green, Blue, and Red Visual Cards -->
     <record id="view_moneta_account_kanban" model="ir.ui.view">
         <field name="name">moneta.account.kanban</field>
         <field name="model">moneta.account</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard" default_group_by="account_type" sample="1">
+            <kanban class="o_kanban_dashboard" default_order="account_type, sequence, name" sample="1">
                 <field name="name"/>
                 <field name="account_type"/>
                 <field name="currency_id"/>
@@ -218,107 +218,114 @@
                 <field name="credit_limit"/>
                 <templates>
                     <t t-name="card">
-                        <div class="d-flex flex-column justify-content-between h-100 p-2">
-                            <!-- Card Header -->
+                        <t t-set="is_debt" t-value="['mortgage', 'loan', 'credit_card', 'loc'].includes(record.account_type.raw_value)"/>
+                        <t t-set="is_cash" t-value="['checking', 'chequing', 'savings', 'cash'].includes(record.account_type.raw_value)"/>
+                        <t t-set="is_inv" t-value="['brokerage', 'retirement', 'crypto'].includes(record.account_type.raw_value)"/>
+                        
+                        <t t-set="card_style" t-value="is_debt ? 'border: 2px solid #E74C3C !important; background: linear-gradient(180deg, #FDEDEC 0%, #FFFFFF 100%); min-height: 190px;' : (is_cash ? 'border: 2px solid #2ECC71 !important; background: linear-gradient(180deg, #EAFAF1 0%, #FFFFFF 100%); min-height: 190px;' : 'border: 2px solid #3498DB !important; background: linear-gradient(180deg, #EBF5FB 0%, #FFFFFF 100%); min-height: 190px;')"/>
+                        <t t-set="badge_class" t-value="is_debt ? 'bg-danger text-white' : (is_cash ? 'bg-success text-white' : 'bg-primary text-white')"/>
+                        <t t-set="icon_name" t-value="record.account_type.raw_value == 'mortgage' ? 'fa-home' : (record.account_type.raw_value == 'loan' ? 'fa-car' : (record.account_type.raw_value == 'credit_card' ? 'fa-credit-card' : (record.account_type.raw_value in ['brokerage', 'retirement', 'crypto'] ? 'fa-line-chart' : (record.account_type.raw_value == 'savings' ? 'fa-money' : 'fa-bank'))))"/>
+
+                        <div class="oe_kanban_global_click o_kanban_card rounded-4 shadow-sm p-3 mb-2 d-flex flex-column justify-content-between h-100" t-att-style="card_style">
+                            <!-- Card Top Header -->
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <span class="badge rounded-pill px-2 py-1 small fw-bold text-uppercase"
-                                          t-attf-class="{{
-                                              record.account_type.raw_value in ['checking', 'chequing', 'savings', 'cash'] ? 'bg-success-subtle text-success' :
-                                              record.account_type.raw_value in ['brokerage', 'retirement', 'crypto'] ? 'bg-primary-subtle text-primary' :
-                                              record.account_type.raw_value in ['credit_card'] ? 'bg-warning-subtle text-warning' :
-                                              'bg-danger-subtle text-danger'
-                                          }}">
-                                        <t t-out="record.account_type.value"/>
-                                    </span>
-                                    <div class="text-muted small mt-1" t-if="record.institution_name.value">
-                                        <i class="fa fa-university me-1"/> <t t-out="record.institution_name.value"/>
+                                <div class="d-flex align-items-center">
+                                    <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center #{badge_class} shadow-sm" style="width: 36px; height: 36px;">
+                                        <i t-attf-class="fa #{icon_name} fa-lg"/>
+                                    </div>
+                                    <div>
+                                        <strong class="fs-6 text-dark fw-bold"><field name="name"/></strong>
+                                        <div class="text-muted small" t-if="record.institution_name.value">
+                                            <i class="fa fa-university me-1"/> <field name="institution_name"/>
+                                        </div>
                                     </div>
                                 </div>
-                                <field name="is_favourite" widget="boolean_favorite" nolabel="1"/>
-                            </div>
-
-                            <!-- Account Title -->
-                            <div class="mb-2">
-                                <h5 class="fw-bold text-dark mb-0 text-truncate">
-                                    <field name="name"/>
-                                </h5>
+                                <div class="d-flex align-items-center gap-1">
+                                    <span t-attf-class="badge rounded-pill text-uppercase px-2 py-1 #{badge_class}">
+                                        <field name="account_type"/>
+                                    </span>
+                                    <field name="is_favourite" widget="boolean_favorite" nolabel="1"/>
+                                </div>
                             </div>
 
                             <!-- Financial Numbers Hero -->
-                            <div class="my-2 p-2 rounded-3" style="background: rgba(0,0,0,0.02);">
-                                <!-- If Brokerage -->
-                                <t t-if="record.account_type.raw_value in ['brokerage', 'retirement', 'crypto']">
+                            <div class="my-2 p-2 rounded-3 bg-white bg-opacity-75 shadow-xs border">
+                                <!-- If Brokerage & Investments (BLUE) -->
+                                <t t-if="is_inv">
                                     <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small">Stock Value:</span>
-                                        <span class="fs-5 fw-bold text-primary">
+                                        <span class="text-muted small fw-semibold">Stock Market Value:</span>
+                                        <h4 class="mb-0 fw-bold text-primary">
                                             <field name="total_portfolio_market_value" widget="monetary"/>
-                                        </span>
+                                        </h4>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-baseline small text-muted">
                                         <span>Cash Balance:</span>
                                         <span class="fw-semibold text-dark"><field name="current_balance" widget="monetary"/></span>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-baseline small mt-1" t-if="record.total_portfolio_gain.raw_value">
-                                        <span>Return:</span>
+                                        <span>Total Return:</span>
                                         <span t-attf-class="fw-bold {{ record.total_portfolio_gain.raw_value &gt;= 0 ? 'text-success' : 'text-danger' }}">
                                             <t t-if="record.total_portfolio_gain.raw_value &gt; 0">+</t><field name="total_portfolio_gain" widget="monetary"/>
                                             (<field name="total_portfolio_gain_percent"/>%)
                                         </span>
                                     </div>
                                 </t>
-                                <!-- If Credit Card -->
+                                <!-- If Credit Card & Debt (RED) -->
                                 <t t-elif="record.account_type.raw_value == 'credit_card'">
                                     <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small">Card Balance:</span>
-                                        <span class="fs-5 fw-bold text-danger">
+                                        <span class="text-muted small fw-semibold">Card Balance:</span>
+                                        <h4 class="mb-0 fw-bold text-danger">
                                             <field name="current_balance" widget="monetary"/>
-                                        </span>
+                                        </h4>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-baseline small text-muted" t-if="record.credit_limit.raw_value">
                                         <span>Credit Limit:</span>
-                                        <span class="fw-semibold"><field name="credit_limit" widget="monetary"/></span>
+                                        <span class="fw-semibold text-dark"><field name="credit_limit" widget="monetary"/></span>
                                     </div>
                                 </t>
-                                <!-- If Loan / Mortgage -->
-                                <t t-elif="record.account_type.raw_value in ['loan', 'mortgage', 'loc']">
+                                <!-- If Mortgage / Loans (RED) -->
+                                <t t-elif="is_debt">
                                     <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small">Principal Debt:</span>
-                                        <span class="fs-5 fw-bold text-danger">
+                                        <span class="text-muted small fw-semibold">Principal Debt:</span>
+                                        <h4 class="mb-0 fw-bold text-danger">
                                             <field name="current_balance" widget="monetary"/>
-                                        </span>
-                                    </div>
-                                </t>
-                                <!-- Standard Bank Account -->
-                                <t t-else="">
-                                    <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                        <span class="text-muted small">Available Cash:</span>
-                                        <span class="fs-5 fw-bold text-success">
-                                            <field name="current_balance" widget="monetary"/>
-                                        </span>
+                                        </h4>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-baseline small text-muted">
-                                        <span>Cleared:</span>
-                                        <span class="fw-semibold text-muted"><field name="cleared_balance" widget="monetary"/></span>
+                                        <span>Status:</span>
+                                        <span class="badge bg-danger-subtle text-danger">Active Loan</span>
+                                    </div>
+                                </t>
+                                <!-- Standard Bank Accounts & Cash (GREEN) -->
+                                <t t-else="">
+                                    <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                        <span class="text-muted small fw-semibold">Current Balance:</span>
+                                        <h4 class="mb-0 fw-bold text-success">
+                                            <field name="current_balance" widget="monetary"/>
+                                        </h4>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-baseline small text-muted">
+                                        <span>Cleared Balance:</span>
+                                        <span class="fw-semibold text-dark"><field name="cleared_balance" widget="monetary"/></span>
                                     </div>
                                 </t>
                             </div>
 
                             <!-- Card Footer Quick Links -->
                             <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-auto">
-                                <t t-if="record.account_type.raw_value in ['brokerage', 'retirement', 'crypto']">
-                                    <button name="action_view_holdings" type="object" class="btn btn-sm btn-outline-primary py-0 px-2">
+                                <t t-if="is_inv">
+                                    <button name="action_view_holdings" type="object" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold">
                                         <i class="fa fa-pie-chart me-1"/>Holdings (<field name="holding_count"/>)
                                     </button>
                                     <button name="action_view_transactions" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-muted">
-                                        <i class="fa fa-list me-1"/>Register
+                                        <i class="fa fa-list me-1"/>Cash Register
                                     </button>
                                 </t>
                                 <t t-else="">
-                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2">
+                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold">
                                         <i class="fa fa-list me-1"/>Transactions
                                     </button>
-                                    <button name="action_reconcile_statement" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-primary" t-if="record.account_type.raw_value in ['checking', 'chequing', 'savings', 'cash']">
+                                    <button name="action_reconcile_statement" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-primary fw-semibold" t-if="is_cash">
                                         <i class="fa fa-check-square-o me-1"/>Reconcile
                                     </button>
                                 </t>
