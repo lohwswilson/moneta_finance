@@ -24,6 +24,7 @@
                             <field name="institution_id"/>
                             <field name="institution_name"/>
                             <field name="account_number"/>
+                            <field name="sequence"/>
                         </group>
                         <group>
                             <field name="opening_balance" widget="monetary"/>
@@ -121,6 +122,7 @@
                   decoration-danger="account_type in ('loan', 'mortgage')" 
                   decoration-success="account_type in ('checking', 'chequing', 'savings', 'cash')"
                   decoration-info="account_type in ('credit_card', 'loc')">
+                <field name="sequence" widget="handle"/>
                 <field name="is_favourite" widget="boolean_toggle"/>
                 <field name="name"/>
                 <field name="institution_name"/>
@@ -144,7 +146,8 @@
         <field name="name">moneta.account.kanban</field>
         <field name="model">moneta.account</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" default_order="account_type, name">
+            <kanban class="o_kanban_mobile" default_order="sequence, is_favourite desc, name">
+                <field name="sequence"/>
                 <field name="name"/>
                 <field name="account_type"/>
                 <field name="currency_id"/>

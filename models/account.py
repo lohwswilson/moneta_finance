@@ -8,8 +8,9 @@ from odoo.exceptions import ValidationError
 class MonetaAccount(models.Model):
     _name = 'moneta.account'
     _description = 'Moneta Account'
-    _order = 'is_favourite desc, name'
+    _order = 'sequence, is_favourite desc, name'
 
+    sequence = fields.Integer(string='Sequence', default=10, index=True)
     name = fields.Char(string='Account Name', required=True)
     account_type = fields.Selection([
         ('checking', 'Checking'),
