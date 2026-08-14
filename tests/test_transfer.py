@@ -141,3 +141,46 @@ class TestTransfer(MonetaTestBase):
         self.assertTrue(tx2.is_transfer)
         self.assertEqual(self._current_balance(acc1), 650.0)
         self.assertEqual(self._current_balance(acc2), 850.0)
+
+    def test_transfer_move_target_with_existing_orphan(self):
+        acc1 = self._make_account(name='Checking', opening_balance=1000.0)
+        acc2 = self._make_account(name='Savings A', opening_balance=500.0)
+        acc3 = self._make_account(name='Savings B', opening_balance=200.0)
+        acc1._sync_transfer_category()
+        acc2._sync_transfer_category()
+        acc3._sync_transfer_category()
+
+        cat2 = self.env['moneta.category'].search([('transfer_account_id', '=', acc2.id)], limit=1)
+        cat3 = self.env['moneta.category'].search([('transfer_account_id', '=', acc3.id)], limit=1)
+
+        # 1. Create transfer from acc1 to acc2 (creates counterpart in acc2)
+        tx1 = self.env['moneta.transaction'].create({
+            'account_id': acc1.id,
+            'amount': -400.0,
+            'category_id': cat2.id,
+        })
+        cp_in_acc2 = tx1.linked_transaction_id
+        self.assertEqual(cp_in_acc2.account_id, acc2)
+        self.assertEqual(self._current_balance(acc1), 600.0)
+        self.assertEqual(self._current_balance(acc2), 900.0)
+        self.assertEqual(self._current_balance(acc3), 200.0)
+
+        # 2. Suppose acc3 already had an unlinked imported transaction of +400.0
+        tx3_existing = self.env['moneta.transaction'].create({
+            'account_id': acc3.id,
+            'amount': 400.0,
+            'memo': 'Imported deposit in Savings B',
+        })
+        self.assertEqual(self._current_balance(acc3), 600.0)
+
+        # 3. User re-categorizes tx1 to [Savings B] (acc3)
+        tx1.write({'category_id': cat3.id})
+
+        # Check: tx1 is now linked to tx3_existing in acc3, and the old counterpart in acc2 was cleaned up!
+        self.assertFalse(cp_in_acc2.exists())
+        self.assertEqual(tx1.linked_transaction_id, tx3_existing)
+        self.assertEqual(tx3_existing.linked_transaction_id, tx1)
+        self.assertTrue(tx3_existing.is_transfer)
+        self.assertEqual(self._current_balance(acc1), 600.0)
+        self.assertEqual(self._current_balance(acc2), 500.0) # Restored
+        self.assertEqual(self._current_balance(acc3), 600.0) # Accurate, not 1000.0

@@ -306,7 +306,34 @@ class MonetaTransaction(models.Model):
         if 'transfer_account_id' in vals or 'category_id' in vals:
             new_target_acc_id = self.transfer_account_id.id
             if new_target_acc_id and counterpart.account_id.id != new_target_acc_id:
-                cp_vals['account_id'] = new_target_acc_id
+                # Check if the new target account already has an unlinked matching transaction
+                # (e.g. from an existing statement import)
+                target_amount = round(-(self.amount or 0.0), 4)
+                min_date = self.transaction_date - timedelta(days=3)
+                max_date = self.transaction_date + timedelta(days=3)
+                existing_match = self.search([
+                    ('account_id', '=', new_target_acc_id),
+                    ('linked_transaction_id', '=', False),
+                    ('amount', '=', target_amount),
+                    ('transaction_date', '>=', min_date),
+                    ('transaction_date', '<=', max_date),
+                ], order='transaction_date asc, id asc', limit=1)
+
+                if existing_match:
+                    cat_source = self.env['moneta.category'].search([('transfer_account_id', '=', self.account_id.id)], limit=1)
+                    old_cp = counterpart
+                    old_cp.write({'linked_transaction_id': False})
+                    super(MonetaTransaction, self).write({'linked_transaction_id': existing_match.id})
+                    super(MonetaTransaction, existing_match).write({
+                        'is_transfer': True,
+                        'transfer_account_id': self.account_id.id,
+                        'category_id': cat_source.id if cat_source else False,
+                        'linked_transaction_id': self.id,
+                    })
+                    old_cp.unlink()
+                    return
+                else:
+                    cp_vals['account_id'] = new_target_acc_id
                 
         # 2. Source Account changed (moved this transaction to another source account)
         if 'account_id' in vals:
@@ -449,8 +476,9 @@ class MonetaTransaction(models.Model):
                             counterpart._balance_contribution(),
                             counterpart._cleared_contribution(),
                         )
-        self._invalidate_budget_actuals(self._collect_category_ids())
-        for rec in self:
+        active_recs = self.exists()
+        self._invalidate_budget_actuals(active_recs._collect_category_ids())
+        for rec in active_recs:
             self.env['moneta.account.balance.monthly']._rebuild_for_account(rec.account_id)
         return res
 
