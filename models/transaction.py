@@ -150,16 +150,26 @@ class MonetaTransaction(models.Model):
             account_txs = self.filtered(lambda t: t.account_id == account)
             if not account_txs:
                 continue
+            acc_id = account._origin.id if hasattr(account, '_origin') and account._origin.id else account.id
+            if not acc_id or not isinstance(acc_id, int):
+                running = float(account.opening_balance or 0.0)
+                for tx in sorted(account_txs, key=lambda t: (t.transaction_date or fields.Date.context_today(self), getattr(t._origin, 'id', 0) or 0)):
+                    if tx.state != 'void':
+                        running += (tx.amount or 0.0)
+                    tx.running_balance = running
+                continue
+
             self.env.cr.execute("""
                 SELECT id, 
                        (COALESCE(%s, 0) + SUM(CASE WHEN state <> 'void' THEN amount ELSE 0 END) 
                         OVER (PARTITION BY account_id ORDER BY transaction_date ASC, id ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW))::float
                 FROM moneta_transaction
                 WHERE account_id = %s
-            """, (float(account.opening_balance or 0.0), account.id))
+            """, (float(account.opening_balance or 0.0), acc_id))
             res_map = dict(self.env.cr.fetchall())
             for tx in account_txs:
-                tx.running_balance = res_map.get(tx.id, 0.0)
+                tx_id = tx._origin.id if hasattr(tx, '_origin') and tx._origin.id else tx.id
+                tx.running_balance = res_map.get(tx_id, 0.0)
         for tx in self.filtered(lambda t: not t.account_id):
             tx.running_balance = 0.0
 

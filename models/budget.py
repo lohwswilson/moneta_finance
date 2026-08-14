@@ -356,6 +356,10 @@ class MonetaBudgetPeriodCategory(models.Model):
             if not pc.category_id:
                 pc.actual_amount = 0.0
                 continue
+            cat_id = pc.category_id._origin.id if hasattr(pc.category_id, '_origin') and pc.category_id._origin.id else pc.category_id.id
+            if not cat_id or not isinstance(cat_id, int):
+                pc.actual_amount = 0.0
+                continue
             period = pc.budget_period_id
             if not (period.period_start and period.period_end):
                 pc.actual_amount = 0.0
@@ -364,7 +368,7 @@ class MonetaBudgetPeriodCategory(models.Model):
                 "SELECT COALESCE(SUM(amount), 0)::float FROM moneta_transaction "
                 "WHERE category_id = %s AND is_split = false AND state <> 'void' "
                 "  AND transaction_date >= %s AND transaction_date <= %s",
-                (pc.category_id.id, period.period_start, period.period_end),
+                (cat_id, period.period_start, period.period_end),
             )
             total = float(self.env.cr.fetchone()[0] or 0.0)
             self.env.cr.execute(
@@ -373,7 +377,7 @@ class MonetaBudgetPeriodCategory(models.Model):
                 "JOIN moneta_transaction t ON s.transaction_id = t.id "
                 "WHERE s.category_id = %s AND t.state <> 'void' "
                 "  AND t.transaction_date >= %s AND t.transaction_date <= %s",
-                (pc.category_id.id, period.period_start, period.period_end),
+                (cat_id, period.period_start, period.period_end),
             )
             total += float(self.env.cr.fetchone()[0] or 0.0)
             if pc.budget_category_id.is_income:

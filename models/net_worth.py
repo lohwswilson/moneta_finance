@@ -73,7 +73,7 @@ class MonetaAccountBalanceMonthly(models.Model):
         brokerage with no holdings (known zero); False for non-brokerage."""
         if account.account_type != 'brokerage':
             return False
-        holdings = self.env['moneta.holding'].search([('account_id', '=', account.id)])
+        holdings = self.env['moneta.holding'].search([('account_id', '=', acc_id)])
         if not holdings:
             return 0.0
         total = 0.0
@@ -106,6 +106,9 @@ class MonetaAccountBalanceMonthly(models.Model):
 
     @api.model
     def _rebuild_for_account(self, account):
+        acc_id = account._origin.id if hasattr(account, '_origin') and account._origin.id else account.id
+        if not acc_id or not isinstance(acc_id, int):
+            return
         """Rebuild the monthly snapshot rows for one account (rebuild-on-write,
         mirroring Moneta's monthly_account_balances). Every month from the
         account's opening-balance date (or earliest transaction) through the
@@ -114,13 +117,13 @@ class MonetaAccountBalanceMonthly(models.Model):
         today = fields.Date.context_today(self)
         Tx = self.env['moneta.transaction']
         first_date = account.opening_balance_date or today
-        earliest = Tx.search([('account_id', '=', account.id)], order='transaction_date asc', limit=1)
+        earliest = Tx.search([('account_id', '=', acc_id)], order='transaction_date asc', limit=1)
         if earliest and earliest.transaction_date and earliest.transaction_date < first_date:
             first_date = earliest.transaction_date
         # Investment activity extends the range too (a brokerage may hold
         # securities without any cash transaction).
         earliest_inv = self.env['moneta.investment.transaction'].search(
-            [('account_id', '=', account.id)], order='trade_date asc', limit=1
+            [('account_id', '=', acc_id)], order='trade_date asc', limit=1
         )
         if earliest_inv and earliest_inv.trade_date and earliest_inv.trade_date < first_date:
             first_date = earliest_inv.trade_date
@@ -136,7 +139,7 @@ class MonetaAccountBalanceMonthly(models.Model):
             self.env.cr.execute(
                 "SELECT COALESCE(SUM(amount), 0)::float FROM moneta_transaction "
                 "WHERE account_id = %s AND state <> 'void' AND transaction_date <= %s",
-                (account.id, month_end),
+                (acc_id, month_end),
             )
             balance = round(
                 float(account.opening_balance or 0.0) + float(self.env.cr.fetchone()[0] or 0.0),
