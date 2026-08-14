@@ -11,7 +11,7 @@ class MonetaCategory(models.Model):
 
     name = fields.Char(string='Category Name', required=True)
     icon = fields.Char(string='Icon', default='📁', help='Emoji icon (e.g. 🍔, 🏠, 🚗, 💰)')
-    color = fields.Integer(string='Color Index', default=0)
+    color = fields.Char(string='Color', default='#4A90E2')
     description = fields.Text(string='Description / Notes')
     is_system = fields.Boolean(string='System Default Template', default=False)
 
