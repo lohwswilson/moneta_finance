@@ -66,6 +66,9 @@ class MonetaDashboard(models.TransientModel):
         ('success', 'Positive Milestone'),
     ], string='Top Insight Severity', compute='_compute_insights')
 
+    # Dynamic Quick Action Launchpad (Customizable)
+    action_launchpad_ids = fields.Many2many('moneta.dashboard.action', string='Dynamic Quick Actions', compute='_compute_launchpad_actions')
+
     @api.depends('name')
     def _compute_display_name(self):
         for rec in self:
@@ -275,5 +278,22 @@ class MonetaDashboard(models.TransientModel):
 
     def action_open_insights(self):
         action = self.env.ref('moneta_finance.action_moneta_insight').read()[0]
+        action['target'] = 'current'
+        return action
+
+    @api.depends()
+    def _compute_launchpad_actions(self):
+        ActionModel = self.env['moneta.dashboard.action']
+        user = self.env.user
+        ActionModel.seed_user_default_actions(user)
+        actions = ActionModel.search([('user_id', '=', user.id), ('active', '=', True)], order='sequence asc, id asc')
+        for dash in self:
+            dash.action_launchpad_ids = actions
+
+    def action_customize_launchpad(self):
+        """Open the Launchpad Configuration Manager."""
+        ActionModel = self.env['moneta.dashboard.action']
+        ActionModel.seed_user_default_actions(self.env.user)
+        action = self.env.ref('moneta_finance.action_moneta_dashboard_action').read()[0]
         action['target'] = 'current'
         return action

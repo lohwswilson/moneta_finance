@@ -206,6 +206,12 @@
               parent="menu_moneta_root"
               sequence="60"/>
 
+    <menuitem id="menu_moneta_dashboard_actions"
+              name="Customize Quick Action Launchpad"
+              parent="menu_moneta_config_root"
+              action="action_moneta_dashboard_action"
+              sequence="2"/>
+
     <menuitem id="menu_moneta_transaction_rules"
               name="Transaction Rules"
               parent="menu_moneta_config_root"

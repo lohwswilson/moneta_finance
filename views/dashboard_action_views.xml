@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Launchpad Action Form View -->
+    <record id="view_moneta_dashboard_action_form" model="ir.ui.view">
+        <field name="name">moneta.dashboard.action.form</field>
+        <field name="model">moneta.dashboard.action</field>
+        <field name="arch" type="xml">
+            <form string="Customize Quick Action Button">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Button Label"/>
+                        <h1><field name="name" placeholder="e.g. Checkbook Register or Ask Moneta AI"/></h1>
+                    </div>
+                    <group>
+                        <group string="Action Target">
+                            <field name="action_type"/>
+                            <field name="custom_action_id" invisible="action_type != 'custom'" required="action_type == 'custom'"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Visual Styling &amp; Icon">
+                            <field name="icon" placeholder="fa-book, fa-comments, fa-magic, fa-camera..."/>
+                            <field name="color_class"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Launchpad Action List View (Drag & Drop Re-ordering via Sequence Handle) -->
+    <record id="view_moneta_dashboard_action_tree" model="ir.ui.view">
+        <field name="name">moneta.dashboard.action.list</field>
+        <field name="model">moneta.dashboard.action</field>
+        <field name="arch" type="xml">
+            <list string="Dashboard Quick Action Buttons" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name" string="Button Label"/>
+                <field name="action_type" string="Target Action"/>
+                <field name="icon" string="Icon"/>
+                <field name="color_class" string="Style"/>
+                <field name="active" widget="boolean_toggle" string="Visible"/>
+                <button name="action_execute" string="Test Launch" type="object" icon="fa-external-link" class="btn-sm btn-secondary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action Window for Launchpad Customizer -->
+    <record id="action_moneta_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Customize Quick Action Launchpad</field>
+        <field name="res_model">moneta.dashboard.action</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Customize Your Personal Dashboard Quick Actions
+            </p>
+            <p>
+                Drag and drop rows to re-order, toggle visibility, customize button labels, pick icons, or add new shortcuts.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -24,3 +24,4 @@ from . import insight
 from . import res_config_settings
 from . import ai_advisor
 from . import portfolio_analytics
+from . import dashboard_action
