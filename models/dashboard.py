@@ -7,7 +7,9 @@ from odoo import models, fields, api
 class MonetaDashboard(models.TransientModel):
     _name = 'moneta.dashboard'
     _description = 'Moneta Quicken Premier Dashboard'
+    _rec_name = 'name'
 
+    name = fields.Char(string='Name', default='Dashboard')
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.company.currency_id, required=True,
     )
@@ -38,6 +40,11 @@ class MonetaDashboard(models.TransientModel):
     portfolio_unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_investment_totals')
     portfolio_gain_percent = fields.Float(string='Portfolio Gain (%)', compute='_compute_investment_totals', digits=(5, 2))
     holding_count = fields.Integer(string='Holdings Count', compute='_compute_investment_totals')
+
+    @api.depends('name')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = 'Dashboard'
 
     @api.depends()
     def _compute_totals(self):
@@ -83,7 +90,7 @@ class MonetaDashboard(models.TransientModel):
                     expenses += float(tx.amount or 0.0)
             dash.month_income = round(income, 4)
             dash.month_expenses = round(-expenses, 4)
-            dash.month_net_savings = round(income + expenses, 4)  # expenses are negative in amount
+            dash.month_net_savings = round(income + expenses, 4)
             dash.savings_rate = round((dash.month_net_savings / income * 100.0), 2) if income > 0 else 0.0
 
     @api.depends()
@@ -117,67 +124,41 @@ class MonetaDashboard(models.TransientModel):
         return True
 
     def action_open_accounts(self):
-        return {
-            'name': 'Financial Accounts',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.account',
-            'view_mode': 'kanban,list,form',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_account').read()[0]
+        action['target'] = 'current'
+        return action
 
     def action_open_register(self):
-        return {
-            'name': 'Checkbook Register',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.transaction',
-            'view_mode': 'list,form,pivot,graph',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_transaction').read()[0]
+        action['target'] = 'current'
+        return action
 
     def action_open_portfolio(self):
-        return {
-            'name': 'Portfolio Holdings',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.holding',
-            'view_mode': 'list,form,graph',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_holding').read()[0]
+        action['target'] = 'current'
+        return action
 
     def action_open_bills(self):
-        return {
-            'name': 'Bills & Scheduled Transactions',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.recurring.transaction',
-            'view_mode': 'list,form',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_recurring').read()[0]
+        action['target'] = 'current'
+        return action
 
     def action_open_budgets(self):
-        return {
-            'name': 'Category Budgets',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.budget',
-            'view_mode': 'list,form',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_budget').read()[0]
+        action['target'] = 'current'
+        return action
 
     def action_open_net_worth(self):
-        return {
-            'name': 'Net Worth Trend',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.net.worth',
-            'view_mode': 'list,graph',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_net_worth').read()[0]
+        action['target'] = 'current'
+        return action
 
     def action_open_reconciliation(self):
-        return {
-            'name': 'Reconcile Account Statement',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.reconciliation.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_reconciliation_wizard').read()[0]
+        action['target'] = 'new'
+        return action
 
     def action_open_import(self):
-        return {
-            'name': 'Import Financial Data',
-            'type': 'ir.actions.act_window',
-            'res_model': 'moneta.import.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-        }
+        action = self.env.ref('moneta_finance.action_moneta_import_wizard').read()[0]
+        action['target'] = 'new'
+        return action
