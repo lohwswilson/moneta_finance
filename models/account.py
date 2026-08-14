@@ -181,22 +181,27 @@ class MonetaAccount(models.Model):
         opening_balance change, and by the daily cron to roll future-dated
         transactions in once their date arrives."""
         for account in self:
+            acc_id = account._origin.id if hasattr(account, '_origin') and account._origin.id else account.id
+            if not acc_id or not isinstance(acc_id, int):
+                continue
             today = fields.Date.context_today(self)
             self.env.cr.execute(
                 "SELECT COALESCE(SUM(amount), 0)::float FROM moneta_transaction "
                 "WHERE account_id = %s AND state <> 'void' AND transaction_date <= %s",
-                (account.id, today),
+                (acc_id, today),
             )
-            current = float(account.opening_balance or 0.0) + float(self.env.cr.fetchone()[0] or 0.0)
+            row = self.env.cr.fetchone()
+            current = float(account.opening_balance or 0.0) + float((row and row[0]) or 0.0)
             self.env.cr.execute(
                 "SELECT COALESCE(SUM(amount), 0)::float FROM moneta_transaction "
                 "WHERE account_id = %s AND state IN ('cleared','reconciled') AND transaction_date <= %s",
-                (account.id, today),
+                (acc_id, today),
             )
-            cleared = float(account.opening_balance or 0.0) + float(self.env.cr.fetchone()[0] or 0.0)
+            row_c = self.env.cr.fetchone()
+            cleared = float(account.opening_balance or 0.0) + float((row_c and row_c[0]) or 0.0)
             self.env.cr.execute(
                 "UPDATE moneta_account SET current_balance = %s, cleared_balance = %s WHERE id = %s",
-                (round(current, 4), round(cleared, 4), account.id),
+                (round(current, 4), round(cleared, 4), acc_id),
             )
         self.invalidate_recordset(['current_balance', 'cleared_balance'])
 
