@@ -33,8 +33,15 @@
                             <field name="csv_preview" nolabel="1" colspan="2"/>
                         </group>
                     </group>
-                    <group>
-                        <field name="imported_count" invisible="imported_count == 0" readonly="1"/>
+                    <group string="Import Options">
+                        <group>
+                            <field name="skip_duplicates" widget="boolean_toggle"/>
+                            <field name="apply_rules" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="imported_count" invisible="imported_count == 0" readonly="1"/>
+                            <field name="skipped_count" invisible="skipped_count == 0" readonly="1"/>
+                        </group>
                     </group>
                 </sheet>
                 <footer>

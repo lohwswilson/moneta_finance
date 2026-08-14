@@ -62,3 +62,33 @@ class TestImport(MonetaTestBase):
         txs = self.env['moneta.transaction'].search([('account_id', '=', acc.id)])
         self.assertEqual(len(txs), 1)
         self.assertEqual(round(txs[0].amount, 4), -55.2)
+    def test_dbs_bank_csv_import(self):
+        acc = self._make_account(opening_balance=0.0)
+        dbs_csv = (
+            "Transaction Date,Value Date,Statement Code,Description,Supplementary Code,Supplementary Code Description,Client Reference,Additional Reference,Status,Currency,Debit Amount,Credit Amount\n"
+            "31-Jul-26,,ATINT,   , ,Interest Earned,,,Settled,SGD,,0.31\n"
+            "31-Jul-26,,ATFEE,   , ,Account Fee,,,Settled,SGD,2,\n"
+            "31-Jul-26,,ATM,\"CSH 31200469,PEOPLE PK FC  \",\"CSH 31200469,PEOPLE PK FC\",ATM,,,Settled,SGD,100,\n"
+            "20-Jul-26,,ADV,ICT Incoming PayNow Ref 5877687 From: LIEW WAI KUAN OTHR Travel insurance claims,ICT Incoming PayNow Ref 5877687,Advice,From: LIEW WAI KUAN,OTHR Travel insurance claims,Settled,SGD,,419\n"
+        )
+        wiz = self._wizard(acc, 'csv', dbs_csv)
+        wiz.action_import()
+        txs = self.env['moneta.transaction'].search([('account_id', '=', acc.id)], order='transaction_date desc')
+        self.assertEqual(len(txs), 4)
+        
+        # Check interest deposit
+        int_tx = txs.filtered(lambda t: t.amount == 0.31)
+        self.assertTrue(int_tx)
+        self.assertEqual(str(int_tx.transaction_date), '2026-07-31')
+        self.assertEqual(int_tx.payee_id.name, 'Interest Earned')
+
+        # Check fee withdrawal
+        fee_tx = txs.filtered(lambda t: t.amount == -2.0)
+        self.assertTrue(fee_tx)
+        self.assertEqual(fee_tx.payee_id.name, 'Account Fee')
+
+        # Check PayNow
+        paynow_tx = txs.filtered(lambda t: t.amount == 419.0)
+        self.assertTrue(paynow_tx)
+        self.assertEqual(str(paynow_tx.transaction_date), '2026-07-20')
+        self.assertEqual(paynow_tx.payee_id.name, 'LIEW WAI KUAN')

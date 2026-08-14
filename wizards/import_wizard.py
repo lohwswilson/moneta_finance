@@ -12,11 +12,11 @@ _OFX_FIELD_RE = re.compile(r'<([A-Z0-9.]+)>([^<\r\n]*)', re.IGNORECASE)
 
 class MonetaImportWizard(models.TransientModel):
     _name = 'moneta.import.wizard'
-    _description = 'Moneta Financial File Import Wizard (QIF / OFX / CSV)'
+    _description = 'Moneta Financial File Import Wizard (QIF / OFX / CSV / DBS / POSB)'
 
     account_id = fields.Many2one('moneta.account', string='Target Account', required=True)
     file_type = fields.Selection([
-        ('csv', 'CSV File'),
+        ('csv', 'CSV File (DBS, POSB, OCBC, UOB, Quicken, Bank Statements)'),
         ('qif', 'QIF (Quicken / MS Money)'),
         ('ofx', 'OFX / QFX (Open Financial Exchange)')
     ], string='File Type', default='csv', required=True)
@@ -24,18 +24,22 @@ class MonetaImportWizard(models.TransientModel):
     file_data = fields.Binary(string='Upload File', required=True)
     file_name = fields.Char(string='File Name')
 
+    skip_duplicates = fields.Boolean(string='Skip Duplicate Transactions', default=True, help='Skip transactions that match existing records on same account, date, and amount.')
+    apply_rules = fields.Boolean(string='Apply Automation Rules', default=True, help='Automatically categorize and tag transactions using your configured Transaction Rules.')
+
     imported_count = fields.Integer(string='Imported Transactions Count', readonly=True)
+    skipped_count = fields.Integer(string='Skipped Duplicates Count', readonly=True)
 
     # CSV column mapping (editable step: auto-detect with override). Columns
     # are 1-based; 0 means "auto-detect" at import time.
     csv_has_header = fields.Boolean(string='CSV Has Header Row', default=True)
     csv_date_col = fields.Integer(string='Date Column', default=0, help='1-based column number; 0 = auto-detect')
-    csv_payee_col = fields.Integer(string='Payee Column', default=0, help='1-based column number; 0 = auto-detect')
+    csv_payee_col = fields.Integer(string='Payee / Description Column', default=0, help='1-based column number; 0 = auto-detect')
     csv_amount_col = fields.Integer(string='Amount Column', default=0, help='1-based column number; 0 = auto-detect')
-    csv_debit_col = fields.Integer(string='Debit Column', default=0, help='1-based column number; 0 = auto-detect')
-    csv_credit_col = fields.Integer(string='Credit Column', default=0, help='1-based column number; 0 = auto-detect')
+    csv_debit_col = fields.Integer(string='Debit / Withdrawal Column', default=0, help='1-based column number; 0 = auto-detect')
+    csv_credit_col = fields.Integer(string='Credit / Deposit Column', default=0, help='1-based column number; 0 = auto-detect')
     csv_category_col = fields.Integer(string='Category Column', default=0, help='1-based column number; 0 = auto-detect')
-    csv_memo_col = fields.Integer(string='Memo Column', default=0, help='1-based column number; 0 = auto-detect')
+    csv_memo_col = fields.Integer(string='Memo / Ref Column', default=0, help='1-based column number; 0 = auto-detect')
     csv_column_count = fields.Integer(string='Detected Columns', readonly=True)
     csv_preview = fields.Text(string='File Preview', readonly=True)
 
@@ -89,21 +93,27 @@ class MonetaImportWizard(models.TransientModel):
             raise UserError(f"Unable to read file: {e}")
 
         if self.file_type == 'csv':
-            count = self._parse_csv(content)
+            count, skipped = self._parse_csv(content)
         elif self.file_type == 'qif':
-            count = self._parse_qif(content)
+            count, skipped = self._parse_qif(content), 0
         elif self.file_type == 'ofx':
-            count = self._parse_ofx(content)
+            count, skipped = self._parse_ofx(content), 0
         else:
             raise UserError("Unsupported file type.")
 
         self.imported_count = count
+        self.skipped_count = skipped
+        
+        msg = f"Successfully imported {count} transaction(s) into {self.account_id.name}."
+        if skipped > 0:
+            msg += f" (Skipped {skipped} duplicate entries)."
+
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'title': 'Import Completed',
-                'message': f"Successfully imported {count} transactions into {self.account_id.name}.",
+                'message': msg,
                 'type': 'success',
                 'sticky': False,
             }
@@ -111,37 +121,66 @@ class MonetaImportWizard(models.TransientModel):
 
     @api.model
     def _detect_csv_mapping(self, content):
-        """Return (rows, has_header, mapping) for a CSV file. The mapping maps
-        'date'/'payee'/'amount'/'debit'/'credit'/'category'/'memo' to 0-based
-        column indices (or -1 when the column is absent)."""
+        """Return (rows, has_header, mapping) for a CSV file.
+        Robustly supports DBS, POSB, OCBC, UOB, Standard Chartered, and international bank formats."""
         reader = csv.reader(io.StringIO(content))
         rows = [r for r in reader if r]
         mapping = {'date': -1, 'payee': -1, 'amount': -1, 'debit': -1, 'credit': -1, 'category': -1, 'memo': -1}
         if not rows:
             return rows, False, mapping
+
         header = [c.lower().strip() for c in rows[0]]
         has_header = any(
             k in ' '.join(header)
-            for k in ['date', 'payee', 'description', 'amount', 'debit', 'credit', 'category']
+            for k in ['date', 'payee', 'description', 'amount', 'debit', 'credit', 'category', 'status', 'currency', 'reference']
         )
+
         if has_header:
+            # 1. Debit and Credit columns (check FIRST before general amount)
             for idx, col in enumerate(header):
-                if any(x in col for x in ['date', 'time', 'posted']):
-                    mapping['date'] = idx
-                elif any(x in col for x in ['payee', 'description', 'merchant', 'name', 'details']):
-                    mapping['payee'] = idx
-                elif any(x in col for x in ['amount', 'sum', 'total', 'val']):
-                    mapping['amount'] = idx
-                elif any(x in col for x in ['debit', 'outflow', 'withdraw']):
+                if any(x in col for x in ['debit amount', 'debit', 'outflow', 'withdrawal', 'dr', 'paid out', 'spent']):
                     mapping['debit'] = idx
-                elif any(x in col for x in ['credit', 'inflow', 'deposit']):
+                elif any(x in col for x in ['credit amount', 'credit', 'inflow', 'deposit', 'cr', 'paid in', 'received']):
                     mapping['credit'] = idx
-                elif any(x in col for x in ['category', 'cat']):
+
+            # 2. Date column (prioritize transaction date over empty value date)
+            for idx, col in enumerate(header):
+                if 'value date' in col and mapping['date'] != -1:
+                    continue
+                if any(x in col for x in ['transaction date', 'trans date', 'booking date', 'date', 'posted', 'time']):
+                    if mapping['date'] == -1 or 'transaction' in col or 'trans' in col:
+                        mapping['date'] = idx
+
+            # 3. Payee / Description column
+            for idx, col in enumerate(header):
+                if any(x in col for x in ['payee', 'merchant', 'beneficiary', 'party']):
+                    mapping['payee'] = idx
+                    break
+                elif any(x in col for x in ['description', 'particulars', 'narrative', 'details']):
+                    if mapping['payee'] == -1 or 'supplementary' not in col:
+                        mapping['payee'] = idx
+
+            # 4. Amount column (if not separate debit/credit)
+            if mapping['debit'] == -1 and mapping['credit'] == -1:
+                for idx, col in enumerate(header):
+                    if any(x in col for x in ['amount', 'sum', 'total', 'net']):
+                        mapping['amount'] = idx
+                        break
+
+            # 5. Category column
+            for idx, col in enumerate(header):
+                if any(x in col for x in ['category', 'cat', 'classification']):
                     mapping['category'] = idx
-                elif any(x in col for x in ['memo', 'notes', 'reference']):
-                    mapping['memo'] = idx
+                    break
+
+            # 6. Memo / Reference column
+            for idx, col in enumerate(header):
+                if any(x in col for x in ['memo', 'notes', 'reference', 'client reference', 'additional reference', 'ref']):
+                    if idx != mapping['payee'] and idx != mapping['date']:
+                        mapping['memo'] = idx
         else:
             mapping.update({'date': 0, 'payee': 1, 'amount': 2, 'memo': 3 if len(rows[0]) > 3 else -1})
+
         return rows, has_header, mapping
 
     def _csv_mapping(self, auto):
@@ -162,10 +201,90 @@ class MonetaImportWizard(models.TransientModel):
                 mapping[key] = col - 1
         return mapping
 
+    def _clean_bank_payee(self, raw_payee, supplementary=''):
+        """Clean raw bank narration strings into recognizable merchant/payee names."""
+        p = raw_payee.strip() if raw_payee else ''
+        if not p and supplementary:
+            p = supplementary.strip()
+
+        # 1. PayNow Transfer
+        if 'paynow transfer' in p.lower() and 'to:' in p.lower():
+            m = re.search(r'to:\s*([^\s,]+(?:\s+[^\s,]+)*?)(?:\s+othr|\s+ref|\s+from|$)', p, re.IGNORECASE)
+            if m:
+                return m.group(1).strip()
+
+        # 2. Incoming PayNow
+        if 'incoming paynow' in p.lower() and 'from:' in p.lower():
+            m = re.search(r'from:\s*([^\s,]+(?:\s+[^\s,]+)*?)(?:\s+othr|\s+ref|$)', p, re.IGNORECASE)
+            if m:
+                return m.group(1).strip()
+
+        # 3. PayLah! Top-up
+        if 'top-up to paylah!' in p.lower():
+            m = re.search(r'top-up to paylah!\s*:\s*([^,\s]+(?:\s+[^,\s]+)*?)(?:\s+tf|\s+plpe|$)', p, re.IGNORECASE)
+            if m:
+                return f"DBS PayLah! ({m.group(1).strip()})"
+            return "DBS PayLah! Top-up"
+
+        # 4. IRAS Tax
+        if 'iras' in p.lower():
+            if 'property' in p.lower():
+                return "IRAS - Property Tax"
+            elif 'itx' in p.lower() or 'income' in p.lower():
+                return "IRAS - Income Tax"
+            return "IRAS"
+
+        # 5. Ministry of Manpower (MOM) / Foreign Worker Levy
+        if 'ministry of manpower' in p.lower() or 'fwlevy' in p.lower():
+            return "Ministry of Manpower (MOM)"
+
+        # 6. Ministry of Education (MOE)
+        if 'moe' in p.lower() and 'bill' in p.lower():
+            return "Ministry of Education (MOE)"
+
+        # 7. ATM Cash Withdrawal
+        if p.startswith('CSH ') and ',' in p:
+            parts = p.split(',', 1)
+            return f"ATM - {parts[1].strip()}"
+
+        # 8. NETS / FlashPay / CashCard Top-up
+        if p.startswith('CCT ') and ',' in p:
+            parts = p.split(',', 1)
+            clean_loc = re.sub(r'\s+\d{10,}$', '', parts[1].strip())
+            return f"NETS/CashCard - {clean_loc}"
+
+        # 9. GIRO / IBG Prefix removal
+        p = re.sub(r'^(IBG|GRO|GIRO|ICT|TRF|WDL)\s+', '', p, flags=re.IGNORECASE).strip()
+        p = re.sub(r'\s+(Bill\d+|REF:\s*\d+|OTHR\s+.*|SUPP-\d+.*)$', '', p, flags=re.IGNORECASE).strip()
+
+        return p or supplementary or 'Bank Transaction'
+
+    def _parse_date(self, date_str):
+        if not date_str:
+            return fields.Date.context_today(self)
+        s = date_str.strip()
+        # 1. Textual month formats (e.g. 31-Jul-26, 31-Jul-2026, 31 Jul 2026)
+        for fmt in ('%d-%b-%y', '%d-%b-%Y', '%d %b %Y', '%d-%B-%Y', '%b-%d-%y', '%b-%d-%Y',
+                    '%Y-%m-%d', '%d/%m/%Y', '%m/%d/%Y', '%d-%m-%Y', '%Y/%m/%d'):
+            try:
+                return datetime.strptime(s, fmt).strftime('%Y-%m-%d')
+            except ValueError:
+                pass
+
+        # 2. Digits only formats
+        clean = re.sub(r"[^\d/\-\.]", "", s)
+        for fmt in ('%Y-%m-%d', '%d/%m/%Y', '%m/%d/%Y', '%Y/%m/%d', '%d-%m-%Y'):
+            try:
+                return datetime.strptime(clean, fmt).strftime('%Y-%m-%d')
+            except ValueError:
+                pass
+
+        return fields.Date.context_today(self)
+
     def _parse_csv(self, content):
         rows, has_header, auto = self._detect_csv_mapping(content)
         if not rows:
-            return 0
+            return 0, 0
         mapping = self._csv_mapping(auto)
         data_rows = rows[1:] if self.csv_has_header else rows
 
@@ -178,6 +297,9 @@ class MonetaImportWizard(models.TransientModel):
         memo_idx = mapping['memo']
 
         count = 0
+        skipped = 0
+        TxEnv = self.env['moneta.transaction']
+
         for row in data_rows:
             if not row or len(row) == 0:
                 continue
@@ -186,9 +308,14 @@ class MonetaImportWizard(models.TransientModel):
                 raw_date = row[date_idx] if 0 <= date_idx < len(row) else ''
                 parsed_date = self._parse_date(raw_date)
 
-                payee_str = row[payee_idx] if 0 <= payee_idx < len(row) else ''
-                cat_str = row[cat_idx] if 0 <= cat_idx < len(row) else ''
-                memo_str = row[memo_idx] if 0 <= memo_idx < len(row) else ''
+                raw_payee = row[payee_idx].strip() if 0 <= payee_idx < len(row) else ''
+                supplementary = row[5].strip() if len(row) > 5 else ''
+                payee_str = self._clean_bank_payee(raw_payee, supplementary)
+
+                cat_str = row[cat_idx].strip() if 0 <= cat_idx < len(row) else ''
+                memo_str = row[memo_idx].strip() if 0 <= memo_idx < len(row) else ''
+                if not memo_str and raw_payee and raw_payee != payee_str:
+                    memo_str = raw_payee
 
                 amount = 0.0
                 if 0 <= amt_idx < len(row) and row[amt_idx]:
@@ -208,6 +335,17 @@ class MonetaImportWizard(models.TransientModel):
                             credit_val = float(c_c)
                     amount = credit_val - debit_val
 
+                # Deduplication check
+                if self.skip_duplicates and amount != 0.0:
+                    existing = TxEnv.search([
+                        ('account_id', '=', self.account_id.id),
+                        ('transaction_date', '=', parsed_date),
+                        ('amount', '=', round(amount, 4)),
+                    ], limit=1)
+                    if existing:
+                        skipped += 1
+                        continue
+
                 self._create_imported_transaction({
                     'date': parsed_date,
                     'payee': payee_str,
@@ -219,7 +357,7 @@ class MonetaImportWizard(models.TransientModel):
             except Exception:
                 continue
 
-        return count
+        return count, skipped
 
     def _parse_qif(self, content):
         lines = content.splitlines()
@@ -274,7 +412,7 @@ class MonetaImportWizard(models.TransientModel):
             elif line == '^':
                 if 'amount' in current_tx:
                     if self._maybe_apply_opening_balance(current_tx):
-                        pass  # opening-balance row does not create a transaction
+                        pass
                     else:
                         self._create_imported_transaction(current_tx)
                         count += 1
@@ -284,10 +422,6 @@ class MonetaImportWizard(models.TransientModel):
         return count
 
     def _parse_ofx(self, content):
-        """Parse OFX/QFX SGML. OFX is not valid XML (tags are often unclosed),
-        so we extract each <STMTTRN> block by regex and pull field values with a
-        tag-value regex. The TRNAMT sign already carries direction (debit
-        negative, credit positive), matching Moneta's signed-amount convention."""
         count = 0
         blocks = re.findall(r'<STMTTRN>(.*?)</STMTTRN>', content, re.DOTALL | re.IGNORECASE)
         for block in blocks:
@@ -307,10 +441,6 @@ class MonetaImportWizard(models.TransientModel):
                 continue
 
             parsed_date = self._parse_ofx_date(date_raw)
-            # XFER rows are flagged as transfers but not auto-paired: the OFX
-            # file does not name the counterpart account, so pairing is left to
-            # the user after import. is_transfer without transfer_account_id
-            # is a flagged-but-unpaired leg (see transaction.create override).
             is_transfer = trntype == 'XFER'
 
             self._create_imported_transaction({
@@ -343,8 +473,6 @@ class MonetaImportWizard(models.TransientModel):
         return fields.Date.context_today(self)
 
     def _maybe_apply_opening_balance(self, tx_dict):
-        """QIF convention: a row whose payee reads 'Opening Balance' seeds the
-        target account's opening balance instead of creating a transaction."""
         payee = (tx_dict.get('payee') or '').strip().lower()
         if payee != 'opening balance':
             return False
@@ -356,21 +484,10 @@ class MonetaImportWizard(models.TransientModel):
         })
         return True
 
-    def _parse_date(self, date_str):
-        if not date_str:
-            return fields.Date.context_today(self)
-        clean = re.sub(r"[^\d/\-\.]", "", date_str.strip())
-        for fmt in ('%Y-%m-%d', '%m/%d/%Y', '%d/%m/%Y', '%Y/%m/%d', '%d-%m-%Y', '%m-%d-%Y'):
-            try:
-                dt = datetime.strptime(clean, fmt)
-                return dt.strftime('%Y-%m-%d')
-            except ValueError:
-                pass
-        return fields.Date.context_today(self)
-
     def _create_imported_transaction(self, tx_dict):
         PayeeEnv = self.env['moneta.payee']
         CategoryEnv = self.env['moneta.category']
+        RuleEnv = self.env['moneta.transaction.rule']
 
         payee_id = False
         if tx_dict.get('payee'):
@@ -383,7 +500,6 @@ class MonetaImportWizard(models.TransientModel):
         category_id = False
         if tx_dict.get('category'):
             c_name = tx_dict['category'].strip()
-            # Check for Quicken transfer notation [Account Name]
             if c_name.startswith('[') and c_name.endswith(']'):
                 target_acc_name = c_name[1:-1].strip()
                 target_acc = self.env['moneta.account'].search([
@@ -396,7 +512,7 @@ class MonetaImportWizard(models.TransientModel):
             else:
                 cat = CategoryEnv.search([('name', '=ilike', c_name)], limit=1)
                 if not cat:
-                    cat = CategoryEnv.create({'name': c_name, 'is_income': False})
+                    cat = CategoryEnv.create({'name': c_name, 'is_income': tx_dict.get('amount', 0.0) > 0})
                 category_id = cat.id
         elif payee_id and PayeeEnv.browse(payee_id).default_category_id:
             category_id = PayeeEnv.browse(payee_id).default_category_id.id
@@ -432,4 +548,14 @@ class MonetaImportWizard(models.TransientModel):
                 }))
             vals['split_ids'] = split_commands
 
-        return self.env['moneta.transaction'].create(vals)
+        tx = self.env['moneta.transaction'].create(vals)
+
+        # Apply active automation rules if enabled
+        if self.apply_rules:
+            rules = RuleEnv.search([('user_id', '=', self.env.user.id), ('active', '=', True)], order='sequence asc, id asc')
+            for rule in rules:
+                if rule.matches_transaction(tx):
+                    rule.apply_to_transaction(tx)
+                    break
+
+        return tx
