@@ -147,7 +147,7 @@ class MonetaAccount(models.Model):
         store=True,
     )
     is_shared = fields.Boolean(string='Is Shared', compute='_compute_shared_users', store=True)
-    shared_count = fields.Integer(string='Shared Users Count', compute='_compute_shared_users')
+    shared_count = fields.Integer(string='Shared Users Count', compute='_compute_shared_count')
 
     @api.depends('current_balance', 'billing_cycle_day', 'payment_due_day', 'account_type')
     def _compute_forecast_and_statement_cycle(self):
@@ -196,11 +196,17 @@ class MonetaAccount(models.Model):
 
     @api.depends('share_ids', 'share_ids.user_id')
     def _compute_shared_users(self):
+        # Stored fields only; shared_count is non-stored and lives in its own
+        # method (Odoo 18 warns when one compute mixes stored and non-stored).
         for acc in self:
             users = acc.share_ids.mapped('user_id')
             acc.shared_user_ids = [(6, 0, users.ids)]
             acc.is_shared = bool(users)
-            acc.shared_count = len(users)
+
+    @api.depends('share_ids', 'share_ids.user_id')
+    def _compute_shared_count(self):
+        for acc in self:
+            acc.shared_count = len(acc.shared_user_ids)
 
     # ------------------------------------------------------------------
     # Three-layer balance model

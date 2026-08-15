@@ -615,6 +615,21 @@ class MonetaInvestmentTransaction(models.Model):
                 "Cannot sell more than the held quantity (held: %s)." % round(max(projected + extra_sell, 0.0), 8)
             )
 
+    def _set_realized_gain(self, value):
+        """Store realized_gain honouring the null-propagation contract.
+
+        The ORM coerces False/None to 0.0 for numeric columns, so an unknown
+        gain (NULL = unknown, never 0) must be written with raw SQL.
+        """
+        if value is False:
+            self.env.cr.execute(
+                "UPDATE moneta_investment_transaction SET realized_gain = NULL WHERE id = %s",
+                (self.id,),
+            )
+            self.invalidate_recordset()
+        else:
+            self.write({'realized_gain': value})
+
     # ------------------------------------------------------------------
     # ORM overrides (rebuild-on-write)
     # ------------------------------------------------------------------
@@ -746,18 +761,18 @@ class MonetaHolding(models.Model):
     # Monetary field cannot itself express 'unknown' -- the null propagation
     # contract is carried by explicit known-flags (booleans never coerce).
     # Consumers treat the value as unknown when the flag is False.
-    price_known = fields.Boolean(string='Price Known', compute='_compute_valuation')
-    basis_known = fields.Boolean(string='Cost Basis Known', compute='_compute_valuation')
+    price_known = fields.Boolean(string='Price Known', compute='_compute_valuation_flags')
+    basis_known = fields.Boolean(string='Cost Basis Known', compute='_compute_valuation_flags')
     market_value = fields.Monetary(string='Market Value', compute='_compute_valuation', store=True, aggregator='sum')
     cost_basis = fields.Monetary(string='Cost Basis', compute='_compute_valuation', store=True, aggregator='sum')
     unrealized_gain = fields.Monetary(string='Unrealized Gain / Loss', compute='_compute_valuation', store=True, aggregator='sum')
-    unrealized_gain_percent = fields.Float(string='Gain / Loss (%)', compute='_compute_valuation', digits=(5, 2))
+    unrealized_gain_percent = fields.Float(string='Gain / Loss (%)', compute='_compute_valuation_flags', digits=(5, 2))
     asset_class = fields.Selection(related='security_id.asset_class', string='Asset Class', store=True)
     symbol = fields.Char(related='security_id.symbol', string='Symbol', store=True)
 
     # Advanced Return & Dividend Analytics (Wealthfolio Style)
     annual_dividend_income = fields.Monetary(string='Est. Annual Dividends', compute='_compute_valuation', store=True, aggregator='sum')
-    dividend_yield = fields.Float(string='Dividend Yield (%)', compute='_compute_valuation', digits=(5, 2))
+    dividend_yield = fields.Float(string='Dividend Yield (%)', compute='_compute_valuation_flags', digits=(5, 2))
     twr_percent = fields.Float(string='TWR (%)', compute='_compute_returns', digits=(5, 2), help='Time-Weighted Return (Modified Dietz): period return with cash-flow timing weight.')
     mwr_percent = fields.Float(string='MWR / IRR (%)', compute='_compute_returns', digits=(5, 2), help='Money-Weighted Return: annualized internal rate of return (XIRR) on dated cash flows.')
 
@@ -811,13 +826,12 @@ class MonetaHolding(models.Model):
 
     @api.depends('quantity', 'average_cost', 'current_price')
     def _compute_valuation(self):
+        # Stored valuation fields only. The known-flags and derived percents
+        # live in _compute_valuation_flags: Odoo 18 warns when one compute
+        # method mixes stored and non-stored fields (accessing the non-stored
+        # ones would recompute and rewrite the stored ones).
         for holding in self:
-            price_known = self.env['moneta.security.price'].search_count([
-                ('security_id', '=', holding.security_id.id),
-            ]) > 0
             basis_known = not _field_is_null(self.env, self, holding.id, 'average_cost')
-            holding.price_known = price_known
-            holding.basis_known = basis_known
             qty = holding.quantity or 0.0
             price = holding.current_price or 0.0
             avg = holding.average_cost or 0.0
@@ -825,16 +839,30 @@ class MonetaHolding(models.Model):
             holding.cost_basis = round(qty * avg, 4) if basis_known else 0.0
             if basis_known:
                 holding.unrealized_gain = round(holding.market_value - holding.cost_basis, 4)
-                holding.unrealized_gain_percent = round(((holding.unrealized_gain / holding.cost_basis) * 100.0), 2) if holding.cost_basis > 0 else 0.0
             else:
                 holding.unrealized_gain = 0.0
-                holding.unrealized_gain_percent = 0.0
 
             # Dividend analytics. TWR/MWR are computed separately by
             # _compute_returns (they need the dated trade cash flows, which are
             # too costly to rebuild on every list-view read).
             div_rate = float(holding.security_id.annual_dividend_rate or 0.0)
             holding.annual_dividend_income = round(qty * div_rate, 4)
+
+    @api.depends('quantity', 'average_cost', 'current_price',
+                 'market_value', 'cost_basis', 'unrealized_gain',
+                 'annual_dividend_income')
+    def _compute_valuation_flags(self):
+        for holding in self:
+            price_known = self.env['moneta.security.price'].search_count([
+                ('security_id', '=', holding.security_id.id),
+            ]) > 0
+            basis_known = not _field_is_null(self.env, self, holding.id, 'average_cost')
+            holding.price_known = price_known
+            holding.basis_known = basis_known
+            if basis_known and holding.cost_basis > 0:
+                holding.unrealized_gain_percent = round(((holding.unrealized_gain / holding.cost_basis) * 100.0), 2)
+            else:
+                holding.unrealized_gain_percent = 0.0
             holding.dividend_yield = holding.security_id.dividend_yield_pct or ((holding.annual_dividend_income / holding.market_value * 100.0) if holding.market_value > 0 else 0.0)
 
     @api.model
@@ -900,9 +928,7 @@ class MonetaHolding(models.Model):
                 else:
                     proceeds = (tx.quantity or 0.0) * (tx.price or 0.0) - (tx.commission or 0.0)
                     realized = round(proceeds - (tx.quantity or 0.0) * avg, 4)
-                self.env['moneta.investment.transaction'].browse(tx.id).write(
-                    {'realized_gain': realized}
-                )
+                self.env['moneta.investment.transaction'].browse(tx.id)._set_realized_gain(realized)
             elif tx.action == 'split':
                 ratio = tx.quantity or 1.0
                 qty *= ratio
@@ -911,9 +937,7 @@ class MonetaHolding(models.Model):
             elif tx.action in ('dividend', 'interest'):
                 # Realized gain is the amount; the cash entry is a separate
                 # transaction created by the investment record itself.
-                self.env['moneta.investment.transaction'].browse(tx.id).write(
-                    {'realized_gain': tx.total_amount}
-                )
+                self.env['moneta.investment.transaction'].browse(tx.id)._set_realized_gain(tx.total_amount)
             else:
                 # buy/split never carry a realized gain; clear stale values
                 # (e.g. a record converted from sell to buy).

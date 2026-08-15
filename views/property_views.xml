@@ -58,8 +58,8 @@
                         
                         <!-- Vehicle Details -->
                         <group string="Vehicle Specifications" invisible="asset_category != 'vehicle'">
-                            <field name="vehicle_make"/>
-                            <field name="vehicle_model"/>
+                            <field name="vehicle_make" placeholder="e.g. Porsche, Tesla, BMW"/>
+                            <field name="vehicle_model" placeholder="e.g. 911 Carrera, Model S"/>
                             <field name="vehicle_year"/>
                             <field name="vehicle_vin"/>
                             <field name="vehicle_license_plate"/>
@@ -69,11 +69,11 @@
 
                         <!-- Antiques, Jewelry & Collectibles Details -->
                         <group string="Antique &amp; Valuables Details" invisible="asset_category not in ('antiques', 'jewelry', 'collectibles')">
-                            <field name="antique_era"/>
-                            <field name="maker_artist"/>
+                            <field name="antique_era" placeholder="e.g. Victorian 1880, Art Deco, Ming Dynasty"/>
+                            <field name="maker_artist" placeholder="e.g. Rolex, Cartier, Monet, Gibson"/>
                             <field name="condition_grade"/>
                             <field name="authenticity_cert_number"/>
-                            <field name="storage_location"/>
+                            <field name="storage_location" placeholder="e.g. Home Safe, Vault #42, Climate-Controlled Storage"/>
                             <field name="insured_value" widget="monetary"/>
                             <field name="insurance_policy_number"/>
                         </group>
@@ -94,7 +94,7 @@
                                 <list editable="bottom">
                                     <field name="valuation_date"/>
                                     <field name="appraised_value" widget="monetary"/>
-                                    <field name="appraiser"/>
+                                    <field name="appraiser" placeholder="e.g. Kelley Blue Book, Sotheby's, Christie's, Zillow"/>
                                     <field name="notes"/>
                                     <field name="currency_id" column_invisible="1"/>
                                 </list>

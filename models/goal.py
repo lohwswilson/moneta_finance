@@ -9,7 +9,7 @@ class MonetaGoal(models.Model):
     _description = 'Moneta Financial Goal & Sinking Fund'
     _order = 'target_date asc, name asc'
 
-    name = fields.Char(string='Goal Name', required=True, placeholder='e.g. 6-Month Emergency Fund')
+    name = fields.Char(string='Goal Name', required=True)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.user, required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id, required=True)
 

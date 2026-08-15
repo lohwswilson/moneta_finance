@@ -31,8 +31,8 @@ class MonetaInsight(models.TransientModel):
         ('success', 'Positive Milestone'),
     ], string='Severity Level', default='info', required=True)
 
-    badge_text = fields.Char(string='Metric Highlight', placeholder='e.g. +45% or -$2,100')
-    badge_subtext = fields.Char(string='Metric Context', placeholder='e.g. vs 3-month avg or of budget')
+    badge_text = fields.Char(string='Metric Highlight')
+    badge_subtext = fields.Char(string='Metric Context')
     description = fields.Text(string='Actionable Recommendation', required=True)
 
     action_type = fields.Char(string='Action Key')

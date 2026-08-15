@@ -161,7 +161,7 @@ class MonetaAIChat(models.Model):
     name = fields.Char(string='Session Title', default='Wealth Advisory Chat', required=True)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.user, required=True)
     message_ids = fields.One2many('moneta.ai.chat.message', 'chat_id', string='Messages')
-    pending_question = fields.Text(string='Ask a Question...', placeholder='e.g. How can I optimize my monthly budget to save $500 more? Or what is my current net worth breakdown?')
+    pending_question = fields.Text(string='Ask a Question...')
 
     def action_send_message(self):
         """Send question with complete financial ledger context to AI."""

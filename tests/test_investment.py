@@ -74,6 +74,24 @@ class TestInvestment(MonetaTestBase):
         self.assertEqual(round(h.average_cost or 0.0, 4), 100.0)  # unchanged by sells
         self.assertEqual(round(sell.realized_gain or 0.0, 4), 240.0)  # (5*150 - 10) - 5*100
 
+    def test_sell_unknown_price_sets_realized_gain_null(self):
+        # A sell with a NULL price has unknowable proceeds, so the realized
+        # gain is NULL (null propagation), never 0.0 -- the ORM coerces
+        # False/None to 0.0, so the column is asserted directly.
+        acc = self._brokerage()
+        sec = self._security()
+        self._inv_tx(acc, sec, 'buy', 10.0, 100.0)
+        sell = self._inv_tx(acc, sec, 'sell', 5.0)  # price NULL
+        self.assertTrue(self._is_null(self.env['moneta.investment.transaction'], sell.id, 'realized_gain'))
+
+    def test_dividend_unknown_amount_sets_realized_gain_null(self):
+        # A dividend with a NULL price has an unknowable amount, so its
+        # realized gain is NULL too (no cash entry is posted either).
+        acc = self._brokerage()
+        sec = self._security()
+        div = self._inv_tx(acc, sec, 'dividend', 1.0)  # price NULL
+        self.assertTrue(self._is_null(self.env['moneta.investment.transaction'], div.id, 'realized_gain'))
+
     def test_sell_exceeding_holding_rejected(self):
         acc = self._brokerage()
         sec = self._security()

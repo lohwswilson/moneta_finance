@@ -7,7 +7,7 @@ class MonetaProperty(models.Model):
     _description = 'Moneta Real Estate, Vehicles, Antiques & Tangible Assets'
     _order = 'asset_category asc, name asc'
 
-    name = fields.Char(string='Asset / Item Name', required=True, placeholder='e.g. 1967 Shelby GT500 or 19th Century Antique Clock')
+    name = fields.Char(string='Asset / Item Name', required=True)
     asset_category = fields.Selection([
         ('real_estate', 'Real Estate & Properties'),
         ('vehicle', 'Vehicles & Automobiles'),
@@ -64,8 +64,8 @@ class MonetaProperty(models.Model):
     loan_to_value_ratio = fields.Float(string='Loan-to-Value (LTV %)', compute='_compute_equity', store=True, digits=(5, 1))
 
     # --- Vehicle Specific Fields ---
-    vehicle_make = fields.Char(string='Make / Manufacturer', placeholder='e.g. Porsche, Tesla, BMW')
-    vehicle_model = fields.Char(string='Model', placeholder='e.g. 911 Carrera, Model S')
+    vehicle_make = fields.Char(string='Make / Manufacturer')
+    vehicle_model = fields.Char(string='Model')
     vehicle_year = fields.Integer(string='Model Year', default=2024)
     vehicle_vin = fields.Char(string='VIN / Chassis #')
     vehicle_license_plate = fields.Char(string='License Plate')
@@ -73,8 +73,8 @@ class MonetaProperty(models.Model):
     annual_depreciation_rate = fields.Float(string='Annual Depreciation Rate (%)', default=15.0, digits=(5, 2))
 
     # --- Antiques, Collectibles & Valuables Fields ---
-    antique_era = fields.Char(string='Period / Era / Year Made', placeholder='e.g. Victorian 1880, Art Deco, Ming Dynasty')
-    maker_artist = fields.Char(string='Artist / Maker / Brand', placeholder='e.g. Rolex, Cartier, Monet, Gibson')
+    antique_era = fields.Char(string='Period / Era / Year Made')
+    maker_artist = fields.Char(string='Artist / Maker / Brand')
     condition_grade = fields.Selection([
         ('mint', 'Mint / Brand New'),
         ('near_mint', 'Near Mint / Like New'),
@@ -83,7 +83,7 @@ class MonetaProperty(models.Model):
         ('fair', 'Fair / Needs Restoration'),
     ], string='Condition Grade', default='excellent')
     authenticity_cert_number = fields.Char(string='Certificate of Authenticity # / Serial #')
-    storage_location = fields.Char(string='Storage Location / Safe Box', placeholder='e.g. Home Safe, Vault #42, Climate-Controlled Storage')
+    storage_location = fields.Char(string='Storage Location / Safe Box')
     insured_value = fields.Monetary(string='Insured Value')
     insurance_policy_number = fields.Char(string='Insurance Policy # / Carrier')
 
@@ -152,5 +152,5 @@ class MonetaPropertyValuation(models.Model):
     currency_id = fields.Many2one('res.currency', related='property_id.currency_id', readonly=True)
     user_id = fields.Many2one('res.users', related='property_id.user_id', store=True, index=True)
     appraised_value = fields.Monetary(string='Appraised Value', required=True)
-    appraiser = fields.Char(string='Appraiser / Source', placeholder='e.g. Kelley Blue Book, Sotheby\'s, Christie\'s, Zillow')
+    appraiser = fields.Char(string='Appraiser / Source')
     notes = fields.Char(string='Valuation Notes / Market Condition')

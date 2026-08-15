@@ -65,7 +65,7 @@ class MonetaRecurringTransaction(models.Model):
     occurrences_remaining = fields.Integer(string='Occurrences Remaining', default=0)
     last_posted_date = fields.Date(string='Last Posted Date', readonly=True)
     reminder_days_before = fields.Integer(string='Reminder Days Before', default=3)
-    is_bill = fields.Boolean(string='Is Bill / Expense', compute='_compute_due_status', store=True)
+    is_bill = fields.Boolean(string='Is Bill / Expense', compute='_compute_is_bill', store=True)
     due_status = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Due Today'),
@@ -79,12 +79,18 @@ class MonetaRecurringTransaction(models.Model):
         index=True,
     )
 
+    @api.depends('amount')
+    def _compute_is_bill(self):
+        # Stored field only; due_status is non-stored and lives in its own
+        # method (Odoo 18 warns when one compute mixes stored and non-stored).
+        for rec in self:
+            rec.is_bill = (rec.amount or 0.0) < 0
+
     @api.depends('next_date', 'amount')
     def _compute_due_status(self):
         today = fields.Date.context_today(self)
         horizon = today + timedelta(days=7)
         for rec in self:
-            rec.is_bill = (rec.amount or 0.0) < 0
             nd = rec.next_date
             if not nd:
                 rec.due_status = 'upcoming'

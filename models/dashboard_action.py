@@ -8,7 +8,7 @@ class MonetaDashboardAction(models.Model):
     _description = 'Moneta Dynamic Dashboard Quick Action'
     _order = 'sequence asc, id asc'
 
-    name = fields.Char(string='Button Label', required=True, placeholder='e.g. Transaction Register or Ask AI')
+    name = fields.Char(string='Button Label', required=True)
     sequence = fields.Integer(string='Order Sequence', default=10)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.user, required=True, index=True)
     active = fields.Boolean(string='Show on Dashboard', default=True)
@@ -41,7 +41,7 @@ class MonetaDashboardAction(models.Model):
 
     custom_action_id = fields.Many2one('ir.actions.act_window', string='Custom Window Action')
 
-    icon = fields.Char(string='Icon Class (FontAwesome)', default='fa-bolt', required=True, placeholder='fa-book, fa-comments, fa-magic, fa-camera...')
+    icon = fields.Char(string='Icon Class (FontAwesome)', default='fa-bolt', required=True)
     color_class = fields.Selection([
         ('primary', 'Solid Primary (Blue)'),
         ('outline_primary', 'Outline Primary (Blue)'),
