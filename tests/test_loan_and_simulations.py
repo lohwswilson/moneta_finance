@@ -74,3 +74,77 @@ class TestLoanAndSimulations(TransactionCase):
         self.assertAlmostEqual(account.loan_monthly_payment, scenario.monthly_payment, places=2)
         self.assertTrue(account.loan_payoff_date)
         self.assertGreater(account.loan_remaining_interest, 0.0)
+
+    def test_rate_change_inference(self):
+        """Test automatic rate change detection from split interest payments."""
+        account = self.env['moneta.account'].create({
+            'name': 'Adjustable Rate Loan',
+            'account_type': 'loan',
+            'opening_balance': -200000.0,
+            'current_balance': -200000.0,
+            'interest_rate': 4.0,
+        })
+        scenario = self.env['moneta.loan.scenario'].create({
+            'name': 'Adjustable Loan Scenario',
+            'account_id': account.id,
+            'principal_amount': 200000.0,
+            'annual_interest_rate': 4.0,
+            'loan_term_years': 25,
+            'start_date': date(2026, 1, 1),
+        })
+        cat_int = self.env['moneta.category'].create({'name': 'Loan Interest', 'is_income': False})
+        cat_prin = self.env['moneta.category'].create({'name': 'Principal', 'is_income': False})
+
+        # Month 1: 4.0% rate ($200k bal -> ~$666.67 interest)
+        self.env['moneta.transaction'].create({
+            'account_id': account.id,
+            'transaction_date': date(2026, 1, 15),
+            'amount': -1500.0,
+            'is_split': True,
+            'split_ids': [
+                (0, 0, {'category_id': cat_int.id, 'amount': -666.67}),
+                (0, 0, {'category_id': cat_prin.id, 'amount': -833.33}),
+            ]
+        })
+        # Month 2: 4.0% rate
+        self.env['moneta.transaction'].create({
+            'account_id': account.id,
+            'transaction_date': date(2026, 2, 15),
+            'amount': -1500.0,
+            'is_split': True,
+            'split_ids': [
+                (0, 0, {'category_id': cat_int.id, 'amount': -663.89}),
+                (0, 0, {'category_id': cat_prin.id, 'amount': -836.11}),
+            ]
+        })
+        # Month 3: Rate hikes to 5.5% ($198k bal -> ~$907.50 interest)
+        self.env['moneta.transaction'].create({
+            'account_id': account.id,
+            'transaction_date': date(2026, 3, 15),
+            'amount': -1700.0,
+            'is_split': True,
+            'split_ids': [
+                (0, 0, {'category_id': cat_int.id, 'amount': -907.50}),
+                (0, 0, {'category_id': cat_prin.id, 'amount': -792.50}),
+            ]
+        })
+        # Month 4: 5.5% rate
+        self.env['moneta.transaction'].create({
+            'account_id': account.id,
+            'transaction_date': date(2026, 4, 15),
+            'amount': -1700.0,
+            'is_split': True,
+            'split_ids': [
+                (0, 0, {'category_id': cat_int.id, 'amount': -903.87}),
+                (0, 0, {'category_id': cat_prin.id, 'amount': -796.13}),
+            ]
+        })
+
+        res = scenario.action_infer_rate_changes()
+        self.assertEqual(res['type'], 'ir.actions.client')
+        self.assertAlmostEqual(scenario.annual_interest_rate, 4.0, delta=0.2)
+        # Should have detected the step to 5.5% on 2026-03-15
+        self.assertTrue(scenario.rate_change_ids)
+        step = scenario.rate_change_ids[0]
+        self.assertEqual(step.effective_date, date(2026, 3, 15))
+        self.assertAlmostEqual(step.annual_rate, 5.5, delta=0.2)

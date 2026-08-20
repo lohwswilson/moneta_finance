@@ -224,6 +224,102 @@ class MonetaLoanScenario(models.Model):
         self.env['moneta.loan.amortization.line'].create(lines)
         return True
 
+    def action_infer_rate_changes(self):
+        """Infers historical interest rate shifts from linked account payment transactions.
+        
+        Scans split transactions for interest components, computes annualized rate observations:
+        annual_rate = (interest_amount / balance_before) * 12 * 100
+        Segments observations when rate changes by >= 0.15% (15 bps), creating rate change records.
+        """
+        self.ensure_one()
+        if not self.account_id:
+            raise ValidationError("Please link a Loan / Mortgage account first to infer rate changes.")
+
+        Tx = self.env['moneta.transaction']
+        txs = Tx.search([
+            ('account_id', '=', self.account_id.id),
+            ('state', '!=', 'void'),
+        ], order='transaction_date asc, id asc')
+
+        if not txs:
+            raise ValidationError("No transactions found for this loan account to infer rate changes.")
+
+        # Build running balance map and payment records
+        observations = []
+        for t in txs:
+            # Check splits for interest component
+            interest_amt = 0.0
+            if t.is_split and t.split_ids:
+                for sp in t.split_ids:
+                    cat_name = (sp.category_id.name or '').lower()
+                    if 'interest' in cat_name:
+                        interest_amt += abs(float(sp.amount or 0.0))
+            elif t.category_id and 'interest' in (t.category_id.name or '').lower():
+                interest_amt = abs(float(t.amount or 0.0))
+
+            if interest_amt > 0 and t.running_balance:
+                bal_before = abs(float(t.running_balance or 0.0)) + abs(float(t.amount or 0.0))
+                if bal_before > 500.0:  # Avoid noisy micro balances
+                    annualized_rate = round((interest_amt / bal_before) * 12.0 * 100.0, 3)
+                    if 0.1 <= annualized_rate <= 30.0:  # Sanity bounds
+                        observations.append({
+                            'date': t.transaction_date,
+                            'rate': annualized_rate,
+                            'interest': interest_amt,
+                            'balance': bal_before,
+                        })
+
+        if len(observations) < 2:
+            raise ValidationError(
+                f"Found {len(observations)} interest observations. At least 2 payments with interest splits are required to detect rate changes."
+            )
+
+        # Step detector: segment observations when rate deviates by >= 0.15 percentage points
+        segments = []
+        curr_segment = [observations[0]]
+        for obs in observations[1:]:
+            prev_median = sorted([o['rate'] for o in curr_segment])[len(curr_segment) // 2]
+            if abs(obs['rate'] - prev_median) >= 0.15:
+                # Step detected!
+                segments.append(curr_segment)
+                curr_segment = [obs]
+            else:
+                curr_segment.append(obs)
+        if curr_segment:
+            segments.append(curr_segment)
+
+        # Clear existing auto-inferred rate changes
+        self.rate_change_ids.filtered(lambda r: (r.note or '').startswith('Inferred')).unlink()
+
+        created_count = 0
+        for i, seg in enumerate(segments):
+            rates = [s['rate'] for s in seg]
+            median_rate = round(sorted(rates)[len(rates) // 2], 3)
+            seg_start_date = seg[0]['date']
+
+            if i == 0:
+                self.annual_interest_rate = median_rate
+            else:
+                self.env['moneta.loan.rate.change'].create({
+                    'scenario_id': self.id,
+                    'effective_date': seg_start_date,
+                    'annual_rate': median_rate,
+                    'note': f"Inferred from payment on {seg_start_date} ({len(seg)} observations, ~{median_rate}%)",
+                })
+                created_count += 1
+
+        self._compute_amortization_schedule()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Rate Change Inference Complete',
+                'message': f'Analyzed {len(observations)} payments and detected {len(segments)} rate segments ({created_count} new rate adjustments created).',
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
 
 class MonetaLoanAmortizationLine(models.Model):
     _name = 'moneta.loan.amortization.line'

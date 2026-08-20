@@ -30,10 +30,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Payee brand avatars in checkbook registers, compact lists, and kanban cards
   - [x] Category icon glyph inheritance (subcategories inherit parent icons and badges)
 
-* **Track 2.2: Variable-Rate Mortgage & Rate Change Inference Engine**
-  - [ ] Step-detection algorithm ($\text{rate} = \frac{\text{interest}}{\text{balance}} \times 12$) on historical split loan transactions
-  - [ ] Automated rate inference wizard generating historical `moneta.loan.rate.change` records
-  - [ ] Dynamic amortization curves adapting to segmented variable rate histories
+* **Track 2.2: Variable-Rate Mortgage & Rate Change Inference Engine (Completed ✅)**
+  - [x] Step-detection algorithm ($\text{rate} = \frac{\text{interest}}{\text{balance}} \times 12$) on historical split loan transactions
+  - [x] Automated rate inference wizard generating historical `moneta.loan.rate.change` records
+  - [x] Dynamic amortization curves adapting to segmented variable rate histories
 
 * **Track 2.3: Microsoft Money 75+ Investment & Portfolio Metrics**
   - [ ] Dynamic market metrics on `moneta.security`: 52-Week High/Low, Day's Gain/Loss ($ & %), Beta, Day Volume

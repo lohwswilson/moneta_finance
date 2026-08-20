@@ -8,6 +8,7 @@
             <form string="Loan &amp; Mortgage Early Payoff Scenario">
                 <header>
                     <button name="action_generate_schedule" type="object" string="Calculate Full Amortization Table" class="btn-primary" icon="fa-calculator"/>
+                    <button name="action_infer_rate_changes" type="object" string="🔍 Auto-Infer Rate Changes from Payments" class="btn-secondary" icon="fa-line-chart" invisible="not account_id"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
