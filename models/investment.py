@@ -438,6 +438,63 @@ class MonetaSecurity(models.Model):
             # False writes NULL: no price means the price is unknown.
             sec.current_price = latest.price_close if latest else False
 
+    @api.model
+    def _auto_refresh_stale_quotes(self):
+        """Auto-refreshes securities missing today's price."""
+        today = fields.Date.context_today(self)
+        securities = self.search([('symbol', '!=', False)])
+        updated_any = False
+        for sec in securities:
+            has_today_price = self.env['moneta.security.price'].search_count([
+                ('security_id', '=', sec.id),
+                ('price_date', '=', today),
+            ])
+            if not has_today_price:
+                try:
+                    info = sec._lookup_symbol_info(sec.symbol)
+                    price = info.get('price')
+                    if price:
+                        self.env['moneta.security.price'].create({
+                            'security_id': sec.id,
+                            'price_date': today,
+                            'price_close': price,
+                            'source': 'yahoo',
+                        })
+                        sec.write({
+                            'day_change': info.get('day_change', 0.0),
+                            'day_change_percent': info.get('day_change_percent', 0.0),
+                            'fifty_two_week_high': info.get('fifty_two_week_high', False),
+                            'fifty_two_week_low': info.get('fifty_two_week_low', False),
+                            'day_volume': info.get('day_volume', 0.0),
+                        })
+                        updated_any = True
+                except Exception:
+                    continue
+        if updated_any:
+            self.invalidate_model()
+
+    @api.model
+    def web_search_read(self, domain=None, specification=None, offset=0, limit=None, order=None, count_limit=None):
+        try:
+            self._auto_refresh_stale_quotes()
+        except Exception:
+            pass
+        return super().web_search_read(
+            domain=domain, specification=specification, offset=offset,
+            limit=limit, order=order, count_limit=count_limit
+        )
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        try:
+            self._auto_refresh_stale_quotes()
+        except Exception:
+            pass
+        return super().search_read(
+            domain=domain, fields=fields, offset=offset,
+            limit=limit, order=order
+        )
+
 
 class MonetaSecurityAllocation(models.Model):
     _name = 'moneta.security.allocation'
@@ -962,6 +1019,69 @@ class MonetaHolding(models.Model):
             self._compute_holding_market_metrics()
             return res
         return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    @api.model
+    def _auto_refresh_stale_quotes(self):
+        """Automatically updates stale quotes from Yahoo Finance when viewing holdings."""
+        today = fields.Date.context_today(self)
+        holdings = self.search([('quantity', '>', 0)])
+        securities = holdings.mapped('security_id').filtered(lambda s: bool(s.symbol))
+        if not securities:
+            return
+
+        updated_any = False
+        for sec in securities:
+            has_today_price = self.env['moneta.security.price'].search_count([
+                ('security_id', '=', sec.id),
+                ('price_date', '=', today),
+            ])
+            if not has_today_price:
+                try:
+                    info = sec._lookup_symbol_info(sec.symbol)
+                    price = info.get('price')
+                    if price:
+                        self.env['moneta.security.price'].create({
+                            'security_id': sec.id,
+                            'price_date': today,
+                            'price_close': price,
+                            'source': 'yahoo',
+                        })
+                        sec.write({
+                            'day_change': info.get('day_change', 0.0),
+                            'day_change_percent': info.get('day_change_percent', 0.0),
+                            'fifty_two_week_high': info.get('fifty_two_week_high', False),
+                            'fifty_two_week_low': info.get('fifty_two_week_low', False),
+                            'day_volume': info.get('day_volume', 0.0),
+                        })
+                        updated_any = True
+                except Exception:
+                    continue
+
+        if updated_any:
+            self.invalidate_model()
+            securities.invalidate_model()
+
+    @api.model
+    def web_search_read(self, domain=None, specification=None, offset=0, limit=None, order=None, count_limit=None):
+        try:
+            self._auto_refresh_stale_quotes()
+        except Exception:
+            pass
+        return super().web_search_read(
+            domain=domain, specification=specification, offset=offset,
+            limit=limit, order=order, count_limit=count_limit
+        )
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        try:
+            self._auto_refresh_stale_quotes()
+        except Exception:
+            pass
+        return super().search_read(
+            domain=domain, fields=fields, offset=offset,
+            limit=limit, order=order
+        )
 
     @api.depends('quantity', 'average_cost', 'current_price')
     def _compute_valuation(self):
