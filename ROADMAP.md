@@ -87,34 +87,57 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 4: Open Banking & Live Bank Sync (Q4 2026)
+### Phase 4: Quicken Classic Power Parity & Cash Flow Calendar (Q4 2026)
+*Closing the core functional gaps with Quicken Classic Premier & Home & Business:*
+
+* **Track 4.1: Interactive Cash Flow & Financial Calendar View**
+  - [ ] Month/Week/Day visual calendar view (`view_mode="calendar"`) plotting scheduled bills, deposits, and transfers
+  - [ ] Daily projected end-of-day bank balance calculation across all active checking/savings accounts
+  - [ ] Visual overdraft & low-balance threshold warnings on future calendar dates
+  - [ ] 1-Click quick-entry and skip occurrence directly from the interactive calendar view
+
+* **Track 4.2: Investment Tax-Lot Accounting (Specific ID, FIFO, LIFO, HIFO)**
+  - [ ] Lot-level purchase tracking (`moneta.security.lot`) recording purchase date, quantity, cost basis, and remaining shares
+  - [ ] Automated disposal strategies on stock/ETF sells: **FIFO**, **LIFO**, **HIFO** (Highest In, First Out), and **Specific Identification**
+  - [ ] Holding period tracking ($< 365$ days vs. $\ge 365$ days) for Short-Term vs. Long-Term Capital Gains classification
+  - [ ] Tax-loss harvesting opportunities analyzer
+
+* **Track 4.3: Landlord & Rental Property Lease / Tenant Roll (Quicken Business)**
+  - [ ] Tenant management (`moneta.property.tenant`) with lease start/end dates, monthly rent amount, and security deposit tracking
+  - [ ] Rent roll ledger with automated monthly rent invoice generation and overdue rent alerts
+  - [ ] Rental property expense categorization and Schedule E net operating income (NOI) reporting
+
+* **Track 4.4: Tax Schedule & TurboTax TXF Export**
+  - [ ] IRS Form 8949 / Schedule D capital gains summary report generator
+  - [ ] 1099-DIV / 1099-INT dividend and interest income tax schedules
+  - [ ] Standard `.txf` (Tax Exchange Format) file exporter for 1-click import into TurboTax, TaxSlayer, and H&R Block
+
+---
+
+### Phase 5: Open Banking & Live Bank Sync (Q1 2027)
 - [ ] **Plaid Integration**: US & Canada automated bank transaction download
 - [ ] **Salt Edge / Teller / SimpleFIN Sync**: European & Global Open Banking live feed
 - [ ] **Automated Rule Matching**: Auto-assign categories based on imported transaction metadata
 
 ---
 
-### Phase 5: Global Tax & Multi-Jurisdiction Packs (Q1 2027)
+### Phase 6: Global Tax & Multi-Jurisdiction Packs (Q2 2027)
 - [ ] **US Tax Pack**: 1099-DIV, 1099-B capital gains schedule, and tax-loss harvesting
 - [ ] **UK / EU Tax Pack**: Capital Gains Tax allowance tracking and ISA portfolio accounts
 - [ ] **Malaysia / Regional Tax Pack**: EPF (KWSP) dividend tracking and LHDN tax relief schedule
 
 ---
 
-### Phase 6: Crypto & Multi-Asset Hub (Q2 2027)
+### Phase 7: Crypto & Multi-Asset Hub (Q3 2027)
 - [ ] **Crypto Exchange API Sync**: Read-only balance sync for Coinbase, Binance, and Kraken
 - [ ] **On-Chain Wallet Tracking**: Ethereum, Bitcoin, and Solana public address balance monitoring
 - [ ] **Commodities & Precious Metals**: Live Gold (XAU) and Silver (XAG) spot pricing
 
 ---
 
-### Phase 7: Mobile PWA & Offline Experience (Q3 2027)
+### Phase 8: Mobile PWA & Autonomous AI Financial Copilot (Q4 2027)
 - [ ] **Responsive Mobile App**: Dedicated mobile-optimized dashboard view
 - [ ] **Offline Quick-Receipt Entry**: Progressive Web App (PWA) offline expense logging
-
----
-
-### Phase 8: Autonomous AI Financial Copilot (Q4 2027)
 - [ ] **Autonomous Spending Leak Audits**: LLM-driven anomaly detection
 - [ ] **Cash Flow Forecasting**: 90-day predictive balance forecast using seasonal regression
 - [ ] **Subscription Negotiation Assistant**: Automated drafts for cancelling unused SaaS subscriptions
