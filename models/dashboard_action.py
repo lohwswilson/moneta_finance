@@ -96,7 +96,7 @@ class MonetaDashboardAction(models.Model):
             'rebalance': 'moneta_finance.action_moneta_rebalance_wizard',
             'stock_split': 'moneta_finance.action_moneta_stock_split_wizard',
             'goals': 'moneta_finance.action_moneta_goal',
-            'properties': 'moneta_finance_property.action_moneta_property',
+            'properties': 'moneta_finance.action_moneta_property',
             'portfolio': 'moneta_finance.action_moneta_holding',
             'target_alloc': 'moneta_finance.action_moneta_target_allocation',
             'benchmark': 'moneta_finance.action_moneta_benchmark',

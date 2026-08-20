@@ -69,6 +69,10 @@ access_moneta_goal_user,moneta.goal.user,model_moneta_goal,group_moneta_user,1,1
 access_moneta_goal_manager,moneta.goal.manager,model_moneta_goal,group_moneta_manager,1,1,1,1
 access_moneta_goal_fund_wizard_user,moneta.goal.fund.wizard.user,model_moneta_goal_fund_wizard,group_moneta_user,1,1,1,1
 access_moneta_goal_fund_wizard_manager,moneta.goal.fund.wizard.manager,model_moneta_goal_fund_wizard,group_moneta_manager,1,1,1,1
+access_moneta_property_user,moneta.property.user,model_moneta_property,group_moneta_user,1,1,1,1
+access_moneta_property_manager,moneta.property.manager,model_moneta_property,group_moneta_manager,1,1,1,1
+access_moneta_property_valuation_user,moneta.property.valuation.user,model_moneta_property_valuation,group_moneta_user,1,1,1,1
+access_moneta_property_valuation_manager,moneta.property.valuation.manager,model_moneta_property_valuation,group_moneta_manager,1,1,1,1
 access_moneta_subscription_detector_user,moneta.subscription.detector.user,model_moneta_subscription_detector,group_moneta_user,1,1,1,1
 access_moneta_subscription_detector_manager,moneta.subscription.detector.manager,model_moneta_subscription_detector,group_moneta_manager,1,1,1,1
 access_moneta_subscription_detector_line_user,moneta.subscription.detector.line.user,model_moneta_subscription_detector_line,group_moneta_user,1,1,1,1

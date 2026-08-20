@@ -6,7 +6,7 @@
     'summary': 'Singapore Personal Finance Hub: CPF 3-Account & LIFE, SRS, SSB, MAS T-Bills, CPF-OA Accrued Interest, BSD/ABSD, and IRAS Tax Reliefs',
     'author': 'Moneta Finance / Wilson Loh',
     'license': 'LGPL-3',
-    'depends': ['moneta_finance', 'moneta_finance_property'],
+    'depends': ['moneta_finance'],
     'pre_init_hook': '_pre_init_transfer_singapore_data',
     'data': [
         'security/ir.model.access.csv',

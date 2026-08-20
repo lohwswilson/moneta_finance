@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_moneta_properties"
-              name="Real Estate, Vehicles &amp; Valuables"
-              parent="moneta_finance.menu_moneta_investments_root"
-              action="action_moneta_property"
-              sequence="8"/>
-
     <menuitem id="menu_moneta_property_tenants"
               name="Landlord: Tenants &amp; Rent Roll"
               parent="moneta_finance.menu_moneta_investments_root"
               action="action_moneta_property_tenant"
+              sequence="9"/>
+
+    <menuitem id="menu_moneta_property_rent_payments"
+              name="Rent Roll Ledger"
+              parent="moneta_finance.menu_moneta_investments_root"
+              action="action_moneta_property_rent_payment"
               sequence="9"/>
 </odoo>
