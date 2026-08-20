@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Duplicate Detector Wizard Form View -->
+    <record id="view_moneta_duplicate_detector_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.duplicate.detector.wizard.form</field>
+        <field name="model">moneta.duplicate.detector.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Duplicate Transaction Finder &amp; Resolver">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🧹 Transaction Data Hygiene (Monize Parity)</span>
+                        <h1>Duplicate Transaction Finder</h1>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3 bg-light">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-4">
+                                <label for="account_id" class="fw-bold"/>
+                                <field name="account_id" class="form-control-sm"/>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="date_tolerance_days" class="fw-bold"/>
+                                <field name="date_tolerance_days" class="form-control-sm"/>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <field name="match_exact_amount"/> <label for="match_exact_amount"/><br/>
+                                <field name="match_same_payee"/> <label for="match_same_payee"/>
+                            </div>
+                            <div class="col-12 col-md-2 text-end">
+                                <button name="action_scan_duplicates" type="object" string="🔍 Scan Duplicates" class="btn btn-primary btn-sm"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning d-flex align-items-center p-2 mb-3 rounded-3" invisible="duplicate_count == 0" role="status">
+                        <i class="fa fa-exclamation-triangle fa-2x text-warning me-3"/>
+                        <div>
+                            Found <strong><field name="duplicate_count"/> duplicate candidate pair(s)</strong>.
+                            Review below and choose to either merge notes/tags into the original or delete the duplicate.
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success p-2 mb-3 rounded-3" invisible="duplicate_count &gt; 0" role="status">
+                        <i class="fa fa-check-circle me-2"/>No duplicate transactions found with current matching criteria.
+                    </div>
+
+                    <field name="candidate_line_ids" invisible="duplicate_count == 0">
+                        <list editable="bottom">
+                            <field name="selected" string="Select"/>
+                            <field name="account_id" readonly="1"/>
+                            <field name="primary_date" string="Original Date" readonly="1"/>
+                            <field name="duplicate_date" string="Duplicate Date" readonly="1"/>
+                            <field name="primary_payee_id" string="Original Payee" readonly="1"/>
+                            <field name="duplicate_payee_id" string="Duplicate Payee" readonly="1"/>
+                            <field name="primary_amount" string="Original Amount" widget="monetary" readonly="1"/>
+                            <field name="duplicate_amount" string="Duplicate Amount" widget="monetary" readonly="1"/>
+                            <field name="primary_memo" string="Original Memo" readonly="1"/>
+                            <field name="duplicate_memo" string="Duplicate Memo" readonly="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+
+                    <footer>
+                        <button name="action_merge_selected_duplicates" type="object" string="🔄 Merge Selected" class="btn btn-warning" invisible="duplicate_count == 0"/>
+                        <button name="action_delete_selected_duplicates" type="object" string="🗑️ Delete Selected Duplicates" class="btn btn-danger" invisible="duplicate_count == 0"/>
+                        <button string="Close" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_moneta_duplicate_detector_wizard" model="ir.actions.act_window">
+        <field name="name">Find &amp; Resolve Duplicates</field>
+        <field name="res_model">moneta.duplicate.detector.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

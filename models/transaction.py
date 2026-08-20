@@ -13,7 +13,7 @@ _PROPAGATE_FIELDS = _BALANCE_FIELDS | _TRANSFER_FIELDS
 class MonetaTransaction(models.Model):
     _name = 'moneta.transaction'
     _description = 'Moneta Financial Transaction'
-    _order = 'transaction_date desc, amount asc, id desc'
+    _order = 'transaction_date desc, amount desc, id desc'
 
     transaction_date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
     account_id = fields.Many2one('moneta.account', string='Account', required=True, ondelete='cascade')

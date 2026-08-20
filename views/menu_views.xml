@@ -32,6 +32,12 @@
               action="action_moneta_transaction"
               sequence="20"/>
 
+    <menuitem id="menu_moneta_duplicate_detector"
+              name="Find &amp; Resolve Duplicates"
+              parent="menu_moneta_banking_root"
+              action="action_moneta_duplicate_detector_wizard"
+              sequence="30"/>
+
     <!-- Investments & Assets -->
     <menuitem id="menu_moneta_investments_root"
               name="Investments &amp; Assets"

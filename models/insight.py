@@ -261,7 +261,41 @@ class MonetaInsight(models.TransientModel):
                         })
 
         # -------------------------------------------------------------
-        # 5. Financial Goal Milestones
+        # 5. Weekend vs. Weekday Spending Breakdown (Monize Parity)
+        # -------------------------------------------------------------
+        sixty_days_ago = today - timedelta(days=60)
+        txs_60d = self.env['moneta.transaction'].search([
+            ('user_id', '=', user.id),
+            ('transaction_date', '>=', sixty_days_ago),
+            ('amount', '<', 0),
+            ('state', '!=', 'void'),
+            ('is_transfer', '=', False),
+        ])
+        weekend_spend = sum(abs(float(t.amount)) for t in txs_60d if t.transaction_date.weekday() in (5, 6))
+        weekday_spend = sum(abs(float(t.amount)) for t in txs_60d if t.transaction_date.weekday() in (0, 1, 2, 3, 4))
+        
+        # 60 days has ~17 weekend days and ~43 weekdays
+        weekend_daily_avg = weekend_spend / 17.0
+        weekday_daily_avg = weekday_spend / 43.0
+
+        if weekend_daily_avg > 0 and weekday_daily_avg > 0 and (weekend_spend + weekday_spend) > 200.0:
+            weekend_ratio = (weekend_spend / (weekend_spend + weekday_spend)) * 100.0
+            if weekend_daily_avg >= 1.5 * weekday_daily_avg:
+                diff_pct = int(((weekend_daily_avg - weekday_daily_avg) / weekday_daily_avg) * 100.0)
+                insights.append({
+                    'name': f"Weekend spending is {diff_pct}% higher than weekdays",
+                    'category_name': "Behavioral · Weekend vs Weekday",
+                    'insight_type': 'spending',
+                    'level': 'info',
+                    'badge_text': f"${weekend_daily_avg:,.0f} / day",
+                    'badge_subtext': f"vs ${weekday_daily_avg:,.0f} weekdays",
+                    'description': f"Over the past 60 days, you spent {int(weekend_ratio)}% of total expenses on weekends (${weekend_daily_avg:,.2f}/day on Sat-Sun vs ${weekday_daily_avg:,.2f}/day on Mon-Fri).",
+                    'action_type': 'open_register',
+                    'sequence': 7,
+                })
+
+        # -------------------------------------------------------------
+        # 6. Financial Goal Milestones
         # -------------------------------------------------------------
         goals = self.env['moneta.goal'].search([
             ('user_id', '=', user.id),
