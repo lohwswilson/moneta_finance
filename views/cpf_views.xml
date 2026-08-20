@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CPF LIFE Simulator Form View -->
+    <record id="view_moneta_cpf_life_simulator_form" model="ir.ui.view">
+        <field name="name">moneta.cpf.life.simulator.form</field>
+        <field name="model">moneta.cpf.life.simulator</field>
+        <field name="arch" type="xml">
+            <form string="CPF LIFE Retirement Payout Simulator">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇸🇬 Singapore Central Provident Fund (CPF LIFE)</span>
+                        <h1>
+                            <field name="name" placeholder="Simulation Title..."/>
+                        </h1>
+                    </div>
+
+                    <!-- Payout Hero Banner -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 5px solid #16a34a !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-heartbeat text-success me-1"/>Lifelong Monthly Retirement Payout
+                            </span>
+                            <span class="badge bg-success px-3 py-1 fs-6">
+                                <field name="retirement_sum_tier"/>
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-5">
+                                <span class="text-muted small">Estimated Starting Monthly Payout</span>
+                                <h1 class="fw-bolder mb-0 text-success">
+                                    <field name="monthly_payout_estimated" widget="monetary"/>
+                                </h1>
+                                <span class="text-muted small">Annual: <field name="annual_payout_estimated" widget="monetary"/> / year for life</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">At Age 80</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="payout_at_80" widget="monetary"/>/mo</h4>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Cumulative by Age 85</span>
+                                <h4 class="fw-bold mb-0 text-primary"><field name="cumulative_payout_85" widget="monetary"/></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Retirement Account (RA) Parameters">
+                            <field name="birth_year"/>
+                            <field name="current_age"/>
+                            <field name="ra_balance_at_55" widget="monetary"/>
+                            <field name="plan_type" widget="radio"/>
+                            <field name="payout_start_age"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Retirement Sum Benchmarks (2024–2026)">
+                            <field name="brs_amount" widget="monetary"/>
+                            <field name="frs_amount" widget="monetary"/>
+                            <field name="ers_amount" widget="monetary"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3 bg-light">
+                        <h6 class="fw-bold text-dark mb-3"><i class="fa fa-bar-chart text-primary me-2"/>Lifelong Longevity &amp; Estate Bequest Projection</h6>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Payout at Age 90</span>
+                                <h5 class="fw-bold mb-0 text-dark"><field name="payout_at_90" widget="monetary"/>/mo</h5>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Cumulative by Age 95</span>
+                                <h5 class="fw-bold mb-0 text-primary"><field name="cumulative_payout_95" widget="monetary"/></h5>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Est. Bequest at Age 75</span>
+                                <h5 class="fw-bold mb-0 text-success"><field name="estimated_bequest_75" widget="monetary"/></h5>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Est. Bequest at Age 85</span>
+                                <h5 class="fw-bold mb-0 text-success"><field name="estimated_bequest_85" widget="monetary"/></h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group string="Retirement Strategy Notes">
+                        <field name="notes" placeholder="Notes on property pledge, top-ups via RSTU, or OA-to-SA transfers..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- CPF LIFE Simulator List View -->
+    <record id="view_moneta_cpf_life_simulator_tree" model="ir.ui.view">
+        <field name="name">moneta.cpf.life.simulator.list</field>
+        <field name="model">moneta.cpf.life.simulator</field>
+        <field name="arch" type="xml">
+            <list string="CPF LIFE Simulations">
+                <field name="name" class="fw-bold"/>
+                <field name="ra_balance_at_55" string="RA Balance" widget="monetary"/>
+                <field name="plan_type" widget="badge"/>
+                <field name="payout_start_age" string="Start Age"/>
+                <field name="retirement_sum_tier" widget="badge" 
+                       decoration-success="retirement_sum_tier in ('frs', 'ers', 'above_ers')" 
+                       decoration-info="retirement_sum_tier == 'brs'" 
+                       decoration-warning="retirement_sum_tier == 'below_brs'"/>
+                <field name="monthly_payout_estimated" string="Est. Monthly Payout" widget="monetary" class="fw-bold text-success"/>
+                <field name="cumulative_payout_85" string="Total at 85" widget="monetary" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- CPF LIFE Window Action -->
+    <record id="action_moneta_cpf_life_simulator" model="ir.actions.act_window">
+        <field name="name">CPF LIFE Payout Simulator</field>
+        <field name="res_model">moneta.cpf.life.simulator</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Simulate Singapore CPF LIFE Retirement Payouts
+            </p>
+            <p>
+                Calculate lifelong monthly payouts across Standard, Escalating, and Basic plans against BRS, FRS, and ERS milestones.
+            </p>
+        </field>
+    </record>
+</odoo>

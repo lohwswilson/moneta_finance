@@ -58,11 +58,11 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 ### Phase 3: Singapore & South East Asia Financial Ecosystem (Flagship 🇸🇬 🌏)
 *Comprehensive localization for Singapore and South East Asian wealth structures:*
 
-* **Track 3.1: CPF (OA/SA/MA/RA) & SRS Pension Architecture**
-  - [ ] Specialized account types: `cpf_oa` (2.5%), `cpf_sa` (4.0%), `cpf_ma` (4.0%), `cpf_ra` (4.0%), and `srs`
-  - [ ] Monthly CPF interest calculation engine (lowest balance rule) with annual December crediting
-  - [ ] CPF LIFE retirement payout simulator (Standard, Escalating, Basic) with BRS / FRS / ERS threshold milestones
-  - [ ] SRS voluntary tax-relief contributions ($15,300 citizen/PR, $35,700 foreigner) & 10-year penalty-free withdrawal tracker
+* **Track 3.1: CPF (OA/SA/MA/RA) & SRS Pension Architecture (Completed ✅)**
+  - [x] Specialized account types: `cpf_oa` (2.5%), `cpf_sa` (4.0%), `cpf_ma` (4.0%), `cpf_ra` (4.0%), and `srs`
+  - [x] Monthly CPF interest calculation engine (lowest balance rule) with annual December crediting
+  - [x] CPF LIFE retirement payout simulator (Standard, Escalating, Basic) with BRS / FRS / ERS threshold milestones
+  - [x] SRS voluntary tax-relief contributions ($15,300 citizen/PR, $35,700 foreigner) & 10-year penalty-free withdrawal tracker
 
 * **Track 3.2: Singapore Housing, HDB Loans & CPF Accrued Interest**
   - [ ] CPF Housing Accrued Interest engine: calculates the 2.5% compounded interest liability due back to CPF upon property sale

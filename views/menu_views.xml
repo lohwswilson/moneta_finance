@@ -116,6 +116,24 @@
               action="action_moneta_monte_carlo"
               sequence="40"/>
 
+    <!-- Singapore & SEA Wealth Ecosystem -->
+    <menuitem id="menu_moneta_singapore_root"
+              name="🇸🇬 Singapore &amp; SEA"
+              parent="menu_moneta_root"
+              sequence="35"/>
+
+    <menuitem id="menu_moneta_cpf_life"
+              name="CPF LIFE Retirement Simulator"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_cpf_life_simulator"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_srs_tracker"
+              name="SRS Tax Relief &amp; Withdrawal"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_srs_tracker"
+              sequence="20"/>
+
     <!-- Net Worth & Analytics -->
     <menuitem id="menu_moneta_reports_root"
               name="Net Worth &amp; Reports"

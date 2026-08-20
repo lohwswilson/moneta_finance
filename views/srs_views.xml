@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- SRS Tracker Form View -->
+    <record id="view_moneta_srs_tracker_form" model="ir.ui.view">
+        <field name="name">moneta.srs.tracker.form</field>
+        <field name="model">moneta.srs.tracker</field>
+        <field name="arch" type="xml">
+            <form string="Supplementary Retirement Scheme (SRS) Tax Relief">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇸🇬 Singapore SRS Voluntary Tax Relief</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Tax Savings Hero Banner -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 5px solid #2563eb !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-shield text-primary me-1"/>IRAS Tax Savings &amp; Cap Utilization
+                            </span>
+                            <span class="badge bg-primary px-3 py-1 fs-6">
+                                Cap: <field name="annual_cap" widget="monetary"/>
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-5">
+                                <span class="text-muted small">Estimated Tax Relief Saved</span>
+                                <h1 class="fw-bolder mb-0 text-primary">
+                                    <field name="estimated_tax_savings" widget="monetary"/>
+                                </h1>
+                                <span class="text-muted small">Based on <field name="marginal_tax_rate"/>% marginal tax bracket</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">YTD Contributed</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="total_contributed" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Remaining Cap for Dec 31</span>
+                                <h4 class="fw-bold mb-0 text-success"><field name="remaining_allowance" widget="monetary"/></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="SRS Contribution &amp; Tax Profile">
+                            <field name="tax_year"/>
+                            <field name="residency_status"/>
+                            <field name="marginal_tax_rate"/>
+                            <field name="srs_account_id"/>
+                            <field name="srs_current_balance" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="10-Year Penalty-Free Withdrawal Optimization">
+                            <field name="statutory_retirement_age"/>
+                            <field name="annual_withdrawal_target" widget="monetary"/>
+                            <field name="annual_taxable_portion" widget="monetary"/>
+                            <field name="is_tax_free_strategy" widget="boolean_toggle"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-info d-flex align-items-center p-3 my-3 rounded-3" role="status">
+                        <div>
+                            <i class="fa fa-lightbulb-o fa-2x text-info me-3"/>
+                            <strong>Singapore SRS 10-Year Withdrawal Rule:</strong>
+                            <p class="mb-0 small text-muted">
+                                Withdrawals made over 10 years starting from statutory retirement age (age 63/64) enjoy <strong>50% tax exemption</strong>. 
+                                Withdrawing up to SGD $40,000/year produces only $20,000 taxable income, which falls completely inside the <strong>0% IRAS tax bracket</strong> ($0 income tax)!
+                            </p>
+                        </div>
+                    </div>
+
+                    <group string="Tax Optimization Notes">
+                        <field name="notes" placeholder="Notes on year-end SRS top-ups, SRS investment in SSB/REITs, or withdrawal strategy..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SRS Tracker List View -->
+    <record id="view_moneta_srs_tracker_tree" model="ir.ui.view">
+        <field name="name">moneta.srs.tracker.list</field>
+        <field name="model">moneta.srs.tracker</field>
+        <field name="arch" type="xml">
+            <list string="SRS Tax Relief Plans" default_order="tax_year desc">
+                <field name="tax_year" string="Year" class="fw-bold"/>
+                <field name="residency_status" widget="badge"/>
+                <field name="total_contributed" string="Contributed" widget="monetary" sum="Total Contributed"/>
+                <field name="remaining_allowance" string="Remaining Cap" widget="monetary"/>
+                <field name="marginal_tax_rate" string="Tax Bracket"/>
+                <field name="estimated_tax_savings" string="Tax Saved" widget="monetary" sum="Total Tax Saved" class="fw-bold text-primary"/>
+                <field name="annual_withdrawal_target" string="10-Yr Target / Yr" widget="monetary" optional="show"/>
+                <field name="is_tax_free_strategy" string="100% Tax-Free Strategy" widget="boolean" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- SRS Window Action -->
+    <record id="action_moneta_srs_tracker" model="ir.actions.act_window">
+        <field name="name">SRS Tax Relief &amp; Withdrawal</field>
+        <field name="res_model">moneta.srs.tracker</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Plan Supplementary Retirement Scheme (SRS) Tax Relief
+            </p>
+            <p>
+                Track annual voluntary contribution caps ($15,300 citizen/PR, $35,700 foreigner), estimate IRAS tax savings, and optimize 10-year penalty-free withdrawals.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -109,3 +109,7 @@ access_moneta_dashboard_action_user,moneta.dashboard.action.user,model_moneta_da
 access_moneta_dashboard_action_manager,moneta.dashboard.action.manager,model_moneta_dashboard_action,group_moneta_manager,1,1,1,1
 access_moneta_action_history_user,moneta.action.history.user,model_moneta_action_history,group_moneta_user,1,1,1,1
 access_moneta_action_history_manager,moneta.action.history.manager,model_moneta_action_history,group_moneta_manager,1,1,1,1
+access_moneta_cpf_life_simulator_user,moneta.cpf.life.simulator.user,model_moneta_cpf_life_simulator,group_moneta_user,1,1,1,1
+access_moneta_cpf_life_simulator_manager,moneta.cpf.life.simulator.manager,model_moneta_cpf_life_simulator,group_moneta_manager,1,1,1,1
+access_moneta_srs_tracker_user,moneta.srs.tracker.user,model_moneta_srs_tracker,group_moneta_user,1,1,1,1
+access_moneta_srs_tracker_manager,moneta.srs.tracker.manager,model_moneta_srs_tracker,group_moneta_manager,1,1,1,1

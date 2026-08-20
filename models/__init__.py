@@ -26,3 +26,5 @@ from . import ai_advisor
 from . import portfolio_analytics
 from . import dashboard_action
 from . import action_history
+from . import cpf
+from . import srs

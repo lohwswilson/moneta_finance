@@ -23,6 +23,11 @@ class MonetaAccount(models.Model):
         ('brokerage', 'Brokerage / Investment'),
         ('asset', 'Asset'),
         ('cash', 'Cash'),
+        ('cpf_oa', 'Singapore CPF Ordinary Account (OA)'),
+        ('cpf_sa', 'Singapore CPF Special Account (SA)'),
+        ('cpf_ma', 'Singapore CPF MediSave Account (MA)'),
+        ('cpf_ra', 'Singapore CPF Retirement Account (RA)'),
+        ('srs', 'Singapore Supplementary Retirement Scheme (SRS)'),
         ('other', 'Other'),
     ], string='Account Type', default='checking', required=True)
 
