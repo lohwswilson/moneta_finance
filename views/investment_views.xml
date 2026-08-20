@@ -210,8 +210,12 @@
                             <field name="total_amount" widget="monetary" readonly="1"/>
                             <field name="realized_gain" widget="monetary" readonly="1" invisible="action != 'sell'"/>
                         </group>
-                    </group>
-
+                        <group name="tax_lot_group" string="Tax-Lot Matching &amp; Capital Gains" invisible="action != 'sell'">
+                            <field name="lot_disposal_strategy"/>
+                            <field name="specific_lot_id" invisible="lot_disposal_strategy != 'specific_id'"/>
+                            <field name="short_term_realized_gain" widget="monetary" readonly="1" decoration-danger="short_term_realized_gain &lt; 0" decoration-success="short_term_realized_gain &gt; 0"/>
+                            <field name="long_term_realized_gain" widget="monetary" readonly="1" decoration-danger="long_term_realized_gain &lt; 0" decoration-success="long_term_realized_gain &gt; 0"/>
+                        </group>
                         <group name="notes_group" string="Memo &amp; Accounting">
                             <field name="memo" placeholder="Trade rationale, limit order notes, dividend distribution info..."/>
                             <field name="state" widget="badge"
@@ -221,6 +225,24 @@
                             <field name="reconciled_date" invisible="state != 'reconciled'"/>
                             <field name="linked_transaction_id" readonly="1"/>
                         </group>
+                    </group>
+
+                    <notebook invisible="action != 'sell'">
+                        <page string="Tax-Lot Disposals" name="tax_lot_disposal_page">
+                            <field name="lot_disposal_ids" readonly="1">
+                                <list>
+                                    <field name="lot_id" string="Acquired Lot"/>
+                                    <field name="disposal_date"/>
+                                    <field name="quantity_sold" string="Shares Sold"/>
+                                    <field name="cost_basis_sold" widget="monetary"/>
+                                    <field name="proceeds" widget="monetary"/>
+                                    <field name="realized_gain" widget="monetary" decoration-success="realized_gain &gt; 0" decoration-danger="realized_gain &lt; 0"/>
+                                    <field name="term_type" widget="badge" decoration-info="term_type == 'short_term'" decoration-success="term_type == 'long_term'"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

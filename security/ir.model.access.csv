@@ -133,3 +133,7 @@ access_moneta_cashflow_projection_user,moneta.cashflow.projection.user,model_mon
 access_moneta_cashflow_projection_manager,moneta.cashflow.projection.manager,model_moneta_cashflow_projection,group_moneta_manager,1,1,1,1
 access_moneta_cashflow_projection_line_user,moneta.cashflow.projection.line.user,model_moneta_cashflow_projection_line,group_moneta_user,1,1,1,1
 access_moneta_cashflow_projection_line_manager,moneta.cashflow.projection.line.manager,model_moneta_cashflow_projection_line,group_moneta_manager,1,1,1,1
+access_moneta_security_lot_user,moneta.security.lot.user,model_moneta_security_lot,group_moneta_user,1,1,1,1
+access_moneta_security_lot_manager,moneta.security.lot.manager,model_moneta_security_lot,group_moneta_manager,1,1,1,1
+access_moneta_security_lot_disposal_user,moneta.security.lot.disposal.user,model_moneta_security_lot_disposal,group_moneta_user,1,1,1,1
+access_moneta_security_lot_disposal_manager,moneta.security.lot.disposal.manager,model_moneta_security_lot_disposal,group_moneta_manager,1,1,1,1

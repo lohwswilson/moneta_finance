@@ -686,6 +686,27 @@ class MonetaInvestmentTransaction(models.Model):
     # rebuild). buy/sell cash impact is deferred from the MVP.
     realized_gain = fields.Monetary(string='Realized Gain / Loss')
 
+    # Tax-Lot Accounting & Disposal Strategy (Track 4.2)
+    lot_disposal_strategy = fields.Selection([
+        ('fifo', 'FIFO (First In, First Out)'),
+        ('lifo', 'LIFO (Last In, First Out)'),
+        ('hifo', 'HIFO (Highest In, First Out - Max Tax Loss)'),
+        ('specific_id', 'Specific Lot Selection'),
+    ], string='Tax-Lot Matching Method', default='fifo')
+    specific_lot_id = fields.Many2one(
+        'moneta.security.lot', string='Specific Lot to Sell',
+        domain="[('account_id', '=', account_id), ('security_id', '=', security_id), ('state', '=', 'open')]"
+    )
+    lot_disposal_ids = fields.One2many(
+        'moneta.security.lot.disposal', 'sell_transaction_id', string='Disposed Lots'
+    )
+    short_term_realized_gain = fields.Monetary(
+        string='Short-Term Capital Gain (< 1 Yr)', compute='_compute_lot_gains', store=True
+    )
+    long_term_realized_gain = fields.Monetary(
+        string='Long-Term Capital Gain (≥ 1 Yr)', compute='_compute_lot_gains', store=True
+    )
+
     state = fields.Selection([
         ('unreconciled', 'Unreconciled'),
         ('cleared', 'Cleared'),
@@ -734,6 +755,14 @@ class MonetaInvestmentTransaction(models.Model):
                 tx.total_amount = round(qty * price + commission, 4)
             else:  # sell
                 tx.total_amount = round(qty * price - commission, 4)
+
+    @api.depends('lot_disposal_ids.realized_gain', 'lot_disposal_ids.term_type')
+    def _compute_lot_gains(self):
+        for tx in self:
+            st = sum(d.realized_gain for d in tx.lot_disposal_ids if d.term_type == 'short_term')
+            lt = sum(d.realized_gain for d in tx.lot_disposal_ids if d.term_type == 'long_term')
+            tx.short_term_realized_gain = round(st, 2)
+            tx.long_term_realized_gain = round(lt, 2)
 
     def action_toggle_cleared(self):
         """Quicken-style 1-click status cycle for investment transactions:
@@ -841,6 +870,7 @@ class MonetaInvestmentTransaction(models.Model):
             if tx.action in ('dividend', 'interest'):
                 tx._create_cash_income_transaction()
         self._rebuild_holdings(txs)
+        self._rebuild_tax_lots(txs)
         for account in txs.mapped('account_id'):
             self.env['moneta.account.balance.monthly']._rebuild_for_account(account)
         return txs
@@ -860,6 +890,7 @@ class MonetaInvestmentTransaction(models.Model):
                 )
         res = super().write(vals)
         self._rebuild_holdings(self)
+        self._rebuild_tax_lots(self)
         for account in self.mapped('account_id'):
             self.env['moneta.account.balance.monthly']._rebuild_for_account(account)
         return res
@@ -871,12 +902,16 @@ class MonetaInvestmentTransaction(models.Model):
             cash.unlink()
         pairs = {(tx.account_id.id, tx.security_id.id) for tx in self}
         accounts = self.mapped('account_id')
+        records_to_rebuild = [(tx.account_id, tx.security_id) for tx in self]
         res = super().unlink()
         for account_id, security_id in pairs:
             self.env['moneta.holding']._rebuild(
                 self.env['moneta.account'].browse(account_id),
                 self.env['moneta.security'].browse(security_id),
             )
+        for acc, sec in records_to_rebuild:
+            mock_tx = self.env['moneta.investment.transaction'].new({'account_id': acc.id, 'security_id': sec.id})
+            self._rebuild_tax_lots(mock_tx)
         for account in accounts:
             self.env['moneta.account.balance.monthly']._rebuild_for_account(account)
         return res
@@ -884,6 +919,79 @@ class MonetaInvestmentTransaction(models.Model):
     def _rebuild_holdings(self, txs):
         for tx in txs:
             self.env['moneta.holding']._rebuild(tx.account_id, tx.security_id)
+
+    def _rebuild_tax_lots(self, txs):
+        """Rebuilds tax lots and disposal records for the affected security/account pairs."""
+        pairs = {(tx.account_id.id, tx.security_id.id) for tx in txs if tx.account_id and tx.security_id}
+        Lot = self.env['moneta.security.lot']
+        Disposal = self.env['moneta.security.lot.disposal']
+
+        for account_id, security_id in pairs:
+            old_lots = Lot.search([('account_id', '=', account_id), ('security_id', '=', security_id)])
+            old_lots.unlink()
+
+            history = self.search([
+                ('account_id', '=', account_id),
+                ('security_id', '=', security_id),
+                ('state', '!=', 'void'),
+                ('action', 'in', ('buy', 'sell')),
+            ], order='trade_date asc, id asc')
+
+            active_lots = []
+            for tx in history:
+                if tx.action == 'buy':
+                    qty = tx.quantity or 0.0
+                    price = tx.price or 0.0
+                    commission = tx.commission or 0.0
+                    new_lot = Lot.create({
+                        'account_id': account_id,
+                        'security_id': security_id,
+                        'purchase_date': tx.trade_date,
+                        'initial_quantity': qty,
+                        'remaining_quantity': qty,
+                        'purchase_price': price,
+                        'commission_paid': commission,
+                        'purchase_transaction_id': tx.id,
+                        'user_id': tx.user_id.id or self.env.uid,
+                    })
+                    active_lots.append(new_lot)
+
+                elif tx.action == 'sell':
+                    needed_qty = tx.quantity or 0.0
+                    sell_price = tx.price or 0.0
+                    strat = tx.lot_disposal_strategy or 'fifo'
+
+                    open_lots = [l for l in active_lots if l.remaining_quantity > 1e-6]
+                    if strat == 'lifo':
+                        open_lots.sort(key=lambda l: (l.purchase_date, l.id), reverse=True)
+                    elif strat == 'hifo':
+                        open_lots.sort(key=lambda l: (-l.purchase_price, l.purchase_date))
+                    elif strat == 'specific_id' and tx.specific_lot_id:
+                        open_lots.sort(key=lambda l: 0 if l.id == tx.specific_lot_id.id else 1)
+                    else:  # fifo
+                        open_lots.sort(key=lambda l: (l.purchase_date, l.id))
+
+                    for lot in open_lots:
+                        if needed_qty <= 1e-6:
+                            break
+                        take_qty = min(lot.remaining_quantity, needed_qty)
+                        cost_basis = take_qty * (lot.purchase_price or 0.0)
+                        proceeds = take_qty * sell_price
+                        days = (tx.trade_date - lot.purchase_date).days if lot.purchase_date else 0
+                        term = 'long_term' if days >= 365 else 'short_term'
+
+                        Disposal.create({
+                            'lot_id': lot.id,
+                            'sell_transaction_id': tx.id,
+                            'disposal_date': tx.trade_date,
+                            'quantity_sold': take_qty,
+                            'cost_basis_sold': round(cost_basis, 2),
+                            'proceeds': round(proceeds, 2),
+                            'term_type': term,
+                        })
+
+                        lot.remaining_quantity = lot.remaining_quantity - take_qty
+                        needed_qty -= take_qty
 
     def _create_cash_income_transaction(self):
         """Dividends/interest post a cash income transaction in the brokerage

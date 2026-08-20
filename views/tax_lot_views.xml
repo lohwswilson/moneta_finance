@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Lot Form View -->
+    <record id="view_moneta_security_lot_form" model="ir.ui.view">
+        <field name="name">moneta.security.lot.form</field>
+        <field name="model">moneta.security.lot</field>
+        <field name="arch" type="xml">
+            <form string="Investment Tax Lot">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="open,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🎯 Tax Lot Detail (Quicken Parity)</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Lot Hero Summary Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8fafc; border-left: 4px solid #3b82f6 !important;">
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Remaining Shares</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="remaining_quantity"/></h3>
+                                <span class="text-muted small">of <field name="initial_quantity"/> bought</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Purchase Price / Cost</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="purchase_price" widget="monetary"/></h3>
+                                <span class="text-muted small">Total: <field name="total_cost_basis" widget="monetary"/></span>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Current Market Value</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="current_market_value" widget="monetary"/></h3>
+                                <span class="text-muted small">@ <field name="current_price" widget="monetary"/>/sh</span>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Unrealized Gain / Loss</span>
+                                <h3 class="fw-bold mb-0" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0">
+                                    <field name="unrealized_gain" widget="monetary"/> (<field name="unrealized_gain_percent"/>%)
+                                </h3>
+                                <field name="term_type" widget="badge" decoration-info="term_type == 'short_term'" decoration-success="term_type == 'long_term'"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group name="lot_basics" string="Acquisition Details">
+                            <field name="security_id"/>
+                            <field name="account_id"/>
+                            <field name="purchase_date"/>
+                            <field name="holding_days"/>
+                            <field name="commission_paid" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group name="lot_status" string="Holding Classification &amp; Ownership">
+                            <field name="term_type" widget="badge" decoration-info="term_type == 'short_term'" decoration-success="term_type == 'long_term'"/>
+                            <field name="purchase_transaction_id"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Disposal &amp; Sale History" name="disposal_page">
+                            <field name="disposal_ids" readonly="1">
+                                <list>
+                                    <field name="disposal_date"/>
+                                    <field name="sell_transaction_id"/>
+                                    <field name="quantity_sold"/>
+                                    <field name="cost_basis_sold" widget="monetary"/>
+                                    <field name="proceeds" widget="monetary"/>
+                                    <field name="realized_gain" widget="monetary" decoration-success="realized_gain &gt; 0" decoration-danger="realized_gain &lt; 0"/>
+                                    <field name="term_type" widget="badge" decoration-info="term_type == 'short_term'" decoration-success="term_type == 'long_term'"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Lot List View -->
+    <record id="view_moneta_security_lot_tree" model="ir.ui.view">
+        <field name="name">moneta.security.lot.list</field>
+        <field name="model">moneta.security.lot</field>
+        <field name="arch" type="xml">
+            <list string="Investment Tax Lots" default_order="purchase_date asc">
+                <field name="purchase_date" string="Acquired"/>
+                <field name="security_id" string="Security"/>
+                <field name="account_id" string="Account"/>
+                <field name="remaining_quantity" string="Shares Left" sum="Total Shares"/>
+                <field name="purchase_price" string="Buy Price" widget="monetary"/>
+                <field name="total_cost_basis" string="Cost Basis" widget="monetary" sum="Total Cost Basis"/>
+                <field name="current_market_value" string="Market Value" widget="monetary" sum="Total Value"/>
+                <field name="unrealized_gain" string="Gain / Loss ($)" widget="monetary" sum="Total Gain" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0"/>
+                <field name="unrealized_gain_percent" string="Gain %" decoration-success="unrealized_gain_percent &gt; 0" decoration-danger="unrealized_gain_percent &lt; 0"/>
+                <field name="holding_days" string="Days Held" optional="show"/>
+                <field name="term_type" string="Holding Term" widget="badge" decoration-info="term_type == 'short_term'" decoration-success="term_type == 'long_term'"/>
+                <field name="state" widget="badge" decoration-success="state == 'open'" decoration-muted="state == 'closed'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Security Lot Search View -->
+    <record id="view_moneta_security_lot_search" model="ir.ui.view">
+        <field name="name">moneta.security.lot.search</field>
+        <field name="model">moneta.security.lot</field>
+        <field name="arch" type="xml">
+            <search string="Search Tax Lots">
+                <field name="security_id"/>
+                <field name="account_id"/>
+                
+                <filter name="filter_open" string="Open Lots Only" domain="[('state', '=', 'open')]"/>
+                <filter name="filter_long_term" string="Long-Term (≥ 1 Year)" domain="[('term_type', '=', 'long_term')]"/>
+                <filter name="filter_short_term" string="Short-Term (&lt; 1 Year)" domain="[('term_type', '=', 'short_term')]"/>
+                <separator/>
+                <filter name="filter_gain" string="Unrealized Gains" domain="[('unrealized_gain', '&gt;', 0)]"/>
+                <filter name="filter_loss" string="Unrealized Losses" domain="[('unrealized_gain', '&lt;', 0)]"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_by_security" string="Security" context="{'group_by': 'security_id'}"/>
+                    <filter name="group_by_account" string="Account" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_by_term" string="Holding Term" context="{'group_by': 'term_type'}"/>
+                    <filter name="group_by_status" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_moneta_security_lot" model="ir.actions.act_window">
+        <field name="name">Tax-Lots &amp; Holdings</field>
+        <field name="res_model">moneta.security.lot</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_moneta_security_lot_search"/>
+        <field name="context">{'search_default_filter_open': 1}</field>
+    </record>
+</odoo>

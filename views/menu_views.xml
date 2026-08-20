@@ -50,6 +50,12 @@
               action="action_moneta_holding"
               sequence="5"/>
 
+    <menuitem id="menu_moneta_security_lots"
+              name="Tax-Lots &amp; Holdings"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_security_lot"
+              sequence="6"/>
+
     <menuitem id="menu_moneta_target_alloc"
               name="Target Asset Allocation"
               parent="menu_moneta_investments_root"

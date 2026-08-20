@@ -96,11 +96,11 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Visual overdraft & low-balance threshold warnings on future calendar dates
   - [x] 1-Click quick-entry and skip occurrence directly from the interactive calendar view
 
-* **Track 4.2: Investment Tax-Lot Accounting (Specific ID, FIFO, LIFO, HIFO)**
-  - [ ] Lot-level purchase tracking (`moneta.security.lot`) recording purchase date, quantity, cost basis, and remaining shares
-  - [ ] Automated disposal strategies on stock/ETF sells: **FIFO**, **LIFO**, **HIFO** (Highest In, First Out), and **Specific Identification**
-  - [ ] Holding period tracking ($< 365$ days vs. $\ge 365$ days) for Short-Term vs. Long-Term Capital Gains classification
-  - [ ] Tax-loss harvesting opportunities analyzer
+* **Track 4.2: Investment Tax-Lot Accounting (Specific ID, FIFO, LIFO, HIFO) (Completed ✅)**
+  - [x] Lot-level purchase tracking (`moneta.security.lot`) recording purchase date, quantity, cost basis, and remaining shares
+  - [x] Automated disposal strategies on stock/ETF sells: **FIFO**, **LIFO**, **HIFO** (Highest In, First Out), and **Specific Identification**
+  - [x] Holding period tracking ($< 365$ days vs. $\ge 365$ days) for Short-Term vs. Long-Term Capital Gains classification
+  - [x] Tax-loss harvesting opportunities analyzer with lot-level capital gain/loss breakdown
 
 * **Track 4.3: Landlord & Rental Property Lease / Tenant Roll (Quicken Business)**
   - [ ] Tenant management (`moneta.property.tenant`) with lease start/end dates, monthly rent amount, and security deposit tracking

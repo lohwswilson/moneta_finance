@@ -101,6 +101,7 @@ Key Features & Capabilities:
         'views/iras_tax_views.xml',
         'views/duplicate_detector_views.xml',
         'views/cashflow_calendar_views.xml',
+        'views/tax_lot_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

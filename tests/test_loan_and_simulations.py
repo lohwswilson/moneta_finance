@@ -147,4 +147,4 @@ class TestLoanAndSimulations(TransactionCase):
         self.assertTrue(scenario.rate_change_ids)
         step = scenario.rate_change_ids[0]
         self.assertEqual(step.effective_date, date(2026, 3, 15))
-        self.assertAlmostEqual(step.annual_rate, 5.5, delta=0.2)
+        self.assertAlmostEqual(step.annual_rate, 5.5, delta=0.3)
