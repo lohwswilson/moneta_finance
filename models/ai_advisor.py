@@ -231,8 +231,10 @@ class MonetaAIChat(models.Model):
         goals_summary = [f"- {g.name}: ${g.current_amount:,.2f} of ${g.target_amount:,.2f} ({int(g.progress_percent)}%)" for g in goals]
 
         # Properties & Equity
-        props = self.env['moneta.property'].search([('user_id', '=', user.id)])
-        prop_summary = [f"- {p.name} ({p.asset_category}): Value ${p.current_market_value:,.2f}, Debt ${p.mortgage_balance:,.2f}, Equity ${p.equity_value:,.2f}" for p in props]
+        prop_summary = []
+        if 'moneta.property' in self.env:
+            props = self.env['moneta.property'].search([('user_id', '=', user.id)])
+            prop_summary = [f"- {p.name} ({p.asset_category}): Value ${p.current_market_value:,.2f}, Debt ${p.mortgage_balance:,.2f}, Equity ${p.equity_value:,.2f}" for p in props]
 
         context = (
             f"Date: {today}\n"

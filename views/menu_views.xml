@@ -68,18 +68,6 @@
               action="action_moneta_benchmark"
               sequence="7"/>
 
-    <menuitem id="menu_moneta_properties"
-              name="Real Estate, Vehicles &amp; Valuables"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_property"
-              sequence="8"/>
-
-    <menuitem id="menu_moneta_property_tenants"
-              name="Landlord: Tenants &amp; Rent Roll"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_property_tenant"
-              sequence="9"/>
-
     <menuitem id="menu_moneta_investment_transactions"
               name="Investment Trades"
               parent="menu_moneta_investments_root"

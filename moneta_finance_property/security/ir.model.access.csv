@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_moneta_property_user,moneta.property.user,model_moneta_property,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_property_manager,moneta.property.manager,model_moneta_property,moneta_finance.group_moneta_manager,1,1,1,1
+access_moneta_property_valuation_user,moneta.property.valuation.user,model_moneta_property_valuation,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_property_valuation_manager,moneta.property.valuation.manager,model_moneta_property_valuation,moneta_finance.group_moneta_manager,1,1,1,1
+access_moneta_property_tenant_user,moneta.property.tenant.user,model_moneta_property_tenant,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_property_tenant_manager,moneta.property.tenant.manager,model_moneta_property_tenant,moneta_finance.group_moneta_manager,1,1,1,1
+access_moneta_property_rent_payment_user,moneta.property.rent.payment.user,model_moneta_property_rent_payment,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_property_rent_payment_manager,moneta.property.rent.payment.manager,model_moneta_property_rent_payment,moneta_finance.group_moneta_manager,1,1,1,1

@@ -116,7 +116,7 @@ class MonetaMCPController(http.Controller):
             liabs = sum(abs(a.current_balance) for a in accounts if a.current_balance < 0)
             holdings = env['moneta.holding'].search([])
             stock_val = sum(h.market_value for h in holdings)
-            props = env['moneta.property'].search([])
+            props = env['moneta.property'].search([]) if 'moneta.property' in env else []
             prop_val = sum(p.current_valuation for p in props)
             total_net_worth = assets + stock_val + prop_val - liabs
             return {

@@ -69,8 +69,6 @@ access_moneta_goal_user,moneta.goal.user,model_moneta_goal,group_moneta_user,1,1
 access_moneta_goal_manager,moneta.goal.manager,model_moneta_goal,group_moneta_manager,1,1,1,1
 access_moneta_goal_fund_wizard_user,moneta.goal.fund.wizard.user,model_moneta_goal_fund_wizard,group_moneta_user,1,1,1,1
 access_moneta_goal_fund_wizard_manager,moneta.goal.fund.wizard.manager,model_moneta_goal_fund_wizard,group_moneta_manager,1,1,1,1
-access_moneta_property_user,moneta.property.user,model_moneta_property,group_moneta_user,1,1,1,1
-access_moneta_property_manager,moneta.property.manager,model_moneta_property,group_moneta_manager,1,1,1,1
 access_moneta_subscription_detector_user,moneta.subscription.detector.user,model_moneta_subscription_detector,group_moneta_user,1,1,1,1
 access_moneta_subscription_detector_manager,moneta.subscription.detector.manager,model_moneta_subscription_detector,group_moneta_manager,1,1,1,1
 access_moneta_subscription_detector_line_user,moneta.subscription.detector.line.user,model_moneta_subscription_detector_line,group_moneta_user,1,1,1,1
@@ -81,8 +79,6 @@ access_moneta_export_wizard_user,moneta.export.wizard.user,model_moneta_export_w
 access_moneta_export_wizard_manager,moneta.export.wizard.manager,model_moneta_export_wizard,group_moneta_manager,1,1,1,1
 access_moneta_transaction_batch_category_wizard_user,moneta.transaction.batch.category.wizard.user,model_moneta_transaction_batch_category_wizard,group_moneta_user,1,1,1,1
 access_moneta_transaction_batch_category_wizard_manager,moneta.transaction.batch.category.wizard.manager,model_moneta_transaction_batch_category_wizard,group_moneta_manager,1,1,1,1
-access_moneta_property_valuation_user,moneta.property.valuation.user,model_moneta_property_valuation,group_moneta_user,1,1,1,1
-access_moneta_property_valuation_manager,moneta.property.valuation.manager,model_moneta_property_valuation,group_moneta_manager,1,1,1,1
 access_moneta_insight_user,moneta.insight.user,model_moneta_insight,group_moneta_user,1,1,1,1
 access_moneta_insight_manager,moneta.insight.manager,model_moneta_insight,group_moneta_manager,1,1,1,1
 access_moneta_ai_chat_user,moneta.ai.chat.user,model_moneta_ai_chat,group_moneta_user,1,1,1,1
@@ -121,9 +117,5 @@ access_moneta_security_lot_user,moneta.security.lot.user,model_moneta_security_l
 access_moneta_security_lot_manager,moneta.security.lot.manager,model_moneta_security_lot,group_moneta_manager,1,1,1,1
 access_moneta_security_lot_disposal_user,moneta.security.lot.disposal.user,model_moneta_security_lot_disposal,group_moneta_user,1,1,1,1
 access_moneta_security_lot_disposal_manager,moneta.security.lot.disposal.manager,model_moneta_security_lot_disposal,group_moneta_manager,1,1,1,1
-access_moneta_property_tenant_user,moneta.property.tenant.user,model_moneta_property_tenant,group_moneta_user,1,1,1,1
-access_moneta_property_tenant_manager,moneta.property.tenant.manager,model_moneta_property_tenant,group_moneta_manager,1,1,1,1
-access_moneta_property_rent_payment_user,moneta.property.rent.payment.user,model_moneta_property_rent_payment,group_moneta_user,1,1,1,1
-access_moneta_property_rent_payment_manager,moneta.property.rent.payment.manager,model_moneta_property_rent_payment,group_moneta_manager,1,1,1,1
 access_moneta_tax_schedule_wizard_user,moneta.tax.schedule.wizard.user,model_moneta_tax_schedule_wizard,group_moneta_user,1,1,1,1
 access_moneta_tax_schedule_wizard_manager,moneta.tax.schedule.wizard.manager,model_moneta_tax_schedule_wizard,group_moneta_manager,1,1,1,1

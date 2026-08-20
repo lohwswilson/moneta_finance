@@ -31,5 +31,4 @@ from . import test_emergency_access
 from . import test_duplicate_detector
 from . import test_cashflow_calendar
 from . import test_tax_lot
-from . import test_property_tenants
 from . import test_tax_schedule

@@ -84,7 +84,6 @@ Key Features & Capabilities:
         'views/emergency_views.xml',
         'views/rule_views.xml',
         'views/goal_views.xml',
-        'views/property_views.xml',
         'views/subscription_detector_views.xml',
         'views/net_worth_views.xml',
         'views/wizard_views.xml',

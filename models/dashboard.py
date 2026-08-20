@@ -127,24 +127,26 @@ class MonetaDashboard(models.TransientModel):
         res['total_liabilities'] = round(total_liab, 4)
 
         # 2. Real Estate & Tangible Assets (Converted to Base Currency)
-        props = self.env['moneta.property'].search([('user_id', '=', user.id)])
         re_mkt, re_eq = 0.0, 0.0
-        for p in props:
-            p_curr = p.currency_id or base_curr
-            val_raw = float(p.current_market_value or 0.0)
-            val = p_curr._convert(val_raw, base_curr, company, today) if p_curr != base_curr else val_raw
+        if 'moneta.property' in self.env:
+            props = self.env['moneta.property'].search([('user_id', '=', user.id)])
+            for p in props:
+                p_curr = p.currency_id or base_curr
+                val_raw = float(p.current_market_value or 0.0)
+                val = p_curr._convert(val_raw, base_curr, company, today) if p_curr != base_curr else val_raw
 
-            if p.mortgage_account_id:
-                m_acc = p.mortgage_account_id
-                m_curr = m_acc.currency_id or base_curr
-                m_bal = abs(float(m_acc.current_balance or 0.0))
-                debt = m_curr._convert(m_bal, base_curr, company, today) if m_curr != base_curr else m_bal
-            else:
-                m_raw = float(p.mortgage_balance or 0.0)
-                debt = p_curr._convert(m_raw, base_curr, company, today) if p_curr != base_curr else m_raw
+                if p.mortgage_account_id:
+                    m_acc = p.mortgage_account_id
+                    m_curr = m_acc.currency_id or base_curr
+                    m_bal = abs(float(m_acc.current_balance or 0.0))
+                    debt = m_curr._convert(m_bal, base_curr, company, today) if m_curr != base_curr else m_bal
+                else:
+                    m_raw = float(p.mortgage_balance or 0.0)
+                    debt = p_curr._convert(m_raw, base_curr, company, today) if p_curr != base_curr else m_raw
 
-            re_mkt += val
-            re_eq += max(val - debt, 0.0)
+                eq = max(val - debt, 0.0)
+                re_mkt += val
+                re_eq += eq
 
         res['real_estate_assets'] = round(re_mkt, 4)
         res['total_real_estate_equity'] = round(re_eq, 4)
@@ -298,12 +300,13 @@ class MonetaDashboard(models.TransientModel):
                     assets += bal if bal > 0 else bal
 
             # 2. Real Estate Assets
-            props = self.env['moneta.property'].search([('user_id', '=', user.id)])
             re_mkt = 0.0
-            for p in props:
-                p_curr = p.currency_id or base_curr
-                val_raw = float(p.current_market_value or 0.0)
-                re_mkt += p_curr._convert(val_raw, base_curr, company, today) if p_curr != base_curr else val_raw
+            if 'moneta.property' in self.env:
+                props = self.env['moneta.property'].search([('user_id', '=', user.id)])
+                for p in props:
+                    p_curr = p.currency_id or base_curr
+                    val_raw = float(p.current_market_value or 0.0)
+                    re_mkt += p_curr._convert(val_raw, base_curr, company, today) if p_curr != base_curr else val_raw
             assets += re_mkt
 
             dash.cash_assets = round(cash_tot, 4)
@@ -315,22 +318,6 @@ class MonetaDashboard(models.TransientModel):
             dash.net_worth = round(assets - liabilities, 4)
 
             # 3. Monthly Income & Expenses
-            tx_count = self.env['moneta.transaction'].search_count([
-                ('user_id', '=', user.id),
-                ('transaction_date', '>=', month_start),
-                ('transaction_date', '<=', month_end),
-                ('state', '!=', 'void'),
-            ])
-            if tx_count == 0:
-                latest_tx = self.env['moneta.transaction'].search([
-                    ('user_id', '=', user.id),
-                    ('state', '!=', 'void'),
-                ], order='transaction_date desc', limit=1)
-                if latest_tx and latest_tx.transaction_date:
-                    latest_d = latest_tx.transaction_date
-                    month_start = latest_d.replace(day=1)
-                    month_end = latest_d.replace(day=calendar.monthrange(latest_d.year, latest_d.month)[1])
-
             dash.month_label = month_start.strftime('%B %Y')
             txs = self.env['moneta.transaction'].search([
                 ('user_id', '=', user.id),
@@ -412,25 +399,26 @@ class MonetaDashboard(models.TransientModel):
             base_curr = dash.currency_id or company.currency_id
 
             # 1. Real Estate Equity & Valuation
-            props = self.env['moneta.property'].search([('user_id', '=', user.id)])
             total_mkt = 0.0
             total_eq = 0.0
-            for p in props:
-                p_curr = p.currency_id or base_curr
-                val_raw = float(p.current_market_value or 0.0)
-                val = p_curr._convert(val_raw, base_curr, company, today) if p_curr != base_curr else val_raw
+            if 'moneta.property' in self.env:
+                props = self.env['moneta.property'].search([('user_id', '=', user.id)])
+                for p in props:
+                    p_curr = p.currency_id or base_curr
+                    val_raw = float(p.current_market_value or 0.0)
+                    val = p_curr._convert(val_raw, base_curr, company, today) if p_curr != base_curr else val_raw
 
-                if p.mortgage_account_id:
-                    m_acc = p.mortgage_account_id
-                    m_curr = m_acc.currency_id or base_curr
-                    m_bal = abs(float(m_acc.current_balance or 0.0))
-                    debt = m_curr._convert(m_bal, base_curr, company, today) if m_curr != base_curr else m_bal
-                else:
-                    m_raw = float(p.mortgage_balance or 0.0)
-                    debt = p_curr._convert(m_raw, base_curr, company, today) if p_curr != base_curr else m_raw
+                    if p.mortgage_account_id:
+                        m_acc = p.mortgage_account_id
+                        m_curr = m_acc.currency_id or base_curr
+                        m_bal = abs(float(m_acc.current_balance or 0.0))
+                        debt = m_curr._convert(m_bal, base_curr, company, today) if m_curr != base_curr else m_bal
+                    else:
+                        m_raw = float(p.mortgage_balance or 0.0)
+                        debt = p_curr._convert(m_raw, base_curr, company, today) if p_curr != base_curr else m_raw
 
-                total_mkt += val
-                total_eq += max(val - debt, 0.0)
+                    total_mkt += val
+                    total_eq += max(val - debt, 0.0)
 
             dash.real_estate_assets = round(total_mkt, 4)
             dash.total_real_estate_equity = round(total_eq, 4)

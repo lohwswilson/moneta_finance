@@ -291,65 +291,6 @@
             <field name="interest_rate">5.75</field>
         </record>
 
-        <record id="demo_property_home" model="moneta.property">
-            <field name="name">742 Evergreen Terrace (Primary Residence)</field>
-            <field name="property_type">primary_residence</field>
-            <field name="purchase_date">2023-05-15</field>
-            <field name="purchase_price">520000.00</field>
-            <field name="current_market_value">620000.00</field>
-            <field name="mortgage_account_id" ref="acc_mortgage"/>
-            <field name="monthly_property_tax">450.00</field>
-            <field name="monthly_insurance">120.00</field>
-            <field name="monthly_hoa_maintenance">65.00</field>
-        </record>
-
-        <record id="demo_property_car" model="moneta.property">
-            <field name="name">2024 Tesla Model Y Long Range</field>
-            <field name="asset_category">vehicle</field>
-            <field name="property_type">automobile</field>
-            <field name="vehicle_make">Tesla</field>
-            <field name="vehicle_model">Model Y</field>
-            <field name="vehicle_year">2024</field>
-            <field name="vehicle_vin">5YJSA1E28HF123456</field>
-            <field name="vehicle_license_plate">8XYZ999</field>
-            <field name="vehicle_mileage">14500</field>
-            <field name="purchase_date">2024-01-10</field>
-            <field name="purchase_price">48000.00</field>
-            <field name="current_market_value">41000.00</field>
-            <field name="monthly_insurance">150.00</field>
-        </record>
-
-        <record id="demo_property_antique_clock" model="moneta.property">
-            <field name="name">19th Century French Ormolu Mantle Clock</field>
-            <field name="asset_category">antiques</field>
-            <field name="property_type">antique_furniture</field>
-            <field name="antique_era">Victorian / Napoleon III (c. 1870)</field>
-            <field name="maker_artist">Raingo Frères, Paris</field>
-            <field name="condition_grade">excellent</field>
-            <field name="authenticity_cert_number">COA-PARIS-1870-88</field>
-            <field name="storage_location">Living Room Display Mantle</field>
-            <field name="purchase_date">2022-04-12</field>
-            <field name="purchase_price">6500.00</field>
-            <field name="current_market_value">8200.00</field>
-            <field name="insured_value">9000.00</field>
-            <field name="insurance_policy_number">CHUBB-VAL-44021</field>
-        </record>
-
-        <record id="demo_property_rolex" model="moneta.property">
-            <field name="name">Rolex Submariner Date (Ref. 126610LN)</field>
-            <field name="asset_category">jewelry</field>
-            <field name="property_type">luxury_watch</field>
-            <field name="antique_era">2022</field>
-            <field name="maker_artist">Rolex Geneva</field>
-            <field name="condition_grade">near_mint</field>
-            <field name="authenticity_cert_number">W892K441</field>
-            <field name="storage_location">Home Master Safe</field>
-            <field name="purchase_date">2022-11-20</field>
-            <field name="purchase_price">10250.00</field>
-            <field name="current_market_value">13800.00</field>
-            <field name="insured_value">14000.00</field>
-        </record>
-
         <!-- Sample Financial Goals & Sinking Funds -->
         <record id="demo_goal_emergency" model="moneta.goal">
             <field name="name">6-Month Emergency Safety Net</field>

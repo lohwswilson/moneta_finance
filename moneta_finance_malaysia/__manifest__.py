@@ -6,7 +6,7 @@
     'summary': 'Malaysia Personal Finance Hub: EPF/KWSP 3-Account Hub, LHDN Borang BE Tax Relief Planner, PRS, ASNB Unit Trusts (ASB/ASM), Flexi-Home Loans (SBR), and RPGT',
     'author': 'Moneta Finance / Wilson Loh',
     'license': 'LGPL-3',
-    'depends': ['moneta_finance'],
+    'depends': ['moneta_finance', 'moneta_finance_property'],
     'pre_init_hook': '_pre_init_transfer_malaysia_data',
     'data': [
         'security/ir.model.access.csv',
