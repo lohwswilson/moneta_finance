@@ -35,10 +35,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Automated rate inference wizard generating historical `moneta.loan.rate.change` records
   - [x] Dynamic amortization curves adapting to segmented variable rate histories
 
-* **Track 2.3: Microsoft Money 75+ Investment & Portfolio Metrics**
-  - [ ] Dynamic market metrics on `moneta.security`: 52-Week High/Low, Day's Gain/Loss ($ & %), Beta, Day Volume
-  - [ ] Fundamental valuation metrics: P/E Ratio, Forward P/E, EPS, Market Capitalization, Dividend Yield %
-  - [ ] Multi-period holding return metrics: 1-Week, 1-Month, 3-Month, 1-Year, and YTD total returns
+* **Track 2.3: Microsoft Money 75+ Investment & Portfolio Metrics (Completed ✅)**
+  - [x] Dynamic market metrics on `moneta.security`: 52-Week High/Low, Day's Gain/Loss ($ & %), Beta, Day Volume
+  - [x] Fundamental valuation metrics: P/E Ratio, Forward P/E, EPS, Market Capitalization, Dividend Yield %
+  - [x] Multi-period holding return metrics: Day's Gain/Loss, Portfolio Weight %, 52W High/Low, P/E, Market Cap, Beta
 
 * **Track 2.4: Action History & 1-Click Undo / Rollback Engine**
   - [ ] Mutation audit logger for batch operations (statement imports, batch categorization, rule execution)

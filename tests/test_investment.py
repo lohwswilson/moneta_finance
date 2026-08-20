@@ -321,3 +321,53 @@ class TestInvestment(MonetaTestBase):
         h = self._holding(acc, sec)
         self.assertEqual(round(h.quantity, 4), 20.0)
         self.assertEqual(round(h.average_cost, 4), 250.0)
+
+    def test_ms_money_portfolio_metrics(self):
+        """Test MS Money holding metrics: day gain/loss, portfolio weight, 52W high/low."""
+        acc = self._brokerage()
+        sec1 = self.env['moneta.security'].create({
+            'name': 'Apple Inc',
+            'symbol': 'AAPL',
+            'day_change': 5.0,
+            'day_change_percent': 2.5,
+            'fifty_two_week_high': 230.0,
+            'fifty_two_week_low': 165.0,
+            'pe_ratio': 32.5,
+        })
+        sec2 = self.env['moneta.security'].create({
+            'name': 'Microsoft Corp',
+            'symbol': 'MSFT',
+            'day_change': -2.0,
+            'day_change_percent': -0.5,
+            'fifty_two_week_high': 450.0,
+            'fifty_two_week_low': 380.0,
+            'pe_ratio': 36.0,
+        })
+        self._inv_tx(acc, sec1, 'buy', 10.0, 200.0)
+        self._inv_tx(acc, sec2, 'buy', 10.0, 400.0)
+
+        # Record today's prices
+        today = fields.Date.context_today(self)
+        self.env['moneta.security.price'].create({'security_id': sec1.id, 'price_date': today, 'price_close': 205.0})
+        self.env['moneta.security.price'].create({'security_id': sec2.id, 'price_date': today, 'price_close': 398.0})
+
+        h1 = self._holding(acc, sec1)
+        h2 = self._holding(acc, sec2)
+
+        # Day gain/loss
+        self.assertEqual(h1.day_gain_loss, 50.0)  # 10 shs * $5.00
+        self.assertEqual(h1.day_gain_loss_percent, 2.5)
+        self.assertEqual(h2.day_gain_loss, -20.0)  # 10 shs * -$2.00
+        self.assertEqual(h2.day_gain_loss_percent, -0.5)
+
+        # Related fundamental metrics
+        self.assertEqual(h1.fifty_two_week_high, 230.0)
+        self.assertEqual(h1.pe_ratio, 32.5)
+        self.assertEqual(h2.fifty_two_week_low, 380.0)
+
+        # Portfolio weight
+        # Total portfolio: (10*205) + (10*398) = 2050 + 3980 = 6030
+        h1._compute_portfolio_weights()
+        h2._compute_portfolio_weights()
+        self.assertAlmostEqual(h1.percent_of_portfolio, (2050.0 / 6030.0) * 100.0, places=1)
+        self.assertAlmostEqual(h2.percent_of_portfolio, (3980.0 / 6030.0) * 100.0, places=1)

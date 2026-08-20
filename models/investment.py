@@ -157,6 +157,18 @@ class MonetaSecurity(models.Model):
     next_pay_date = fields.Date(string='Next Pay Date')
     is_benchmark = fields.Boolean(string='Is Benchmark Index (S&P 500 / VOO / VT)', default=False)
 
+    # MS Money Market & Valuation Metrics (Track 2.3)
+    fifty_two_week_high = fields.Monetary(string='52-Week High')
+    fifty_two_week_low = fields.Monetary(string='52-Week Low')
+    day_change = fields.Monetary(string="Day's Change ($)")
+    day_change_percent = fields.Float(string="Day's Change (%)", digits=(5, 2))
+    day_volume = fields.Float(string="Volume (Shares)", digits=(12, 0))
+    market_cap = fields.Monetary(string='Market Capitalization')
+    pe_ratio = fields.Float(string='P/E Ratio', digits=(6, 2))
+    forward_pe = fields.Float(string='Forward P/E', digits=(6, 2))
+    eps = fields.Monetary(string='EPS')
+    beta = fields.Float(string='Beta', digits=(5, 2))
+
     # Multi-asset class weighting (v1.14.0 look-through allocation)
     allocation_ids = fields.One2many('moneta.security.allocation', 'security_id', string='Asset Allocations')
     total_allocation_weight = fields.Float(
@@ -207,6 +219,12 @@ class MonetaSecurity(models.Model):
                 if curr_code in ('GBP', 'GBP'):
                     curr_code = 'GBP'
                 price = meta.get('regularMarketPrice')
+                prev_close = meta.get('chartPreviousClose') or meta.get('previousClose')
+                day_change = (price - prev_close) if (price is not None and prev_close is not None) else 0.0
+                day_change_pct = (day_change / prev_close * 100.0) if prev_close else 0.0
+                high_52 = meta.get('fiftyTwoWeekHigh') or meta.get('regularMarketDayHigh')
+                low_52 = meta.get('fiftyTwoWeekLow') or meta.get('regularMarketDayLow')
+                volume = meta.get('regularMarketVolume')
                 inst_type = (meta.get('instrumentType') or '').lower()
 
                 asset_class = 'stock'
@@ -230,6 +248,11 @@ class MonetaSecurity(models.Model):
                     'currency_id': curr.id if curr else self.env.company.currency_id.id,
                     'asset_class': asset_class,
                     'price': float(price) if price is not None else False,
+                    'day_change': float(day_change) if day_change is not None else 0.0,
+                    'day_change_percent': float(day_change_pct) if day_change_pct is not None else 0.0,
+                    'fifty_two_week_high': float(high_52) if high_52 is not None else False,
+                    'fifty_two_week_low': float(low_52) if low_52 is not None else False,
+                    'day_volume': float(volume) if volume is not None else 0.0,
                 }
         except Exception:
             return {}
@@ -249,6 +272,16 @@ class MonetaSecurity(models.Model):
                     self.currency_id = info.get('currency_id')
                 if info.get('quote_timestamp'):
                     self.quote_timestamp = info.get('quote_timestamp')
+                if info.get('day_change') is not None:
+                    self.day_change = info.get('day_change')
+                if info.get('day_change_percent') is not None:
+                    self.day_change_percent = info.get('day_change_percent')
+                if info.get('fifty_two_week_high'):
+                    self.fifty_two_week_high = info.get('fifty_two_week_high')
+                if info.get('fifty_two_week_low'):
+                    self.fifty_two_week_low = info.get('fifty_two_week_low')
+                if info.get('day_volume'):
+                    self.day_volume = info.get('day_volume')
                 price = info.get('price')
                 if price:
                     today = fields.Date.context_today(self)
@@ -824,6 +857,32 @@ class MonetaHolding(models.Model):
     dividend_yield = fields.Float(string='Dividend Yield (%)', compute='_compute_valuation_flags', digits=(5, 2))
     twr_percent = fields.Float(string='TWR (%)', compute='_compute_returns', digits=(5, 2), help='Time-Weighted Return (Modified Dietz): period return with cash-flow timing weight.')
     mwr_percent = fields.Float(string='MWR / IRR (%)', compute='_compute_returns', digits=(5, 2), help='Money-Weighted Return: annualized internal rate of return (XIRR) on dated cash flows.')
+
+    # MS Money Portfolio Metrics (Track 2.3)
+    day_gain_loss = fields.Monetary(string="Today's Gain / Loss", compute='_compute_holding_market_metrics')
+    day_gain_loss_percent = fields.Float(string="Today's Gain (%)", compute='_compute_holding_market_metrics', digits=(5, 2))
+    percent_of_portfolio = fields.Float(string='% of Portfolio', compute='_compute_portfolio_weights', digits=(5, 2))
+    fifty_two_week_high = fields.Monetary(related='security_id.fifty_two_week_high', readonly=True)
+    fifty_two_week_low = fields.Monetary(related='security_id.fifty_two_week_low', readonly=True)
+    pe_ratio = fields.Float(related='security_id.pe_ratio', readonly=True)
+    market_cap = fields.Monetary(related='security_id.market_cap', readonly=True)
+    beta = fields.Float(related='security_id.beta', readonly=True)
+
+    @api.depends('quantity', 'security_id.day_change', 'security_id.day_change_percent')
+    def _compute_holding_market_metrics(self):
+        for h in self:
+            qty = h.quantity or 0.0
+            day_chg = h.security_id.day_change or 0.0
+            h.day_gain_loss = round(qty * day_chg, 4)
+            h.day_gain_loss_percent = h.security_id.day_change_percent or 0.0
+
+    def _compute_portfolio_weights(self):
+        for h in self:
+            total_account_mv = sum(self.search([('account_id', '=', h.account_id.id)]).mapped('market_value'))
+            if total_account_mv > 0 and h.market_value:
+                h.percent_of_portfolio = round((h.market_value / total_account_mv) * 100.0, 2)
+            else:
+                h.percent_of_portfolio = 0.0
 
     # Stored related owner so the per-user record rule resolves to the account owner.
     user_id = fields.Many2one('res.users', related='account_id.user_id', store=True, index=True)

@@ -65,6 +65,18 @@
                             <field name="next_ex_dividend_date"/>
                             <field name="next_pay_date"/>
                         </group>
+                        <group name="valuation_metrics" string="Valuation &amp; Market Fundamentals (MS Money)">
+                            <field name="day_change" widget="monetary" decoration-success="day_change &gt; 0" decoration-danger="day_change &lt; 0"/>
+                            <field name="day_change_percent" decoration-success="day_change_percent &gt; 0" decoration-danger="day_change_percent &lt; 0"/>
+                            <field name="fifty_two_week_high" widget="monetary"/>
+                            <field name="fifty_two_week_low" widget="monetary"/>
+                            <field name="day_volume"/>
+                            <field name="market_cap" widget="monetary"/>
+                            <field name="pe_ratio"/>
+                            <field name="forward_pe"/>
+                            <field name="eps" widget="monetary"/>
+                            <field name="beta"/>
+                        </group>
                     </group>
                     <group name="links" string="Links &amp; Online References">
                         <group>
@@ -344,9 +356,17 @@
                 <field name="market_value" string="Market Value" widget="monetary" sum="Total Market Value" class="fw-bold"/>
                 <field name="unrealized_gain" string="Gain / Loss ($)" widget="monetary" sum="Total Gain/Loss" decoration-success="unrealized_gain &gt; 0" decoration-danger="unrealized_gain &lt; 0"/>
                 <field name="unrealized_gain_percent" string="Gain (%)" decoration-success="unrealized_gain_percent &gt; 0" decoration-danger="unrealized_gain_percent &lt; 0"/>
+                <field name="day_gain_loss" string="Day Gain ($)" widget="monetary" sum="Total Day Gain" decoration-success="day_gain_loss &gt; 0" decoration-danger="day_gain_loss &lt; 0" optional="show"/>
+                <field name="day_gain_loss_percent" string="Day Gain (%)" decoration-success="day_gain_loss_percent &gt; 0" decoration-danger="day_gain_loss_percent &lt; 0" optional="show"/>
+                <field name="percent_of_portfolio" string="% Portfolio" widget="percentage" optional="show"/>
                 <field name="annual_dividend_income" string="Est. Dividends" widget="monetary" sum="Total Dividends" optional="show"/>
                 <field name="dividend_yield" string="Yield (%)" widget="percentage" optional="show"/>
                 <field name="twr_percent" string="TWR (%)" widget="percentage" optional="show"/>
+                <field name="fifty_two_week_high" string="52W High" widget="monetary" optional="hide"/>
+                <field name="fifty_two_week_low" string="52W Low" widget="monetary" optional="hide"/>
+                <field name="pe_ratio" string="P/E" optional="hide"/>
+                <field name="market_cap" string="Market Cap" widget="monetary" optional="hide"/>
+                <field name="beta" string="Beta" optional="hide"/>
                 <field name="price_known" widget="boolean" optional="hide"/>
                 <field name="basis_known" widget="boolean" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
