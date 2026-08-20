@@ -25,3 +25,14 @@ Simulate repayment strategies and analyze interest savings:
 * **Monthly Amortization Schedule**: Calculates monthly Principal vs. Interest breakdown using standard compound interest formulas.
 * **Prepayment Scenarios**: Test recurring or one-time lump-sum extra principal payments.
 * **Savings Metrics**: Real-time display of total interest saved ($) and loan payoff acceleration (months shaved off).
+
+---
+
+## 3. Direct Loan & Mortgage Account Integration
+
+Loan and mortgage accounts (`moneta.account`) directly surface amortization intelligence:
+* **Account Card Metrics**: The form header and kanban cards display:
+  - **Monthly Payment (P&I)**: Required base monthly debt service.
+  - **Estimated Payoff Date**: Projected mortgage freedom date accounting for extra principal prepayments.
+  - **Remaining Total Interest**: Lifetime interest obligation.
+* **1-Click Amortization Shortcut**: Click **Amortization** directly on any loan card or stat button to inspect or create the linked amortization scenario.

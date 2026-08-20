@@ -51,3 +51,26 @@ class TestLoanAndSimulations(TransactionCase):
         self.assertGreaterEqual(sim.success_probability_pct, 0.0)
         self.assertLessEqual(sim.success_probability_pct, 100.0)
         self.assertEqual(len(sim.path_ids), 36) # 0 to 35 years
+
+    def test_account_loan_scenario_metrics(self):
+        """Test that moneta.account properly exposes linked loan scenario metrics."""
+        account = self.env['moneta.account'].create({
+            'name': 'Primary Mortgage',
+            'account_type': 'mortgage',
+            'opening_balance': -250000.0,
+            'current_balance': -250000.0,
+            'interest_rate': 5.5,
+        })
+        scenario = self.env['moneta.loan.scenario'].create({
+            'name': 'Primary Mortgage Scenario',
+            'account_id': account.id,
+            'principal_amount': 250000.0,
+            'annual_interest_rate': 5.5,
+            'loan_term_years': 30,
+            'start_date': date(2026, 1, 1),
+        })
+        account._compute_loan_metrics()
+        self.assertEqual(account.loan_scenario_id, scenario)
+        self.assertAlmostEqual(account.loan_monthly_payment, scenario.monthly_payment, places=2)
+        self.assertTrue(account.loan_payoff_date)
+        self.assertGreater(account.loan_remaining_interest, 0.0)

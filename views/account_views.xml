@@ -19,6 +19,9 @@
                         <button name="action_view_trades" type="object" class="oe_stat_button" icon="fa-exchange" invisible="account_type not in ('brokerage', 'retirement', 'crypto')">
                             <field name="trade_count" widget="statinfo" string="Trades"/>
                         </button>
+                        <button name="action_view_loan_scenario" type="object" class="oe_stat_button" icon="fa-calculator" invisible="account_type not in ('loan', 'mortgage', 'loc')">
+                            <field name="loan_monthly_payment" widget="statinfo" string="Monthly P&amp;I"/>
+                        </button>
                         <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-money">
                             <field name="current_balance" widget="statinfo" string="Cash Balance"/>
                         </button>
@@ -53,6 +56,32 @@
                                 <h4 class="fw-bold mb-0" decoration-success="total_portfolio_gain &gt; 0" decoration-danger="total_portfolio_gain &lt; 0">
                                     <field name="total_portfolio_gain" widget="monetary"/> (<field name="total_portfolio_gain_percent"/>%)
                                 </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loan & Mortgage Amortization Hero Summary Card (v1.15.0) -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #fff9f5; border-left: 4px solid #fd7e14 !important;" invisible="account_type not in ('loan', 'mortgage', 'loc')">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="fw-bold text-dark mb-0"><i class="fa fa-home text-warning me-2"/>Loan &amp; Mortgage Amortization Summary</h6>
+                            <button name="action_view_loan_scenario" type="object" string="📊 View Amortization Scenario" class="btn btn-sm btn-outline-warning"/>
+                        </div>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Outstanding Debt</span>
+                                <h4 class="fw-bold mb-0 text-danger"><field name="current_balance" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Monthly Payment (P&amp;I)</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="loan_monthly_payment" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Estimated Payoff Date</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="loan_payoff_date"/></h4>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Remaining Total Interest</span>
+                                <h4 class="fw-bold mb-0 text-warning"><field name="loan_remaining_interest" widget="monetary"/></h4>
                             </div>
                         </div>
                     </div>
@@ -289,8 +318,9 @@
                                         <h4 class="mb-0 fw-bold text-danger fs-5"><field name="current_balance" widget="monetary"/></h4>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-1 text-muted" style="font-size: 0.75rem;">
-                                        <span>Liability Status:</span>
-                                        <span class="badge bg-danger-subtle text-danger fw-semibold">Active Loan</span>
+                                        <span t-if="record.loan_monthly_payment.raw_value">P&amp;I: <strong class="text-dark"><field name="loan_monthly_payment" widget="monetary"/></strong></span>
+                                        <span t-else="" class="badge bg-danger-subtle text-danger fw-semibold">Active Loan</span>
+                                        <span t-if="record.loan_payoff_date.raw_value" class="badge rounded-pill bg-light text-dark border">Payoff: <field name="loan_payoff_date"/></span>
                                     </div>
                                 </t>
                                 <!-- Cash & Bank Accounts (GREEN) -->
@@ -321,6 +351,14 @@
                                         <i class="fa fa-credit-card me-1"/>Transactions
                                     </button>
                                     <span class="text-muted" style="font-size: 0.75rem;"><field name="next_payment_due_date" widget="date"/></span>
+                                </t>
+                                <t t-elif="is_loan">
+                                    <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold" style="font-size: 0.78rem;">
+                                        <i class="fa fa-list me-1"/>Transactions
+                                    </button>
+                                    <button name="action_view_loan_scenario" type="object" class="btn btn-sm btn-link text-decoration-none py-0 px-1 text-warning fw-semibold" style="font-size: 0.78rem;">
+                                        <i class="fa fa-calculator me-1"/>Amortization
+                                    </button>
                                 </t>
                                 <t t-else="">
                                     <button name="action_view_transactions" type="object" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold" style="font-size: 0.78rem;">

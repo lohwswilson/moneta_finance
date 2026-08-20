@@ -19,15 +19,24 @@ Accounts are visually categorized with color accents and metrics:
 
 When opening any account, the **Register & Transactions** tab displays an interactive ledger:
 
-* **Transaction Ordering**: Sorted chronologically (`transaction_date desc, id desc`).
-* **Running Balance Calculation**: Automatically computes the exact point-in-time account balance across all historical rows.
+* **Chronological Ordering & Tiebreakers**: Sorted chronologically with credit-before-debit tiebreaking (`transaction_date desc, amount asc, id desc`). On identical dates and import timestamps, deposits/credits are listed before debits/payments so running balances never dip negative on same-day funded purchases.
+* **Running Balance Calculation**: Automatically computes the exact point-in-time account balance across all historical rows using high-performance SQL window partitions.
 * **1-Click `Clr` Toggle**:
   Clicking the `Clr` button on any row toggles its reconciliation status:
   $$\text{Unreconciled (Empty)} \longrightarrow \text{Cleared (🔵 Clr)} \longrightarrow \text{Reconciled (🟢 R)}$$
 
 ---
 
-## 3. Split Transactions
+## 3. Account Transfers & Reconciliation Independence
+
+When transferring funds between two tracked accounts:
+* **Automatic Counterpart Leg**: Creating a transfer in Checking automatically creates the mirrored counterpart leg in Savings (with negated sign and reverse link).
+* **Independent Statement Reconciliation**: Reconciling the transfer leg in Account A (when Account A's statement arrives) leaves Account B's leg unreconciled until Account B's separate statement is verified.
+* **Pair-Wide VOID**: Marking a transfer as `VOID` or un-voiding atomically updates both legs to ensure ledger balance parity.
+
+---
+
+## 4. Split Transactions
 
 For transactions with multiple spending categories (e.g. Costco / Supermarket receipts):
 
@@ -37,7 +46,7 @@ For transactions with multiple spending categories (e.g. Costco / Supermarket re
 
 ---
 
-## 4. Payee Intelligence (Auto-Categorization)
+## 5. Payee Intelligence (Auto-Categorization)
 
 Moneta memorizes past payees and transaction descriptions:
 * Typing a payee (e.g. *Starbucks*) automatically populates the default expense category (*Food & Dining $\rightarrow$ Coffee*), default account, and tags.
@@ -45,7 +54,7 @@ Moneta memorizes past payees and transaction descriptions:
 
 ---
 
-## 5. Bank Statement Reconciliation Wizard
+## 6. Bank Statement Reconciliation Wizard
 
 To reconcile your monthly bank or credit card statement:
 

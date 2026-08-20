@@ -275,3 +275,49 @@ class TestInvestment(MonetaTestBase):
         for v in vals:
             self.assertAlmostEqual(round(v['twr_percent'], 2), expected[v['id']], places=1)
             self.assertAlmostEqual(round(v['mwr_percent'], 2), expected[v['id']], places=1)
+
+    def test_investment_transaction_status_cycle(self):
+        """1-click status toggle cycles: unreconciled -> cleared -> reconciled -> unreconciled."""
+        acc = self._brokerage()
+        sec = self._security('NVDA')
+        tx = self._inv_tx(acc, sec, 'buy', 10.0, 100.0)
+        self.assertEqual(tx.state, 'unreconciled')
+        self.assertFalse(tx.reconciled_date)
+
+        # 1. Unreconciled -> Cleared
+        tx.action_toggle_cleared()
+        self.assertEqual(tx.state, 'cleared')
+
+        # 2. Cleared -> Reconciled (stamps reconciled_date)
+        tx.action_toggle_cleared()
+        self.assertEqual(tx.state, 'reconciled')
+        self.assertTrue(tx.reconciled_date)
+
+        # 3. Reconciled -> Unreconciled (clears reconciled_date)
+        tx.action_toggle_cleared()
+        self.assertEqual(tx.state, 'unreconciled')
+        self.assertFalse(tx.reconciled_date)
+
+    def test_investment_transaction_void_excludes_from_holdings(self):
+        """Voiding an investment transaction excludes it from held quantity and basis."""
+        acc = self._brokerage()
+        sec = self._security('TSLA')
+        tx1 = self._inv_tx(acc, sec, 'buy', 10.0, 200.0)
+        tx2 = self._inv_tx(acc, sec, 'buy', 10.0, 300.0)
+        h = self._holding(acc, sec)
+        self.assertEqual(round(h.quantity, 4), 20.0)
+        self.assertEqual(round(h.average_cost, 4), 250.0)
+
+        # Void tx2
+        tx2.action_void()
+        self.assertEqual(tx2.state, 'void')
+        h = self._holding(acc, sec)
+        self.assertEqual(round(h.quantity, 4), 10.0)
+        self.assertEqual(round(h.average_cost, 4), 200.0)
+
+        # Unvoid tx2
+        tx2.action_unvoid()
+        self.assertEqual(tx2.state, 'unreconciled')
+        h = self._holding(acc, sec)
+        self.assertEqual(round(h.quantity, 4), 20.0)
+        self.assertEqual(round(h.average_cost, 4), 250.0)

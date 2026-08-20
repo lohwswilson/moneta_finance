@@ -8,10 +8,14 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ### Phase 1: Core Wealth & Portfolio Engine (Completed ✅)
 - [x] Multi-account management (Cash, Brokerage, Credit Cards, Loans)
-- [x] Quicken-style Checkbook registers with real-time running balances
+- [x] Quicken-style Checkbook registers with real-time running balances and chronological tiebreakers
 - [x] 1-Click `Clr` status toggles & interactive bank statement reconciliation
+- [x] Transfer reconciliation independence with atomic pair-wide VOID transitions
 - [x] Live Yahoo Finance stock quote engine with hourly cron & 1-click refresh
+- [x] Investment trade reconciliation status (`unreconciled` / `cleared` / `reconciled` / `void`)
 - [x] Multi-lot average cost basis accounting & capital gains analytics
+- [x] Expanded recurring transaction cadences (Triannual / Biennial)
+- [x] Direct loan & mortgage summary metrics on account views and kanban cards
 - [x] Sure-style Executive Wealth Dashboard with Light Sky Blue theme
 - [x] FIRE 4% rule milestone & 1,000-path Monte Carlo wealth simulator
 - [x] 8-Part comprehensive GitHub documentation library

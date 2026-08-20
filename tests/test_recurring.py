@@ -97,3 +97,17 @@ class TestRecurring(MonetaTestBase):
         txs = self.env['moneta.transaction'].search([('account_id', '=', acc.id)])
         self.assertEqual(len(txs), 1)
         self.assertGreater(sched.next_date, today)
+
+    def test_calculate_next_due_date_triannual_and_biennial(self):
+        # Triannual (every 4 months)
+        self.assertEqual(
+            self.env['moneta.recurring.transaction']._calculate_next_due_date(
+                date(2026, 1, 15), 'every4months'),
+            date(2026, 5, 15),
+        )
+        # Biennial (every 2 years)
+        self.assertEqual(
+            self.env['moneta.recurring.transaction']._calculate_next_due_date(
+                date(2026, 3, 10), 'every2years'),
+            date(2028, 3, 10),
+        )

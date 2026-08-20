@@ -541,6 +541,14 @@ class MonetaInvestmentTransaction(models.Model):
     # rebuild). buy/sell cash impact is deferred from the MVP.
     realized_gain = fields.Monetary(string='Realized Gain / Loss')
 
+    state = fields.Selection([
+        ('unreconciled', 'Unreconciled'),
+        ('cleared', 'Cleared'),
+        ('reconciled', 'Reconciled'),
+        ('void', 'Void'),
+    ], string='Status', default='unreconciled', required=True, index=True)
+    reconciled_date = fields.Date(string='Reconciled Date')
+
     memo = fields.Char(string='Memo')
     currency_id = fields.Many2one('res.currency', related='account_id.currency_id', store=True, readonly=True)
     # Cash income transaction created for dividends/interest; removed together
@@ -559,9 +567,12 @@ class MonetaInvestmentTransaction(models.Model):
          'A split ratio must be positive.'),
     ]
 
-    @api.depends('action', 'quantity', 'price', 'commission')
+    @api.depends('action', 'quantity', 'price', 'commission', 'state')
     def _compute_total_amount(self):
         for tx in self:
+            if tx.state == 'void':
+                tx.total_amount = 0.0
+                continue
             if tx.action == 'split':
                 tx.total_amount = 0.0
                 continue
@@ -579,6 +590,43 @@ class MonetaInvestmentTransaction(models.Model):
             else:  # sell
                 tx.total_amount = round(qty * price - commission, 4)
 
+    def action_toggle_cleared(self):
+        """Quicken-style 1-click status cycle for investment transactions:
+        unreconciled -> cleared -> reconciled -> unreconciled."""
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.state == 'unreconciled':
+                rec.write({'state': 'cleared'})
+            elif rec.state == 'cleared':
+                rec.write({'state': 'reconciled', 'reconciled_date': rec.reconciled_date or today})
+            elif rec.state == 'reconciled':
+                rec.write({'state': 'unreconciled', 'reconciled_date': False})
+
+    def action_clear(self):
+        self.write({'state': 'cleared'})
+
+    def action_reconcile(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            rec.write({'state': 'reconciled', 'reconciled_date': rec.reconciled_date or today})
+
+    def action_unreconcile(self):
+        self.write({'state': 'unreconciled', 'reconciled_date': False})
+
+    def action_void(self):
+        """Mark as void: removes from holdings, returns, and net worth."""
+        for rec in self:
+            rec.write({'state': 'void', 'reconciled_date': False})
+            if rec.linked_transaction_id and rec.linked_transaction_id.state != 'void':
+                rec.linked_transaction_id.write({'state': 'void'})
+
+    def action_unvoid(self):
+        """Un-void transaction."""
+        for rec in self:
+            rec.write({'state': 'unreconciled'})
+            if rec.linked_transaction_id and rec.linked_transaction_id.state == 'void':
+                rec.linked_transaction_id.write({'state': 'unreconciled'})
+
     # ------------------------------------------------------------------
     # Validation (rejection before write)
     # ------------------------------------------------------------------
@@ -590,6 +638,7 @@ class MonetaInvestmentTransaction(models.Model):
         txs = self.search([
             ('account_id', '=', account.id),
             ('security_id', '=', security_id),
+            ('state', '!=', 'void'),
         ])
         for tx in txs:
             if tx.id in exclude_ids:
@@ -882,6 +931,7 @@ class MonetaHolding(models.Model):
         txs = self.env['moneta.investment.transaction'].search([
             ('account_id', '=', account.id),
             ('security_id', '=', security.id),
+            ('state', '!=', 'void'),
         ], order='trade_date, id')
         holding = self.search([
             ('account_id', '=', account.id),
@@ -986,7 +1036,7 @@ class MonetaHolding(models.Model):
         self.env.cr.execute(
             "SELECT action, trade_date, quantity, price, commission "
             "FROM moneta_investment_transaction "
-            "WHERE account_id = %s AND security_id = %s "
+            "WHERE account_id = %s AND security_id = %s AND state <> 'void' "
             "ORDER BY trade_date, id",
             (acc_id, sec_id),
         )

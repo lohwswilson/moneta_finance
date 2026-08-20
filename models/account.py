@@ -134,6 +134,52 @@ class MonetaAccount(models.Model):
             'context': {'default_account_id': self.id},
         }
 
+    # Loan & Mortgage Scenario Integration (v1.15.0)
+    loan_scenario_ids = fields.One2many('moneta.loan.scenario', 'account_id', string='Loan Scenarios')
+    loan_scenario_id = fields.Many2one('moneta.loan.scenario', string='Active Loan Scenario', compute='_compute_loan_metrics')
+    loan_monthly_payment = fields.Monetary(string='Monthly Payment (P&I)', compute='_compute_loan_metrics')
+    loan_payoff_date = fields.Date(string='Estimated Payoff Date', compute='_compute_loan_metrics')
+    loan_remaining_interest = fields.Monetary(string='Remaining Total Interest', compute='_compute_loan_metrics')
+
+    def _compute_loan_metrics(self):
+        for acc in self:
+            scenario = self.env['moneta.loan.scenario'].search([('account_id', '=', acc.id)], limit=1)
+            if scenario:
+                acc.loan_scenario_id = scenario.id
+                acc.loan_monthly_payment = scenario.monthly_payment or 0.0
+                acc.loan_payoff_date = scenario.actual_payoff_date or scenario.original_payoff_date
+                acc.loan_remaining_interest = scenario.total_interest_actual or scenario.total_interest_original or 0.0
+            else:
+                acc.loan_scenario_id = False
+                acc.loan_monthly_payment = 0.0
+                acc.loan_payoff_date = False
+                acc.loan_remaining_interest = 0.0
+
+    def action_view_loan_scenario(self):
+        self.ensure_one()
+        scenario = self.env['moneta.loan.scenario'].search([('account_id', '=', self.id)], limit=1)
+        if scenario:
+            return {
+                'name': f'Loan Scenario - {self.name}',
+                'type': 'ir.actions.act_window',
+                'res_model': 'moneta.loan.scenario',
+                'res_id': scenario.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        return {
+            'name': f'New Loan Scenario - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'moneta.loan.scenario',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_name': f'{self.name} Amortization',
+                'default_account_id': self.id,
+                'default_principal_amount': abs(float(self.current_balance or 0.0)) or 100000.0,
+                'default_annual_interest_rate': self.interest_rate or 5.0,
+            },
+        }
 
     # Joint Accounts & Multi-User Sharing (v1.14.0)
     share_ids = fields.One2many('moneta.account.share', 'account_id', string='Shared Access Grants')

@@ -222,3 +222,58 @@ class TestTransfer(MonetaTestBase):
         self.assertEqual(self._current_balance(acc_eur), 1920.50)
         # USD leg remains 1000.00
         self.assertEqual(self._current_balance(acc_usd), 4000.0)
+
+    def test_transfer_reconciliation_status_independent(self):
+        """Reconciliation status (cleared/reconciled) is independent per leg,
+        because statements for each account arrive and reconcile at different times."""
+        acc1 = self._make_account(name='Checking', opening_balance=1000.0)
+        acc2 = self._make_account(name='Savings', opening_balance=500.0)
+        acc1._sync_transfer_category()
+        acc2._sync_transfer_category()
+        cat2 = self.env['moneta.category'].search([('transfer_account_id', '=', acc2.id)], limit=1)
+
+        tx = self.env['moneta.transaction'].create({
+            'account_id': acc1.id,
+            'amount': -150.0,
+            'category_id': cat2.id,
+            'state': 'unreconciled',
+        })
+        cp = tx.linked_transaction_id
+        self.assertEqual(tx.state, 'unreconciled')
+        self.assertEqual(cp.state, 'unreconciled')
+
+        # Reconcile leg 1 with bank statement
+        tx.action_reconcile()
+        self.assertEqual(tx.state, 'reconciled')
+        # Leg 2 remains unreconciled (waiting for savings statement)
+        self.assertEqual(cp.state, 'unreconciled')
+
+    def test_transfer_void_is_pair_wide(self):
+        """VOID / un-void transitions affect both legs to preserve balance parity."""
+        acc1 = self._make_account(name='Checking', opening_balance=1000.0)
+        acc2 = self._make_account(name='Savings', opening_balance=500.0)
+        acc1._sync_transfer_category()
+        acc2._sync_transfer_category()
+        cat2 = self.env['moneta.category'].search([('transfer_account_id', '=', acc2.id)], limit=1)
+
+        tx = self.env['moneta.transaction'].create({
+            'account_id': acc1.id,
+            'amount': -200.0,
+            'category_id': cat2.id,
+            'state': 'cleared',
+        })
+        cp = tx.linked_transaction_id
+
+        # Void leg 1 -> both legs become void
+        tx.action_void()
+        self.assertEqual(tx.state, 'void')
+        self.assertEqual(cp.state, 'void')
+        self.assertEqual(self._current_balance(acc1), 1000.0)
+        self.assertEqual(self._current_balance(acc2), 500.0)
+
+        # Un-void leg 1 -> both legs un-void
+        tx.action_unvoid()
+        self.assertEqual(tx.state, 'unreconciled')
+        self.assertEqual(cp.state, 'unreconciled')
+        self.assertEqual(self._current_balance(acc1), 800.0)
+        self.assertEqual(self._current_balance(acc2), 700.0)

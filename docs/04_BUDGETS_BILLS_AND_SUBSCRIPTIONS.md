@@ -20,9 +20,14 @@ Unlike rigid calendar-month budgeting tools, Moneta accommodates real-world sala
 
 Track recurring utilities, rent, credit card dues, and insurance premiums:
 
+* **Flexible Recurrence Frequencies**:
+  - Once, Daily, Weekly, Biweekly, Every 4 Weeks, Semimonthly
+  - Monthly, Every 2 Months (Bimonthly), Quarterly, Every 4 Months (Triannual)
+  - Semiannual (Half-Yearly), Yearly (Annual), Every 2 Years (Biennial)
 * **14-Day Outlook Horizon**: Displays upcoming obligations on the dashboard.
 * **Badges**: Overdue (🔴), Due Today (🟡), Due in 7 Days (🔵).
-* **1-Click Execution**: Click **Post Bill** to generate the actual transaction in the checkbook ledger and advance the next recurrence date.
+* **Multi-Currency Scheduling**: Enter bills in foreign currencies with custom conversion rates.
+* **1-Click Execution & Auto-Post**: Click **Post Bill** to generate the actual transaction in the checkbook ledger and advance the next recurrence date, or enable **Auto-post** for hands-free daily cron execution.
 
 ---
 

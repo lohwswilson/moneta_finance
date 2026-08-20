@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Moneta Personal Finance',
-    'version': '18.0.7.1.0',
+    'version': '18.0.7.2.0',
     'category': 'Accounting/Finance',
     'summary': 'Personal finance & wealth OS: Quicken-style registers, investments, budgets, loans, Monte Carlo, real estate, vehicles, antiques & FIRE analytics.',
     'description': """
@@ -12,8 +12,9 @@ A premier personal wealth management, budgeting, and investment operating system
 Key Features & Capabilities:
 ----------------------------
 * **Banking & Transaction Registers**:
-  - Real-time cumulative running balances in register list views.
+  - Real-time cumulative running balances with chronological credit-before-debit tiebreaker ordering.
   - 1-Click `Clr` status toggle directly on rows (Unreconciled / Cleared / Reconciled).
+  - Per-account transfer reconciliation independence with atomic pair-wide VOID transitions.
   - Payee QuickFill (auto-fills category, amount, memo, and tags from history).
   - Multi-line split transactions with mathematical sum verification.
   - Interactive Bank Statement Reconciliation Wizard with live $0.00 difference target.
@@ -22,6 +23,7 @@ Key Features & Capabilities:
 
 * **Investments & Wealthfolio Portfolio Analytics**:
   - Ticker master, daily stock quotes, and multi-lot portfolio holdings with average cost basis.
+  - Investment transaction reconciliation status (Unreconciled / Cleared / Reconciled / Void) with 1-click Clr toggle.
   - Time-Weighted Return (TWR %) and Money-Weighted Return (MWR / IRR %) performance metrics.
   - Dividend calendar & yield forecaster with annual estimated dividend income.
   - Target Asset Allocation matrix & 1-Click Portfolio Rebalancer wizard.
@@ -33,6 +35,7 @@ Key Features & Capabilities:
   - Real estate properties with mortgage debt linkage, net home equity ($), and LTV %.
   - Vehicle & automobile tracking: Make, Model, Year, VIN, Mileage, and depreciation.
   - Antiques, fine art, luxury watches, jewelry, and collectibles with condition grades, provenance, and insurance policy tracking.
+  - Direct loan & mortgage summary metrics on account views (monthly payment, payoff date, remaining interest) and 1-click amortization scenarios.
   - Historical appraisal and valuation logs over time.
 
 * **Goals, Budgets & Cashflow**:

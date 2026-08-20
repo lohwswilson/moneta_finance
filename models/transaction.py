@@ -13,7 +13,7 @@ _PROPAGATE_FIELDS = _BALANCE_FIELDS | _TRANSFER_FIELDS
 class MonetaTransaction(models.Model):
     _name = 'moneta.transaction'
     _description = 'Moneta Financial Transaction'
-    _order = 'transaction_date desc, id desc'
+    _order = 'transaction_date desc, amount asc, id desc'
 
     transaction_date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
     account_id = fields.Many2one('moneta.account', string='Account', required=True, ondelete='cascade')
@@ -156,7 +156,7 @@ class MonetaTransaction(models.Model):
             acc_id = account._origin.id if hasattr(account, '_origin') and account._origin.id else account.id
             if not acc_id or not isinstance(acc_id, int):
                 running = float(account.opening_balance or 0.0)
-                for tx in sorted(account_txs, key=lambda t: (t.transaction_date or fields.Date.context_today(self), getattr(t._origin, 'id', 0) or 0)):
+                for tx in sorted(account_txs, key=lambda t: (t.transaction_date or fields.Date.context_today(self), -(t.amount or 0.0), getattr(t._origin, 'id', 0) or 0)):
                     if tx.state != 'void':
                         running += (tx.amount or 0.0)
                     tx.running_balance = running
@@ -165,7 +165,7 @@ class MonetaTransaction(models.Model):
             self.env.cr.execute("""
                 SELECT id, 
                        (COALESCE(%s, 0) + SUM(CASE WHEN state <> 'void' THEN amount ELSE 0 END) 
-                        OVER (PARTITION BY account_id ORDER BY transaction_date ASC, id ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW))::float
+                        OVER (PARTITION BY account_id ORDER BY transaction_date ASC, amount DESC, id ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW))::float
                 FROM moneta_transaction
                 WHERE account_id = %s
             """, (float(account.opening_balance or 0.0), acc_id))
@@ -365,7 +365,12 @@ class MonetaTransaction(models.Model):
         if 'transaction_date' in vals:
             cp_vals['transaction_date'] = self.transaction_date
         if 'state' in vals:
-            cp_vals['state'] = self.state
+            if self.state == 'void' and counterpart.state != 'void':
+                cp_vals['state'] = 'void'
+            elif self.state != 'void' and counterpart.state == 'void':
+                cp_vals['state'] = 'unreconciled'
+            # Non-VOID status changes (unreconciled / cleared / reconciled) remain per-account
+            # because bank statements for each account arrive and reconcile independently.
         if 'memo' in vals:
             cp_vals['memo'] = self.memo
         if 'payee_id' in vals:

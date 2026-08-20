@@ -14,8 +14,10 @@ _FREQUENCY_SELECTION = [
     ('monthly', 'Monthly'),
     ('every2months', 'Every 2 Months'),
     ('quarterly', 'Quarterly'),
+    ('every4months', 'Every 4 Months'),
     ('semiannual', 'Semiannual'),
     ('yearly', 'Yearly'),
+    ('every2years', 'Every 2 Years'),
 ]
 
 
@@ -143,10 +145,14 @@ class MonetaRecurringTransaction(models.Model):
             return self._add_months(current, 2)
         if frequency == 'quarterly':
             return self._add_months(current, 3)
+        if frequency == 'every4months':
+            return self._add_months(current, 4)
         if frequency == 'semiannual':
             return self._add_months(current, 6)
         if frequency == 'yearly':
             return self._add_months(current, 12)
+        if frequency == 'every2years':
+            return self._add_months(current, 24)
         return False
 
     # ------------------------------------------------------------------

@@ -38,10 +38,20 @@ $$\text{Gain \%} = \left( \frac{\text{Market Value} - \text{Total Cost Basis}}{\
 
 ---
 
-## 4. Investment Transactions (Trades & Dividends)
+## 4. Investment Transactions (Trades & Corporate Actions)
 
-Moneta records four primary trade types:
-1. **Buy**: Increases quantity and adjusts total cost basis.
-2. **Sell**: Decreases quantity and locks realized capital gains.
-3. **Dividend (Cash)**: Credits the linked brokerage cash balance.
-4. **Reinvest Dividend (DRIP)**: Adds shares at the reinvestment price without cash withdrawal.
+Moneta records five primary transaction types:
+1. **Buy**: Increases quantity and adjusts total cost basis with broker commission included.
+2. **Sell**: Decreases quantity and records realized capital gains against the running average cost.
+3. **Dividend (Cash)**: Credits the linked brokerage cash balance and records investment income.
+4. **Interest**: Logs fixed-income interest payments into the cash register.
+5. **Split (Corporate Action)**: Adjusts share quantities by the split ratio (e.g. 2:1, 3:1, 10:1) and proportionally scales down average unit cost with zero basis distortion.
+
+---
+
+## 5. Trade Statement Reconciliation & `Clr` Status
+
+Just like cash registers, investment transactions support full reconciliation tracking:
+* **Status Flags**: `Unreconciled` (⚪), `Cleared` (🔵 Clr), `Reconciled` (🟢 R), and `Void` (🚫 Void).
+* **1-Click `Clr` Toggle**: Click the `Clr` button on any trade row to cycle status as you verify monthly brokerage trade confirmations.
+* **Void Isolation**: Voiding a trade immediately excludes it from portfolio quantity, cost basis, TWR/MWR calculations, and net worth history without deleting the audit trail.

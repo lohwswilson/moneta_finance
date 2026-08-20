@@ -186,10 +186,15 @@
                         </group>
                     </group>
 
-                    <group name="notes_group" string="Memo &amp; Accounting">
-                        <field name="memo" placeholder="Trade rationale, limit order notes, dividend distribution info..."/>
-                        <field name="linked_transaction_id" readonly="1"/>
-                    </group>
+                        <group name="notes_group" string="Memo &amp; Accounting">
+                            <field name="memo" placeholder="Trade rationale, limit order notes, dividend distribution info..."/>
+                            <field name="state" widget="badge"
+                                   decoration-info="state == 'cleared'"
+                                   decoration-success="state == 'reconciled'"
+                                   decoration-muted="state == 'void'"/>
+                            <field name="reconciled_date" invisible="state != 'reconciled'"/>
+                            <field name="linked_transaction_id" readonly="1"/>
+                        </group>
                 </sheet>
             </form>
         </field>
@@ -200,7 +205,7 @@
         <field name="name">moneta.investment.transaction.list</field>
         <field name="model">moneta.investment.transaction</field>
         <field name="arch" type="xml">
-            <list string="Investment Trades" default_order="trade_date desc, id desc">
+            <list string="Investment Trades" default_order="trade_date desc, id desc" decoration-muted="state == 'void'">
                 <field name="trade_date" string="Trade Date" class="fw-semibold"/>
                 <field name="action" string="Action" widget="badge" 
                        decoration-success="action == 'buy'" 
@@ -209,6 +214,15 @@
                        decoration-muted="action == 'split'"/>
                 <field name="security_id" string="Security / Ticker" class="fw-bold"/>
                 <field name="account_id" string="Brokerage Account"/>
+                <button name="action_toggle_cleared" type="object" string="Clr" 
+                        title="Click to toggle: Unreconciled -> Cleared -> Reconciled"
+                        icon="fa-check-circle"
+                        invisible="state == 'void'"
+                        class="btn-link"/>
+                <field name="state" string="Status" widget="badge" 
+                       decoration-info="state == 'cleared'" 
+                       decoration-success="state == 'reconciled'" 
+                       decoration-muted="state == 'void'"/>
                 <field name="quantity" string="Shares / Units" options="{'precision': 8}"/>
                 <field name="price" string="Execution Price" widget="monetary"/>
                 <field name="commission" string="Broker Fee" widget="monetary" optional="show"/>
@@ -233,10 +247,15 @@
                 <filter name="filter_buys" string="🟢 Buy Orders" domain="[('action', '=', 'buy')]"/>
                 <filter name="filter_sells" string="🟠 Sell Orders" domain="[('action', '=', 'sell')]"/>
                 <filter name="filter_dividends" string="🟣 Dividends" domain="[('action', '=', 'dividend')]"/>
+                <separator/>
+                <filter name="filter_unreconciled" string="Unreconciled" domain="[('state', '=', 'unreconciled')]"/>
+                <filter name="filter_cleared" string="Cleared" domain="[('state', '=', 'cleared')]"/>
+                <filter name="filter_reconciled" string="Reconciled" domain="[('state', '=', 'reconciled')]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_security" string="Security / Ticker" context="{'group_by': 'security_id'}"/>
                     <filter name="group_by_account" string="Brokerage Account" context="{'group_by': 'account_id'}"/>
                     <filter name="group_by_action" string="Action Type" context="{'group_by': 'action'}"/>
+                    <filter name="group_by_status" string="Reconciliation Status" context="{'group_by': 'state'}"/>
                     <filter name="group_by_date" string="Trade Month" context="{'group_by': 'trade_date:month'}"/>
                 </group>
             </search>

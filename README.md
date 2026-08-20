@@ -23,9 +23,9 @@
 
 * 💎 **Wealth Command Center**: Real-time Net Worth, multi-currency conversion, cash flow savings rate, and 4% FIRE milestone tracking.
 * 🎴 **Color-Coded Accounts & Cards**: Visual 🟢 Emerald Green for Banks, 🔵 Royal Blue for Brokerage, 🟣 Royal Purple for Credit Cards, and 🔴 Crimson Red for Loans.
-* 📈 **Quicken Premier Stock Portfolio**: Live Yahoo Finance real-time price updates, multi-lot holdings with average cost basis, auto-refresh cron, and gain/loss analytics.
-* 📋 **Interactive Bank Reconciler**: Checkbook ledger with live running balances, 1-click `Clr` status toggles, split transactions, and statement reconciliation wizard.
-* 🏡 **Real Estate & Home Equity**: Property valuations, mortgage linkage, loan prepayment simulators, and LTV metrics.
+* 📈 **Quicken Premier Stock Portfolio**: Live Yahoo Finance real-time price updates, trade reconciliation status (`Clr` toggles), multi-lot holdings with average cost basis, auto-refresh cron, and gain/loss analytics.
+* 📋 **Interactive Bank Reconciler**: Checkbook ledger with live running balances, chronological tiebreaking, per-account transfer reconciliation independence, 1-click `Clr` status toggles, split transactions, and statement reconciliation wizard.
+* 🏡 **Real Estate & Debt Amortization**: Property valuations, mortgage linkage, direct loan metrics (monthly payment, payoff date, remaining interest), prepayment simulators, and LTV metrics.
 * 🤖 **AI Advisor & Smart Insights**: Automated financial health audits, cash flow leak detection, and actionable advisory recommendations.
 * 🎲 **1,000-Path Monte Carlo Wealth Simulator**: Stochastic retirement projections with $P_{10}/P_{50}/P_{90}$ percentile bands.
 * 🔒 **Multi-User Household Privacy**: Isolated records with granular joint account sharing and emergency digital estate access.

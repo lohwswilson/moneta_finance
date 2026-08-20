@@ -89,6 +89,7 @@ class MonetaAccountBalanceMonthly(models.Model):
                 ('account_id', '=', account.id),
                 ('security_id', '=', holding.security_id.id),
                 ('trade_date', '<=', as_of),
+                ('state', '!=', 'void'),
             ], order='trade_date, id'):
                 if tx.action == 'buy':
                     qty += tx.quantity or 0.0
@@ -120,13 +121,13 @@ class MonetaAccountBalanceMonthly(models.Model):
         today = fields.Date.context_today(self)
         Tx = self.env['moneta.transaction']
         first_date = account.opening_balance_date or today
-        earliest = Tx.search([('account_id', '=', acc_id)], order='transaction_date asc', limit=1)
+        earliest = Tx.search([('account_id', '=', acc_id), ('state', '!=', 'void')], order='transaction_date asc', limit=1)
         if earliest and earliest.transaction_date and earliest.transaction_date < first_date:
             first_date = earliest.transaction_date
         # Investment activity extends the range too (a brokerage may hold
         # securities without any cash transaction).
         earliest_inv = self.env['moneta.investment.transaction'].search(
-            [('account_id', '=', acc_id)], order='trade_date asc', limit=1
+            [('account_id', '=', acc_id), ('state', '!=', 'void')], order='trade_date asc', limit=1
         )
         if earliest_inv and earliest_inv.trade_date and earliest_inv.trade_date < first_date:
             first_date = earliest_inv.trade_date
