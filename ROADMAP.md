@@ -87,7 +87,7 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 4: Quicken Classic Power Parity & Cash Flow Calendar (Q4 2026)
+### Phase 4: Quicken Classic Power Parity & Cash Flow Calendar (Completed ✅)
 *Closing the core functional gaps with Quicken Classic Premier & Home & Business:*
 
 * **Track 4.1: Interactive Cash Flow & Financial Calendar View (Completed ✅)**
@@ -107,10 +107,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Rent roll ledger with automated monthly rent invoice generation and overdue rent alerts
   - [x] Rental property expense categorization and Schedule E net operating income (NOI) reporting
 
-* **Track 4.4: Tax Schedule & TurboTax TXF Export**
-  - [ ] IRS Form 8949 / Schedule D capital gains summary report generator
-  - [ ] 1099-DIV / 1099-INT dividend and interest income tax schedules
-  - [ ] Standard `.txf` (Tax Exchange Format) file exporter for 1-click import into TurboTax, TaxSlayer, and H&R Block
+* **Track 4.4: Tax Schedule & TurboTax TXF Export (Completed ✅)**
+  - [x] IRS Form 8949 / Schedule D capital gains summary report generator
+  - [x] 1099-DIV / 1099-INT dividend and interest income tax schedules
+  - [x] Standard `.txf` (Tax Exchange Format) file exporter for 1-click import into TurboTax, TaxSlayer, and H&R Block
 
 ---
 

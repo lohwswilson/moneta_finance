@@ -102,6 +102,7 @@ Key Features & Capabilities:
         'views/duplicate_detector_views.xml',
         'views/cashflow_calendar_views.xml',
         'views/tax_lot_views.xml',
+        'views/tax_schedule_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

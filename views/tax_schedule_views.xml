@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tax Schedule Wizard Form View -->
+    <record id="view_moneta_tax_schedule_wizard_form" model="ir.ui.view">
+        <field name="name">moneta.tax.schedule.wizard.form</field>
+        <field name="model">moneta.tax.schedule.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Annual Tax Schedule &amp; TurboTax TXF Export">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">📑 Tax Schedules &amp; TurboTax Export (Quicken Parity)</span>
+                        <h1>Annual Tax Schedule Report</h1>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3 bg-light">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-4">
+                                <label for="tax_year" class="fw-bold"/>
+                                <field name="tax_year" class="form-control-sm"/>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label for="user_id" class="fw-bold" groups="moneta_finance.group_moneta_manager"/>
+                                <field name="user_id" class="form-control-sm" groups="moneta_finance.group_moneta_manager"/>
+                            </div>
+                            <div class="col-12 col-md-4 text-end">
+                                <button name="action_calculate_tax_schedule" type="object" string="🔄 Recompute Schedule" class="btn btn-secondary btn-sm me-2"/>
+                                <button name="action_export_txf" type="object" string="📥 Generate TurboTax (.TXF)" class="btn btn-primary btn-sm" icon="fa-download"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TXF Download File Alert -->
+                    <div class="alert alert-success d-flex align-items-center p-3 mb-3 rounded-3" invisible="not txf_file" role="status">
+                        <i class="fa fa-file-text-o fa-2x text-success me-3"/>
+                        <div class="flex-grow-1">
+                            <strong>TurboTax (.TXF) File Ready:</strong> <field name="txf_filename" readonly="1" class="fw-bold"/>
+                            <br/><span class="text-muted small">Import this file directly into TurboTax Desktop, H&amp;R Block, or TaxSlayer (File ➔ Import ➔ From Accounting Software).</span>
+                        </div>
+                        <div>
+                            <field name="txf_file" filename="txf_filename" widget="binary"/>
+                        </div>
+                    </div>
+
+                    <!-- Capital Gains (Schedule D / Form 8949) Hero Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8fafc; border-left: 4px solid #3b82f6 !important;">
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa fa-line-chart text-primary me-2"/>IRS Form 8949 / Schedule D: Capital Gains &amp; Losses</h6>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-4 border-end">
+                                <span class="text-muted small">Short-Term Gain (&lt; 1 Year)</span>
+                                <h4 class="fw-bold mb-0" decoration-danger="short_term_gain &lt; 0" decoration-success="short_term_gain &gt; 0">
+                                    <field name="short_term_gain" widget="monetary"/>
+                                </h4>
+                                <span class="text-muted small">Proceeds: <field name="short_term_proceeds" widget="monetary"/> / Cost: <field name="short_term_cost_basis" widget="monetary"/></span>
+                            </div>
+                            <div class="col-6 col-md-4 border-end">
+                                <span class="text-muted small">Long-Term Gain (≥ 1 Year)</span>
+                                <h4 class="fw-bold mb-0" decoration-danger="long_term_gain &lt; 0" decoration-success="long_term_gain &gt; 0">
+                                    <field name="long_term_gain" widget="monetary"/>
+                                </h4>
+                                <span class="text-muted small">Proceeds: <field name="long_term_proceeds" widget="monetary"/> / Cost: <field name="long_term_cost_basis" widget="monetary"/></span>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <span class="text-muted small">Total Net Capital Gain</span>
+                                <h3 class="fw-bold mb-0" decoration-danger="total_capital_gain &lt; 0" decoration-success="total_capital_gain &gt; 0">
+                                    <field name="total_capital_gain" widget="monetary"/>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dividends, Interest & Rental Income -->
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="card border-0 shadow-sm rounded-4 p-3 h-100" style="background: #fdf4ff; border-left: 4px solid #a855f7 !important;">
+                                <h6 class="fw-bold text-dark mb-2"><i class="fa fa-percent text-purple me-2"/>1099-DIV &amp; 1099-INT Income</h6>
+                                <div class="row g-2 text-center">
+                                    <div class="col-6 border-end">
+                                        <span class="text-muted small">Ordinary Dividends</span>
+                                        <h4 class="fw-bold mb-0 text-dark"><field name="total_dividend_income" widget="monetary"/></h4>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-muted small">Taxable Interest</span>
+                                        <h4 class="fw-bold mb-0 text-dark"><field name="total_interest_income" widget="monetary"/></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="card border-0 shadow-sm rounded-4 p-3 h-100" style="background: #f0fdf4; border-left: 4px solid #16a34a !important;">
+                                <h6 class="fw-bold text-dark mb-2"><i class="fa fa-home text-success me-2"/>Schedule E: Rental Real Estate</h6>
+                                <div class="row g-2 text-center">
+                                    <div class="col-4 border-end">
+                                        <span class="text-muted small">Gross Rents</span>
+                                        <h4 class="fw-bold mb-0 text-dark"><field name="total_rental_income" widget="monetary"/></h4>
+                                    </div>
+                                    <div class="col-4 border-end">
+                                        <span class="text-muted small">Expenses</span>
+                                        <h4 class="fw-bold mb-0 text-danger"><field name="total_rental_expenses" widget="monetary"/></h4>
+                                    </div>
+                                    <div class="col-4">
+                                        <span class="text-muted small">Net Rental Income</span>
+                                        <h4 class="fw-bold mb-0 text-success"><field name="net_rental_income" widget="monetary"/></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <field name="currency_id" invisible="1"/>
+
+                    <footer>
+                        <button name="action_export_txf" type="object" string="📥 Download TurboTax (.TXF)" class="btn btn-primary" icon="fa-download"/>
+                        <button string="Close" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_moneta_tax_schedule_wizard" model="ir.actions.act_window">
+        <field name="name">Tax Schedules &amp; TurboTax Export</field>
+        <field name="res_model">moneta.tax.schedule.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

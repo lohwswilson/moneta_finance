@@ -141,3 +141,5 @@ access_moneta_property_tenant_user,moneta.property.tenant.user,model_moneta_prop
 access_moneta_property_tenant_manager,moneta.property.tenant.manager,model_moneta_property_tenant,group_moneta_manager,1,1,1,1
 access_moneta_property_rent_payment_user,moneta.property.rent.payment.user,model_moneta_property_rent_payment,group_moneta_user,1,1,1,1
 access_moneta_property_rent_payment_manager,moneta.property.rent.payment.manager,model_moneta_property_rent_payment,group_moneta_manager,1,1,1,1
+access_moneta_tax_schedule_wizard_user,moneta.tax.schedule.wizard.user,model_moneta_tax_schedule_wizard,group_moneta_user,1,1,1,1
+access_moneta_tax_schedule_wizard_manager,moneta.tax.schedule.wizard.manager,model_moneta_tax_schedule_wizard,group_moneta_manager,1,1,1,1

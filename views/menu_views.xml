@@ -230,6 +230,12 @@
               action="action_moneta_transaction"
               sequence="20"/>
 
+    <menuitem id="menu_moneta_tax_schedule"
+              name="Annual Tax Schedules &amp; TurboTax (.TXF)"
+              parent="menu_moneta_reports_root"
+              action="action_moneta_tax_schedule_wizard"
+              sequence="35"/>
+
     <!-- Tools & Imports -->
     <menuitem id="menu_moneta_tools_root"
               name="Tools &amp; Imports"
