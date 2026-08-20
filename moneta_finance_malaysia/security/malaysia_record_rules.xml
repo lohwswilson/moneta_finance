@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- moneta.epf.account -->
+        <record id="moneta_epf_account_rule_user" model="ir.rule">
+            <field name="name">Moneta EPF Account: own</field>
+            <field name="model_id" ref="model_moneta_epf_account"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_epf_account_rule_manager" model="ir.rule">
+            <field name="name">Moneta EPF Account: manager</field>
+            <field name="model_id" ref="model_moneta_epf_account"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.epf.transaction -->
+        <record id="moneta_epf_transaction_rule_user" model="ir.rule">
+            <field name="name">Moneta EPF Transaction: own</field>
+            <field name="model_id" ref="model_moneta_epf_transaction"/>
+            <field name="domain_force">[('epf_account_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_epf_transaction_rule_manager" model="ir.rule">
+            <field name="name">Moneta EPF Transaction: manager</field>
+            <field name="model_id" ref="model_moneta_epf_transaction"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.lhdn.tax.planner -->
+        <record id="moneta_lhdn_tax_planner_rule_user" model="ir.rule">
+            <field name="name">Moneta LHDN Tax Planner: own</field>
+            <field name="model_id" ref="model_moneta_lhdn_tax_planner"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_lhdn_tax_planner_rule_manager" model="ir.rule">
+            <field name="name">Moneta LHDN Tax Planner: manager</field>
+            <field name="model_id" ref="model_moneta_lhdn_tax_planner"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.prs.tracker -->
+        <record id="moneta_prs_tracker_rule_user" model="ir.rule">
+            <field name="name">Moneta PRS Tracker: own</field>
+            <field name="model_id" ref="model_moneta_prs_tracker"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_prs_tracker_rule_manager" model="ir.rule">
+            <field name="name">Moneta PRS Tracker: manager</field>
+            <field name="model_id" ref="model_moneta_prs_tracker"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.asnb.tracker -->
+        <record id="moneta_asnb_tracker_rule_user" model="ir.rule">
+            <field name="name">Moneta ASNB Tracker: own</field>
+            <field name="model_id" ref="model_moneta_asnb_tracker"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_asnb_tracker_rule_manager" model="ir.rule">
+            <field name="name">Moneta ASNB Tracker: manager</field>
+            <field name="model_id" ref="model_moneta_asnb_tracker"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.malaysia.flexi.loan -->
+        <record id="moneta_malaysia_flexi_loan_rule_user" model="ir.rule">
+            <field name="name">Moneta Malaysia Flexi Loan: own</field>
+            <field name="model_id" ref="model_moneta_malaysia_flexi_loan"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_malaysia_flexi_loan_rule_manager" model="ir.rule">
+            <field name="name">Moneta Malaysia Flexi Loan: manager</field>
+            <field name="model_id" ref="model_moneta_malaysia_flexi_loan"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.rpgt.calculator -->
+        <record id="moneta_rpgt_calculator_rule_user" model="ir.rule">
+            <field name="name">Moneta RPGT Calculator: own</field>
+            <field name="model_id" ref="model_moneta_rpgt_calculator"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_rpgt_calculator_rule_manager" model="ir.rule">
+            <field name="name">Moneta RPGT Calculator: manager</field>
+            <field name="model_id" ref="model_moneta_rpgt_calculator"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+    </data>
+</odoo>

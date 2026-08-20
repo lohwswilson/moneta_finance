@@ -26,14 +26,5 @@ from . import ai_advisor
 from . import portfolio_analytics
 from . import dashboard_action
 from . import action_history
-from . import cpf
-from . import srs
-from . import singapore_property
-from . import singapore_fixed_income
-from . import iras_tax
 from . import cashflow_calendar
 from . import tax_lot
-from . import epf
-from . import lhdn_tax
-from . import malaysia_investments
-from . import malaysia_property_loan

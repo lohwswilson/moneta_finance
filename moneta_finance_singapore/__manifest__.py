@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Moneta Finance - Singapore Wealth & Tax',
+    'version': '18.0.1.0.0',
+    'category': 'Accounting/Personal Finance',
+    'summary': 'Singapore Personal Finance Hub: CPF 3-Account & LIFE, SRS, SSB, MAS T-Bills, CPF-OA Accrued Interest, BSD/ABSD, and IRAS Tax Reliefs',
+    'author': 'Moneta Finance / Wilson Loh',
+    'license': 'LGPL-3',
+    'depends': ['moneta_finance'],
+    'pre_init_hook': '_pre_init_transfer_singapore_data',
+    'data': [
+        'security/ir.model.access.csv',
+        'security/singapore_record_rules.xml',
+        'data/singapore_master_data.xml',
+        'views/cpf_views.xml',
+        'views/srs_views.xml',
+        'views/singapore_property_views.xml',
+        'views/singapore_fixed_income_views.xml',
+        'views/iras_tax_views.xml',
+        'views/singapore_menu_views.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

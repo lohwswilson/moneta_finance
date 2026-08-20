@@ -180,7 +180,7 @@
             <field name="is_system" eval="True"/>
             <field name="icon">🏠</field>
             <field name="color">#6610F2</field>
-            <field name="parent_id" ref="cat_housing"/>
+            <field name="parent_id" ref="moneta_finance.cat_housing"/>
         </record>
 
         <record id="cat_town_council_scc" model="moneta.category">
@@ -188,7 +188,7 @@
             <field name="is_system" eval="True"/>
             <field name="icon">🏢</field>
             <field name="color">#DC3545</field>
-            <field name="parent_id" ref="cat_housing"/>
+            <field name="parent_id" ref="moneta_finance.cat_housing"/>
         </record>
 
         <record id="cat_sp_services_util" model="moneta.category">
@@ -196,7 +196,7 @@
             <field name="is_system" eval="True"/>
             <field name="icon">⚡</field>
             <field name="color">#FFC107</field>
-            <field name="parent_id" ref="cat_housing_utilities"/>
+            <field name="parent_id" ref="moneta_finance.cat_housing_utilities"/>
         </record>
 
         <record id="cat_lta_erp_simplygo" model="moneta.category">
@@ -204,7 +204,7 @@
             <field name="is_system" eval="True"/>
             <field name="icon">🚇</field>
             <field name="color">#198754</field>
-            <field name="parent_id" ref="cat_public_transit"/>
+            <field name="parent_id" ref="moneta_finance.cat_public_transit"/>
         </record>
 
         <record id="cat_iras_tax_payment" model="moneta.category">
@@ -220,43 +220,43 @@
         <record id="payee_fairprice" model="moneta.payee">
             <field name="name">NTUC FairPrice</field>
             <field name="website">fairprice.com.sg</field>
-            <field name="default_category_id" ref="cat_groceries"/>
+            <field name="default_category_id" ref="moneta_finance.cat_groceries"/>
         </record>
 
         <record id="payee_sheng_siong" model="moneta.payee">
             <field name="name">Sheng Siong Supermarket</field>
             <field name="website">shengsiong.com.sg</field>
-            <field name="default_category_id" ref="cat_groceries"/>
+            <field name="default_category_id" ref="moneta_finance.cat_groceries"/>
         </record>
 
         <record id="payee_cold_storage" model="moneta.payee">
             <field name="name">Cold Storage / CS Fresh</field>
             <field name="website">coldstorage.com.sg</field>
-            <field name="default_category_id" ref="cat_groceries"/>
+            <field name="default_category_id" ref="moneta_finance.cat_groceries"/>
         </record>
 
         <record id="payee_don_don_donki" model="moneta.payee">
             <field name="name">Don Don Donki</field>
             <field name="website">dondondonki.com</field>
-            <field name="default_category_id" ref="cat_groceries"/>
+            <field name="default_category_id" ref="moneta_finance.cat_groceries"/>
         </record>
 
         <record id="payee_grab" model="moneta.payee">
             <field name="name">Grab / GrabFood / GrabPay</field>
             <field name="website">grab.com</field>
-            <field name="default_category_id" ref="cat_restaurants"/>
+            <field name="default_category_id" ref="moneta_finance.cat_restaurants"/>
         </record>
 
         <record id="payee_gojek" model="moneta.payee">
             <field name="name">Gojek Singapore</field>
             <field name="website">gojek.com</field>
-            <field name="default_category_id" ref="cat_transportation"/>
+            <field name="default_category_id" ref="moneta_finance.cat_transportation"/>
         </record>
 
         <record id="payee_cdg_zig" model="moneta.payee">
             <field name="name">ComfortDelGro (CDG Zig)</field>
             <field name="website">cdgglobal.com</field>
-            <field name="default_category_id" ref="cat_transportation"/>
+            <field name="default_category_id" ref="moneta_finance.cat_transportation"/>
         </record>
 
         <record id="payee_simplygo" model="moneta.payee">
@@ -268,19 +268,19 @@
         <record id="payee_singtel" model="moneta.payee">
             <field name="name">Singtel</field>
             <field name="website">singtel.com</field>
-            <field name="default_category_id" ref="cat_internet"/>
+            <field name="default_category_id" ref="moneta_finance.cat_internet"/>
         </record>
 
         <record id="payee_starhub" model="moneta.payee">
             <field name="name">StarHub</field>
             <field name="website">starhub.com</field>
-            <field name="default_category_id" ref="cat_internet"/>
+            <field name="default_category_id" ref="moneta_finance.cat_internet"/>
         </record>
 
         <record id="payee_m1" model="moneta.payee">
             <field name="name">M1 Limited</field>
             <field name="website">m1.com.sg</field>
-            <field name="default_category_id" ref="cat_phone"/>
+            <field name="default_category_id" ref="moneta_finance.cat_phone"/>
         </record>
 
         <record id="payee_sp_group" model="moneta.payee">
@@ -304,31 +304,31 @@
         <record id="payee_shopee" model="moneta.payee">
             <field name="name">Shopee Singapore</field>
             <field name="website">shopee.sg</field>
-            <field name="default_category_id" ref="cat_shopping"/>
+            <field name="default_category_id" ref="moneta_finance.cat_shopping"/>
         </record>
 
         <record id="payee_lazada" model="moneta.payee">
             <field name="name">Lazada Singapore</field>
             <field name="website">lazada.sg</field>
-            <field name="default_category_id" ref="cat_shopping"/>
+            <field name="default_category_id" ref="moneta_finance.cat_shopping"/>
         </record>
 
         <record id="payee_foodpanda" model="moneta.payee">
             <field name="name">Foodpanda Singapore</field>
             <field name="website">foodpanda.sg</field>
-            <field name="default_category_id" ref="cat_restaurants"/>
+            <field name="default_category_id" ref="moneta_finance.cat_restaurants"/>
         </record>
 
         <record id="payee_guardian" model="moneta.payee">
             <field name="name">Guardian Health &amp; Beauty</field>
             <field name="website">guardian.com.sg</field>
-            <field name="default_category_id" ref="cat_health"/>
+            <field name="default_category_id" ref="moneta_finance.cat_health"/>
         </record>
 
         <record id="payee_watsons" model="moneta.payee">
             <field name="name">Watsons Singapore</field>
             <field name="website">watsons.com.sg</field>
-            <field name="default_category_id" ref="cat_health"/>
+            <field name="default_category_id" ref="moneta_finance.cat_health"/>
         </record>
     </data>
 </odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- moneta.cpf.life.simulator -->
+        <record id="moneta_cpf_life_simulator_rule_user" model="ir.rule">
+            <field name="name">Moneta CPF LIFE Simulator: own</field>
+            <field name="model_id" ref="model_moneta_cpf_life_simulator"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_cpf_life_simulator_rule_manager" model="ir.rule">
+            <field name="name">Moneta CPF LIFE Simulator: manager</field>
+            <field name="model_id" ref="model_moneta_cpf_life_simulator"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.srs.tracker -->
+        <record id="moneta_srs_tracker_rule_user" model="ir.rule">
+            <field name="name">Moneta SRS Tracker: own</field>
+            <field name="model_id" ref="model_moneta_srs_tracker"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_srs_tracker_rule_manager" model="ir.rule">
+            <field name="name">Moneta SRS Tracker: manager</field>
+            <field name="model_id" ref="model_moneta_srs_tracker"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.cpf.accrued.interest -->
+        <record id="moneta_cpf_accrued_interest_rule_user" model="ir.rule">
+            <field name="name">Moneta CPF Accrued Interest: own</field>
+            <field name="model_id" ref="model_moneta_cpf_accrued_interest"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_cpf_accrued_interest_rule_manager" model="ir.rule">
+            <field name="name">Moneta CPF Accrued Interest: manager</field>
+            <field name="model_id" ref="model_moneta_cpf_accrued_interest"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.singapore.property.affordability -->
+        <record id="moneta_singapore_property_affordability_rule_user" model="ir.rule">
+            <field name="name">Moneta Singapore Property Affordability: own</field>
+            <field name="model_id" ref="model_moneta_singapore_property_affordability"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_singapore_property_affordability_rule_manager" model="ir.rule">
+            <field name="name">Moneta Singapore Property Affordability: manager</field>
+            <field name="model_id" ref="model_moneta_singapore_property_affordability"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.ssb.bond -->
+        <record id="moneta_ssb_bond_rule_user" model="ir.rule">
+            <field name="name">Moneta SSB Bond: own</field>
+            <field name="model_id" ref="model_moneta_ssb_bond"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_ssb_bond_rule_manager" model="ir.rule">
+            <field name="name">Moneta SSB Bond: manager</field>
+            <field name="model_id" ref="model_moneta_ssb_bond"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.tbill -->
+        <record id="moneta_tbill_rule_user" model="ir.rule">
+            <field name="name">Moneta TBill: own</field>
+            <field name="model_id" ref="model_moneta_tbill"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_tbill_rule_manager" model="ir.rule">
+            <field name="name">Moneta TBill: manager</field>
+            <field name="model_id" ref="model_moneta_tbill"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.ucits.etf.comparator -->
+        <record id="moneta_ucits_etf_comparator_rule_user" model="ir.rule">
+            <field name="name">Moneta UCITS ETF Comparator: own</field>
+            <field name="model_id" ref="model_moneta_ucits_etf_comparator"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_ucits_etf_comparator_rule_manager" model="ir.rule">
+            <field name="name">Moneta UCITS ETF Comparator: manager</field>
+            <field name="model_id" ref="model_moneta_ucits_etf_comparator"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.iras.tax.planner -->
+        <record id="moneta_iras_tax_planner_rule_user" model="ir.rule">
+            <field name="name">Moneta IRAS Tax Planner: own</field>
+            <field name="model_id" ref="model_moneta_iras_tax_planner"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_iras_tax_planner_rule_manager" model="ir.rule">
+            <field name="name">Moneta IRAS Tax Planner: manager</field>
+            <field name="model_id" ref="model_moneta_iras_tax_planner"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('moneta_finance.group_moneta_manager'))]"/>
+        </record>
+    </data>
+</odoo>

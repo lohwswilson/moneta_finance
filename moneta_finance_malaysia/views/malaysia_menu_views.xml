@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Malaysia Wealth & Tax Hub -->
+    <menuitem id="menu_moneta_malaysia_root"
+              name="🇲🇾 Malaysia"
+              parent="moneta_finance.menu_moneta_root"
+              sequence="36"/>
+
+    <menuitem id="menu_moneta_epf_account"
+              name="EPF / KWSP 3-Account Hub"
+              parent="menu_moneta_malaysia_root"
+              action="action_moneta_epf_account"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_lhdn_tax_planner"
+              name="LHDN Tax Relief Planner (Borang BE)"
+              parent="menu_moneta_malaysia_root"
+              action="action_moneta_lhdn_tax_planner"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_prs_tracker"
+              name="PRS Private Retirement Schemes"
+              parent="menu_moneta_malaysia_root"
+              action="action_moneta_prs_tracker"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_asnb_tracker"
+              name="ASNB Unit Trusts (ASB / ASM)"
+              parent="menu_moneta_malaysia_root"
+              action="action_moneta_asnb_tracker"
+              sequence="40"/>
+
+    <menuitem id="menu_moneta_malaysia_flexi_loan"
+              name="Flexi-Home Loan SBR Simulator"
+              parent="menu_moneta_malaysia_root"
+              action="action_moneta_malaysia_flexi_loan"
+              sequence="50"/>
+
+    <menuitem id="menu_moneta_rpgt_calculator"
+              name="Real Property Gains Tax (RPGT)"
+              parent="menu_moneta_malaysia_root"
+              action="action_moneta_rpgt_calculator"
+              sequence="60"/>
+</odoo>

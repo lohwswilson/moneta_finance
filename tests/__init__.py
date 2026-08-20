@@ -26,3 +26,10 @@ from . import test_ai_features
 from . import test_wealthfolio_features
 from . import test_dashboard_action
 from . import test_benchmark
+from . import test_action_history
+from . import test_emergency_access
+from . import test_duplicate_detector
+from . import test_cashflow_calendar
+from . import test_tax_lot
+from . import test_property_tenants
+from . import test_tax_schedule

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Singapore Wealth Ecosystem Menu -->
+    <menuitem id="menu_moneta_singapore_root"
+              name="🇸🇬 Singapore"
+              parent="moneta_finance.menu_moneta_root"
+              sequence="35"/>
+
+    <menuitem id="menu_moneta_cpf_life"
+              name="CPF LIFE Retirement Simulator"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_cpf_life_simulator"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_srs_tracker"
+              name="SRS Tax Relief &amp; Withdrawal"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_srs_tracker"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_cpf_accrued_interest"
+              name="CPF Housing Accrued Interest"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_cpf_accrued_interest"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_singapore_property_affordability"
+              name="Stamp Duty (BSD/ABSD) &amp; TDSR/MSR"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_singapore_property_affordability"
+              sequence="40"/>
+
+    <menuitem id="menu_moneta_ssb_bond"
+              name="Singapore Savings Bonds (SSB)"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_ssb_bond"
+              sequence="50"/>
+
+    <menuitem id="menu_moneta_tbill"
+              name="MAS Treasury Bills (T-Bills)"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_tbill"
+              sequence="60"/>
+
+    <menuitem id="menu_moneta_ucits_etf_comparator"
+              name="Irish UCITS ETF Tax Advantage"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_ucits_etf_comparator"
+              sequence="70"/>
+
+    <menuitem id="menu_moneta_iras_tax_planner"
+              name="IRAS Tax Relief &amp; Planner"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_iras_tax_planner"
+              sequence="80"/>
+</odoo>
