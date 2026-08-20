@@ -25,10 +25,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 ### Phase 2: Monize Advanced Feature Parity Sprint (Active 🚀)
 *Executing sequentially track-by-track:*
 
-* **Track 2.1: Payee Brand Favicons & Visual Category Hierarchy**
-  - [ ] Payee website domain field and automated favicon resolution (DuckDuckGo / Google Favicon cache)
-  - [ ] Payee brand avatars in checkbook registers, compact lists, and kanban cards
-  - [ ] Category icon glyph inheritance (subcategories inherit parent icons and badges)
+* **Track 2.1: Payee Brand Favicons & Visual Category Hierarchy (Completed ✅)**
+  - [x] Payee website domain field and automated favicon resolution (Google / gstatic Favicon cache)
+  - [x] Payee brand avatars in checkbook registers, compact lists, and kanban cards
+  - [x] Category icon glyph inheritance (subcategories inherit parent icons and badges)
 
 * **Track 2.2: Variable-Rate Mortgage & Rate Change Inference Engine**
   - [ ] Step-detection algorithm ($\text{rate} = \frac{\text{interest}}{\text{balance}} \times 12$) on historical split loan transactions

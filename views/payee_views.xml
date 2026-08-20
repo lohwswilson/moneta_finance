@@ -7,16 +7,22 @@
         <field name="arch" type="xml">
             <form string="Payee">
                 <sheet>
+                    <field name="image_128" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'size': [90, 90]}"/>
                     <div class="oe_title">
+                        <label for="name" string="Payee Name"/>
                         <h1>
-                            <field name="name" placeholder="Payee Name..."/>
+                            <field name="name" placeholder="e.g. Starbucks, Amazon, Apple..."/>
                         </h1>
                     </div>
                     <group>
                         <group name="general" string="General Information">
                             <field name="default_category_id"/>
                             <field name="suggested_category_id" readonly="1"/>
-                            <field name="website" widget="url" placeholder="https://..."/>
+                            <label for="website" string="Website / Domain"/>
+                            <div class="d-flex gap-2">
+                                <field name="website" widget="url" placeholder="https://starbucks.com"/>
+                                <button name="action_fetch_favicon" type="object" string="🔄 Fetch Logo" class="btn btn-sm btn-outline-secondary" title="Fetch brand logo/favicon from domain"/>
+                            </div>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group name="analytics" string="Spend Analytics &amp; Cadence">
@@ -47,15 +53,59 @@
         </field>
     </record>
 
+    <!-- Payee Kanban View -->
+    <record id="view_moneta_payee_kanban" model="ir.ui.view">
+        <field name="name">moneta.payee.kanban</field>
+        <field name="model">moneta.payee</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="image_128"/>
+                <field name="default_category_id"/>
+                <field name="spent_this_year"/>
+                <field name="currency_id"/>
+                <field name="detected_cadence"/>
+                <field name="transaction_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-center gap-3 p-2">
+                            <div class="flex-shrink-0">
+                                <t t-if="record.image_128.raw_value">
+                                    <field name="image_128" widget="image" class="rounded-3 shadow-xs" options="{'size': [48, 48]}"/>
+                                </t>
+                                <t t-else="">
+                                    <div class="rounded-3 bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: 1.2rem;">
+                                        <t t-esc="record.name.value ? record.name.value.charAt(0).toUpperCase() : 'P'"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <h6 class="mb-0 fw-bold text-truncate"><field name="name"/></h6>
+                                <span class="text-muted small"><field name="default_category_id"/></span>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <span class="fw-semibold text-dark small"><field name="spent_this_year" widget="monetary"/></span>
+                                    <span class="badge bg-light text-dark border small" t-if="record.detected_cadence.raw_value != 'none'"><field name="detected_cadence"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <!-- Payee List View -->
     <record id="view_moneta_payee_tree" model="ir.ui.view">
         <field name="name">moneta.payee.list</field>
         <field name="model">moneta.payee</field>
         <field name="arch" type="xml">
             <list string="Payees">
-                <field name="name"/>
+                <field name="image_128" widget="image" string="" options="{'size': [24, 24]}" optional="show"/>
+                <field name="name" class="fw-bold"/>
                 <field name="default_category_id"/>
-                <field name="spent_this_year" widget="monetary"/>
+                <field name="website" widget="url" optional="show"/>
+                <field name="spent_this_year" widget="monetary" sum="Total Spent This Year"/>
                 <field name="detected_cadence" widget="badge"/>
                 <field name="transaction_count"/>
                 <field name="last_transaction_date"/>
@@ -67,6 +117,6 @@
     <record id="action_moneta_payee" model="ir.actions.act_window">
         <field name="name">Payees</field>
         <field name="res_model">moneta.payee</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 </odoo>

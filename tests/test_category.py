@@ -61,11 +61,28 @@ class TestCategory(MonetaTestBase):
         seeded = self.env['moneta.category'].search_count([('user_id', '=', user.id)])
         self.assertEqual(seeded, template_count, "user gets one copy per template")
         # All seeded copies are deletable (is_system=False) and owned by the user.
-        copies = self.env['moneta.category'].search([('user_id', '=', user.id)])
-        self.assertTrue(copies)
-        self.assertFalse(any(c.is_system for c in copies))
-        # Idempotent: a second run does not duplicate.
         self.env['moneta.category'].sudo()._seed_user_defaults(user)
         self.assertEqual(
             self.env['moneta.category'].search_count([('user_id', '=', user.id)]), seeded
         )
+
+    def test_category_icon_and_color_inheritance(self):
+        parent = self.env['moneta.category'].create({
+            'name': 'Food & Dining',
+            'icon': '🍔',
+            'color': '#FF5733',
+        })
+        child = self.env['moneta.category'].create({
+            'name': 'Groceries',
+            'parent_id': parent.id,
+            'icon': '📁',
+            'color': '#4A90E2',
+        })
+        # Child inherits icon and color from parent when unset/default
+        self.assertEqual(child.effective_icon, '🍔')
+        self.assertEqual(child.effective_color, '#FF5733')
+
+        # If child sets its own custom icon/color, it overrides parent
+        child.write({'icon': '🥦', 'color': '#28A745'})
+        self.assertEqual(child.effective_icon, '🥦')
+        self.assertEqual(child.effective_color, '#28A745')

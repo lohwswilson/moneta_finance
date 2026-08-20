@@ -16,6 +16,8 @@ class MonetaCategory(models.Model):
     )
     icon = fields.Char(string='Icon', default='📁', help='Emoji icon (e.g. 📁, 🔁, 🍔, 🏠, 🚗, 💰)')
     color = fields.Char(string='Color', default='#4A90E2')
+    effective_icon = fields.Char(string='Effective Icon', compute='_compute_effective_attributes', store=True)
+    effective_color = fields.Char(string='Effective Color', compute='_compute_effective_attributes', store=True)
     description = fields.Text(string='Description / Notes')
     is_system = fields.Boolean(string='System Default Template', default=False)
 
@@ -107,15 +109,38 @@ class MonetaCategory(models.Model):
                 if rec.is_income != is_inc:
                     rec.is_income = is_inc
 
-    @api.depends('name', 'icon', 'parent_id.name', 'transfer_account_id.name')
+    @api.depends('icon', 'color', 'parent_id', 'parent_id.icon', 'parent_id.color')
+    def _compute_effective_attributes(self):
+        for cat in self:
+            eff_icon = cat.icon
+            eff_color = cat.color
+            if not eff_icon or eff_icon == '📁':
+                parent = cat.parent_id
+                while parent:
+                    if parent.icon and parent.icon != '📁':
+                        eff_icon = parent.icon
+                        break
+                    parent = parent.parent_id
+            if not eff_color or eff_color == '#4A90E2':
+                parent = cat.parent_id
+                while parent:
+                    if parent.color and parent.color != '#4A90E2':
+                        eff_color = parent.color
+                        break
+                    parent = parent.parent_id
+            cat.effective_icon = eff_icon or '📁'
+            cat.effective_color = eff_color or '#4A90E2'
+
+    @api.depends('name', 'icon', 'effective_icon', 'parent_id.name', 'transfer_account_id.name')
     def _compute_display_name(self):
         for rec in self:
+            glyph = rec.effective_icon or rec.icon or '📁'
             if rec.transfer_account_id:
                 rec.display_name = f"[{rec.transfer_account_id.name}]"
             elif rec.parent_id and rec.parent_id.name:
-                rec.display_name = f"{rec.parent_id.name} / {rec.name or ''}"
+                rec.display_name = f"{glyph} {rec.parent_id.name} / {rec.name or ''}"
             else:
-                rec.display_name = rec.name or ''
+                rec.display_name = f"{glyph} {rec.name or ''}"
 
     _sql_constraints = [
         ('unique_user_parent_name', 'unique(user_id, parent_id, name)',

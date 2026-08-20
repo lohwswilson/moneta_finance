@@ -47,3 +47,22 @@ class TestPayeeMatcher(MonetaTestBase):
         # is iterative (no regex), so this returns quickly either way.
         result = Payee._matches_alias_pattern('a' * 400, '*'.join(['a' for _ in range(200)]))
         self.assertIn(result, (True, False))
+
+    def test_payee_website_normalization(self):
+        Payee = self.env['moneta.payee']
+        self.assertEqual(Payee._normalize_website('starbucks.com'), 'https://starbucks.com')
+        self.assertEqual(Payee._normalize_website('http://apple.com/shop'), 'https://apple.com')
+        self.assertFalse(Payee._normalize_website(''))
+        self.assertFalse(Payee._normalize_website('invalid'))
+
+    def test_payee_logo_flag(self):
+        user = self._make_user('Payee Logo User', 'payee_logo_user')
+        Payee = self._payees(user)
+        p = Payee.create({
+            'name': 'Netflix',
+            'website': 'https://netflix.com',
+            'image_128': b'fake_image_bytes_123',
+        })
+        self.assertTrue(p.has_logo)
+        p.image_128 = False
+        self.assertFalse(p.has_logo)

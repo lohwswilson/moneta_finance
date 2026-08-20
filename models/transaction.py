@@ -54,6 +54,8 @@ class MonetaTransaction(models.Model):
     receipt_attachment = fields.Binary(string='Receipt / Invoice', attachment=True)
     receipt_filename = fields.Char(string='Receipt Filename')
     attachment_count = fields.Integer(string='Attachments', compute='_compute_attachment_count')
+    payee_image = fields.Image(related='payee_id.image_128', string='Payee Logo', readonly=True)
+    category_icon = fields.Char(related='category_id.effective_icon', string='Category Glyph', readonly=True)
 
     user_id = fields.Many2one(
         'res.users', string='Owner',

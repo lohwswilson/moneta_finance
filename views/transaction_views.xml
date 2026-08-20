@@ -76,6 +76,7 @@
                 <field name="transaction_date" string="Date"/>
                 <field name="check_number" string="Check #" optional="show"/>
                 <field name="account_id" string="Account"/>
+                <field name="payee_image" widget="image" string="" options="{'size': [20, 20]}" optional="show"/>
                 <field name="payee_id" string="Payee"/>
                 <field name="category_id" string="Category" options="{'no_create': True}"/>
                 <field name="memo" string="Memo"/>

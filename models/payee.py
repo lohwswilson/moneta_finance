@@ -1,5 +1,7 @@
-# -*- coding: utf-8 -*-
+import base64
 import unicodedata
+import urllib.parse
+import urllib.request
 from odoo import models, fields, api
 
 
@@ -31,6 +33,8 @@ class MonetaPayee(models.Model):
     default_category_id = fields.Many2one('moneta.category', string='Default Category')
     notes = fields.Text(string='Notes')
     website = fields.Char(string='Website')
+    image_128 = fields.Image(string='Brand Logo', max_width=128, max_height=128)
+    has_logo = fields.Boolean(string='Has Logo', compute='_compute_has_logo', store=True)
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         default=lambda self: self.env.company.currency_id,
@@ -39,6 +43,76 @@ class MonetaPayee(models.Model):
     alias_ids = fields.One2many('moneta.payee.alias', 'payee_id', string='Payee Match Rules')
     active = fields.Boolean(default=True)
     transaction_count = fields.Integer(compute='_compute_transaction_count', string='Transactions')
+
+    @api.depends('image_128')
+    def _compute_has_logo(self):
+        for rec in self:
+            rec.has_logo = bool(rec.image_128)
+
+    @api.model
+    def _normalize_website(self, url):
+        if not url:
+            return False
+        url = url.strip()
+        if not url:
+            return False
+        if not (url.startswith('http://') or url.startswith('https://')):
+            url = 'https://' + url
+        try:
+            parsed = urllib.parse.urlparse(url)
+            netloc = parsed.netloc or parsed.path.split('/')[0]
+            if '.' in netloc:
+                return f"https://{netloc}"
+        except Exception:
+            pass
+        return False
+
+    @api.model
+    def _fetch_favicon_bytes(self, website):
+        norm = self._normalize_website(website)
+        if not norm:
+            return False
+        api_url = (
+            "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON"
+            f"&fallback_opts=TYPE,SIZE,URL&url={urllib.parse.quote(norm)}&size=128"
+        )
+        try:
+            req = urllib.request.Request(
+                api_url,
+                headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            )
+            with urllib.request.urlopen(req, timeout=4) as resp:
+                if resp.status == 200:
+                    data = resp.read()
+                    if len(data) > 100:
+                        return base64.b64encode(data)
+        except Exception:
+            pass
+        return False
+
+    def action_fetch_favicon(self):
+        """Fetch brand logo / favicon for payees based on website or name."""
+        for rec in self:
+            target_site = rec.website or f"{rec.name.lower().replace(' ', '')}.com"
+            logo_data = self._fetch_favicon_bytes(target_site)
+            if logo_data:
+                rec.image_128 = logo_data
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('website') and not vals.get('image_128'):
+                logo = self._fetch_favicon_bytes(vals['website'])
+                if logo:
+                    vals['image_128'] = logo
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if 'website' in vals and vals['website'] and 'image_128' not in vals:
+            logo = self._fetch_favicon_bytes(vals['website'])
+            if logo:
+                vals['image_128'] = logo
+        return super().write(vals)
 
     # v1.14.0 Analytics & Cadence Detection
     spent_this_year = fields.Monetary(string='Spent This Year', compute='_compute_payee_analytics')
