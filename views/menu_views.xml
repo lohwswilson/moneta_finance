@@ -164,6 +164,12 @@
               action="action_moneta_ucits_etf_comparator"
               sequence="70"/>
 
+    <menuitem id="menu_moneta_iras_tax_planner"
+              name="IRAS Tax Relief &amp; Planner"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_iras_tax_planner"
+              sequence="80"/>
+
     <!-- Net Worth & Analytics -->
     <menuitem id="menu_moneta_reports_root"
               name="Net Worth &amp; Reports"

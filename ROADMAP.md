@@ -76,10 +76,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] SGX (`.SI`) security master with one-tier tax-exempt dividend distribution handling and S-REIT distribution yield tracking
   - [x] Irish-domiciled ETF tracking (`CSPX.L`, `VWRA.L`, `SWRD.L`) with 15% US dividend tax withholding advantage
 
-* **Track 3.4: IRAS Tax Relief & Optimization Engine**
-  - [ ] IRAS progressive personal income tax brackets with instant liability estimation
-  - [ ] Tax Relief Tracker: Retirement Sum Topping-Up (RSTU $8k self + $8k loved ones), SRS ($15.3k), CPF Employee, NSman, Parent, and Child reliefs
-  - [ ] Year-end tax optimization advisory: actionable suggestions to maximize tax deductions before Dec 31
+* **Track 3.4: IRAS Tax Relief & Optimization Engine (Completed ✅)**
+  - [x] IRAS progressive personal income tax brackets with instant liability estimation
+  - [x] Tax Relief Tracker: Retirement Sum Topping-Up (RSTU $8k self + $8k loved ones), SRS ($15.3k), CPF Employee, NSman, Parent, and Child reliefs
+  - [x] Year-end tax optimization advisory: actionable suggestions to maximize tax deductions before Dec 31
 
 * **Track 3.5: Pre-Configured Singapore / SEA Master Data**
   - [ ] Pre-loaded Singapore & SEA financial institutions: DBS/POSB, OCBC, UOB, Standard Chartered, MariBank, GXS, Trust Bank, CPF Board, Endowus, Syfe, Moomoo, Tiger Brokers, Maybank, CIMB

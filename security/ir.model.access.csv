@@ -123,3 +123,5 @@ access_moneta_tbill_user,moneta.tbill.user,model_moneta_tbill,group_moneta_user,
 access_moneta_tbill_manager,moneta.tbill.manager,model_moneta_tbill,group_moneta_manager,1,1,1,1
 access_moneta_ucits_etf_comparator_user,moneta.ucits.etf.comparator.user,model_moneta_ucits_etf_comparator,group_moneta_user,1,1,1,1
 access_moneta_ucits_etf_comparator_manager,moneta.ucits.etf.comparator.manager,model_moneta_ucits_etf_comparator,group_moneta_manager,1,1,1,1
+access_moneta_iras_tax_planner_user,moneta.iras.tax.planner.user,model_moneta_iras_tax_planner,group_moneta_user,1,1,1,1
+access_moneta_iras_tax_planner_manager,moneta.iras.tax.planner.manager,model_moneta_iras_tax_planner,group_moneta_manager,1,1,1,1

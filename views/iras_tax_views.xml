@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- IRAS Tax Planner Form View -->
+    <record id="view_moneta_iras_tax_planner_form" model="ir.ui.view">
+        <field name="name">moneta.iras.tax.planner.form</field>
+        <field name="model">moneta.iras.tax.planner</field>
+        <field name="arch" type="xml">
+            <form string="Singapore IRAS Personal Income Tax Planner">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇸🇬 Inland Revenue Authority of Singapore (IRAS)</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Tax Liability Hero Banner -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" 
+                         style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-left: 5px solid #dc2626 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-calculator text-danger me-1"/>Estimated Personal Income Tax Liability
+                            </span>
+                            <span class="badge bg-danger px-3 py-1 fs-6">
+                                Marginal Bracket: <field name="marginal_tax_bracket_pct"/>%
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-4">
+                                <span class="text-muted small">Estimated Net Tax Payable</span>
+                                <h1 class="fw-bolder mb-0 text-danger">
+                                    <field name="net_tax_payable" widget="monetary"/>
+                                </h1>
+                                <span class="text-muted small">Effective Rate: <field name="effective_tax_rate_pct"/>% of gross</span>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Total Assessable Income</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="gross_total_income" widget="monetary"/></h3>
+                                <span class="text-muted small">YA <field name="year_of_assessment"/></span>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Total Deductions Applied</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="effective_reliefs_applied" widget="monetary"/></h3>
+                                <span class="text-muted small">Remaining Cap: <field name="remaining_cap_to_80k" widget="monetary"/></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Year-End Tax Optimization Advisory Widget -->
+                    <div class="my-3">
+                        <field name="optimization_advisory" widget="html" readonly="1"/>
+                    </div>
+
+                    <group>
+                        <group string="Income Breakdown">
+                            <field name="tax_year"/>
+                            <field name="tax_residency"/>
+                            <field name="annual_employment_income" widget="monetary"/>
+                            <field name="annual_bonus" widget="monetary"/>
+                            <field name="trade_business_income" widget="monetary"/>
+                            <field name="rental_net_income" widget="monetary"/>
+                            <field name="other_taxable_income" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Personal Tax Reliefs (Max $80,000 Cap)">
+                            <field name="age_group"/>
+                            <field name="earned_income_relief" widget="monetary"/>
+                            <field name="cpf_employee_relief" widget="monetary"/>
+                            <field name="rstu_self_relief" widget="monetary"/>
+                            <field name="rstu_family_relief" widget="monetary"/>
+                            <field name="srs_contribution_relief" widget="monetary"/>
+                            <field name="nsman_relief_type"/>
+                            <field name="qualifying_child_count"/>
+                            <field name="parent_relief_type"/>
+                            <field name="course_fees_relief" widget="monetary"/>
+                            <field name="life_insurance_relief" widget="monetary"/>
+                            <field name="charitable_donations" widget="monetary"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <group string="Tax Planning &amp; IRAS Filing Notes">
+                        <field name="notes" placeholder="Notes on Form B1 filing, Giro monthly instalment, or relief claim proofs..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- IRAS Tax Planner List View -->
+    <record id="view_moneta_iras_tax_planner_tree" model="ir.ui.view">
+        <field name="name">moneta.iras.tax.planner.list</field>
+        <field name="model">moneta.iras.tax.planner</field>
+        <field name="arch" type="xml">
+            <list string="IRAS Tax Plans" default_order="tax_year desc">
+                <field name="tax_year" string="Year" class="fw-bold"/>
+                <field name="year_of_assessment" string="YA"/>
+                <field name="gross_total_income" string="Gross Income" widget="monetary" sum="Total Gross Income"/>
+                <field name="effective_reliefs_applied" string="Total Reliefs" widget="monetary" sum="Total Reliefs"/>
+                <field name="chargeable_income" string="Chargeable Income" widget="monetary"/>
+                <field name="marginal_tax_bracket_pct" string="Marginal (%)"/>
+                <field name="net_tax_payable" string="Estimated Tax" widget="monetary" sum="Total Tax" class="fw-bold text-danger"/>
+                <field name="effective_tax_rate_pct" string="Effective (%)"/>
+                <field name="remaining_cap_to_80k" string="Relief Cap Left" widget="monetary" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_moneta_iras_tax_planner" model="ir.actions.act_window">
+        <field name="name">IRAS Tax Relief &amp; Planner</field>
+        <field name="res_model">moneta.iras.tax.planner</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
