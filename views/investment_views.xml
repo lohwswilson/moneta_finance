@@ -12,9 +12,12 @@
                 <sheet>
                     <div class="oe_title">
                         <span class="text-muted text-uppercase fw-bold small"><field name="asset_class"/> · <field name="exchange"/></span>
-                        <h1>
-                            <field name="symbol" placeholder="Ticker (e.g. AAPL, VOO, NVDA, D05.SI)..."/>
-                        </h1>
+                        <div class="d-flex align-items-center gap-3">
+                            <h1 class="mb-0 flex-grow-1">
+                                <field name="symbol" placeholder="Ticker (e.g. AAPL, VOO, NVDA, D05.SI)..."/>
+                            </h1>
+                            <button name="action_fetch_quote" type="object" string="🔍 Auto-Fetch Info &amp; Quote (Yahoo)" class="btn btn-primary" icon="fa-cloud-download"/>
+                        </div>
                         <h2>
                             <field name="name" placeholder="Full Company / Asset Name..."/>
                         </h2>
@@ -24,11 +27,14 @@
                     <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8faff; border-left: 4px solid #198754 !important;">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="text-muted small fw-bold text-uppercase">
-                                <i class="fa fa-line-chart text-success me-1"/>Market Quote &amp; Valuation
+                                <i class="fa fa-line-chart text-success me-1"/>Market Quote &amp; Valuation (Yahoo Finance)
                             </span>
-                            <span class="badge rounded-pill bg-light text-dark border">
-                                <i class="fa fa-clock-o me-1"/>As of: <field name="quote_timestamp"/>
-                            </span>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge rounded-pill bg-light text-dark border">
+                                    <i class="fa fa-clock-o me-1"/>As of: <field name="quote_timestamp"/>
+                                </span>
+                                <button name="action_fetch_quote" type="object" string="🔄 Refresh Quote" class="btn btn-sm btn-outline-success"/>
+                            </div>
                         </div>
                         <div class="row g-3 align-items-center">
                             <div class="col-12 col-md-4">
@@ -285,7 +291,8 @@
         <field name="arch" type="xml">
             <form string="Portfolio Holding">
                 <header>
-                    <button name="action_refresh_all_quotes" type="object" string="🔄 Refresh All Live Quotes" class="btn btn-primary" icon="fa-refresh"/>
+                    <button name="action_fetch_quote" type="object" string="🔄 Refresh Quote (Yahoo Finance)" class="btn btn-primary" icon="fa-cloud-download"/>
+                    <button name="action_refresh_all_quotes" type="object" string="🔄 Refresh All Portfolio Quotes" class="btn btn-outline-secondary" icon="fa-refresh"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -347,7 +354,7 @@
         <field name="arch" type="xml">
             <list string="Portfolio Holdings" default_order="market_value desc">
                 <header>
-                    <button name="action_refresh_all_quotes" type="object" string="🔄 Refresh All Live Quotes" class="btn btn-primary"/>
+                    <button name="action_refresh_all_quotes" type="object" string="🔄 Refresh All Live Quotes (Yahoo Finance)" class="btn btn-primary"/>
                 </header>
                 <field name="symbol" string="Ticker" class="fw-bold"/>
                 <field name="security_id" string="Security Name"/>
@@ -373,6 +380,7 @@
                 <field name="beta" string="Beta" optional="hide"/>
                 <field name="price_known" widget="boolean" optional="hide"/>
                 <field name="basis_known" widget="boolean" optional="hide"/>
+                <button name="action_fetch_quote" type="object" string="🔄 Quote" class="btn-sm btn-outline-primary" title="Fetch live quote from Yahoo Finance"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>

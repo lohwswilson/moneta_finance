@@ -953,6 +953,16 @@ class MonetaHolding(models.Model):
             'tag': 'reload',
         }
 
+    def action_fetch_quote(self):
+        """Fetch live quote for this holding's security from Yahoo Finance."""
+        self.ensure_one()
+        if self.security_id:
+            res = self.security_id.action_fetch_quote()
+            self._compute_valuation()
+            self._compute_holding_market_metrics()
+            return res
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
     @api.depends('quantity', 'average_cost', 'current_price')
     def _compute_valuation(self):
         # Stored valuation fields only. The known-flags and derived percents
