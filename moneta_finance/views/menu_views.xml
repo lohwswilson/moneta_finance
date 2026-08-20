@@ -140,13 +140,7 @@
               parent="menu_moneta_root"
               sequence="40"/>
 
-    <menuitem id="menu_moneta_ai_chat"
-              name="Ask Moneta AI"
-              parent="menu_moneta_reports_root"
-              action="action_moneta_ai_chat"
-              sequence="2"/>
-
-    <menuitem id="menu_moneta_ai_summary"
+<menuitem id="menu_moneta_ai_summary"
               name="Monthly AI Reports"
               parent="menu_moneta_reports_root"
               action="action_moneta_ai_summary"
@@ -182,13 +176,7 @@
               parent="menu_moneta_root"
               sequence="50"/>
 
-    <menuitem id="menu_moneta_ai_receipt"
-              name="Scan Receipt / Invoice (AI OCR)"
-              parent="menu_moneta_tools_root"
-              action="action_moneta_ai_receipt_wizard"
-              sequence="2"/>
-
-    <menuitem id="menu_moneta_subscription_detector"
+<menuitem id="menu_moneta_subscription_detector"
               name="Detect Subscriptions"
               parent="menu_moneta_tools_root"
               action="action_moneta_subscription_detector"

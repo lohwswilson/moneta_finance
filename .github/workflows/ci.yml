@@ -69,11 +69,11 @@ jobs:
             sleep 2
           done
           # NOTE: no `|| true` here — a failing test suite must fail the build.
-          # The repo root IS the module, so we mount it at a fixed
-          # /mnt/extra-addons/moneta_finance path and point addons_path at the
-          # parent so Odoo discovers it by name regardless of the repo name.
+          # The repo root contains multiple addon packages (moneta_finance,
+          # moneta_finance_property, moneta_finance_singapore, moneta_finance_malaysia, moneta_finance_ai_advisor),
+          # so we mount the entire workspace as /mnt/extra-addons.
           docker run --rm --network host \
-            -v "$PWD:/mnt/extra-addons/moneta_finance" \
+            -v "$PWD:/mnt/extra-addons" \
             -e HOST=127.0.0.1 \
             -e PORT=5432 \
             -e USER=odoo \
@@ -81,9 +81,9 @@ jobs:
             odoo:18.0 odoo \
               --addons-path=/mnt/extra-addons \
               -d test_db \
-              -i moneta_finance \
+              -i moneta_finance,moneta_finance_property,moneta_finance_singapore,moneta_finance_malaysia,moneta_finance_ai_advisor \
               --test-enable \
-              --test-tags=/moneta_finance \
+              --test-tags=/moneta_finance,/moneta_finance_property,/moneta_finance_singapore,/moneta_finance_malaysia,/moneta_finance_ai_advisor \
               --stop-after-init \
               --log-level=info \
             2>&1 | tee /tmp/odoo-test.log

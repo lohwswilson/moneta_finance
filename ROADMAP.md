@@ -23,7 +23,7 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 ---
 
 ### Phase 2: Monize Advanced Feature Parity Sprint (Active 🚀)
-*Executing sequentially track-by-track:*
+*Closing advanced feature gaps from Microsoft Money and Monize (`/opt/monize`):*
 
 * **Track 2.1: Payee Brand Favicons & Visual Category Hierarchy (Completed ✅)**
   - [x] Payee website domain field and automated favicon resolution (Google / gstatic Favicon cache)
@@ -52,6 +52,22 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 * **Track 2.6: Financial Assistant MCP Server (Model Context Protocol) (Completed ✅)**
   - [x] Standardized MCP tool endpoints for local AI agents (Claude, Gemini, Antigravity)
   - [x] Natural language tool suite: balance queries, spending categorization, bill forecasting, and loan simulations
+
+* **Track 2.7: Direct Microsoft Money (`.mny`) Native Binary Importer**
+  - [ ] Native binary `.mny` parser wizard (`wizards/mny_import_wizard.py`) extracting accounts, transfers, multi-line splits, investment transactions (Buy, Sell, Reinvest, Split), historical price series, scheduled bills, and custom exchange rates without intermediate QIF export
+  - [ ] Automated post-import reconciliation audit verifying balance and holding integrity against the source `.mny` database
+
+* **Track 2.8: Scoped Personal Access Token (PAT) Management for MCP & API**
+  - [ ] Dedicated UI in Moneta Configuration to generate, label, expire, and revoke scoped API/MCP tokens
+  - [ ] Granular permission scopes (`read:ledger`, `write:transactions`, `read:reports`, `read:investments`, `admin`) for external autonomous AI agents
+
+* **Track 2.9: Automated User-Scoped Snapshot Backups (`.json.gz`) & 1-Click Restore**
+  - [ ] Scheduled background cron generating daily, weekly, and monthly `.json.gz` self-contained data archives sharded per user
+  - [ ] Automated retention pruning policy (e.g. keep 7 daily, 4 weekly, 12 monthly archives)
+  - [ ] 1-Click user data download and restore wizard directly from user preferences
+
+* **Track 2.10: Financial Data Reset & Re-Import Wizard**
+  - [ ] Safe 1-click purge wizard to wipe all financial transactions, accounts, and securities while strictly preserving user credentials, system settings, custom categories, and tags
 
 ---
 
@@ -87,7 +103,7 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 4: Quicken Classic Power Parity & Cash Flow Calendar (Completed ✅)
+### Phase 4: Quicken Classic Power Parity & Landlord Hub (Completed ✅)
 *Closing the core functional gaps with Quicken Classic Premier & Home & Business:*
 
 * **Track 4.1: Interactive Cash Flow & Financial Calendar View (Completed ✅)**
@@ -102,7 +118,7 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Holding period tracking ($< 365$ days vs. $\ge 365$ days) for Short-Term vs. Long-Term Capital Gains classification
   - [x] Tax-loss harvesting opportunities analyzer with lot-level capital gain/loss breakdown
 
-* **Track 4.3: Landlord & Rental Property Lease / Tenant Roll (Completed ✅)**
+* **Track 4.3: Landlord & Rental Property Lease / Tenant Roll (`moneta_finance_property`) (Completed ✅)**
   - [x] Tenant management (`moneta.property.tenant`) with lease start/end dates, monthly rent amount, and security deposit tracking
   - [x] Rent roll ledger with automated monthly rent invoice generation and overdue rent alerts
   - [x] Rental property expense categorization and Schedule E net operating income (NOI) reporting
@@ -114,39 +130,143 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 5: Open Banking & Live Bank Sync (Q1 2027)
-- [ ] **Plaid Integration**: US & Canada automated bank transaction download
-- [ ] **Salt Edge / Teller / SimpleFIN Sync**: European & Global Open Banking live feed
-- [ ] **Automated Rule Matching**: Auto-assign categories based on imported transaction metadata
+### Phase 5: Open Banking & Automated Feed Sync (Q1 2027)
+- [ ] **Plaid Integration**: US & Canada automated bank transaction download and account balance refresh
+- [ ] **Salt Edge / Teller / SimpleFIN Sync**: European & Global Open Banking live feed integration
+- [ ] **Automated Rule Matching Engine**: Auto-assign categories, payees, and split templates based on imported bank metadata and regex patterns
+- [ ] **Bank Feed Deduplication**: Fuzzy hash matching against pending manual entries to prevent double-counting
 
 ---
 
 ### Phase 6: Global Tax & Multi-Jurisdiction Packs
 - [x] **US Tax Pack (Completed ✅)**: Form 8949, Schedule D, 1099-DIV/INT, Schedule E, and TurboTax `.txf` export
-- [x] **Malaysia Wealth & Tax Pack (Completed ✅)**:
+- [x] **Malaysia Wealth & Tax Pack (`moneta_finance_malaysia`) (Completed ✅)**:
   - [x] EPF / KWSP 3-Account Hub (Akaun Persaraan 75%, Sejahtera 15%, Fleksibel 10%, dividend compounding, and i-Saraan matching)
   - [x] LHDN Borang BE Tax Relief Planner & Optimizer (Individual, Medical, Lifestyle, Sports, SSPN, EPF, Life, PRS, EV charging)
   - [x] Private Retirement Scheme (PRS) & ASNB Unit Trusts (ASB/ASM capital protected fixed-price tracking)
   - [x] Malaysian Semi/Full-Flexi Housing Loan SBR interest savings simulator
   - [x] RPGT (Real Property Gains Tax) disposal capital gains tax calculator
   - [x] Pre-loaded Malaysian banks, digital banks (GXBank, Boost Bank, AEON Bank), e-wallets, and utility payees
-- [ ] **UK / EU Tax Pack**: Capital Gains Tax allowance tracking and ISA portfolio accounts
+- [ ] **UK / EU Tax Pack**: Capital Gains Tax (CGT) annual exempt amount tracking, ISA (Individual Savings Account) wrapper management, and HMRC Self Assessment schedules
 
 ---
 
-### Phase 7: Crypto & Multi-Asset Hub (Q3 2027)
-- [ ] **Crypto Exchange API Sync**: Read-only balance sync for Coinbase, Binance, and Kraken
-- [ ] **On-Chain Wallet Tracking**: Ethereum, Bitcoin, and Solana public address balance monitoring
-- [ ] **Commodities & Precious Metals**: Live Gold (XAU) and Silver (XAG) spot pricing
+### Phase 7: Multi-Market Stock Intelligence, Technical Indicators & Strategies (Q2-Q3 2027)
+*Incorporating technical indicator engines and strategy scanners from `daily_stock_analysis` (`/opt/daily_stock_analysis`):*
+
+* **Track 7.1: Multi-Market Historical & Real-Time Data Pipeline**
+  - [ ] Expanded market data fetchers with fallback hierarchy: **Yahoo Finance**, **AkShare**, **Tushare**, **TickFlow**, **Longbridge**, and **AlphaVantage**
+  - [ ] Multi-market support: US (NYSE, NASDAQ), HK (HKEX), China A-Shares (SSE, SZSE, BSE), Singapore (SGX), Malaysia (Bursa), Japan (TSE), South Korea (KRX), Taiwan (TWSE), and Global ETFs
+  - [ ] Automated market trading calendar awareness (auto-skip holidays across US, SG, MY, HK, and CN exchanges)
+
+* **Track 7.2: Technical Indicator Calculation Engine (`moneta.security.price`)**
+  - [ ] **Moving Averages**: MA5, MA10, MA20, MA50, MA60, MA120, MA250, EMA12, EMA26
+  - [ ] **Momentum & Trend Oscillators**: MACD (DIF, DEA, Histogram), RSI (6, 12, 24 periods with overbought/oversold bands), KDJ (9, 3, 3)
+  - [ ] **Volatility & Range**: Bollinger Bands (20-day, $\pm 2\sigma$, Bandwidth %), Average True Range (ATR 14)
+  - [ ] **Volume & Liquidity Metrics**: Volume Ratio (量比), Volume Spike factor ($>2\times$ 20-day average volume), VWAP (Volume Weighted Average Price)
+  - [ ] **Chip Distribution Analytics (筹码分布)**: Profit chip ratio (获利筹码比例), 70% & 90% chip concentration ranges (筹码集中度)
+
+* **Track 7.3: 15 Built-in Technical & Fundamental Strategy Screeners**
+  - [ ] **Technical Pattern Scanners**:
+    - **MA Golden Cross / Death Cross**: Fast moving average breakout with volume confirmation
+    - **Bull Trend Alignment**: Classic MA5 > MA10 > MA20 > MA60 multi-timeframe alignment
+    - **Volume Breakout (放量突破)**: Heavy-volume surge breaking through 60-day resistance
+    - **Shrink Pullback (缩量回踩)**: Low-volume pullback touching key MA20/MA50 support
+    - **Box Channel Oscillation (箱体震荡)**: Range trading between validated support floor and resistance ceiling
+    - **Bottom Accumulation Volume (底部放量)**: Reversal accumulation signals at multi-month lows
+    - **One Yang Engulfing Three Yin (一阳吞三阴)**: Bullish engulfing candlestick reversal pattern
+    - **Chan Theory (缠论)**: Fractal (分型), Pen (笔), Central Zone (中枢), and 1st/2nd/3rd Buy/Sell point identification
+    - **Elliott Wave Structure (波浪理论)**: 5-wave impulse and 3-wave ABC corrective pattern recognition
+  - [ ] **Fundamental & Sentiment Screeners**:
+    - **Growth Quality**: High ROE ($>15\%$), operating margin expansion, low debt-to-equity ($<0.5$), and positive Free Cash Flow
+    - **Dividend Aristocrat & Value**: Low P/E ($<15$), Dividend Yield ($>4\%$), sustained dividend payout history
+    - **Event-Driven & Catalyst**: Earnings surprise beat, stock split announcements, share buyback programs
+    - **Expectation Repricing (预期重估)**: Valuation discount vs. forward consensus growth
+    - **Dragon Head / Momentum Leader (龙头战法)**: Sector leader momentum with relative strength index leadership
+
+* **Track 7.4: Crypto, Commodities & Digital Asset Hub**
+  - [ ] Read-only balance sync for major exchanges: Coinbase, Binance, and Kraken
+  - [ ] Public on-chain wallet tracking for Bitcoin (BTC), Ethereum (ETH), and Solana (SOL)
+  - [ ] Live spot pricing for Gold (XAU), Silver (XAG), and Platinum (XPT)
 
 ---
 
-### Phase 8: Mobile PWA & Autonomous AI Financial Copilot (Q4 2027)
-- [ ] **Responsive Mobile App**: Dedicated mobile-optimized dashboard view
-- [ ] **Offline Quick-Receipt Entry**: Progressive Web App (PWA) offline expense logging
-- [ ] **Autonomous Spending Leak Audits**: LLM-driven anomaly detection
-- [ ] **Cash Flow Forecasting**: 90-day predictive balance forecast using seasonal regression
-- [ ] **Subscription Negotiation Assistant**: Automated drafts for cancelling unused SaaS subscriptions
+### Phase 8: Pre-Aggregated Reports, Macro Reviews & Multi-Channel Webhook Alerts (Q3 2027)
+*Delivering the 46 pre-aggregated report catalog from Monize and automated market digests from DSA:*
+
+* **Track 8.1: Pre-Aggregated Financial Reports & Analytics Suite**
+  - [ ] **Year-over-Year (YoY) Monthly Comparison Matrix**: Side-by-side multi-year monthly category spending, income, and savings rate comparisons
+  - [ ] **Weekend vs. Weekday Spending Analysis**: Discretionary spending velocity, weekend vs. weekday spending ratio, and daily averages
+  - [ ] **Cash Flow Statement Engine**: Direct and indirect cash flow statements across custom calendar periods
+  - [ ] **Spending Anomaly & Spike Detection**: Automated statistical outlier detection ($>2\sigma$ historical category variance)
+  - [ ] **Data Quality & Hygiene Audit**: Automated reports for uncategorized transactions, fuzzy duplicate entries, and recurring price creep
+  - [ ] **Bill Payment Timeliness Matrix**: Historical tracking of on-time vs. late recurring bill payments
+  - [ ] **Debt Snowball & Avalanche Payoff Planner**: Interactive debt reduction simulator with milestone payoff dates
+
+* **Track 8.2: Daily Macro Market Review Briefing (`moneta.market.review`)**
+  - [ ] Automated post-market cron generating a daily macro briefing across tracked market indices (S&P 500, Nasdaq, STI, KLCI, Hang Seng, CSI 300)
+  - [ ] Market breadth metrics: Advancing vs. Declining stocks, Total market turnover, Sector & industry leaderboard
+  - [ ] Benchmark comparison: Portfolio alpha/beta performance against index benchmarks synthesized into an executive summary
+
+* **Track 8.3: Multi-Channel Webhook Notification Engine**
+  - [ ] Outbound HTTP Webhook dispatchers for **Telegram Bot**, **Discord Webhook**, **Slack Bot**, **Feishu / Lark Interactive Cards**, and **Enterprise WeChat**
+  - [ ] Configurable alert triggers:
+    - Daily Morning Portfolio Outlook & Evening Post-Market Digest
+    - Low balance & impending overdraft alerts
+    - Scheduled bill payment due date & credit card statement closing warnings
+    - Stock target price reached, stop-loss breach, and technical strategy triggers
+  - [ ] **Markdown-to-Image Infographic Generator**: Auto-renders daily market and net worth briefings into high-resolution shareable card graphics
+
+---
+
+### Phase 9: Autonomous AI Copilot, Stock Intelligence & Private Local LLMs (`moneta_finance_ai_advisor`) (Q4 2027)
+*Combining Monize's agentic financial tools with DSA's stock intelligence and local LLM privacy:*
+
+* **Track 9.1: Daily AI Stock Decision Cards (`moneta.security.analysis`)**
+  - [ ] Automated daily analysis generating a structured stock decision dashboard:
+    - **Quant Score (0–100)** and **Trend Direction** (Bullish / Range-bound / Bearish)
+    - **Action Verdict**: 🟢 Buy / 🟡 Hold / 🔴 Sell with confidence weighting
+    - **Execution Price Levels**: Ideal Entry Range, Strict Stop-Loss Level, Multi-stage Take-Profit Targets
+    - **Risk Alerts**: Institutional outflows, high chip dispersion, overhead resistance clusters
+    - **Bullish Catalysts**: Fundamental earnings surprise, industry tailwinds, technical confluence
+    - **Pre-Trade Execution Checklist**: 5-step risk-reward verification before executing orders
+
+* **Track 9.2: Real-Time Financial News & Sentiment Search**
+  - [ ] Integration with multi-engine search APIs: **Tavily**, **SerpAPI**, **Bocha**, **Brave Search**, and **SearXNG**
+  - [ ] Real-time sentiment classification: Bullish / Neutral / Bearish scoring of recent company news and regulatory filings
+  - [ ] Social sentiment integration: Reddit, X (Twitter), and Polymarket prediction market sentiment monitoring (US equities)
+
+* **Track 9.3: Universal Multi-LLM Provider Gateway & Local LLM Support**
+  - [ ] **Ollama Local Private Model Gateway**: 100% private, self-hosted local LLMs (Llama 3, DeepSeek-R1, Mistral, Qwen) with zero external network transmission of financial records
+  - [ ] **Expanded Cloud Provider Support**: Anthropic Claude, Google Gemini, OpenAI (GPT-4o), and custom OpenAI-compatible endpoints
+  - [ ] **AES-256-GCM Encryption**: Secure encryption for all stored API keys with per-user credential isolation
+  - [ ] **Provider Fallback Chain & Usage Analytics**: Automatic fallback to secondary models on timeout/rate limit, with token and cost tracking
+
+* **Track 9.4: Real-Time Streaming (SSE) & Dynamic Agentic Tool-Calling Loop**
+  - [ ] **Server-Sent Events (SSE) Streaming**: Token-by-token streaming chat interface for natural conversation flow
+  - [ ] **6 Core Financial Agentic Tools**:
+    1. `get_account_balances`: Real-time balances and credit utilization
+    2. `get_transactions_by_period`: Filtered transaction ledger queries
+    3. `get_spending_by_category`: Deep category and subcategory spending aggregations
+    4. `get_income_summary`: Income breakdown across salary, dividends, rental, and interest
+    5. `get_net_worth_history`: Multi-period historical net worth snapshots
+    6. `get_period_comparison`: Period-over-period financial variance calculations
+  - [ ] **90-Day Predictive Cash Flow Forecasting**: Seasonal regression forecasting for account balance trajectories
+  - [ ] **SaaS Subscription Negotiation Assistant**: Automated cancellation and reduction request drafts for unused recurring charges
+
+---
+
+### Phase 10: Native Mobile Apps (iOS & Android) & PWA (Q4 2027)
+*Delivering dedicated mobile apps and responsive fast-logging interfaces:*
+
+- [ ] **Cross-Platform Native Apps (iOS & Android)**: High-performance mobile applications built with React Native / Flutter connecting securely to Moneta via REST/JSON-RPC and MCP APIs
+- [ ] **Biometric Security**: Native Face ID, Touch ID, and Android Biometric Prompt authentication
+- [ ] **Offline-First Architecture**: Local SQLite cache enabling full offline checkbook browsing with background bidirectional synchronization and conflict resolution
+- [ ] **Native Camera Receipt & Invoice OCR**: In-app camera scanner capturing receipts and parsing itemized line items into transaction splits via on-device or cloud OCR
+- [ ] **Real-Time Push Notifications**: Native iOS (APNs) and Android (FCM) alerts for upcoming bill due dates, low balance thresholds, credit card settlement dates, and stock price alerts
+- [ ] **Home Screen Widgets & Fast Capture**: iOS Lock Screen / Home Screen Widgets and Android App Widgets for 1-tap rapid expense capture and live net worth glance
+- [ ] **Mobile Progressive Web App (PWA)**: Web-based PWA fallback for instant desktop/mobile browser installation without app store download
+- [ ] **Smartwatch Companions (Apple Watch & Wear OS)**: Quick glance at daily checking balance, monthly budget progress, and 1-tap voice expense logging
 
 ---
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Clean & Categorize Server Action -->
+    <record id="action_moneta_tx_ai_enrich" model="ir.actions.server">
+        <field name="name">AI Clean &amp; Categorize</field>
+        <field name="model_id" ref="moneta_finance.model_moneta_transaction"/>
+        <field name="state">code</field>
+        <field name="code">records.action_ai_enrich()</field>
+        <field name="binding_model_id" ref="moneta_finance.model_moneta_transaction"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

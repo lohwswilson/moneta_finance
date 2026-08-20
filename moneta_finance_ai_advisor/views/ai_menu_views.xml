@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Advisor Chat Menu -->
+    <menuitem id="menu_moneta_ai_chat"
+              name="Ask Moneta AI"
+              parent="moneta_finance.menu_moneta_reports_root"
+              action="action_moneta_ai_chat"
+              sequence="2"/>
+
+    <!-- Monthly AI Reports Menu -->
+    <menuitem id="menu_moneta_ai_summary"
+              name="Monthly AI Reports"
+              parent="moneta_finance.menu_moneta_reports_root"
+              action="action_moneta_ai_summary"
+              sequence="4"/>
+
+    <!-- AI Receipt OCR Menu -->
+    <menuitem id="menu_moneta_ai_receipt"
+              name="Scan Receipt / Invoice (AI OCR)"
+              parent="moneta_finance.menu_moneta_tools_root"
+              action="action_moneta_ai_receipt_wizard"
+              sequence="2"/>
+</odoo>

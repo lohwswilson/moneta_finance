@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_moneta_ai_chat_user,moneta.ai.chat.user,model_moneta_ai_chat,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_ai_chat_manager,moneta.ai.chat.manager,model_moneta_ai_chat,moneta_finance.group_moneta_manager,1,1,1,1
+access_moneta_ai_chat_message_user,moneta.ai.chat.message.user,model_moneta_ai_chat_message,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_ai_chat_message_manager,moneta.ai.chat.message.manager,model_moneta_ai_chat_message,moneta_finance.group_moneta_manager,1,1,1,1
+access_moneta_ai_summary_user,moneta.ai.summary.user,model_moneta_ai_summary,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_ai_summary_manager,moneta.ai.summary.manager,model_moneta_ai_summary,moneta_finance.group_moneta_manager,1,1,1,1
+access_moneta_ai_receipt_wizard_user,moneta.ai.receipt.wizard.user,model_moneta_ai_receipt_wizard,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_ai_receipt_wizard_manager,moneta.ai.receipt.wizard.manager,model_moneta_ai_receipt_wizard,moneta_finance.group_moneta_manager,1,1,1,1
+access_moneta_ai_receipt_line_wizard_user,moneta.ai.receipt.line.wizard.user,model_moneta_ai_receipt_line_wizard,moneta_finance.group_moneta_user,1,1,1,1
+access_moneta_ai_receipt_line_wizard_manager,moneta.ai.receipt.line.wizard.manager,model_moneta_ai_receipt_line_wizard,moneta_finance.group_moneta_manager,1,1,1,1

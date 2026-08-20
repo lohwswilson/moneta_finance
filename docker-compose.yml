@@ -14,8 +14,8 @@ services:
       - PASSWORD=odoo
     volumes:
       - odoo-web-data:/var/lib/odoo
-      - .:/mnt/extra-addons/moneta_finance
-    command: -- --addons-path=/mnt/extra-addons -d moneta_dev -i moneta_finance --dev=all
+      - .:/mnt/extra-addons
+    command: -- --addons-path=/mnt/extra-addons -d moneta_dev -i moneta_finance,moneta_finance_property,moneta_finance_singapore,moneta_finance_malaysia,moneta_finance_ai_advisor --dev=all
     restart: unless-stopped
 
   db:

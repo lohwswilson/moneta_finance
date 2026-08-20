@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
+from odoo.tests import tagged
 from datetime import date
-from ..models.ai_advisor import MonetaAIClient
+from ..models.ai_client import MonetaAIClient
+from .common import MonetaTestBase
 
 
-class TestAIFeatures(TransactionCase):
+@tagged('post_install', '-at_install', 'moneta_ai')
+class TestAIFeatures(MonetaTestBase):
 
     def setUp(self):
         super().setUp()
         self.user = self.env.user
-        self.account = self.env['moneta.account'].create({
-            'name': 'Primary Checking',
-            'account_type': 'checking',
-            'opening_balance': 2500.0,
-        })
-        self.category = self.env['moneta.category'].create({
-            'name': 'Groceries',
-            'is_income': False,
-        })
+        self.account = self._make_account(
+            name='Primary Checking',
+            account_type='checking',
+            opening_balance=2500.0,
+        )
+        self.category = self.cat_expense
 
     def test_ai_advisor_fallback(self):
         """Test fallback advisory message when no external API key is set."""
@@ -57,11 +57,11 @@ class TestAIFeatures(TransactionCase):
 
     def test_ai_transaction_enrich(self):
         """Test transaction AI enrichment action."""
-        tx = self.env['moneta.transaction'].create({
-            'account_id': self.account.id,
-            'amount': -35.0,
-            'memo': 'SQ *BLUE BOTTLE COFFEE SF CA',
-            'transaction_date': date(2026, 8, 1),
-        })
+        tx = self._make_transaction(
+            account=self.account,
+            amount=-35.0,
+            memo='SQ *BLUE BOTTLE COFFEE SF CA',
+            transaction_date=date(2026, 8, 1),
+        )
         tx.action_ai_enrich()
         self.assertEqual(tx.amount, -35.0)

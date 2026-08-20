@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_moneta_ai_config_settings_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.moneta.ai</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='moneta_finance']" position="inside">
+                <block title="Generative AI Intelligence Engine (Gemini &amp; OpenAI)" id="moneta_ai_block">
+                    <setting id="moneta_ai_setting" help="Configure Google Gemini or OpenAI API keys for AI Advisor Chat, Receipt Vision OCR, and Transaction Enrichment.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="moneta_ai_provider" class="col-lg-3 o_light_label"/>
+                                <field name="moneta_ai_provider" class="col-lg-9"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="moneta_ai_api_key" class="col-lg-3 o_light_label"/>
+                                <field name="moneta_ai_api_key" password="True" class="col-lg-9" placeholder="AIzaSy... or sk-proj-..."/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="moneta_ai_model" class="col-lg-3 o_light_label"/>
+                                <field name="moneta_ai_model" class="col-lg-9" placeholder="gemini-1.5-flash / gpt-4o-mini"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

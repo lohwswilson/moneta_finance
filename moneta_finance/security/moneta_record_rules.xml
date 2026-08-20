@@ -458,34 +458,6 @@
             <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
         </record>
 
-        <!-- moneta.ai.chat -->
-        <record id="moneta_ai_chat_rule_user" model="ir.rule">
-            <field name="name">Moneta AI Chat: own</field>
-            <field name="model_id" ref="model_moneta_ai_chat"/>
-            <field name="domain_force">[('user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
-        </record>
-        <record id="moneta_ai_chat_rule_manager" model="ir.rule">
-            <field name="name">Moneta AI Chat: manager</field>
-            <field name="model_id" ref="model_moneta_ai_chat"/>
-            <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
-        </record>
-
-        <!-- moneta.ai.summary -->
-        <record id="moneta_ai_summary_rule_user" model="ir.rule">
-            <field name="name">Moneta AI Summary: own</field>
-            <field name="model_id" ref="model_moneta_ai_summary"/>
-            <field name="domain_force">[('user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
-        </record>
-        <record id="moneta_ai_summary_rule_manager" model="ir.rule">
-            <field name="name">Moneta AI Summary: manager</field>
-            <field name="model_id" ref="model_moneta_ai_summary"/>
-            <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
-        </record>
-
         <!-- moneta.target.allocation -->
         <record id="moneta_target_allocation_rule_user" model="ir.rule">
             <field name="name">Moneta Target Allocation: own</field>
@@ -596,20 +568,6 @@
         <record id="moneta_monte_carlo_path_rule_manager" model="ir.rule">
             <field name="name">Moneta Monte Carlo Path: manager</field>
             <field name="model_id" ref="model_moneta_monte_carlo_path"/>
-            <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
-        </record>
-
-        <!-- moneta.ai.chat.message -->
-        <record id="moneta_ai_chat_message_rule_user" model="ir.rule">
-            <field name="name">Moneta AI Chat Message: own</field>
-            <field name="model_id" ref="model_moneta_ai_chat_message"/>
-            <field name="domain_force">[('user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
-        </record>
-        <record id="moneta_ai_chat_message_rule_manager" model="ir.rule">
-            <field name="name">Moneta AI Chat Message: manager</field>
-            <field name="model_id" ref="model_moneta_ai_chat_message"/>
             <field name="domain_force">[(1,'=',1)]</field>
             <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
         </record>

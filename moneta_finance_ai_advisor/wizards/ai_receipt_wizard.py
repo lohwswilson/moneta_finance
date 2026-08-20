@@ -4,7 +4,7 @@ import base64
 from datetime import date
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from ..models.ai_advisor import MonetaAIClient
+from ..models.ai_client import MonetaAIClient
 
 
 class MonetaAIReceiptWizard(models.TransientModel):
@@ -50,7 +50,7 @@ class MonetaAIReceiptWizard(models.TransientModel):
         )
 
         raw_json = MonetaAIClient.analyze_image(self.env, img_b64, prompt)
-        
+
         # Clean any markdown code blocks
         clean_json = raw_json.strip()
         if clean_json.startswith('```json'):
@@ -109,17 +109,12 @@ class MonetaAIReceiptWizard(models.TransientModel):
         split_vals = []
         if self.line_ids:
             for l in self.line_ids:
-                # Find best category match
                 line_cat = self.env['moneta.category'].search([('name', '=ilike', l.category_suggestion)], limit=1) or cat
                 split_vals.append((0, 0, {
                     'category_id': line_cat.id if line_cat else False,
                     'amount': -abs(float(l.amount or 0.0)),
                     'memo': l.description,
                 }))
-            # The parsed total usually includes tax while line items are
-            # pre-tax; the transaction split guard requires the splits to sum
-            # to the total, so a balancing line absorbs the difference
-            # (tax / rounding) instead of failing the create.
             split_sum = sum(float(v[2]['amount']) for v in split_vals)
             balance = round(tx_amount - split_sum, 4)
             if abs(balance) > 0.01:

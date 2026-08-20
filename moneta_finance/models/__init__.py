@@ -22,7 +22,6 @@ from . import property
 from . import subscription_detector
 from . import insight
 from . import res_config_settings
-from . import ai_advisor
 from . import portfolio_analytics
 from . import dashboard_action
 from . import action_history
