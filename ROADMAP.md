@@ -49,9 +49,9 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Automated daily email reminder cron to owner before granting access to emergency contacts
   - [x] Read-only view permissions for designated family members/executors
 
-* **Track 2.6: Financial Assistant MCP Server (Model Context Protocol)**
-  - [ ] Standardized MCP tool endpoints for local AI agents (Claude, Gemini, Antigravity)
-  - [ ] Natural language tool suite: balance queries, spending categorization, bill forecasting, and loan simulations
+* **Track 2.6: Financial Assistant MCP Server (Model Context Protocol) (Completed ✅)**
+  - [x] Standardized MCP tool endpoints for local AI agents (Claude, Gemini, Antigravity)
+  - [x] Natural language tool suite: balance queries, spending categorization, bill forecasting, and loan simulations
 
 ---
 
