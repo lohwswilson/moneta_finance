@@ -63,5 +63,16 @@
             <field name="interval_type">hours</field>
             <field name="active">True</field>
         </record>
+
+        <!-- Daily: check pending emergency access claims and unlock expired waiting periods -->
+        <record id="cron_moneta_emergency_access" model="ir.cron">
+            <field name="name">Moneta: process emergency access claims</field>
+            <field name="model_id" ref="model_moneta_emergency_contact"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_emergency_access()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
     </data>
 </odoo>

@@ -8,8 +8,9 @@
             <form string="Emergency Access &amp; Digital Estate Contact">
                 <header>
                     <button name="action_initiate_claim" type="object" string="Initiate Emergency Claim" class="btn-warning" invisible="status != 'active'" confirm="Are you sure you want to trigger the emergency claim waiting period?"/>
-                    <button name="action_approve_access" type="object" string="Grant Access" class="btn-success" invisible="status != 'pending_claim'"/>
-                    <button name="action_revoke_access" type="object" string="Revoke Contact" class="btn-danger" invisible="status == 'revoked'"/>
+                    <button name="action_decline_claim" type="object" string="🚫 Decline Claim" class="btn-danger" invisible="status != 'pending_claim'" confirm="Are you sure you want to decline this emergency claim?"/>
+                    <button name="action_approve_access" type="object" string="Grant Access Early" class="btn-success" invisible="status != 'pending_claim'"/>
+                    <button name="action_revoke_access" type="object" string="Revoke Contact" class="btn-secondary" invisible="status in ('revoked', 'declined')"/>
                     <field name="status" widget="statusbar" statusbar_visible="active,pending_claim,approved"/>
                 </header>
                 <sheet>
@@ -17,6 +18,18 @@
                         <label for="name" string="Contact Name"/>
                         <h1><field name="name" placeholder="e.g. Jane Doe (Spouse)"/></h1>
                     </div>
+
+                    <!-- Pending Claim Alert Banner -->
+                    <div class="alert alert-warning d-flex align-items-center justify-content-between p-3 my-3 rounded-3" invisible="status != 'pending_claim'">
+                        <div>
+                            <i class="fa fa-clock-o fa-2x text-warning me-3"/>
+                            <strong>Emergency Access Claim Pending!</strong>
+                            <p class="mb-0 small text-muted">
+                                Unlock Date: <strong><field name="unlock_date"/></strong> (<field name="days_remaining"/> days remaining). Owner will receive daily email alerts until grace period expires.
+                            </p>
+                        </div>
+                    </div>
+
                     <group>
                         <group string="Contact Details">
                             <field name="email" widget="email"/>
@@ -24,9 +37,11 @@
                             <field name="relationship"/>
                             <field name="user_id" invisible="1"/>
                         </group>
-                        <group string="Security Waiting Period">
+                        <group string="Security Waiting Period &amp; Unlock">
                             <field name="waiting_period_days"/>
                             <field name="claim_request_date" invisible="not claim_request_date"/>
+                            <field name="unlock_date" invisible="not unlock_date"/>
+                            <field name="days_remaining" invisible="status != 'pending_claim'"/>
                             <field name="access_granted_date" invisible="not access_granted_date"/>
                         </group>
                     </group>
@@ -48,11 +63,14 @@
                 <field name="relationship"/>
                 <field name="email"/>
                 <field name="phone"/>
-                <field name="waiting_period_days" string="Waiting Period (Days)"/>
+                <field name="waiting_period_days" string="Grace Period (Days)"/>
+                <field name="unlock_date" string="Unlock Date" optional="show"/>
+                <field name="days_remaining" string="Days Left" optional="show"/>
                 <field name="status" widget="badge" 
                        decoration-success="status == 'active'" 
                        decoration-warning="status == 'pending_claim'" 
                        decoration-info="status == 'approved'" 
+                       decoration-muted="status == 'declined'" 
                        decoration-danger="status == 'revoked'"/>
             </list>
         </field>

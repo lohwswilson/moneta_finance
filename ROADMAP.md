@@ -44,10 +44,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Mutation audit logger for batch operations (statement imports, batch categorization, rule execution)
   - [x] 1-Click "Undo Last Action" wizard to cleanly revert batch imports or bulk changes
 
-* **Track 2.5: Time-Delayed Emergency Digital Estate Access**
-  - [ ] Time-delayed security lock with configurable grace period (7, 14, or 30 days)
-  - [ ] Automated daily email reminder cron to owner before granting access to emergency contacts
-  - [ ] Read-only view permissions for designated family members/executors
+* **Track 2.5: Time-Delayed Emergency Digital Estate Access (Completed ✅)**
+  - [x] Time-delayed security lock with configurable grace period (7, 14, or 30 days)
+  - [x] Automated daily email reminder cron to owner before granting access to emergency contacts
+  - [x] Read-only view permissions for designated family members/executors
 
 * **Track 2.6: Financial Assistant MCP Server (Model Context Protocol)**
   - [ ] Standardized MCP tool endpoints for local AI agents (Claude, Gemini, Antigravity)
