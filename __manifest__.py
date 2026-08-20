@@ -100,6 +100,7 @@ Key Features & Capabilities:
         'views/singapore_fixed_income_views.xml',
         'views/iras_tax_views.xml',
         'views/duplicate_detector_views.xml',
+        'views/cashflow_calendar_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

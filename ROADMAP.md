@@ -90,11 +90,11 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 ### Phase 4: Quicken Classic Power Parity & Cash Flow Calendar (Q4 2026)
 *Closing the core functional gaps with Quicken Classic Premier & Home & Business:*
 
-* **Track 4.1: Interactive Cash Flow & Financial Calendar View**
-  - [ ] Month/Week/Day visual calendar view (`view_mode="calendar"`) plotting scheduled bills, deposits, and transfers
-  - [ ] Daily projected end-of-day bank balance calculation across all active checking/savings accounts
-  - [ ] Visual overdraft & low-balance threshold warnings on future calendar dates
-  - [ ] 1-Click quick-entry and skip occurrence directly from the interactive calendar view
+* **Track 4.1: Interactive Cash Flow & Financial Calendar View (Completed ✅)**
+  - [x] Month/Week/Day visual calendar view (`view_mode="calendar"`) plotting scheduled bills, deposits, and transfers
+  - [x] Daily projected end-of-day bank balance calculation across all active checking/savings accounts
+  - [x] Visual overdraft & low-balance threshold warnings on future calendar dates
+  - [x] 1-Click quick-entry and skip occurrence directly from the interactive calendar view
 
 * **Track 4.2: Investment Tax-Lot Accounting (Specific ID, FIFO, LIFO, HIFO)**
   - [ ] Lot-level purchase tracking (`moneta.security.lot`) recording purchase date, quantity, cost basis, and remaining shares

@@ -104,6 +104,12 @@
               action="action_moneta_recurring"
               sequence="10"/>
 
+    <menuitem id="menu_moneta_cashflow_projection"
+              name="Cash Flow &amp; Financial Calendar"
+              parent="menu_moneta_planning_root"
+              action="action_moneta_cashflow_projection"
+              sequence="15"/>
+
     <menuitem id="menu_moneta_budgets"
               name="Category Budgets"
               parent="menu_moneta_planning_root"

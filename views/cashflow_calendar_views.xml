@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Daily Cash Flow Calendar Line Calendar View -->
+    <record id="view_moneta_cashflow_projection_line_calendar" model="ir.ui.view">
+        <field name="name">moneta.cashflow.projection.line.calendar</field>
+        <field name="model">moneta.cashflow.projection.line</field>
+        <field name="arch" type="xml">
+            <calendar string="Projected Cash Flow Calendar"
+                      date_start="projection_date"
+                      color="is_overdraft"
+                      mode="month"
+                      quick_create="0">
+                <field name="closing_balance" widget="monetary"/>
+                <field name="event_summary"/>
+                <field name="net_change" widget="monetary"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Cashflow Projection Line List View -->
+    <record id="view_moneta_cashflow_projection_line_tree" model="ir.ui.view">
+        <field name="name">moneta.cashflow.projection.line.list</field>
+        <field name="model">moneta.cashflow.projection.line</field>
+        <field name="arch" type="xml">
+            <list string="Daily Projected Balances" default_order="projection_date asc" decoration-danger="is_overdraft" decoration-success="closing_balance &gt; 0">
+                <field name="projection_date" string="Date" class="fw-bold"/>
+                <field name="day_of_week" string="Day"/>
+                <field name="opening_balance" string="Opening" widget="monetary"/>
+                <field name="total_income" string="Inflows (+)" widget="monetary" decoration-success="total_income &gt; 0"/>
+                <field name="total_expense" string="Outflows (-)" widget="monetary" decoration-danger="total_expense &gt; 0"/>
+                <field name="net_change" string="Net Change" widget="monetary" decoration-success="net_change &gt; 0" decoration-danger="net_change &lt; 0"/>
+                <field name="closing_balance" string="Projected Balance" widget="monetary" class="fw-bold"/>
+                <field name="event_summary" string="Scheduled Bills / Paychecks"/>
+                <field name="is_overdraft" widget="badge" decoration-danger="is_overdraft" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Cashflow Projection Form View -->
+    <record id="view_moneta_cashflow_projection_form" model="ir.ui.view">
+        <field name="name">moneta.cashflow.projection.form</field>
+        <field name="model">moneta.cashflow.projection</field>
+        <field name="arch" type="xml">
+            <form string="Quicken Cash Flow &amp; Financial Calendar">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🗓️ Projected Cash Flow &amp; Overdraft Forecast (Quicken Parity)</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Cashflow Hero Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" 
+                         style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 5px solid #16a34a !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-line-chart text-success me-1"/>Forecast Summary &amp; Liquidity Health
+                            </span>
+                            <span class="badge px-3 py-1 fs-6" decoration-danger="has_overdraft_risk" decoration-success="not has_overdraft_risk">
+                                <field name="has_overdraft_risk" invisible="1"/>
+                                <span invisible="has_overdraft_risk">✅ Safe Cash Buffer</span>
+                                <span invisible="not has_overdraft_risk" class="bg-danger text-white">⚠️ Overdraft Risk Detected</span>
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-3">
+                                <span class="text-muted small">Starting Balance</span>
+                                <h2 class="fw-bold mb-0 text-dark"><field name="starting_balance" widget="monetary"/></h2>
+                                <span class="text-muted small">On <field name="start_date"/></span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">Lowest Projected Balance</span>
+                                <h2 class="fw-bold mb-0" decoration-danger="lowest_projected_balance &lt; 0" decoration-success="lowest_projected_balance &gt; 0">
+                                    <field name="lowest_projected_balance" widget="monetary"/>
+                                </h2>
+                                <span class="text-muted small">On <field name="lowest_balance_date"/></span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">Ending Projected Balance</span>
+                                <h2 class="fw-bold mb-0 text-primary"><field name="ending_projected_balance" widget="monetary"/></h2>
+                                <span class="text-muted small">On <field name="end_date"/></span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">Net Cash Flow</span>
+                                <h2 class="fw-bold mb-0" decoration-success="net_projected_cashflow &gt; 0" decoration-danger="net_projected_cashflow &lt; 0">
+                                    <field name="net_projected_cashflow" widget="monetary"/>
+                                </h2>
+                                <span class="text-muted small">+<field name="total_projected_income" widget="monetary"/> / -<field name="total_projected_expenses" widget="monetary"/></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Projection Parameters">
+                            <field name="account_id" placeholder="All Liquid Accounts (Default)"/>
+                            <field name="forecast_days"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Overdraft &amp; Liquidity Controls">
+                            <field name="overdraft_days_count" class="text-danger fw-bold"/>
+                            <field name="has_overdraft_risk" invisible="1"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Daily Projected Register" name="daily_register_page">
+                            <field name="line_ids" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Cashflow Projection List View -->
+    <record id="view_moneta_cashflow_projection_tree" model="ir.ui.view">
+        <field name="name">moneta.cashflow.projection.list</field>
+        <field name="model">moneta.cashflow.projection</field>
+        <field name="arch" type="xml">
+            <list string="Cash Flow Forecasts" default_order="start_date desc">
+                <field name="name" class="fw-bold"/>
+                <field name="account_id"/>
+                <field name="forecast_days"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="starting_balance" widget="monetary"/>
+                <field name="lowest_projected_balance" widget="monetary" decoration-danger="lowest_projected_balance &lt; 0"/>
+                <field name="ending_projected_balance" widget="monetary" class="fw-bold text-primary"/>
+                <field name="has_overdraft_risk" widget="badge" decoration-danger="has_overdraft_risk" decoration-success="not has_overdraft_risk"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_moneta_cashflow_projection" model="ir.actions.act_window">
+        <field name="name">Cash Flow &amp; Financial Calendar</field>
+        <field name="res_model">moneta.cashflow.projection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Scheduled Bills Calendar View on Recurring Transaction -->
+    <record id="view_moneta_recurring_calendar" model="ir.ui.view">
+        <field name="name">moneta.recurring.transaction.calendar</field>
+        <field name="model">moneta.recurring.transaction</field>
+        <field name="arch" type="xml">
+            <calendar string="Bills &amp; Income Schedule Calendar"
+                      date_start="next_date"
+                      color="account_id"
+                      mode="month"
+                      quick_create="0">
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="amount" widget="monetary"/>
+                <field name="due_status"/>
+            </calendar>
+        </field>
+    </record>
+</odoo>
