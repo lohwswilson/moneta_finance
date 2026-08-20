@@ -81,9 +81,9 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Tax Relief Tracker: Retirement Sum Topping-Up (RSTU $8k self + $8k loved ones), SRS ($15.3k), CPF Employee, NSman, Parent, and Child reliefs
   - [x] Year-end tax optimization advisory: actionable suggestions to maximize tax deductions before Dec 31
 
-* **Track 3.5: Pre-Configured Singapore / SEA Master Data**
-  - [ ] Pre-loaded Singapore & SEA financial institutions: DBS/POSB, OCBC, UOB, Standard Chartered, MariBank, GXS, Trust Bank, CPF Board, Endowus, Syfe, Moomoo, Tiger Brokers, Maybank, CIMB
-  - [ ] Pre-loaded common payees & categories: NTUC FairPrice, Cold Storage, Sheng Siong, Grab/GrabFood, Singtel, StarHub, M1, SP Group, HDB Town Council, IRAS, LTA SimplyGo/ERP, Shopee, Lazada
+* **Track 3.5: Pre-Configured Singapore / SEA Master Data (Completed ✅)**
+  - [x] Pre-loaded Singapore & SEA financial institutions: DBS/POSB, OCBC, UOB, Standard Chartered, MariBank, GXS, Trust Bank, CPF Board, Endowus, Syfe, Moomoo, Tiger Brokers, Maybank, CIMB
+  - [x] Pre-loaded common payees & categories: NTUC FairPrice, Cold Storage, Sheng Siong, Grab/GrabFood, Singtel, StarHub, M1, SP Group, HDB Town Council, IRAS, LTA SimplyGo/ERP, Shopee, Lazada
 
 ---
 

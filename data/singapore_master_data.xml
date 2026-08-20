@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================================ -->
+        <!-- Singapore & SEA Financial Institutions                       -->
+        <!-- ============================================================ -->
+        <!-- Major Singapore Retail Banks -->
+        <record id="inst_dbs_posb" model="moneta.institution">
+            <field name="name">DBS / POSB Bank</field>
+            <field name="website">dbs.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">dbs_posb</field>
+        </record>
+
+        <record id="inst_ocbc" model="moneta.institution">
+            <field name="name">OCBC Bank</field>
+            <field name="website">ocbc.com</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">ocbc</field>
+        </record>
+
+        <record id="inst_uob" model="moneta.institution">
+            <field name="name">UOB (United Overseas Bank)</field>
+            <field name="website">uob.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">uob</field>
+        </record>
+
+        <record id="inst_sc_sg" model="moneta.institution">
+            <field name="name">Standard Chartered Singapore</field>
+            <field name="website">sc.com/sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">sc</field>
+        </record>
+
+        <record id="inst_hsbc_sg" model="moneta.institution">
+            <field name="name">HSBC Singapore</field>
+            <field name="website">hsbc.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">hsbc</field>
+        </record>
+
+        <record id="inst_citi_sg" model="moneta.institution">
+            <field name="name">Citibank Singapore</field>
+            <field name="website">citibank.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">citi</field>
+        </record>
+
+        <!-- Singapore Digital Full Banks -->
+        <record id="inst_maribank" model="moneta.institution">
+            <field name="name">MariBank (Sea Ltd)</field>
+            <field name="website">maribank.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_gxs_bank" model="moneta.institution">
+            <field name="name">GXS Bank (Grab &amp; Singtel)</field>
+            <field name="website">gxs.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_trust_bank" model="moneta.institution">
+            <field name="name">Trust Bank (FairPrice &amp; StanChart)</field>
+            <field name="website">trustbank.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <!-- Sovereign, Pension & Tax Bodies -->
+        <record id="inst_cpf_board" model="moneta.institution">
+            <field name="name">Central Provident Fund Board (CPF)</field>
+            <field name="website">cpf.gov.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_iras" model="moneta.institution">
+            <field name="name">Inland Revenue Authority of Singapore (IRAS)</field>
+            <field name="website">iras.gov.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_hdb" model="moneta.institution">
+            <field name="name">Housing &amp; Development Board (HDB)</field>
+            <field name="website">hdb.gov.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <!-- Robo-Advisors & Wealth Platforms -->
+        <record id="inst_endowus" model="moneta.institution">
+            <field name="name">Endowus (Cash / CPF / SRS)</field>
+            <field name="website">endowus.com</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_syfe" model="moneta.institution">
+            <field name="name">Syfe Wealth &amp; Brokerage</field>
+            <field name="website">syfe.com</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_stashaway" model="moneta.institution">
+            <field name="name">StashAway</field>
+            <field name="website">stashaway.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <!-- Retail Brokerages -->
+        <record id="inst_moomoo" model="moneta.institution">
+            <field name="name">Moomoo Financial Singapore</field>
+            <field name="website">moomoo.com/sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_tiger" model="moneta.institution">
+            <field name="name">Tiger Brokers Singapore</field>
+            <field name="website">tigerbrokers.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_ibkr_sg" model="moneta.institution">
+            <field name="name">Interactive Brokers Singapore (IBKR)</field>
+            <field name="website">interactivebrokers.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_poems" model="moneta.institution">
+            <field name="name">POEMS (PhillipCapital)</field>
+            <field name="website">poems.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_fsmone" model="moneta.institution">
+            <field name="name">FSMOne (iFAST Financial)</field>
+            <field name="website">fsmone.com</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <!-- Regional SEA Banks -->
+        <record id="inst_maybank" model="moneta.institution">
+            <field name="name">Maybank Singapore / Malaysia</field>
+            <field name="website">maybank2u.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">maybank</field>
+        </record>
+
+        <record id="inst_cimb" model="moneta.institution">
+            <field name="name">CIMB Bank Singapore / Malaysia</field>
+            <field name="website">cimb.com.sg</field>
+            <field name="country">SG</field>
+            <field name="bank_profile">maybank</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- Singapore Localized Categories                               -->
+        <!-- ============================================================ -->
+        <record id="cat_cpf_contributions" model="moneta.category">
+            <field name="name">CPF Contributions (Employee / Employer)</field>
+            <field name="is_income" eval="False"/>
+            <field name="is_system" eval="True"/>
+            <field name="icon">🛡️</field>
+            <field name="color">#0D6EFD</field>
+        </record>
+
+        <record id="cat_cpf_housing_grant" model="moneta.category">
+            <field name="name">CPF Housing Grants &amp; Withdrawals</field>
+            <field name="is_system" eval="True"/>
+            <field name="icon">🏠</field>
+            <field name="color">#6610F2</field>
+            <field name="parent_id" ref="cat_housing"/>
+        </record>
+
+        <record id="cat_town_council_scc" model="moneta.category">
+            <field name="name">Town Council (S&amp;CC)</field>
+            <field name="is_system" eval="True"/>
+            <field name="icon">🏢</field>
+            <field name="color">#DC3545</field>
+            <field name="parent_id" ref="cat_housing"/>
+        </record>
+
+        <record id="cat_sp_services_util" model="moneta.category">
+            <field name="name">SP Group (Electricity, Water &amp; Gas)</field>
+            <field name="is_system" eval="True"/>
+            <field name="icon">⚡</field>
+            <field name="color">#FFC107</field>
+            <field name="parent_id" ref="cat_housing_utilities"/>
+        </record>
+
+        <record id="cat_lta_erp_simplygo" model="moneta.category">
+            <field name="name">SimplyGo, Bus, MRT &amp; ERP</field>
+            <field name="is_system" eval="True"/>
+            <field name="icon">🚇</field>
+            <field name="color">#198754</field>
+            <field name="parent_id" ref="cat_public_transit"/>
+        </record>
+
+        <record id="cat_iras_tax_payment" model="moneta.category">
+            <field name="name">IRAS Income &amp; Property Tax</field>
+            <field name="is_system" eval="True"/>
+            <field name="icon">📋</field>
+            <field name="color">#FD7E14</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- Pre-Loaded Singapore Payees (with official domain favicons)  -->
+        <!-- ============================================================ -->
+        <record id="payee_fairprice" model="moneta.payee">
+            <field name="name">NTUC FairPrice</field>
+            <field name="website">fairprice.com.sg</field>
+            <field name="default_category_id" ref="cat_groceries"/>
+        </record>
+
+        <record id="payee_sheng_siong" model="moneta.payee">
+            <field name="name">Sheng Siong Supermarket</field>
+            <field name="website">shengsiong.com.sg</field>
+            <field name="default_category_id" ref="cat_groceries"/>
+        </record>
+
+        <record id="payee_cold_storage" model="moneta.payee">
+            <field name="name">Cold Storage / CS Fresh</field>
+            <field name="website">coldstorage.com.sg</field>
+            <field name="default_category_id" ref="cat_groceries"/>
+        </record>
+
+        <record id="payee_don_don_donki" model="moneta.payee">
+            <field name="name">Don Don Donki</field>
+            <field name="website">dondondonki.com</field>
+            <field name="default_category_id" ref="cat_groceries"/>
+        </record>
+
+        <record id="payee_grab" model="moneta.payee">
+            <field name="name">Grab / GrabFood / GrabPay</field>
+            <field name="website">grab.com</field>
+            <field name="default_category_id" ref="cat_restaurants"/>
+        </record>
+
+        <record id="payee_gojek" model="moneta.payee">
+            <field name="name">Gojek Singapore</field>
+            <field name="website">gojek.com</field>
+            <field name="default_category_id" ref="cat_transportation"/>
+        </record>
+
+        <record id="payee_cdg_zig" model="moneta.payee">
+            <field name="name">ComfortDelGro (CDG Zig)</field>
+            <field name="website">cdgglobal.com</field>
+            <field name="default_category_id" ref="cat_transportation"/>
+        </record>
+
+        <record id="payee_simplygo" model="moneta.payee">
+            <field name="name">LTA SimplyGo / TransitLink</field>
+            <field name="website">simplygo.com.sg</field>
+            <field name="default_category_id" ref="cat_lta_erp_simplygo"/>
+        </record>
+
+        <record id="payee_singtel" model="moneta.payee">
+            <field name="name">Singtel</field>
+            <field name="website">singtel.com</field>
+            <field name="default_category_id" ref="cat_internet"/>
+        </record>
+
+        <record id="payee_starhub" model="moneta.payee">
+            <field name="name">StarHub</field>
+            <field name="website">starhub.com</field>
+            <field name="default_category_id" ref="cat_internet"/>
+        </record>
+
+        <record id="payee_m1" model="moneta.payee">
+            <field name="name">M1 Limited</field>
+            <field name="website">m1.com.sg</field>
+            <field name="default_category_id" ref="cat_phone"/>
+        </record>
+
+        <record id="payee_sp_group" model="moneta.payee">
+            <field name="name">SP Services (SP Group)</field>
+            <field name="website">spgroup.com.sg</field>
+            <field name="default_category_id" ref="cat_sp_services_util"/>
+        </record>
+
+        <record id="payee_iras" model="moneta.payee">
+            <field name="name">Inland Revenue Authority of Singapore (IRAS)</field>
+            <field name="website">iras.gov.sg</field>
+            <field name="default_category_id" ref="cat_iras_tax_payment"/>
+        </record>
+
+        <record id="payee_cpf_board" model="moneta.payee">
+            <field name="name">CPF Board</field>
+            <field name="website">cpf.gov.sg</field>
+            <field name="default_category_id" ref="cat_cpf_contributions"/>
+        </record>
+
+        <record id="payee_shopee" model="moneta.payee">
+            <field name="name">Shopee Singapore</field>
+            <field name="website">shopee.sg</field>
+            <field name="default_category_id" ref="cat_shopping"/>
+        </record>
+
+        <record id="payee_lazada" model="moneta.payee">
+            <field name="name">Lazada Singapore</field>
+            <field name="website">lazada.sg</field>
+            <field name="default_category_id" ref="cat_shopping"/>
+        </record>
+
+        <record id="payee_foodpanda" model="moneta.payee">
+            <field name="name">Foodpanda Singapore</field>
+            <field name="website">foodpanda.sg</field>
+            <field name="default_category_id" ref="cat_restaurants"/>
+        </record>
+
+        <record id="payee_guardian" model="moneta.payee">
+            <field name="name">Guardian Health &amp; Beauty</field>
+            <field name="website">guardian.com.sg</field>
+            <field name="default_category_id" ref="cat_health"/>
+        </record>
+
+        <record id="payee_watsons" model="moneta.payee">
+            <field name="name">Watsons Singapore</field>
+            <field name="website">watsons.com.sg</field>
+            <field name="default_category_id" ref="cat_health"/>
+        </record>
+    </data>
+</odoo>

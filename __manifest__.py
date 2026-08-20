@@ -66,6 +66,7 @@ Key Features & Capabilities:
         'security/ir.model.access.csv',
         'security/moneta_record_rules.xml',
         'data/default_categories.xml',
+        'data/singapore_master_data.xml',
         'data/moneta_cron.xml',
         'views/category_views.xml',
         'views/payee_views.xml',
