@@ -121,10 +121,16 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 6: Global Tax & Multi-Jurisdiction Packs (Q2 2027)
-- [ ] **US Tax Pack**: 1099-DIV, 1099-B capital gains schedule, and tax-loss harvesting
+### Phase 6: Global Tax & Multi-Jurisdiction Packs
+- [x] **US Tax Pack (Completed ✅)**: Form 8949, Schedule D, 1099-DIV/INT, Schedule E, and TurboTax `.txf` export
+- [x] **Malaysia Wealth & Tax Pack (Completed ✅)**:
+  - [x] EPF / KWSP 3-Account Hub (Akaun Persaraan 75%, Sejahtera 15%, Fleksibel 10%, dividend compounding, and i-Saraan matching)
+  - [x] LHDN Borang BE Tax Relief Planner & Optimizer (Individual, Medical, Lifestyle, Sports, SSPN, EPF, Life, PRS, EV charging)
+  - [x] Private Retirement Scheme (PRS) & ASNB Unit Trusts (ASB/ASM capital protected fixed-price tracking)
+  - [x] Malaysian Semi/Full-Flexi Housing Loan SBR interest savings simulator
+  - [x] RPGT (Real Property Gains Tax) disposal capital gains tax calculator
+  - [x] Pre-loaded Malaysian banks, digital banks (GXBank, Boost Bank, AEON Bank), e-wallets, and utility payees
 - [ ] **UK / EU Tax Pack**: Capital Gains Tax allowance tracking and ISA portfolio accounts
-- [ ] **Malaysia / Regional Tax Pack**: EPF (KWSP) dividend tracking and LHDN tax relief schedule
 
 ---
 

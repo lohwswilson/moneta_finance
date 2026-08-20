@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PRS Tracker Form View -->
+    <record id="view_moneta_prs_tracker_form" model="ir.ui.view">
+        <field name="name">moneta.prs.tracker.form</field>
+        <field name="model">moneta.prs.tracker</field>
+        <field name="arch" type="xml">
+            <form string="Private Retirement Scheme (PRS)">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇲🇾 Private Retirement Scheme (PRS)</span>
+                        <h1><field name="name" placeholder="e.g. Principal PRS Plus Growth"/></h1>
+                        <span class="badge bg-light text-dark border">
+                            Provider: <field name="provider"/> | PPA #: <field name="ppa_account_number" placeholder="PPA Account Number"/>
+                        </span>
+                    </div>
+
+                    <!-- PRS Summary Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #fdf4ff; border-left: 4px solid #a855f7 !important;">
+                        <div class="row g-3 text-center">
+                            <div class="col-12 col-md-4 border-end">
+                                <span class="text-muted small">Current PRS Portfolio Value</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="current_fund_value" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-4 border-end">
+                                <span class="text-muted small">Contributions YTD</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="total_contributions_ytd" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <span class="text-muted small">LHDN Tax Relief Utilized</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="prs_tax_relief_utilized" widget="monetary"/></h3>
+                                <span class="text-muted small">Max RM3,000 / Year</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Fund Details">
+                            <field name="annual_return_rate_pct"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Allocation Notes">
+                            <field name="notes" placeholder="Asset breakdown (Equities, Sukuk, Fixed Income)..."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- PRS Tracker List View -->
+    <record id="view_moneta_prs_tracker_tree" model="ir.ui.view">
+        <field name="name">moneta.prs.tracker.list</field>
+        <field name="model">moneta.prs.tracker</field>
+        <field name="arch" type="xml">
+            <list string="Private Retirement Schemes (PRS)">
+                <field name="name" string="PRS Fund" class="fw-bold"/>
+                <field name="provider"/>
+                <field name="ppa_account_number"/>
+                <field name="current_fund_value" widget="monetary" sum="Total PRS Value"/>
+                <field name="total_contributions_ytd" widget="monetary" sum="Total YTD Contributions"/>
+                <field name="prs_tax_relief_utilized" widget="monetary" sum="Total Tax Relief"/>
+                <field name="annual_return_rate_pct" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action for PRS -->
+    <record id="action_moneta_prs_tracker" model="ir.actions.act_window">
+        <field name="name">Private Retirement Schemes (PRS)</field>
+        <field name="res_model">moneta.prs.tracker</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ASNB Tracker Form View -->
+    <record id="view_moneta_asnb_tracker_form" model="ir.ui.view">
+        <field name="name">moneta.asnb.tracker.form</field>
+        <field name="model">moneta.asnb.tracker</field>
+        <field name="arch" type="xml">
+            <form string="ASNB Unit Trust Portfolio">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇲🇾 Amanah Saham Nasional Berhad (ASNB)</span>
+                        <h1><field name="name" placeholder="e.g. Amanah Saham Bumiputera (ASB)"/></h1>
+                        <div class="d-flex gap-2 my-2">
+                            <field name="fund_code" widget="badge"/>
+                            <field name="fund_type" widget="badge"/>
+                        </div>
+                    </div>
+
+                    <!-- ASNB Value Hero Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f0fdf4; border-left: 4px solid #16a34a !important;">
+                        <div class="row g-3 text-center">
+                            <div class="col-12 col-md-4 border-end">
+                                <span class="text-muted small">Total ASNB Market Value</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="total_market_value" widget="monetary"/></h3>
+                                <span class="text-muted small"><field name="units_held"/> Units @ <field name="unit_price" widget="monetary"/></span>
+                            </div>
+                            <div class="col-6 col-md-4 border-end">
+                                <span class="text-muted small">Latest Dividend / Distribution</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="latest_dividend_rate_pct"/>%</h3>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <span class="text-muted small">Estimated Annual Income</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="annual_dividend_income" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Unit Holding Details">
+                            <field name="units_held"/>
+                            <field name="unit_price" widget="monetary" readonly="fund_type == 'fixed_price'"/>
+                            <field name="latest_dividend_rate_pct"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="ASB Financing (ASBF)">
+                            <field name="is_asb_financing"/>
+                            <field name="asbf_monthly_installment" widget="monetary" invisible="not is_asb_financing"/>
+                            <field name="notes" placeholder="Notes / Financing tenure..."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ASNB Tracker List View -->
+    <record id="view_moneta_asnb_tracker_tree" model="ir.ui.view">
+        <field name="name">moneta.asnb.tracker.list</field>
+        <field name="model">moneta.asnb.tracker</field>
+        <field name="arch" type="xml">
+            <list string="ASNB Unit Trusts">
+                <field name="name" string="Fund" class="fw-bold"/>
+                <field name="fund_code"/>
+                <field name="fund_type"/>
+                <field name="units_held"/>
+                <field name="unit_price" widget="monetary"/>
+                <field name="total_market_value" widget="monetary" sum="Total ASNB Value"/>
+                <field name="latest_dividend_rate_pct"/>
+                <field name="annual_dividend_income" widget="monetary" sum="Total Projected Dividends"/>
+                <field name="is_asb_financing" widget="boolean_toggle" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action for ASNB -->
+    <record id="action_moneta_asnb_tracker" model="ir.actions.act_window">
+        <field name="name">ASNB Unit Trusts (ASB / ASM)</field>
+        <field name="res_model">moneta.asnb.tracker</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

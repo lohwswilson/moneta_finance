@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LHDN Tax Planner Form View -->
+    <record id="view_moneta_lhdn_tax_planner_form" model="ir.ui.view">
+        <field name="name">moneta.lhdn.tax.planner.form</field>
+        <field name="model">moneta.lhdn.tax.planner</field>
+        <field name="arch" type="xml">
+            <form string="Malaysia LHDN Tax Planner (Borang BE)">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇲🇾 Lembaga Hasil Dalam Negeri (LHDN) Borang BE</span>
+                        <h1><field name="name" readonly="1"/></h1>
+                        <span class="badge bg-light text-dark border">
+                            Year of Assessment: <field name="tax_year"/>
+                        </span>
+                    </div>
+
+                    <!-- Tax Computation Summary Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8fafc; border-left: 4px solid #16a34a !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-calculator text-success me-1"/>Tax Computation Summary (Resident Individual)
+                            </span>
+                            <span class="badge bg-success text-white">
+                                Marginal Tax Bracket: <field name="marginal_tax_bracket_pct"/>%
+                            </span>
+                        </div>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Gross Total Income</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="gross_total_income" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Total Pelepasan Cukai</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="total_tax_reliefs" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Chargeable Income</span>
+                                <h3 class="fw-bold mb-0 text-warning"><field name="chargeable_income" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Net Tax Payable</span>
+                                <h3 class="fw-bold mb-0 text-danger"><field name="net_tax_payable" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="row g-2 mt-2 pt-2 border-top text-center">
+                            <div class="col-6">
+                                <span class="text-muted small">Monthly PCB Deductions Paid: </span>
+                                <span class="fw-bold"><field name="monthly_pcb_deducted" widget="monetary"/></span>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted small">Estimated Tax Refund / Due: </span>
+                                <span class="fw-bold fs-6" decoration-success="tax_refund_or_payable &gt; 0" decoration-danger="tax_refund_or_payable &lt; 0">
+                                    <field name="tax_refund_or_payable" widget="monetary"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Income Sources (Borang BE)">
+                            <field name="annual_employment_income" widget="monetary"/>
+                            <field name="annual_business_income" widget="monetary"/>
+                            <field name="annual_rental_net_income" widget="monetary"/>
+                            <field name="annual_other_taxable_income" widget="monetary"/>
+                            <field name="monthly_pcb_deducted" widget="monetary"/>
+                            <field name="tax_rebate_zakat" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                        <group string="Tax Optimization Insights">
+                            <field name="optimization_notes" readonly="1" nolabel="1" class="text-muted"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Pelepasan Cukai (Statutory Tax Reliefs)" name="reliefs_page">
+                            <group>
+                                <group string="Individual, Medical &amp; Lifestyle">
+                                    <field name="relief_individual" widget="monetary"/>
+                                    <field name="relief_parent_medical" widget="monetary"/>
+                                    <field name="relief_education_self" widget="monetary"/>
+                                    <field name="relief_medical_expenses" widget="monetary"/>
+                                    <field name="relief_lifestyle" widget="monetary"/>
+                                    <field name="relief_lifestyle_sports" widget="monetary"/>
+                                    <field name="relief_ev_charging" widget="monetary"/>
+                                </group>
+                                <group string="Retirement, Insurance &amp; Family">
+                                    <field name="relief_life_insurance" widget="monetary"/>
+                                    <field name="relief_epf" widget="monetary"/>
+                                    <field name="relief_prs" widget="monetary"/>
+                                    <field name="relief_socso_eis" widget="monetary"/>
+                                    <field name="relief_sspn" widget="monetary"/>
+                                    <field name="relief_childcare_fees" widget="monetary"/>
+                                    <field name="relief_breastfeeding_equipment" widget="monetary"/>
+                                    <field name="relief_spouse" widget="monetary"/>
+                                    <field name="relief_children_unmarried_under_18"/>
+                                    <field name="relief_children_higher_education"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- LHDN Tax Planner List View -->
+    <record id="view_moneta_lhdn_tax_planner_tree" model="ir.ui.view">
+        <field name="name">moneta.lhdn.tax.planner.list</field>
+        <field name="model">moneta.lhdn.tax.planner</field>
+        <field name="arch" type="xml">
+            <list string="LHDN Borang BE Tax Assessments">
+                <field name="tax_year" class="fw-bold"/>
+                <field name="user_id" string="Taxpayer"/>
+                <field name="gross_total_income" widget="monetary" sum="Total Gross Income"/>
+                <field name="total_tax_reliefs" widget="monetary" sum="Total Reliefs"/>
+                <field name="chargeable_income" widget="monetary"/>
+                <field name="marginal_tax_bracket_pct"/>
+                <field name="net_tax_payable" widget="monetary" sum="Total Tax Payable"/>
+                <field name="tax_refund_or_payable" widget="monetary" decoration-success="tax_refund_or_payable &gt; 0" decoration-danger="tax_refund_or_payable &lt; 0"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_moneta_lhdn_tax_planner" model="ir.actions.act_window">
+        <field name="name">LHDN Tax Relief Planner</field>
+        <field name="res_model">moneta.lhdn.tax.planner</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

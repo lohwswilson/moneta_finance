@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- EPF Account Form View -->
+    <record id="view_moneta_epf_account_form" model="ir.ui.view">
+        <field name="name">moneta.epf.account.form</field>
+        <field name="model">moneta.epf.account</field>
+        <field name="arch" type="xml">
+            <form string="EPF / KWSP 3-Account Hub">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇲🇾 Kumpulan Wang Simpanan Pekerja (KWSP / EPF)</span>
+                        <h1><field name="name" placeholder="e.g. My EPF Savings"/></h1>
+                        <span class="badge bg-light text-dark border">
+                            Member #: <field name="epf_member_number" placeholder="e.g. 12345678"/> | Scheme: <field name="scheme_type"/>
+                        </span>
+                    </div>
+
+                    <!-- 3-Account Restructuring Hero Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8fafc; border-left: 4px solid #0284c7 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-university text-primary me-1"/>KWSP 3-Account Balances (Post-May 2024 Structure)
+                            </span>
+                            <span class="badge bg-primary text-white">
+                                Projected Dividend: <field name="projected_dividend_rate"/>% (~<field name="projected_annual_dividend" widget="monetary"/>/yr)
+                            </span>
+                        </div>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Akaun Persaraan (75%)</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="account_1_persaraan" widget="monetary"/></h3>
+                                <span class="text-muted small">Retirement (Age 55)</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Akaun Sejahtera (15%)</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="account_2_sejahtera" widget="monetary"/></h3>
+                                <span class="text-muted small">Housing / Edu / Medical</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Akaun Fleksibel (10%)</span>
+                                <h3 class="fw-bold mb-0 text-warning"><field name="account_3_fleksibel" widget="monetary"/></h3>
+                                <span class="text-muted small">Anytime Liquid Cash</span>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Total EPF Savings</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="total_epf_balance" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Monthly Contribution Rates">
+                            <field name="monthly_employee_rate"/>
+                            <field name="monthly_employer_rate"/>
+                            <field name="projected_dividend_rate"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="i-Saraan / Voluntary Self-Contribution">
+                            <field name="i_saraan_voluntary_ytd" widget="monetary"/>
+                            <field name="i_saraan_matching_incentive" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Contribution &amp; Withdrawal History" name="transactions_page">
+                            <field name="transaction_ids">
+                                <list default_order="transaction_date desc" editable="bottom">
+                                    <field name="transaction_date"/>
+                                    <field name="transaction_type"/>
+                                    <field name="amount_total" widget="monetary" sum="Total"/>
+                                    <field name="amount_account_1" widget="monetary" sum="Akaun 1 Total"/>
+                                    <field name="amount_account_2" widget="monetary" sum="Akaun 2 Total"/>
+                                    <field name="amount_account_3" widget="monetary" sum="Akaun 3 Total"/>
+                                    <field name="notes" placeholder="Remarks / Ref..."/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Nomination &amp; Notes" name="notes_page">
+                            <field name="notes" placeholder="EPF nomination details, beneficiary names, i-Lindung policies..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- EPF Account List View -->
+    <record id="view_moneta_epf_account_tree" model="ir.ui.view">
+        <field name="name">moneta.epf.account.list</field>
+        <field name="model">moneta.epf.account</field>
+        <field name="arch" type="xml">
+            <list string="Malaysia EPF Accounts">
+                <field name="name" string="Member Name" class="fw-bold"/>
+                <field name="epf_member_number"/>
+                <field name="scheme_type"/>
+                <field name="account_1_persaraan" widget="monetary" sum="Total Akaun 1"/>
+                <field name="account_2_sejahtera" widget="monetary" sum="Total Akaun 2"/>
+                <field name="account_3_fleksibel" widget="monetary" sum="Total Akaun 3"/>
+                <field name="total_epf_balance" widget="monetary" sum="Total EPF Savings"/>
+                <field name="projected_annual_dividend" widget="monetary" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_moneta_epf_account" model="ir.actions.act_window">
+        <field name="name">EPF / KWSP 3-Account Hub</field>
+        <field name="res_model">moneta.epf.account</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

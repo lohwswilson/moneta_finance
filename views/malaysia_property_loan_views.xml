@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Flexi Home Loan Form View -->
+    <record id="view_moneta_malaysia_flexi_loan_form" model="ir.ui.view">
+        <field name="name">moneta.malaysia.flexi.loan.form</field>
+        <field name="model">moneta.malaysia.flexi.loan</field>
+        <field name="arch" type="xml">
+            <form string="Malaysia Flexi Home Loan &amp; SBR Simulator">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇲🇾 Malaysia Housing Loan &amp; Flexi Offset</span>
+                        <h1><field name="name" placeholder="e.g. Maybank MaxiHome Flexi Loan"/></h1>
+                        <span class="badge bg-light text-dark border">
+                            Type: <field name="loan_type"/> | Bank: <field name="lending_bank" placeholder="Lending Bank"/>
+                        </span>
+                    </div>
+
+                    <!-- Flexi Interest Savings Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f0fdf4; border-left: 4px solid #16a34a !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-money text-success me-1"/>Flexi Account Offset &amp; Interest Savings
+                            </span>
+                            <span class="badge bg-success text-white">
+                                Effective Rate: <field name="effective_interest_rate"/>% (SBR <field name="standardised_base_rate"/>% + Spread <field name="bank_spread_rate"/>%)
+                            </span>
+                        </div>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Outstanding Principal</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="outstanding_principal" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Flexi Cash Parked</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="flexi_deposit_balance" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Net Interest-Bearing Principal</span>
+                                <h3 class="fw-bold mb-0 text-warning"><field name="net_chargeable_principal" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Annual Interest Saved</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="annual_interest_saved" widget="monetary"/></h3>
+                                <span class="text-muted small">Risk-Free Return: <field name="flexi_return_equivalent_pct"/>%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Loan Structure &amp; SBR Rates">
+                            <field name="property_id"/>
+                            <field name="original_loan_amount" widget="monetary"/>
+                            <field name="outstanding_principal" widget="monetary"/>
+                            <field name="loan_tenure_years"/>
+                            <field name="standardised_base_rate"/>
+                            <field name="bank_spread_rate"/>
+                            <field name="monthly_installment" widget="monetary" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                        <group string="Flexi Cash Offset Simulation">
+                            <field name="flexi_deposit_balance" widget="monetary"/>
+                            <field name="annual_interest_without_flexi" widget="monetary" readonly="1"/>
+                            <field name="annual_interest_with_flexi" widget="monetary" readonly="1"/>
+                            <field name="notes" placeholder="Lock-in period, monthly maintenance fees (e.g. RM10/mo for full-flexi)..."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Flexi Home Loan List View -->
+    <record id="view_moneta_malaysia_flexi_loan_tree" model="ir.ui.view">
+        <field name="name">moneta.malaysia.flexi.loan.list</field>
+        <field name="model">moneta.malaysia.flexi.loan</field>
+        <field name="arch" type="xml">
+            <list string="Malaysia Flexi Housing Loans">
+                <field name="name" string="Facility Name" class="fw-bold"/>
+                <field name="lending_bank"/>
+                <field name="loan_type"/>
+                <field name="outstanding_principal" widget="monetary" sum="Total Outstanding Debt"/>
+                <field name="effective_interest_rate"/>
+                <field name="flexi_deposit_balance" widget="monetary" sum="Total Flexi Cash"/>
+                <field name="annual_interest_saved" widget="monetary" sum="Total Annual Interest Saved"/>
+                <field name="monthly_installment" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action for Flexi Loan -->
+    <record id="action_moneta_malaysia_flexi_loan" model="ir.actions.act_window">
+        <field name="name">Malaysia Flexi-Home Loans</field>
+        <field name="res_model">moneta.malaysia.flexi.loan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- RPGT Calculator Form View -->
+    <record id="view_moneta_rpgt_calculator_form" model="ir.ui.view">
+        <field name="name">moneta.rpgt.calculator.form</field>
+        <field name="model">moneta.rpgt.calculator</field>
+        <field name="arch" type="xml">
+            <form string="Real Property Gains Tax (RPGT)">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇲🇾 Malaysia Real Property Gains Tax (RPGT)</span>
+                        <h1><field name="name" readonly="1"/></h1>
+                        <span class="badge bg-light text-dark border">
+                            Seller Status: <field name="citizenship_status"/> | Holding: <field name="holding_period_years"/> Years
+                        </span>
+                    </div>
+
+                    <!-- RPGT Result Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f8fafc; border-left: 4px solid #ef4444 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-gavel text-danger me-1"/>RPGT Tax Assessment Result
+                            </span>
+                            <span class="badge bg-danger text-white">
+                                RPGT Tier Rate: <field name="rpgt_rate_pct"/>%
+                            </span>
+                        </div>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Gross Capital Gain</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="gross_chargeable_gain" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Statutory Exemption</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="individual_exemption_amount" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Net Chargeable Gain</span>
+                                <h3 class="fw-bold mb-0 text-warning"><field name="net_chargeable_gain" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">RPGT Tax Payable</span>
+                                <h3 class="fw-bold mb-0 text-danger"><field name="rpgt_tax_payable" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Acquisition &amp; Disposal Dates">
+                            <field name="property_id"/>
+                            <field name="acquisition_date"/>
+                            <field name="disposal_date"/>
+                            <field name="citizenship_status"/>
+                            <field name="is_once_in_lifetime_exemption"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                        <group string="Financial Breakdown">
+                            <field name="acquisition_price" widget="monetary"/>
+                            <field name="disposal_price" widget="monetary"/>
+                            <field name="allowable_expenses" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- RPGT Calculator List View -->
+    <record id="view_moneta_rpgt_calculator_tree" model="ir.ui.view">
+        <field name="name">moneta.rpgt.calculator.list</field>
+        <field name="model">moneta.rpgt.calculator</field>
+        <field name="arch" type="xml">
+            <list string="RPGT Assessments">
+                <field name="name" string="Assessment" class="fw-bold"/>
+                <field name="property_id"/>
+                <field name="holding_period_years"/>
+                <field name="citizenship_status"/>
+                <field name="gross_chargeable_gain" widget="monetary" sum="Total Gain"/>
+                <field name="rpgt_rate_pct"/>
+                <field name="rpgt_tax_payable" widget="monetary" sum="Total RPGT Payable"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action for RPGT -->
+    <record id="action_moneta_rpgt_calculator" model="ir.actions.act_window">
+        <field name="name">Real Property Gains Tax (RPGT)</field>
+        <field name="res_model">moneta.rpgt.calculator</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

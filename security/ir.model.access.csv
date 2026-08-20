@@ -143,3 +143,17 @@ access_moneta_property_rent_payment_user,moneta.property.rent.payment.user,model
 access_moneta_property_rent_payment_manager,moneta.property.rent.payment.manager,model_moneta_property_rent_payment,group_moneta_manager,1,1,1,1
 access_moneta_tax_schedule_wizard_user,moneta.tax.schedule.wizard.user,model_moneta_tax_schedule_wizard,group_moneta_user,1,1,1,1
 access_moneta_tax_schedule_wizard_manager,moneta.tax.schedule.wizard.manager,model_moneta_tax_schedule_wizard,group_moneta_manager,1,1,1,1
+access_moneta_epf_account_user,moneta.epf.account.user,model_moneta_epf_account,group_moneta_user,1,1,1,1
+access_moneta_epf_account_manager,moneta.epf.account.manager,model_moneta_epf_account,group_moneta_manager,1,1,1,1
+access_moneta_epf_transaction_user,moneta.epf.transaction.user,model_moneta_epf_transaction,group_moneta_user,1,1,1,1
+access_moneta_epf_transaction_manager,moneta.epf.transaction.manager,model_moneta_epf_transaction,group_moneta_manager,1,1,1,1
+access_moneta_lhdn_tax_planner_user,moneta.lhdn.tax.planner.user,model_moneta_lhdn_tax_planner,group_moneta_user,1,1,1,1
+access_moneta_lhdn_tax_planner_manager,moneta.lhdn.tax.planner.manager,model_moneta_lhdn_tax_planner,group_moneta_manager,1,1,1,1
+access_moneta_prs_tracker_user,moneta.prs.tracker.user,model_moneta_prs_tracker,group_moneta_user,1,1,1,1
+access_moneta_prs_tracker_manager,moneta.prs.tracker.manager,model_moneta_prs_tracker,group_moneta_manager,1,1,1,1
+access_moneta_asnb_tracker_user,moneta.asnb.tracker.user,model_moneta_asnb_tracker,group_moneta_user,1,1,1,1
+access_moneta_asnb_tracker_manager,moneta.asnb.tracker.manager,model_moneta_asnb_tracker,group_moneta_manager,1,1,1,1
+access_moneta_malaysia_flexi_loan_user,moneta.malaysia.flexi.loan.user,model_moneta_malaysia_flexi_loan,group_moneta_user,1,1,1,1
+access_moneta_malaysia_flexi_loan_manager,moneta.malaysia.flexi.loan.manager,model_moneta_malaysia_flexi_loan,group_moneta_manager,1,1,1,1
+access_moneta_rpgt_calculator_user,moneta.rpgt.calculator.user,model_moneta_rpgt_calculator,group_moneta_user,1,1,1,1
+access_moneta_rpgt_calculator_manager,moneta.rpgt.calculator.manager,model_moneta_rpgt_calculator,group_moneta_manager,1,1,1,1

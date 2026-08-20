@@ -33,3 +33,7 @@ from . import singapore_fixed_income
 from . import iras_tax
 from . import cashflow_calendar
 from . import tax_lot
+from . import epf
+from . import lhdn_tax
+from . import malaysia_investments
+from . import malaysia_property_loan

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================================ -->
+        <!-- Malaysia Financial Institutions (Banks & E-Wallets)          -->
+        <!-- ============================================================ -->
+        <!-- Major Malaysian Commercial & Islamic Banks -->
+        <record id="inst_my_maybank" model="moneta.institution">
+            <field name="name">Maybank (Malayan Banking Berhad)</field>
+            <field name="website">maybank2u.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_cimb" model="moneta.institution">
+            <field name="name">CIMB Bank Berhad</field>
+            <field name="website">cimbclicks.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_public_bank" model="moneta.institution">
+            <field name="name">Public Bank Berhad</field>
+            <field name="website">pbebank.com</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_rhb" model="moneta.institution">
+            <field name="name">RHB Bank Berhad</field>
+            <field name="website">rhbgroup.com</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_hong_leong" model="moneta.institution">
+            <field name="name">Hong Leong Bank Berhad</field>
+            <field name="website">hlb.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_ambank" model="moneta.institution">
+            <field name="name">AmBank (M) Berhad</field>
+            <field name="website">ambank.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_alliance" model="moneta.institution">
+            <field name="name">Alliance Bank Malaysia Berhad</field>
+            <field name="website">alliancebank.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_bank_islam" model="moneta.institution">
+            <field name="name">Bank Islam Malaysia Berhad</field>
+            <field name="website">bankislam.com</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <!-- Malaysian Digital Banks -->
+        <record id="inst_my_gxbank" model="moneta.institution">
+            <field name="name">GXBank (Grab Digital Bank Malaysia)</field>
+            <field name="website">gxbank.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_boost_bank" model="moneta.institution">
+            <field name="name">Boost Bank</field>
+            <field name="website">myboostbank.co</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_aeon_bank" model="moneta.institution">
+            <field name="name">AEON Bank (Islamic Digital Bank)</field>
+            <field name="website">aeonbank.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <!-- E-Wallets & Wealth Platforms -->
+        <record id="inst_my_tng_ewallet" model="moneta.institution">
+            <field name="name">Touch 'n Go eWallet / GO+</field>
+            <field name="website">touchngo.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_epf_kwsp" model="moneta.institution">
+            <field name="name">Kumpulan Wang Simpanan Pekerja (KWSP / EPF)</field>
+            <field name="website">kwsp.gov.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_asnb" model="moneta.institution">
+            <field name="name">Amanah Saham Nasional Berhad (ASNB)</field>
+            <field name="website">myasnb.com.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <record id="inst_my_ptptn" model="moneta.institution">
+            <field name="name">PTPTN (Perbadanan Tabung Pendidikan Tinggi Nasional)</field>
+            <field name="website">ptptn.gov.my</field>
+            <field name="country">MY</field>
+            <field name="bank_profile">auto</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- Malaysian Pre-Loaded Common Payees                           -->
+        <!-- ============================================================ -->
+        <record id="payee_my_tnb" model="moneta.payee">
+            <field name="name">Tenaga Nasional Berhad (TNB)</field>
+        </record>
+
+        <record id="payee_my_air_selangor" model="moneta.payee">
+            <field name="name">Pengurusan Air Selangor Sdn Bhd</field>
+        </record>
+
+        <record id="payee_my_indah_water" model="moneta.payee">
+            <field name="name">Indah Water Konsortium (IWK)</field>
+        </record>
+
+        <record id="payee_my_unifi_tm" model="moneta.payee">
+            <field name="name">Telekom Malaysia (TM Unifi)</field>
+        </record>
+
+        <record id="payee_my_maxis" model="moneta.payee">
+            <field name="name">Maxis / Hotlink</field>
+        </record>
+
+        <record id="payee_my_celcomdigi" model="moneta.payee">
+            <field name="name">CelcomDigi Berhad</field>
+        </record>
+
+        <record id="payee_my_u_mobile" model="moneta.payee">
+            <field name="name">U Mobile Sdn Bhd</field>
+        </record>
+
+        <record id="payee_my_astro" model="moneta.payee">
+            <field name="name">Astro Malaysia</field>
+        </record>
+
+        <record id="payee_my_lhdn" model="moneta.payee">
+            <field name="name">Lembaga Hasil Dalam Negeri (LHDN Malaysia)</field>
+        </record>
+
+        <record id="payee_my_ptptn_loan" model="moneta.payee">
+            <field name="name">PTPTN Loan Repayment / SSPN Deposit</field>
+        </record>
+
+        <record id="payee_my_jaya_grocer" model="moneta.payee">
+            <field name="name">Jaya Grocer</field>
+        </record>
+
+        <record id="payee_my_lotus" model="moneta.payee">
+            <field name="name">Lotus's Stores Malaysia</field>
+        </record>
+
+        <record id="payee_my_99_speedmart" model="moneta.payee">
+            <field name="name">99 Speedmart</field>
+        </record>
+
+        <record id="payee_my_village_grocer" model="moneta.payee">
+            <field name="name">Village Grocer</field>
+        </record>
+
+        <record id="payee_my_tng_reload" model="moneta.payee">
+            <field name="name">Touch 'n Go RFID / Toll Reload</field>
+        </record>
+    </data>
+</odoo>
