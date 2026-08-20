@@ -200,6 +200,12 @@
               action="action_moneta_export_wizard"
               sequence="30"/>
 
+    <menuitem id="menu_moneta_action_history"
+              name="Action History &amp; 1-Click Undo"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_action_history"
+              sequence="40"/>
+
     <!-- Configuration & Estate -->
     <menuitem id="menu_moneta_config_root"
               name="Configuration"

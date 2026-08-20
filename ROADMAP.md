@@ -40,9 +40,9 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Fundamental valuation metrics: P/E Ratio, Forward P/E, EPS, Market Capitalization, Dividend Yield %
   - [x] Multi-period holding return metrics: Day's Gain/Loss, Portfolio Weight %, 52W High/Low, P/E, Market Cap, Beta
 
-* **Track 2.4: Action History & 1-Click Undo / Rollback Engine**
-  - [ ] Mutation audit logger for batch operations (statement imports, batch categorization, rule execution)
-  - [ ] 1-Click "Undo Last Action" wizard to cleanly revert batch imports or bulk changes
+* **Track 2.4: Action History & 1-Click Undo / Rollback Engine (Completed ✅)**
+  - [x] Mutation audit logger for batch operations (statement imports, batch categorization, rule execution)
+  - [x] 1-Click "Undo Last Action" wizard to cleanly revert batch imports or bulk changes
 
 * **Track 2.5: Time-Delayed Emergency Digital Estate Access**
   - [ ] Time-delayed security lock with configurable grace period (7, 14, or 30 days)

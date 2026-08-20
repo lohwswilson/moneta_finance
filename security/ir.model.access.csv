@@ -107,3 +107,5 @@ access_moneta_stock_split_wizard_user,moneta.stock.split.wizard.user,model_monet
 access_moneta_stock_split_wizard_manager,moneta.stock.split.wizard.manager,model_moneta_stock_split_wizard,group_moneta_manager,1,1,1,1
 access_moneta_dashboard_action_user,moneta.dashboard.action.user,model_moneta_dashboard_action,group_moneta_user,1,1,1,1
 access_moneta_dashboard_action_manager,moneta.dashboard.action.manager,model_moneta_dashboard_action,group_moneta_manager,1,1,1,1
+access_moneta_action_history_user,moneta.action.history.user,model_moneta_action_history,group_moneta_user,1,1,1,1
+access_moneta_action_history_manager,moneta.action.history.manager,model_moneta_action_history,group_moneta_manager,1,1,1,1

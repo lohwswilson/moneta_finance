@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action History Form View -->
+    <record id="view_moneta_action_history_form" model="ir.ui.view">
+        <field name="name">moneta.action.history.form</field>
+        <field name="model">moneta.action.history</field>
+        <field name="arch" type="xml">
+            <form string="Action History &amp; Audit Log">
+                <header>
+                    <button name="action_undo" type="object" string="↩️ Undo / Revert This Action" class="btn-danger" icon="fa-undo" invisible="is_undone" confirm="Are you sure you want to revert this action?"/>
+                    <field name="is_undone" widget="boolean_toggle" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small"><field name="entity_type"/> · <field name="action"/></span>
+                        <h1>
+                            <field name="description"/>
+                        </h1>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-3 p-3 my-3 bg-light">
+                        <div class="row g-3 text-center">
+                            <div class="col-4 border-end">
+                                <span class="text-muted small">Status</span>
+                                <h5 class="fw-bold mb-0">
+                                    <span class="badge bg-success" invisible="is_undone">Active</span>
+                                    <span class="badge bg-secondary" invisible="not is_undone">Reverted</span>
+                                </h5>
+                            </div>
+                            <div class="col-4 border-end">
+                                <span class="text-muted small">Affected Records</span>
+                                <h5 class="fw-bold mb-0 text-primary"><field name="record_count"/></h5>
+                            </div>
+                            <div class="col-4">
+                                <span class="text-muted small">Executed At</span>
+                                <h6 class="fw-bold mb-0 text-dark"><field name="create_date"/></h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group name="meta_info" string="Action Details">
+                            <field name="action" widget="badge"/>
+                            <field name="entity_type" widget="badge"/>
+                            <field name="entity_id" readonly="1"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                        <group name="revert_info" string="Reversal Status">
+                            <field name="is_undone" widget="badge" decoration-danger="is_undone" decoration-success="not is_undone"/>
+                            <field name="undone_at" invisible="not is_undone"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="📋 State Before (JSON)" name="before_snapshot">
+                            <field name="before_data" widget="ace" options="{'mode': 'json'}" readonly="1"/>
+                        </page>
+                        <page string="📋 State After (JSON)" name="after_snapshot">
+                            <field name="after_data" widget="ace" options="{'mode': 'json'}" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action History List View -->
+    <record id="view_moneta_action_history_tree" model="ir.ui.view">
+        <field name="name">moneta.action.history.list</field>
+        <field name="model">moneta.action.history</field>
+        <field name="arch" type="xml">
+            <list string="Action History" default_order="create_date desc, id desc" decoration-muted="is_undone">
+                <field name="create_date" string="Time"/>
+                <field name="description" string="Action Description" class="fw-bold"/>
+                <field name="action" string="Type" widget="badge" 
+                       decoration-success="action == 'create'" 
+                       decoration-info="action in ('update', 'batch_categorize')" 
+                       decoration-warning="action == 'batch_import'" 
+                       decoration-danger="action == 'delete'"/>
+                <field name="entity_type" string="Entity" widget="badge"/>
+                <field name="record_count" string="Items"/>
+                <field name="is_undone" string="Reverted" widget="boolean"/>
+                <button name="action_undo" type="object" string="↩️ Undo" 
+                        class="btn-sm btn-outline-danger" 
+                        title="Revert this action"
+                        invisible="is_undone"
+                        confirm="Are you sure you want to undo this action?"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action History Search View -->
+    <record id="view_moneta_action_history_search" model="ir.ui.view">
+        <field name="name">moneta.action.history.search</field>
+        <field name="model">moneta.action.history</field>
+        <field name="arch" type="xml">
+            <search string="Search Action History">
+                <field name="description"/>
+                <field name="action"/>
+                <field name="entity_type"/>
+                <filter name="filter_reversible" string="Active / Reversible Actions" domain="[('is_undone', '=', False)]"/>
+                <filter name="filter_undone" string="Already Reverted" domain="[('is_undone', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_action" string="Action Type" context="{'group_by': 'action'}"/>
+                    <filter name="group_by_entity" string="Entity Type" context="{'group_by': 'entity_type'}"/>
+                    <filter name="group_by_date" string="Execution Date" context="{'group_by': 'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action History Window Action -->
+    <record id="action_moneta_action_history" model="ir.actions.act_window">
+        <field name="name">Action History &amp; Undo</field>
+        <field name="res_model">moneta.action.history</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_moneta_action_history_search"/>
+        <field name="context">{'search_default_filter_reversible': 1}</field>
+    </record>
+
+    <!-- Quick 1-Click Undo Server Action -->
+    <record id="action_moneta_undo_last" model="ir.actions.server">
+        <field name="name">↩️ Undo Last Action</field>
+        <field name="model_id" ref="model_moneta_action_history"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_undo_last()</field>
+    </record>
+</odoo>

@@ -92,6 +92,7 @@ Key Features & Capabilities:
         'views/ai_advisor_views.xml',
         'views/ai_receipt_views.xml',
         'views/portfolio_analytics_views.xml',
+        'views/action_history_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

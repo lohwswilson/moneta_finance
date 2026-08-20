@@ -614,5 +614,19 @@
             <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
         </record>
 
+        <!-- moneta.action.history -->
+        <record id="moneta_action_history_rule_user" model="ir.rule">
+            <field name="name">Moneta Action History: own</field>
+            <field name="model_id" ref="model_moneta_action_history"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_action_history_rule_manager" model="ir.rule">
+            <field name="name">Moneta Action History: manager</field>
+            <field name="model_id" ref="model_moneta_action_history"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
     </data>
 </odoo>
