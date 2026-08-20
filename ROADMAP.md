@@ -22,34 +22,67 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 2: Open Banking & Live Bank Sync (Q4 2026)
+### Phase 2: Monize Advanced Feature Parity Sprint (Active 🚀)
+*Executing sequentially track-by-track:*
+
+* **Track 2.1: Payee Brand Favicons & Visual Category Hierarchy**
+  - [ ] Payee website domain field and automated favicon resolution (DuckDuckGo / Google Favicon cache)
+  - [ ] Payee brand avatars in checkbook registers, compact lists, and kanban cards
+  - [ ] Category icon glyph inheritance (subcategories inherit parent icons and badges)
+
+* **Track 2.2: Variable-Rate Mortgage & Rate Change Inference Engine**
+  - [ ] Step-detection algorithm ($\text{rate} = \frac{\text{interest}}{\text{balance}} \times 12$) on historical split loan transactions
+  - [ ] Automated rate inference wizard generating historical `moneta.loan.rate.change` records
+  - [ ] Dynamic amortization curves adapting to segmented variable rate histories
+
+* **Track 2.3: Microsoft Money 75+ Investment & Portfolio Metrics**
+  - [ ] Dynamic market metrics on `moneta.security`: 52-Week High/Low, Day's Gain/Loss ($ & %), Beta, Day Volume
+  - [ ] Fundamental valuation metrics: P/E Ratio, Forward P/E, EPS, Market Capitalization, Dividend Yield %
+  - [ ] Multi-period holding return metrics: 1-Week, 1-Month, 3-Month, 1-Year, and YTD total returns
+
+* **Track 2.4: Action History & 1-Click Undo / Rollback Engine**
+  - [ ] Mutation audit logger for batch operations (statement imports, batch categorization, rule execution)
+  - [ ] 1-Click "Undo Last Action" wizard to cleanly revert batch imports or bulk changes
+
+* **Track 2.5: Time-Delayed Emergency Digital Estate Access**
+  - [ ] Time-delayed security lock with configurable grace period (7, 14, or 30 days)
+  - [ ] Automated daily email reminder cron to owner before granting access to emergency contacts
+  - [ ] Read-only view permissions for designated family members/executors
+
+* **Track 2.6: Financial Assistant MCP Server (Model Context Protocol)**
+  - [ ] Standardized MCP tool endpoints for local AI agents (Claude, Gemini, Antigravity)
+  - [ ] Natural language tool suite: balance queries, spending categorization, bill forecasting, and loan simulations
+
+---
+
+### Phase 3: Open Banking & Live Bank Sync (Q4 2026)
 - [ ] **Plaid Integration**: US & Canada automated bank transaction download
 - [ ] **Salt Edge / Teller / SimpleFIN Sync**: European & Global Open Banking live feed
 - [ ] **Automated Rule Matching**: Auto-assign categories based on imported transaction metadata
 
 ---
 
-### Phase 3: Global Tax & Localization Packs (Q1 2027)
+### Phase 4: Global Tax & Localization Packs (Q1 2027)
 - [ ] **Singapore Tax Pack**: CPF interest, SRS contributions, and IRAS tax summary
 - [ ] **US Tax Pack**: 1099-DIV, 1099-B capital gains schedule, and tax-loss harvesting
 - [ ] **UK / EU Tax Pack**: Capital Gains Tax allowance tracking and ISA portfolio accounts
 
 ---
 
-### Phase 4: Crypto & Multi-Asset Hub (Q2 2027)
+### Phase 5: Crypto & Multi-Asset Hub (Q2 2027)
 - [ ] **Crypto Exchange API Sync**: Read-only balance sync for Coinbase, Binance, and Kraken
 - [ ] **On-Chain Wallet Tracking**: Ethereum, Bitcoin, and Solana public address balance monitoring
 - [ ] **Commodities & Precious Metals**: Live Gold (XAU) and Silver (XAG) spot pricing
 
 ---
 
-### Phase 5: Mobile PWA & Offline Experience (Q3 2027)
+### Phase 6: Mobile PWA & Offline Experience (Q3 2027)
 - [ ] **Responsive Mobile App**: Dedicated mobile-optimized dashboard view
 - [ ] **Offline Quick-Receipt Entry**: Progressive Web App (PWA) offline expense logging
 
 ---
 
-### Phase 6: Autonomous AI Financial Copilot (Q4 2027)
+### Phase 7: Autonomous AI Financial Copilot (Q4 2027)
 - [ ] **Autonomous Spending Leak Audits**: LLM-driven anomaly detection
 - [ ] **Cash Flow Forecasting**: 90-day predictive balance forecast using seasonal regression
 - [ ] **Subscription Negotiation Assistant**: Automated drafts for cancelling unused SaaS subscriptions
