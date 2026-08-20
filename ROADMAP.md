@@ -55,34 +55,66 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 3: Open Banking & Live Bank Sync (Q4 2026)
+### Phase 3: Singapore & South East Asia Financial Ecosystem (Flagship 🇸🇬 🌏)
+*Comprehensive localization for Singapore and South East Asian wealth structures:*
+
+* **Track 3.1: CPF (OA/SA/MA/RA) & SRS Pension Architecture**
+  - [ ] Specialized account types: `cpf_oa` (2.5%), `cpf_sa` (4.0%), `cpf_ma` (4.0%), `cpf_ra` (4.0%), and `srs`
+  - [ ] Monthly CPF interest calculation engine (lowest balance rule) with annual December crediting
+  - [ ] CPF LIFE retirement payout simulator (Standard, Escalating, Basic) with BRS / FRS / ERS threshold milestones
+  - [ ] SRS voluntary tax-relief contributions ($15,300 citizen/PR, $35,700 foreigner) & 10-year penalty-free withdrawal tracker
+
+* **Track 3.2: Singapore Housing, HDB Loans & CPF Accrued Interest**
+  - [ ] CPF Housing Accrued Interest engine: calculates the 2.5% compounded interest liability due back to CPF upon property sale
+  - [ ] HDB Concessionary Loan (pegged at CPF OA + 0.1% = 2.60%) & SORA-pegged commercial bank mortgage amortization
+  - [ ] Buyer's Stamp Duty (BSD) & Additional Buyer's Stamp Duty (ABSD) property calculator (Singapore Citizen vs PR vs Foreigner)
+  - [ ] Total Debt Servicing Ratio (TDSR $\le 55\%$) and Mortgage Servicing Ratio (MSR $\le 30\%$) affordability checks
+
+* **Track 3.3: Singapore Savings Bonds (SSB), MAS T-Bills & S-REITs**
+  - [ ] Singapore Savings Bonds (SSB) engine: 10-year step-up interest schedule with monthly par redemption ($100) and $2 MAS fee
+  - [ ] MAS Treasury Bills (6-Month / 1-Year T-Bills) discount auction yield accounting
+  - [ ] SGX (`.SI`) security master with one-tier tax-exempt dividend distribution handling and S-REIT distribution yield tracking
+  - [ ] Irish-domiciled ETF tracking (`CSPX.L`, `VWRA.L`, `SWRD.L`) with 15% US dividend tax withholding advantage
+
+* **Track 3.4: IRAS Tax Relief & Optimization Engine**
+  - [ ] IRAS progressive personal income tax brackets with instant liability estimation
+  - [ ] Tax Relief Tracker: Retirement Sum Topping-Up (RSTU $8k self + $8k loved ones), SRS ($15.3k), CPF Employee, NSman, Parent, and Child reliefs
+  - [ ] Year-end tax optimization advisory: actionable suggestions to maximize tax deductions before Dec 31
+
+* **Track 3.5: Pre-Configured Singapore / SEA Master Data**
+  - [ ] Pre-loaded Singapore & SEA financial institutions: DBS/POSB, OCBC, UOB, Standard Chartered, MariBank, GXS, Trust Bank, CPF Board, Endowus, Syfe, Moomoo, Tiger Brokers, Maybank, CIMB
+  - [ ] Pre-loaded common payees & categories: NTUC FairPrice, Cold Storage, Sheng Siong, Grab/GrabFood, Singtel, StarHub, M1, SP Group, HDB Town Council, IRAS, LTA SimplyGo/ERP, Shopee, Lazada
+
+---
+
+### Phase 4: Open Banking & Live Bank Sync (Q4 2026)
 - [ ] **Plaid Integration**: US & Canada automated bank transaction download
 - [ ] **Salt Edge / Teller / SimpleFIN Sync**: European & Global Open Banking live feed
 - [ ] **Automated Rule Matching**: Auto-assign categories based on imported transaction metadata
 
 ---
 
-### Phase 4: Global Tax & Localization Packs (Q1 2027)
-- [ ] **Singapore Tax Pack**: CPF interest, SRS contributions, and IRAS tax summary
+### Phase 5: Global Tax & Multi-Jurisdiction Packs (Q1 2027)
 - [ ] **US Tax Pack**: 1099-DIV, 1099-B capital gains schedule, and tax-loss harvesting
 - [ ] **UK / EU Tax Pack**: Capital Gains Tax allowance tracking and ISA portfolio accounts
+- [ ] **Malaysia / Regional Tax Pack**: EPF (KWSP) dividend tracking and LHDN tax relief schedule
 
 ---
 
-### Phase 5: Crypto & Multi-Asset Hub (Q2 2027)
+### Phase 6: Crypto & Multi-Asset Hub (Q2 2027)
 - [ ] **Crypto Exchange API Sync**: Read-only balance sync for Coinbase, Binance, and Kraken
 - [ ] **On-Chain Wallet Tracking**: Ethereum, Bitcoin, and Solana public address balance monitoring
 - [ ] **Commodities & Precious Metals**: Live Gold (XAU) and Silver (XAG) spot pricing
 
 ---
 
-### Phase 6: Mobile PWA & Offline Experience (Q3 2027)
+### Phase 7: Mobile PWA & Offline Experience (Q3 2027)
 - [ ] **Responsive Mobile App**: Dedicated mobile-optimized dashboard view
 - [ ] **Offline Quick-Receipt Entry**: Progressive Web App (PWA) offline expense logging
 
 ---
 
-### Phase 7: Autonomous AI Financial Copilot (Q4 2027)
+### Phase 8: Autonomous AI Financial Copilot (Q4 2027)
 - [ ] **Autonomous Spending Leak Audits**: LLM-driven anomaly detection
 - [ ] **Cash Flow Forecasting**: 90-day predictive balance forecast using seasonal regression
 - [ ] **Subscription Negotiation Assistant**: Automated drafts for cancelling unused SaaS subscriptions
