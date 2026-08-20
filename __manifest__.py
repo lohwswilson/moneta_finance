@@ -95,6 +95,7 @@ Key Features & Capabilities:
         'views/action_history_views.xml',
         'views/cpf_views.xml',
         'views/srs_views.xml',
+        'views/singapore_property_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

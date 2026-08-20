@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CPF Accrued Interest Simulator Form View -->
+    <record id="view_moneta_cpf_accrued_interest_form" model="ir.ui.view">
+        <field name="name">moneta.cpf.accrued.interest.form</field>
+        <field name="model">moneta.cpf.accrued.interest</field>
+        <field name="arch" type="xml">
+            <form string="CPF Housing Accrued Interest &amp; Sale Proceeds">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇸🇬 Singapore CPF Housing Accrued Interest</span>
+                        <h1>
+                            <field name="name" placeholder="Simulation Title..."/>
+                        </h1>
+                    </div>
+
+                    <!-- Net Cash Hero Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" 
+                         style="background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-left: 5px solid #a855f7 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-home text-purple me-1"/>Projected Sale Cash In Hand
+                            </span>
+                            <span class="badge bg-danger px-3 py-1 fs-6" invisible="not is_negative_cash_sale">
+                                ⚠️ Negative Cash Sale Warning!
+                            </span>
+                            <span class="badge bg-success px-3 py-1 fs-6" invisible="is_negative_cash_sale">
+                                Positive Cash Proceeds
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-5">
+                                <span class="text-muted small">Estimated Net Cash in Hand</span>
+                                <h1 class="fw-bolder mb-0" decoration-danger="is_negative_cash_sale" decoration-success="not is_negative_cash_sale">
+                                    <field name="net_cash_in_hand" widget="monetary"/>
+                                </h1>
+                                <span class="text-muted small">After loan repayment &amp; CPF OA refund</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">Total CPF Principal</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="total_cpf_principal" widget="monetary"/></h4>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">CPF Accrued Interest (2.5%)</span>
+                                <h4 class="fw-bold mb-0 text-danger"><field name="total_cpf_accrued_interest" widget="monetary"/></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Property &amp; CPF Usage">
+                            <field name="property_name"/>
+                            <field name="property_id"/>
+                            <field name="purchase_price" widget="monetary"/>
+                            <field name="cpf_downpayment" widget="monetary"/>
+                            <field name="cpf_grants" widget="monetary"/>
+                            <field name="monthly_cpf_payment" widget="monetary"/>
+                            <field name="holding_period_years"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Resale &amp; Loan Payoff">
+                            <field name="projected_selling_price" widget="monetary"/>
+                            <field name="outstanding_loan_balance" widget="monetary"/>
+                            <field name="estimated_resale_fees" widget="monetary"/>
+                            <field name="total_cpf_refund_to_oa" widget="monetary" class="fw-bold text-primary"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-warning d-flex align-items-center p-3 my-3 rounded-3" role="status">
+                        <div>
+                            <i class="fa fa-info-circle fa-2x text-warning me-3"/>
+                            <strong>CPF Housing Refund Rule:</strong>
+                            <p class="mb-0 small text-muted">
+                                When selling a Singapore residential property, all CPF OA principal withdrawn plus <strong>2.50% compounded annual interest</strong> must be refunded to your CPF OA. If the market sale price is insufficient to cover the refund, you only refund up to the net sales proceeds (no cash top-up required if sold at market value).
+                            </p>
+                        </div>
+                    </div>
+
+                    <group string="Strategy &amp; Resale Planning Notes">
+                        <field name="notes" placeholder="Notes on upgrading to private condo, voluntary CPF housing refund to stop accrued interest..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- CPF Accrued Interest List View -->
+    <record id="view_moneta_cpf_accrued_interest_tree" model="ir.ui.view">
+        <field name="name">moneta.cpf.accrued.interest.list</field>
+        <field name="model">moneta.cpf.accrued.interest</field>
+        <field name="arch" type="xml">
+            <list string="CPF Accrued Interest Simulations">
+                <field name="name" class="fw-bold"/>
+                <field name="property_name" string="Property"/>
+                <field name="holding_period_years" string="Holding (Yrs)"/>
+                <field name="total_cpf_principal" string="CPF Principal" widget="monetary"/>
+                <field name="total_cpf_accrued_interest" string="Accrued Interest (2.5%)" widget="monetary" decoration-danger="total_cpf_accrued_interest &gt; 0"/>
+                <field name="total_cpf_refund_to_oa" string="Refund Due" widget="monetary"/>
+                <field name="projected_selling_price" string="Selling Price" widget="monetary"/>
+                <field name="net_cash_in_hand" string="Net Cash in Hand" widget="monetary" class="fw-bold" 
+                       decoration-success="net_cash_in_hand &gt; 0" decoration-danger="net_cash_in_hand &lt;= 0"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Affordability Form View -->
+    <record id="view_moneta_singapore_property_affordability_form" model="ir.ui.view">
+        <field name="name">moneta.singapore.property.affordability.form</field>
+        <field name="model">moneta.singapore.property.affordability</field>
+        <field name="arch" type="xml">
+            <form string="Singapore Property Stamp Duty &amp; TDSR/MSR Affordability">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇸🇬 Singapore Property Stamp Duty &amp; Financing</span>
+                        <h1>
+                            <field name="name" placeholder="Assessment Name..."/>
+                        </h1>
+                    </div>
+
+                    <!-- Stamp Duty & Compliance Banner -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" 
+                         style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border-left: 5px solid #0284c7 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-calculator text-primary me-1"/>Total Stamp Duty &amp; Regulatory Compliance
+                            </span>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-success px-2 py-1" invisible="not tdsr_passed">TDSR Passed</span>
+                                <span class="badge bg-danger px-2 py-1" invisible="tdsr_passed">TDSR Exceeded!</span>
+                                <span class="badge bg-success px-2 py-1" invisible="not msr_passed">MSR Passed</span>
+                                <span class="badge bg-danger px-2 py-1" invisible="msr_passed">MSR Exceeded!</span>
+                            </div>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-5">
+                                <span class="text-muted small">Total Stamp Duty Payable (BSD + ABSD)</span>
+                                <h1 class="fw-bolder mb-0 text-primary">
+                                    <field name="total_stamp_duty" widget="monetary"/>
+                                </h1>
+                                <span class="text-muted small">BSD: <field name="bsd_amount" widget="monetary"/> | ABSD: <field name="absd_amount" widget="monetary"/> (<field name="absd_rate_pct"/>%)</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">Actual TDSR Ratio</span>
+                                <h4 class="fw-bold mb-0" decoration-success="tdsr_passed" decoration-danger="not tdsr_passed">
+                                    <field name="tdsr_actual_pct"/>% / 55%
+                                </h4>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Actual MSR (HDB/EC)</span>
+                                <h4 class="fw-bold mb-0" decoration-success="msr_passed" decoration-danger="not msr_passed">
+                                    <field name="msr_actual_pct"/>% / 30%
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Property &amp; Buyer Profile">
+                            <field name="property_price" widget="monetary"/>
+                            <field name="property_type"/>
+                            <field name="buyer_profile"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Income &amp; Debt Profile">
+                            <field name="gross_monthly_income" widget="monetary"/>
+                            <field name="other_monthly_debt_commitments" widget="monetary"/>
+                            <field name="loan_tenure_years"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3 bg-light">
+                        <h6 class="fw-bold text-dark mb-3"><i class="fa fa-exchange text-primary me-2"/>Mortgage Package &amp; Stress-Test Monthly Payments (75% LTV)</h6>
+                        <div class="row g-3 text-center">
+                            <div class="col-12 col-md-4 border-end">
+                                <span class="text-muted small">HDB Concessionary (2.60%)</span>
+                                <h4 class="fw-bold mb-0 text-dark"><field name="simulated_monthly_mortgage_hdb" widget="monetary"/>/mo</h4>
+                            </div>
+                            <div class="col-12 col-md-4 border-end">
+                                <span class="text-muted small">Bank SORA Mortgage (<field name="bank_sora_rate"/>%)</span>
+                                <h4 class="fw-bold mb-0 text-primary"><field name="simulated_monthly_mortgage_bank" widget="monetary"/>/mo</h4>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <span class="text-muted small">MAS 4.0% Stress Test</span>
+                                <h4 class="fw-bold mb-0 text-danger"><field name="simulated_monthly_mortgage_stress" widget="monetary"/>/mo</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group string="Financing Notes &amp; Strategy">
+                        <field name="notes" placeholder="Notes on Decoupling, Pledging, or Joint Tenancy vs Tenancy-in-Common..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Affordability List View -->
+    <record id="view_moneta_singapore_property_affordability_tree" model="ir.ui.view">
+        <field name="name">moneta.singapore.property.affordability.list</field>
+        <field name="model">moneta.singapore.property.affordability</field>
+        <field name="arch" type="xml">
+            <list string="Affordability Assessments">
+                <field name="name" class="fw-bold"/>
+                <field name="property_price" string="Price" widget="monetary"/>
+                <field name="buyer_profile" widget="badge"/>
+                <field name="total_stamp_duty" string="Total Stamp Duty" widget="monetary"/>
+                <field name="simulated_monthly_mortgage_bank" string="Bank Monthly" widget="monetary"/>
+                <field name="tdsr_actual_pct" string="TDSR (%)" decoration-success="tdsr_passed" decoration-danger="not tdsr_passed"/>
+                <field name="msr_actual_pct" string="MSR (%)" decoration-success="msr_passed" decoration-danger="not msr_passed"/>
+                <field name="tdsr_passed" string="TDSR Pass" widget="boolean"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_moneta_cpf_accrued_interest" model="ir.actions.act_window">
+        <field name="name">CPF Housing Accrued Interest</field>
+        <field name="res_model">moneta.cpf.accrued.interest</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_moneta_singapore_property_affordability" model="ir.actions.act_window">
+        <field name="name">Property Stamp Duty &amp; TDSR/MSR</field>
+        <field name="res_model">moneta.singapore.property.affordability</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

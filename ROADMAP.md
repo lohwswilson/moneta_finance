@@ -64,11 +64,11 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] CPF LIFE retirement payout simulator (Standard, Escalating, Basic) with BRS / FRS / ERS threshold milestones
   - [x] SRS voluntary tax-relief contributions ($15,300 citizen/PR, $35,700 foreigner) & 10-year penalty-free withdrawal tracker
 
-* **Track 3.2: Singapore Housing, HDB Loans & CPF Accrued Interest**
-  - [ ] CPF Housing Accrued Interest engine: calculates the 2.5% compounded interest liability due back to CPF upon property sale
-  - [ ] HDB Concessionary Loan (pegged at CPF OA + 0.1% = 2.60%) & SORA-pegged commercial bank mortgage amortization
-  - [ ] Buyer's Stamp Duty (BSD) & Additional Buyer's Stamp Duty (ABSD) property calculator (Singapore Citizen vs PR vs Foreigner)
-  - [ ] Total Debt Servicing Ratio (TDSR $\le 55\%$) and Mortgage Servicing Ratio (MSR $\le 30\%$) affordability checks
+* **Track 3.2: Singapore Housing, HDB Loans & CPF Accrued Interest (Completed ✅)**
+  - [x] CPF Housing Accrued Interest engine: calculates the 2.5% compounded interest liability due back to CPF upon property sale
+  - [x] HDB Concessionary Loan (pegged at CPF OA + 0.1% = 2.60%) & SORA-pegged commercial bank mortgage amortization
+  - [x] Buyer's Stamp Duty (BSD) & Additional Buyer's Stamp Duty (ABSD) property calculator (Singapore Citizen vs PR vs Foreigner)
+  - [x] Total Debt Servicing Ratio (TDSR $\le 55\%$) and Mortgage Servicing Ratio (MSR $\le 30\%$) affordability checks
 
 * **Track 3.3: Singapore Savings Bonds (SSB), MAS T-Bills & S-REITs**
   - [ ] Singapore Savings Bonds (SSB) engine: 10-year step-up interest schedule with monthly par redemption ($100) and $2 MAS fee

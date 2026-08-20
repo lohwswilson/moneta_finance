@@ -656,5 +656,33 @@
             <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
         </record>
 
+        <!-- moneta.cpf.accrued.interest -->
+        <record id="moneta_cpf_accrued_interest_rule_user" model="ir.rule">
+            <field name="name">Moneta CPF Accrued Interest: own</field>
+            <field name="model_id" ref="model_moneta_cpf_accrued_interest"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_cpf_accrued_interest_rule_manager" model="ir.rule">
+            <field name="name">Moneta CPF Accrued Interest: manager</field>
+            <field name="model_id" ref="model_moneta_cpf_accrued_interest"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.singapore.property.affordability -->
+        <record id="moneta_singapore_property_affordability_rule_user" model="ir.rule">
+            <field name="name">Moneta Singapore Property Affordability: own</field>
+            <field name="model_id" ref="model_moneta_singapore_property_affordability"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_singapore_property_affordability_rule_manager" model="ir.rule">
+            <field name="name">Moneta Singapore Property Affordability: manager</field>
+            <field name="model_id" ref="model_moneta_singapore_property_affordability"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
     </data>
 </odoo>

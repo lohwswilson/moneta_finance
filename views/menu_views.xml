@@ -134,6 +134,18 @@
               action="action_moneta_srs_tracker"
               sequence="20"/>
 
+    <menuitem id="menu_moneta_cpf_accrued_interest"
+              name="CPF Housing Accrued Interest"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_cpf_accrued_interest"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_singapore_property_affordability"
+              name="Stamp Duty (BSD/ABSD) &amp; TDSR/MSR"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_singapore_property_affordability"
+              sequence="40"/>
+
     <!-- Net Worth & Analytics -->
     <menuitem id="menu_moneta_reports_root"
               name="Net Worth &amp; Reports"
