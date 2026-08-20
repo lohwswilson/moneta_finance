@@ -96,7 +96,7 @@ class MonetaDashboardAction(models.Model):
             'rebalance': 'moneta_finance.action_moneta_rebalance_wizard',
             'stock_split': 'moneta_finance.action_moneta_stock_split_wizard',
             'goals': 'moneta_finance.action_moneta_goal',
-            'properties': 'moneta_finance.action_moneta_property',
+            'properties': 'moneta_finance_property.action_moneta_property',
             'portfolio': 'moneta_finance.action_moneta_holding',
             'target_alloc': 'moneta_finance.action_moneta_target_allocation',
             'benchmark': 'moneta_finance.action_moneta_benchmark',
@@ -117,10 +117,15 @@ class MonetaDashboardAction(models.Model):
             return self.custom_action_id.read()[0]
 
         xml_id = mapping.get(self.action_type)
-        if not xml_id:
-            xml_id = 'moneta_finance.action_moneta_transaction'
+        action_ref = self.env.ref(xml_id, raise_if_not_found=False) if xml_id else None
+        if not action_ref and self.action_type == 'properties':
+            action_ref = self.env.ref('moneta_finance.action_moneta_property', raise_if_not_found=False)
+        if not action_ref:
+            action_ref = self.env.ref('moneta_finance.action_moneta_transaction', raise_if_not_found=False)
 
-        action = self.env.ref(xml_id).read()[0]
+        if not action_ref:
+            return {'type': 'ir.actions.act_window_close'}
+        action = action_ref.read()[0]
         return action
 
     @api.model

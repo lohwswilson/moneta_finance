@@ -540,7 +540,11 @@ class MonetaDashboard(models.TransientModel):
         return action
 
     def action_open_properties(self):
-        action = self.env.ref('moneta_finance.action_moneta_property').read()[0]
+        action_ref = self.env.ref('moneta_finance_property.action_moneta_property', raise_if_not_found=False) \
+            or self.env.ref('moneta_finance.action_moneta_property', raise_if_not_found=False)
+        if not action_ref:
+            return {'type': 'ir.actions.act_window_close'}
+        action = action_ref.read()[0]
         action['target'] = 'current'
         return action
 
