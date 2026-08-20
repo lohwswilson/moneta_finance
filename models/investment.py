@@ -345,12 +345,47 @@ class MonetaSecurity(models.Model):
             self.env['moneta.account.balance.monthly']._rebuild_for_account(acc)
 
     def action_fetch_quote(self):
-        """Fetch live quote and auto-fill metadata on button click."""
-        self.ensure_one()
-        if not self.symbol:
-            raise ValidationError("Please enter a Ticker Symbol first (e.g. AAPL, VOO, NVDA, D05.SI).")
-        info = self._lookup_symbol_info(self.symbol)
-        if not info:
+        """Fetch live quote and auto-fill metadata from Yahoo Finance."""
+        today = fields.Date.context_today(self)
+        count = 0
+        for rec in self:
+            if not rec.symbol:
+                continue
+            info = rec._lookup_symbol_info(rec.symbol)
+            if not info:
+                continue
+            vals = {
+                'symbol': info.get('symbol', rec.symbol),
+                'name': info.get('name') or rec.name or rec.symbol,
+                'exchange': info.get('exchange') or rec.exchange,
+                'asset_class': info.get('asset_class') or rec.asset_class,
+                'currency_id': info.get('currency_id') or rec.currency_id.id,
+                'day_change': info.get('day_change', 0.0),
+                'day_change_percent': info.get('day_change_percent', 0.0),
+                'fifty_two_week_high': info.get('fifty_two_week_high', False),
+                'fifty_two_week_low': info.get('fifty_two_week_low', False),
+                'day_volume': info.get('day_volume', 0.0),
+            }
+            rec.write(vals)
+
+            price = info.get('price')
+            if price:
+                existing_price = self.env['moneta.security.price'].search([
+                    ('security_id', '=', rec.id),
+                    ('price_date', '=', today),
+                ], limit=1)
+                if existing_price:
+                    existing_price.write({'price_close': price, 'source': 'yahoo'})
+                else:
+                    self.env['moneta.security.price'].create({
+                        'security_id': rec.id,
+                        'price_date': today,
+                        'price_close': price,
+                        'source': 'yahoo',
+                    })
+            count += 1
+
+        if len(self) == 1 and count == 0:
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -361,37 +396,23 @@ class MonetaSecurity(models.Model):
                     'sticky': False,
                 }
             }
-        
-        vals = {
-            'symbol': info.get('symbol', self.symbol),
-            'name': info.get('name') or self.name or self.symbol,
-            'exchange': info.get('exchange') or self.exchange,
-            'asset_class': info.get('asset_class') or self.asset_class,
-            'currency_id': info.get('currency_id') or self.currency_id.id,
-        }
-        self.write(vals)
-
-        price = info.get('price')
-        if price:
-            today = fields.Date.context_today(self)
-            existing_price = self.env['moneta.security.price'].search([
-                ('security_id', '=', self.id),
-                ('price_date', '=', today),
-            ], limit=1)
-            if existing_price:
-                existing_price.write({'price_close': price, 'source': 'yahoo'})
-            else:
-                self.env['moneta.security.price'].create({
-                    'security_id': self.id,
-                    'price_date': today,
-                    'price_close': price,
-                    'source': 'yahoo',
-                })
 
         return {
             'type': 'ir.actions.client',
-            'tag': 'reload',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Live Quotes Updated',
+                'message': f"Successfully refreshed live quote data from Yahoo Finance for {count} security(ies).",
+                'type': 'success',
+                'sticky': False,
+            }
         }
+
+    @api.model
+    def action_fetch_all_quotes(self):
+        """Fetches live quotes for all active securities."""
+        securities = self.search([])
+        return securities.action_fetch_quote()
 
     @api.depends('allocation_ids.weight')
     def _compute_total_allocation_weight(self):

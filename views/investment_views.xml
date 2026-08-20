@@ -124,6 +124,9 @@
         <field name="model">moneta.security</field>
         <field name="arch" type="xml">
             <list string="Securities" default_order="symbol asc">
+                <header>
+                    <button name="action_fetch_all_quotes" type="object" string="🔄 Refresh All Live Quotes (Yahoo Finance)" class="btn btn-primary"/>
+                </header>
                 <field name="symbol" string="Ticker" class="fw-bold"/>
                 <field name="name" string="Company / ETF Name"/>
                 <field name="asset_class" widget="badge"/>
@@ -133,6 +136,7 @@
                 <field name="dividend_yield_pct" string="Div Yield (%)" widget="percentage" optional="show"/>
                 <field name="annual_dividend_rate" string="Div / Share" widget="monetary" optional="hide"/>
                 <field name="quote_timestamp" string="Last Updated" optional="show"/>
+                <button name="action_fetch_quote" type="object" string="🔄 Update" class="btn-sm btn-outline-primary" title="Fetch live quote &amp; fundamentals from Yahoo Finance"/>
             </list>
         </field>
     </record>
