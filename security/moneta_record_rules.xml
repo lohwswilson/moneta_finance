@@ -684,5 +684,47 @@
             <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
         </record>
 
+        <!-- moneta.ssb.bond -->
+        <record id="moneta_ssb_bond_rule_user" model="ir.rule">
+            <field name="name">Moneta SSB Bond: own</field>
+            <field name="model_id" ref="model_moneta_ssb_bond"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_ssb_bond_rule_manager" model="ir.rule">
+            <field name="name">Moneta SSB Bond: manager</field>
+            <field name="model_id" ref="model_moneta_ssb_bond"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.tbill -->
+        <record id="moneta_tbill_rule_user" model="ir.rule">
+            <field name="name">Moneta TBill: own</field>
+            <field name="model_id" ref="model_moneta_tbill"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_tbill_rule_manager" model="ir.rule">
+            <field name="name">Moneta TBill: manager</field>
+            <field name="model_id" ref="model_moneta_tbill"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.ucits.etf.comparator -->
+        <record id="moneta_ucits_etf_comparator_rule_user" model="ir.rule">
+            <field name="name">Moneta UCITS ETF Comparator: own</field>
+            <field name="model_id" ref="model_moneta_ucits_etf_comparator"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_ucits_etf_comparator_rule_manager" model="ir.rule">
+            <field name="name">Moneta UCITS ETF Comparator: manager</field>
+            <field name="model_id" ref="model_moneta_ucits_etf_comparator"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
     </data>
 </odoo>

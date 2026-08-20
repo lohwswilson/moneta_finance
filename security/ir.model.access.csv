@@ -117,3 +117,9 @@ access_moneta_cpf_accrued_interest_user,moneta.cpf.accrued.interest.user,model_m
 access_moneta_cpf_accrued_interest_manager,moneta.cpf.accrued.interest.manager,model_moneta_cpf_accrued_interest,group_moneta_manager,1,1,1,1
 access_moneta_singapore_property_affordability_user,moneta.singapore.property.affordability.user,model_moneta_singapore_property_affordability,group_moneta_user,1,1,1,1
 access_moneta_singapore_property_affordability_manager,moneta.singapore.property.affordability.manager,model_moneta_singapore_property_affordability,group_moneta_manager,1,1,1,1
+access_moneta_ssb_bond_user,moneta.ssb.bond.user,model_moneta_ssb_bond,group_moneta_user,1,1,1,1
+access_moneta_ssb_bond_manager,moneta.ssb.bond.manager,model_moneta_ssb_bond,group_moneta_manager,1,1,1,1
+access_moneta_tbill_user,moneta.tbill.user,model_moneta_tbill,group_moneta_user,1,1,1,1
+access_moneta_tbill_manager,moneta.tbill.manager,model_moneta_tbill,group_moneta_manager,1,1,1,1
+access_moneta_ucits_etf_comparator_user,moneta.ucits.etf.comparator.user,model_moneta_ucits_etf_comparator,group_moneta_user,1,1,1,1
+access_moneta_ucits_etf_comparator_manager,moneta.ucits.etf.comparator.manager,model_moneta_ucits_etf_comparator,group_moneta_manager,1,1,1,1

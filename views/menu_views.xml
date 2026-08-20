@@ -146,6 +146,24 @@
               action="action_moneta_singapore_property_affordability"
               sequence="40"/>
 
+    <menuitem id="menu_moneta_ssb_bond"
+              name="Singapore Savings Bonds (SSB)"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_ssb_bond"
+              sequence="50"/>
+
+    <menuitem id="menu_moneta_tbill"
+              name="MAS Treasury Bills (T-Bills)"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_tbill"
+              sequence="60"/>
+
+    <menuitem id="menu_moneta_ucits_etf_comparator"
+              name="Irish UCITS ETF Tax Advantage"
+              parent="menu_moneta_singapore_root"
+              action="action_moneta_ucits_etf_comparator"
+              sequence="70"/>
+
     <!-- Net Worth & Analytics -->
     <menuitem id="menu_moneta_reports_root"
               name="Net Worth &amp; Reports"

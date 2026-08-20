@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Singapore Savings Bonds (SSB) Form View -->
+    <record id="view_moneta_ssb_bond_form" model="ir.ui.view">
+        <field name="name">moneta.ssb.bond.form</field>
+        <field name="model">moneta.ssb.bond</field>
+        <field name="arch" type="xml">
+            <form string="Singapore Savings Bond (SSB)">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇸🇬 Singapore Government Securities (AAA Rated)</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- SSB Hero Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" 
+                         style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-left: 5px solid #059669 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-shield text-success me-1"/>10-Year Step-Up Return &amp; Coupon
+                            </span>
+                            <span class="badge bg-success px-3 py-1 fs-6">
+                                <field name="state"/>
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-4">
+                                <span class="text-muted small">10-Year Average Yield</span>
+                                <h1 class="fw-bolder mb-0 text-success">
+                                    <field name="average_10yr_yield"/>% p.a.
+                                </h1>
+                                <span class="text-muted small">Total Interest: <field name="total_interest_to_maturity" widget="monetary"/></span>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Principal Invested</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="investment_amount" widget="monetary"/></h3>
+                                <span class="text-muted small">Funding: <field name="funding_source"/></span>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Next Semi-Annual Coupon</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="next_coupon_payout" widget="monetary"/></h3>
+                                <span class="text-muted small">Paid every 6 months</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Bond Issue &amp; Allocation">
+                            <field name="issue_code"/>
+                            <field name="issue_date"/>
+                            <field name="maturity_date"/>
+                            <field name="funding_source"/>
+                            <field name="linked_account_id"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Redemption &amp; Liquidity">
+                            <field name="state"/>
+                            <field name="redemption_fee" widget="monetary"/>
+                            <field name="redemption_date" invisible="state == 'active'"/>
+                            <field name="actual_interest_received" widget="monetary" invisible="state == 'active'"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3 bg-light">
+                        <h6 class="fw-bold text-dark mb-3"><i class="fa fa-line-chart text-success me-2"/>10-Year Step-Up Annual Coupon Schedule (% p.a.)</h6>
+                        <div class="row g-2 text-center small">
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 1</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_1"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 2</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_2"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 3</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_3"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 4</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_4"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 5</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_5"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 6</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_6"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 7</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_7"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 8</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_8"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 9</span>
+                                <div class="fw-bold fs-6 text-dark"><field name="rate_year_9"/>%</div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <span class="text-muted">Yr 10</span>
+                                <div class="fw-bold fs-6 text-success"><field name="rate_year_10"/>%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group string="Notes &amp; Coupon Receipts">
+                        <field name="notes" placeholder="Notes on CDP account, bank linkage, or redemption planning..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SSB List View -->
+    <record id="view_moneta_ssb_bond_tree" model="ir.ui.view">
+        <field name="name">moneta.ssb.bond.list</field>
+        <field name="model">moneta.ssb.bond</field>
+        <field name="arch" type="xml">
+            <list string="Singapore Savings Bonds (SSB)" default_order="issue_date desc">
+                <field name="issue_code" string="Issue Code" class="fw-bold"/>
+                <field name="issue_date" string="Issue Date"/>
+                <field name="maturity_date" string="Maturity Date"/>
+                <field name="investment_amount" string="Principal Invested" widget="monetary" sum="Total SSB Invested"/>
+                <field name="funding_source" widget="badge"/>
+                <field name="average_10yr_yield" string="10-Yr Avg Yield (%)"/>
+                <field name="next_coupon_payout" string="Next Coupon ($)" widget="monetary" sum="Total Semi-Annual Coupons"/>
+                <field name="total_interest_to_maturity" string="Total 10-Yr Return" widget="monetary" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-muted="state in ('redeemed', 'matured')"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- MAS T-Bill Form View -->
+    <record id="view_moneta_tbill_form" model="ir.ui.view">
+        <field name="name">moneta.tbill.form</field>
+        <field name="model">moneta.tbill</field>
+        <field name="arch" type="xml">
+            <form string="MAS Treasury Bill (T-Bill)">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇸🇬 Monetary Authority of Singapore (MAS T-Bill)</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- T-Bill Hero Card -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" 
+                         style="background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border-left: 5px solid #0d9488 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-university text-teal me-1"/>Discount Auction Economics &amp; Yield
+                            </span>
+                            <span class="badge bg-teal px-3 py-1 fs-6">
+                                <field name="state"/>
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-4">
+                                <span class="text-muted small">Cut-Off Yield (Annualized)</span>
+                                <h1 class="fw-bolder mb-0 text-dark">
+                                    <field name="cut_off_yield_p_a"/>% p.a.
+                                </h1>
+                                <span class="text-muted small">Issue Price: $<field name="issue_price_per_hundred"/> / $100</span>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Face Value at Maturity</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="face_value" widget="monetary"/></h3>
+                                <span class="text-muted small">Cost: <field name="total_investment_cost" widget="monetary"/></span>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">Net Discount Profit</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="net_discount_profit" widget="monetary"/></h3>
+                                <span class="text-muted small">Days to Maturity: <field name="days_to_maturity"/> days</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Auction &amp; Issue Parameters">
+                            <field name="issue_code"/>
+                            <field name="tenure_type"/>
+                            <field name="auction_date"/>
+                            <field name="issue_date"/>
+                            <field name="maturity_date"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Funding Source &amp; Accounts">
+                            <field name="funding_source"/>
+                            <field name="linked_account_id"/>
+                            <field name="face_value" widget="monetary"/>
+                            <field name="issue_price_per_hundred"/>
+                            <field name="state"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <group string="Notes &amp; Allotment Details">
+                        <field name="notes" placeholder="Competitive vs non-competitive bid, CDP allotment info, CPF/SRS deduction..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MAS T-Bill List View -->
+    <record id="view_moneta_tbill_tree" model="ir.ui.view">
+        <field name="name">moneta.tbill.list</field>
+        <field name="model">moneta.tbill</field>
+        <field name="arch" type="xml">
+            <list string="MAS Treasury Bills (T-Bills)" default_order="issue_date desc">
+                <field name="issue_code" string="Issue Code" class="fw-bold"/>
+                <field name="tenure_type" widget="badge"/>
+                <field name="funding_source" widget="badge"/>
+                <field name="issue_date" string="Issue Date"/>
+                <field name="maturity_date" string="Maturity Date"/>
+                <field name="face_value" string="Face Value" widget="monetary" sum="Total Par Value"/>
+                <field name="total_investment_cost" string="Cost ($)" widget="monetary" sum="Total Invested Cost"/>
+                <field name="net_discount_profit" string="Profit ($)" widget="monetary" sum="Total Discount Profit" class="fw-bold text-success"/>
+                <field name="cut_off_yield_p_a" string="Yield (% p.a.)" class="fw-bold"/>
+                <field name="days_to_maturity" string="Days Left"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-muted="state == 'matured'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- UCITS ETF Comparator Form View -->
+    <record id="view_moneta_ucits_etf_comparator_form" model="ir.ui.view">
+        <field name="name">moneta.ucits.etf.comparator.form</field>
+        <field name="model">moneta.ucits.etf.comparator</field>
+        <field name="arch" type="xml">
+            <form string="Irish UCITS vs US ETF Tax Drag Comparator">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🇮🇪 Irish UCITS vs 🇺🇸 US-Domiciled ETFs</span>
+                        <h1>
+                            <field name="name" placeholder="Comparison Title..."/>
+                        </h1>
+                    </div>
+
+                    <!-- Hero Tax Comparison Banner -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 my-3" 
+                         style="background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 5px solid #2563eb !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-globe text-primary me-1"/>15% Dividend WHT Advantage &amp; Estate Tax Exemption
+                            </span>
+                            <span class="badge bg-primary px-3 py-1 fs-6">
+                                0% Irish Estate Tax
+                            </span>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-5">
+                                <span class="text-muted small">Cumulative Tax Saved (Compounded over <field name="investment_horizon_years"/> yrs)</span>
+                                <h1 class="fw-bolder mb-0 text-primary">
+                                    <field name="cumulative_tax_savings_horizon" widget="monetary"/>
+                                </h1>
+                                <span class="text-muted small">Annual Dividend Tax Saved: <field name="annual_tax_savings_with_ucits" widget="monetary"/> / year</span>
+                            </div>
+                            <div class="col-6 col-md-3 border-start">
+                                <span class="text-muted small">US ETF (VOO) 30% WHT</span>
+                                <h4 class="fw-bold mb-0 text-danger"><field name="us_etf_annual_tax_drag" widget="monetary"/>/yr</h4>
+                            </div>
+                            <div class="col-6 col-md-4 border-start">
+                                <span class="text-muted small">UCITS (CSPX) 15% WHT</span>
+                                <h4 class="fw-bold mb-0 text-success"><field name="ucits_annual_tax_drag" widget="monetary"/>/yr</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Portfolio &amp; Horizon">
+                            <field name="portfolio_value" widget="monetary"/>
+                            <field name="dividend_yield_pct"/>
+                            <field name="expected_growth_rate"/>
+                            <field name="investment_horizon_years"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="US Estate Tax Exposure Risk">
+                            <field name="us_estate_tax_threshold" widget="monetary"/>
+                            <field name="us_estate_tax_exposure" widget="monetary" class="text-danger fw-bold"/>
+                            <field name="ucits_estate_tax_exposure" widget="monetary" class="text-success fw-bold"/>
+                            <field name="user_id" groups="moneta_finance.group_moneta_manager"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-info d-flex align-items-center p-3 my-3 rounded-3" role="status">
+                        <div>
+                            <i class="fa fa-graduation-cap fa-2x text-info me-3"/>
+                            <strong>Why Singapore Investors Prefer Irish UCITS ETFs:</strong>
+                            <ul class="mb-0 small text-muted ps-3">
+                                <li><strong>Dividend Withholding Tax:</strong> US-Ireland tax treaty cuts withholding tax from 30% to 15% (e.g. `CSPX.L`, `VWRA.L`, `SWRD.L`).</li>
+                                <li><strong>US Estate Tax:</strong> Non-US residents holding &gt; $60,000 in US-domiciled assets (e.g. `VOO`, `VTI`, `AAPL`) face up to <strong>40% US Estate Tax</strong> upon death. Irish-domiciled UCITS ETFs are <strong>100% exempt</strong> from US Estate Tax.</li>
+                                <li><strong>Accumulating Share Classes:</strong> Automatically reinvest dividends internally with zero dividend reinvestment fees.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <group string="Strategy Notes">
+                        <field name="notes" placeholder="Notes on broker selection (Interactive Brokers, Endowus, etc.)..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- UCITS ETF Comparator List View -->
+    <record id="view_moneta_ucits_etf_comparator_tree" model="ir.ui.view">
+        <field name="name">moneta.ucits.etf.comparator.list</field>
+        <field name="model">moneta.ucits.etf.comparator</field>
+        <field name="arch" type="xml">
+            <list string="UCITS vs US ETF Tax Comparisons">
+                <field name="name" class="fw-bold"/>
+                <field name="portfolio_value" string="Portfolio Value" widget="monetary"/>
+                <field name="investment_horizon_years" string="Horizon (Yrs)"/>
+                <field name="annual_tax_savings_with_ucits" string="Annual Tax Saved" widget="monetary" class="text-success"/>
+                <field name="cumulative_tax_savings_horizon" string="Cumulative Saved" widget="monetary" class="fw-bold text-primary"/>
+                <field name="us_estate_tax_exposure" string="US Estate Tax Risk" widget="monetary" decoration-danger="us_estate_tax_exposure &gt; 0"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_moneta_ssb_bond" model="ir.actions.act_window">
+        <field name="name">Singapore Savings Bonds (SSB)</field>
+        <field name="res_model">moneta.ssb.bond</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_moneta_tbill" model="ir.actions.act_window">
+        <field name="name">MAS Treasury Bills (T-Bills)</field>
+        <field name="res_model">moneta.tbill</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_moneta_ucits_etf_comparator" model="ir.actions.act_window">
+        <field name="name">Irish UCITS ETF Tax Advantage</field>
+        <field name="res_model">moneta.ucits.etf.comparator</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

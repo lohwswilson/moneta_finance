@@ -157,6 +157,17 @@ class MonetaSecurity(models.Model):
     next_pay_date = fields.Date(string='Next Pay Date')
     is_benchmark = fields.Boolean(string='Is Benchmark Index (S&P 500 / VOO / VT)', default=False)
 
+    # Singapore & Global Tax Classification (Track 3.3)
+    is_sgx_security = fields.Boolean(string='SGX Listed (.SI)', compute='_compute_security_tax_profile', store=True)
+    is_sreit = fields.Boolean(string='Singapore REIT (S-REIT)', default=False)
+    is_ucits_etf = fields.Boolean(string='Irish-Domiciled UCITS ETF (15% WHT)', compute='_compute_security_tax_profile', store=True)
+    dividend_tax_treatment = fields.Selection([
+        ('sg_tax_exempt', '🇸🇬 Singapore One-Tier 0% Tax Exempt (SGX / S-REIT)'),
+        ('ucits_wht_15', '🇮🇪 Irish UCITS ETF 15% US WHT (CSPX / VWRA)'),
+        ('us_wht_30', '🇺🇸 US-Domiciled 30% Non-Resident WHT (VOO / VTI)'),
+        ('taxable', 'Standard Taxable Dividend'),
+    ], string='Dividend Tax Treatment', compute='_compute_security_tax_profile', store=True, readonly=False)
+
     # MS Money Market & Valuation Metrics (Track 2.3)
     fifty_two_week_high = fields.Monetary(string='52-Week High')
     fifty_two_week_low = fields.Monetary(string='52-Week Low')
@@ -290,6 +301,29 @@ class MonetaSecurity(models.Model):
                         'price_close': price,
                         'source': 'yahoo',
                     })]
+
+    @api.depends('symbol', 'exchange', 'is_sreit')
+    def _compute_security_tax_profile(self):
+        for sec in self:
+            sym = (sec.symbol or '').strip().upper()
+            exch = (sec.exchange or '').strip().upper()
+
+            is_sg = sym.endswith('.SI') or 'SGX' in exch or 'SINGAPORE' in exch
+            sec.is_sgx_security = is_sg
+
+            # Irish UCITS ETF detection (e.g. CSPX.L, VUAA.L, VWRA.L, SWRD.L, IWDA.AS)
+            is_ucits = sym.endswith(('.L', '.AS', '.DE', '.PA', '.MI', '.SW')) and not is_sg
+            sec.is_ucits_etf = is_ucits
+
+            if is_sg or sec.is_sreit:
+                sec.dividend_tax_treatment = 'sg_tax_exempt'
+            elif is_ucits:
+                sec.dividend_tax_treatment = 'ucits_wht_15'
+            elif sym and not sym.endswith(('.SI', '.L', '.AS', '.DE', '.PA', '.MI', '.SW', '.TO', '.AX', '.HK')):
+                # Default US stocks / ETFs have 30% WHT for Singapore investors
+                sec.dividend_tax_treatment = 'us_wht_30'
+            else:
+                sec.dividend_tax_treatment = 'taxable'
 
 
     @api.model

@@ -70,11 +70,11 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Buyer's Stamp Duty (BSD) & Additional Buyer's Stamp Duty (ABSD) property calculator (Singapore Citizen vs PR vs Foreigner)
   - [x] Total Debt Servicing Ratio (TDSR $\le 55\%$) and Mortgage Servicing Ratio (MSR $\le 30\%$) affordability checks
 
-* **Track 3.3: Singapore Savings Bonds (SSB), MAS T-Bills & S-REITs**
-  - [ ] Singapore Savings Bonds (SSB) engine: 10-year step-up interest schedule with monthly par redemption ($100) and $2 MAS fee
-  - [ ] MAS Treasury Bills (6-Month / 1-Year T-Bills) discount auction yield accounting
-  - [ ] SGX (`.SI`) security master with one-tier tax-exempt dividend distribution handling and S-REIT distribution yield tracking
-  - [ ] Irish-domiciled ETF tracking (`CSPX.L`, `VWRA.L`, `SWRD.L`) with 15% US dividend tax withholding advantage
+* **Track 3.3: Singapore Savings Bonds (SSB), MAS T-Bills & S-REITs (Completed ✅)**
+  - [x] Singapore Savings Bonds (SSB) engine: 10-year step-up interest schedule with monthly par redemption ($100) and $2 MAS fee
+  - [x] MAS Treasury Bills (6-Month / 1-Year T-Bills) discount auction yield accounting
+  - [x] SGX (`.SI`) security master with one-tier tax-exempt dividend distribution handling and S-REIT distribution yield tracking
+  - [x] Irish-domiciled ETF tracking (`CSPX.L`, `VWRA.L`, `SWRD.L`) with 15% US dividend tax withholding advantage
 
 * **Track 3.4: IRAS Tax Relief & Optimization Engine**
   - [ ] IRAS progressive personal income tax brackets with instant liability estimation

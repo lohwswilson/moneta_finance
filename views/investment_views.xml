@@ -64,10 +64,14 @@
                             <field name="isin"/>
                             <field name="is_benchmark" widget="boolean_toggle"/>
                         </group>
-                        <group name="dividend_info" string="Dividend &amp; Distribution Profile">
+                        <group name="dividend_info" string="Dividend, Distribution &amp; Tax Profile">
                             <field name="annual_dividend_rate" widget="monetary"/>
                             <field name="dividend_yield_pct" widget="percentage"/>
                             <field name="dividend_frequency"/>
+                            <field name="dividend_tax_treatment"/>
+                            <field name="is_sreit" widget="boolean_toggle"/>
+                            <field name="is_sgx_security" invisible="1"/>
+                            <field name="is_ucits_etf" invisible="1"/>
                             <field name="next_ex_dividend_date"/>
                             <field name="next_pay_date"/>
                         </group>
