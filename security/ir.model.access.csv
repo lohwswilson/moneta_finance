@@ -137,3 +137,7 @@ access_moneta_security_lot_user,moneta.security.lot.user,model_moneta_security_l
 access_moneta_security_lot_manager,moneta.security.lot.manager,model_moneta_security_lot,group_moneta_manager,1,1,1,1
 access_moneta_security_lot_disposal_user,moneta.security.lot.disposal.user,model_moneta_security_lot_disposal,group_moneta_user,1,1,1,1
 access_moneta_security_lot_disposal_manager,moneta.security.lot.disposal.manager,model_moneta_security_lot_disposal,group_moneta_manager,1,1,1,1
+access_moneta_property_tenant_user,moneta.property.tenant.user,model_moneta_property_tenant,group_moneta_user,1,1,1,1
+access_moneta_property_tenant_manager,moneta.property.tenant.manager,model_moneta_property_tenant,group_moneta_manager,1,1,1,1
+access_moneta_property_rent_payment_user,moneta.property.rent.payment.user,model_moneta_property_rent_payment,group_moneta_user,1,1,1,1
+access_moneta_property_rent_payment_manager,moneta.property.rent.payment.manager,model_moneta_property_rent_payment,group_moneta_manager,1,1,1,1

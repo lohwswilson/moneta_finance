@@ -782,5 +782,33 @@
             <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
         </record>
 
+        <!-- moneta.property.tenant -->
+        <record id="moneta_property_tenant_rule_user" model="ir.rule">
+            <field name="name">Moneta Property Tenant: own</field>
+            <field name="model_id" ref="model_moneta_property_tenant"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_property_tenant_rule_manager" model="ir.rule">
+            <field name="name">Moneta Property Tenant: manager</field>
+            <field name="model_id" ref="model_moneta_property_tenant"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
+        <!-- moneta.property.rent.payment -->
+        <record id="moneta_property_rent_payment_rule_user" model="ir.rule">
+            <field name="name">Moneta Property Rent Payment: own</field>
+            <field name="model_id" ref="model_moneta_property_rent_payment"/>
+            <field name="domain_force">[('property_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_user'))]"/>
+        </record>
+        <record id="moneta_property_rent_payment_rule_manager" model="ir.rule">
+            <field name="name">Moneta Property Rent Payment: manager</field>
+            <field name="model_id" ref="model_moneta_property_rent_payment"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_moneta_manager'))]"/>
+        </record>
+
     </data>
 </odoo>

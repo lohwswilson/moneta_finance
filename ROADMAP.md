@@ -102,10 +102,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [x] Holding period tracking ($< 365$ days vs. $\ge 365$ days) for Short-Term vs. Long-Term Capital Gains classification
   - [x] Tax-loss harvesting opportunities analyzer with lot-level capital gain/loss breakdown
 
-* **Track 4.3: Landlord & Rental Property Lease / Tenant Roll (Quicken Business)**
-  - [ ] Tenant management (`moneta.property.tenant`) with lease start/end dates, monthly rent amount, and security deposit tracking
-  - [ ] Rent roll ledger with automated monthly rent invoice generation and overdue rent alerts
-  - [ ] Rental property expense categorization and Schedule E net operating income (NOI) reporting
+* **Track 4.3: Landlord & Rental Property Lease / Tenant Roll (Completed ✅)**
+  - [x] Tenant management (`moneta.property.tenant`) with lease start/end dates, monthly rent amount, and security deposit tracking
+  - [x] Rent roll ledger with automated monthly rent invoice generation and overdue rent alerts
+  - [x] Rental property expense categorization and Schedule E net operating income (NOI) reporting
 
 * **Track 4.4: Tax Schedule & TurboTax TXF Export**
   - [ ] IRS Form 8949 / Schedule D capital gains summary report generator

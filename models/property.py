@@ -97,6 +97,14 @@ class MonetaProperty(models.Model):
     # Historical Valuation Log
     valuation_line_ids = fields.One2many('moneta.property.valuation', 'property_id', string='Valuation History')
 
+    # --- Landlord & Tenant Management (Track 4.3 Quicken Parity) ---
+    tenant_ids = fields.One2many('moneta.property.tenant', 'property_id', string='Tenants & Leases')
+    tenant_count = fields.Integer(string='Active Tenants', compute='_compute_rental_metrics', store=True)
+    gross_annual_rental_income = fields.Monetary(string='Gross Annual Rent', compute='_compute_rental_metrics', store=True)
+    gross_rental_yield_pct = fields.Float(string='Gross Rental Yield (%)', compute='_compute_rental_metrics', store=True, digits=(5, 2))
+    net_operating_income = fields.Monetary(string='Annual Net Operating Income (NOI)', compute='_compute_rental_metrics', store=True)
+    occupancy_rate_pct = fields.Float(string='Occupancy Rate (%)', compute='_compute_rental_metrics', store=True, digits=(5, 1))
+
     notes = fields.Text(string='Description, Provenance & Notes')
 
     @api.onchange('asset_category')
@@ -140,6 +148,187 @@ class MonetaProperty(models.Model):
             ins = float(prop.monthly_insurance or 0.0)
             hoa = float(prop.monthly_hoa_maintenance or 0.0)
             prop.net_monthly_cashflow = round(inc - (tax + ins + hoa), 4)
+
+    @api.depends('tenant_ids.lease_status', 'tenant_ids.monthly_rent_amount', 'current_market_value', 'monthly_property_tax', 'monthly_insurance', 'monthly_hoa_maintenance')
+    def _compute_rental_metrics(self):
+        for prop in self:
+            active_tenants = prop.tenant_ids.filtered(lambda t: t.lease_status == 'active')
+            prop.tenant_count = len(active_tenants)
+            
+            # Monthly rent from active leases (or manual monthly_rental_income fallback)
+            lease_rent = sum(t.monthly_rent_amount for t in active_tenants)
+            effective_monthly_rent = lease_rent if lease_rent > 0 else (prop.monthly_rental_income or 0.0)
+            annual_rent = effective_monthly_rent * 12.0
+            prop.gross_annual_rental_income = round(annual_rent, 2)
+
+            # Annual operating expenses
+            annual_expenses = (float(prop.monthly_property_tax or 0.0) +
+                               float(prop.monthly_insurance or 0.0) +
+                               float(prop.monthly_hoa_maintenance or 0.0)) * 12.0
+            prop.net_operating_income = round(annual_rent - annual_expenses, 2)
+
+            # Yield
+            mkt_val = float(prop.current_market_value or 0.0)
+            if mkt_val > 0:
+                prop.gross_rental_yield_pct = round((annual_rent / mkt_val) * 100.0, 2)
+            else:
+                prop.gross_rental_yield_pct = 0.0
+
+            prop.occupancy_rate_pct = 100.0 if active_tenants else 0.0
+
+
+class MonetaPropertyTenant(models.Model):
+    _name = 'moneta.property.tenant'
+    _description = 'Rental Property Tenant & Lease Agreement'
+    _order = 'lease_start_date desc, id desc'
+
+    name = fields.Char(string='Tenant Full Name', required=True)
+    property_id = fields.Many2one(
+        'moneta.property', string='Rental Property',
+        domain="[('asset_category', '=', 'real_estate')]", required=True, ondelete='cascade'
+    )
+    user_id = fields.Many2one('res.users', string='Owner', related='property_id.user_id', store=True, index=True)
+    currency_id = fields.Many2one('res.currency', related='property_id.currency_id', store=True, readonly=True)
+
+    unit_number = fields.Char(string='Unit / Suite / Room #')
+    email = fields.Char(string='Email Address')
+    phone = fields.Char(string='Phone / Mobile')
+    emergency_contact = fields.Char(string='Emergency Contact')
+
+    # Lease Terms
+    lease_start_date = fields.Date(string='Lease Start Date', required=True)
+    lease_end_date = fields.Date(string='Lease End Date', required=True)
+    monthly_rent_amount = fields.Monetary(string='Monthly Rent Amount', required=True, default=0.0)
+    rent_due_day = fields.Integer(string='Rent Due Day of Month', default=1, required=True)
+
+    # Security Deposit
+    security_deposit_held = fields.Monetary(string='Security Deposit Held', default=0.0)
+    security_deposit_refunded = fields.Monetary(string='Deposit Refunded', default=0.0)
+    deposit_status = fields.Selection([
+        ('held', 'Held in Escrow'),
+        ('partially_refunded', 'Partially Refunded'),
+        ('fully_refunded', 'Fully Refunded'),
+        ('forfeited', 'Forfeited / Deducted for Repairs'),
+    ], string='Deposit Status', default='held', required=True)
+
+    lease_status = fields.Selection([
+        ('upcoming', 'Upcoming Lease'),
+        ('active', 'Active Lease'),
+        ('expired', 'Expired'),
+        ('terminated', 'Terminated Early'),
+    ], string='Lease Status', compute='_compute_lease_status', store=True)
+
+    rent_payment_ids = fields.One2many(
+        'moneta.property.rent.payment', 'tenant_id', string='Rent Roll Ledger'
+    )
+    total_rent_collected = fields.Monetary(string='Total Rent Collected', compute='_compute_payment_totals', store=True)
+    total_rent_overdue = fields.Monetary(string='Total Rent Overdue', compute='_compute_payment_totals', store=True)
+    notes = fields.Text(string='Lease Terms & Agreement Notes')
+
+    @api.depends('lease_start_date', 'lease_end_date')
+    def _compute_lease_status(self):
+        today = fields.Date.today()
+        for t in self:
+            if not t.lease_start_date or not t.lease_end_date:
+                t.lease_status = 'active'
+            elif today < t.lease_start_date:
+                t.lease_status = 'upcoming'
+            elif today > t.lease_end_date:
+                t.lease_status = 'expired'
+            else:
+                t.lease_status = 'active'
+
+    @api.depends('rent_payment_ids.amount_paid', 'rent_payment_ids.balance_due', 'rent_payment_ids.payment_status')
+    def _compute_payment_totals(self):
+        for t in self:
+            collected = sum(p.amount_paid for p in t.rent_payment_ids)
+            overdue = sum(p.balance_due for p in t.rent_payment_ids if p.payment_status in ('late', 'overdue'))
+            t.total_rent_collected = round(collected, 2)
+            t.total_rent_overdue = round(overdue, 2)
+
+    def action_generate_rent_schedule(self):
+        """Generates monthly rent payment dues across the entire lease duration."""
+        self.ensure_one()
+        if not self.lease_start_date or not self.lease_end_date:
+            return
+
+        cur_date = self.lease_start_date
+        Payment = self.env['moneta.property.rent.payment']
+
+        while cur_date <= self.lease_end_date:
+            due_d = cur_date.replace(day=min(self.rent_due_day or 1, 28))
+            existing = Payment.search([
+                ('tenant_id', '=', self.id),
+                ('period_month', '=', cur_date.replace(day=1)),
+            ], limit=1)
+
+            if not existing:
+                Payment.create({
+                    'tenant_id': self.id,
+                    'period_month': cur_date.replace(day=1),
+                    'due_date': due_d,
+                    'amount_due': self.monthly_rent_amount,
+                })
+
+            # Advance 1 month
+            if cur_date.month == 12:
+                cur_date = cur_date.replace(year=cur_date.year + 1, month=1)
+            else:
+                cur_date = cur_date.replace(month=cur_date.month + 1)
+
+
+class MonetaPropertyRentPayment(models.Model):
+    _name = 'moneta.property.rent.payment'
+    _description = 'Rent Roll Payment Record'
+    _order = 'due_date desc, id desc'
+
+    tenant_id = fields.Many2one('moneta.property.tenant', string='Tenant', required=True, ondelete='cascade')
+    property_id = fields.Many2one('moneta.property', string='Property', related='tenant_id.property_id', store=True)
+    currency_id = fields.Many2one('res.currency', related='tenant_id.currency_id')
+
+    period_month = fields.Date(string='Rental Month', required=True)
+    due_date = fields.Date(string='Due Date', required=True)
+    paid_date = fields.Date(string='Paid Date')
+
+    amount_due = fields.Monetary(string='Rent Due ($)', required=True)
+    amount_paid = fields.Monetary(string='Rent Paid ($)', default=0.0)
+    balance_due = fields.Monetary(string='Balance Due ($)', compute='_compute_payment_status', store=True)
+
+    payment_status = fields.Selection([
+        ('paid', 'Paid in Full'),
+        ('partial', 'Partially Paid'),
+        ('pending', 'Pending / Upcoming'),
+        ('overdue', 'Overdue'),
+    ], string='Payment Status', compute='_compute_payment_status', store=True)
+
+    transaction_id = fields.Many2one('moneta.transaction', string='Linked Bank Entry')
+    memo = fields.Char(string='Payment Note / Check #')
+
+    @api.depends('amount_due', 'amount_paid', 'due_date', 'paid_date')
+    def _compute_payment_status(self):
+        today = fields.Date.today()
+        for rec in self:
+            due = rec.amount_due or 0.0
+            paid = rec.amount_paid or 0.0
+            bal = max(due - paid, 0.0)
+            rec.balance_due = round(bal, 2)
+
+            if bal <= 1e-4:
+                rec.payment_status = 'paid'
+            elif paid > 0 and bal > 0:
+                rec.payment_status = 'partial'
+            elif rec.due_date and today > rec.due_date:
+                rec.payment_status = 'overdue'
+            else:
+                rec.payment_status = 'pending'
+
+    def action_mark_paid(self):
+        """1-Click button to record full rent payment as of today."""
+        self.ensure_one()
+        self.write({
+            'amount_paid': self.amount_due,
+            'paid_date': fields.Date.today(),
+        })
 
 
 class MonetaPropertyValuation(models.Model):

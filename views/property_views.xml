@@ -45,6 +45,38 @@
                         </div>
                     </div>
 
+                    <!-- Real Estate Rental Performance Card (Quicken Parity) -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 my-3" style="background: #f0fdf4; border-left: 4px solid #16a34a !important;" invisible="asset_category != 'real_estate'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small fw-bold text-uppercase">
+                                <i class="fa fa-building text-success me-1"/>Landlord &amp; Rental Performance (NOI &amp; Yield)
+                            </span>
+                            <span class="badge px-3 py-1 bg-success text-white">
+                                <field name="occupancy_rate_pct"/>% Occupancy (<field name="tenant_count"/> Active Tenants)
+                            </span>
+                        </div>
+                        <div class="row g-3 text-center">
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Gross Annual Rent</span>
+                                <h3 class="fw-bold mb-0 text-dark"><field name="gross_annual_rental_income" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Gross Rental Yield</span>
+                                <h3 class="fw-bold mb-0 text-success"><field name="gross_rental_yield_pct"/>%</h3>
+                            </div>
+                            <div class="col-6 col-md-3 border-end">
+                                <span class="text-muted small">Net Operating Income (NOI)</span>
+                                <h3 class="fw-bold mb-0 text-primary"><field name="net_operating_income" widget="monetary"/></h3>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="text-muted small">Net Monthly Cash Flow</span>
+                                <h3 class="fw-bold mb-0" decoration-success="net_monthly_cashflow &gt; 0" decoration-danger="net_monthly_cashflow &lt; 0">
+                                    <field name="net_monthly_cashflow" widget="monetary"/>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
                     <group>
                         <group string="Acquisition &amp; Valuation">
                             <field name="purchase_date"/>
@@ -79,16 +111,31 @@
                         </group>
 
                         <!-- Real Estate & Rental Cashflow -->
-                        <group string="Real Estate &amp; Rental Cashflow" invisible="asset_category != 'real_estate'">
-                            <field name="monthly_rental_income" widget="monetary"/>
+                        <group string="Real Estate Operating Expenses" invisible="asset_category != 'real_estate'">
+                            <field name="monthly_rental_income" widget="monetary" string="Base Monthly Rent (Manual)"/>
                             <field name="monthly_property_tax" widget="monetary"/>
                             <field name="monthly_insurance" widget="monetary"/>
                             <field name="monthly_hoa_maintenance" widget="monetary"/>
-                            <field name="net_monthly_cashflow" widget="monetary" readonly="1" decoration-success="net_monthly_cashflow &gt; 0" decoration-danger="net_monthly_cashflow &lt; 0"/>
                         </group>
                     </group>
 
                     <notebook>
+                        <page string="Tenants &amp; Rent Roll" name="tenants_page" invisible="asset_category != 'real_estate'">
+                            <field name="tenant_ids">
+                                <list>
+                                    <field name="name" string="Tenant Name"/>
+                                    <field name="unit_number" string="Unit #"/>
+                                    <field name="lease_start_date"/>
+                                    <field name="lease_end_date"/>
+                                    <field name="monthly_rent_amount" widget="monetary"/>
+                                    <field name="security_deposit_held" widget="monetary"/>
+                                    <field name="total_rent_collected" widget="monetary" sum="Total Collected"/>
+                                    <field name="total_rent_overdue" widget="monetary" sum="Total Overdue" decoration-danger="total_rent_overdue &gt; 0"/>
+                                    <field name="lease_status" widget="badge" decoration-success="lease_status == 'active'" decoration-info="lease_status == 'upcoming'" decoration-muted="lease_status == 'expired'"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Appraisal &amp; Valuation History" name="valuations_page">
                             <field name="valuation_line_ids">
                                 <list editable="bottom">
@@ -107,6 +154,126 @@
                 </sheet>
             </form>
         </field>
+    </record>
+
+    <!-- Tenant Form View -->
+    <record id="view_moneta_property_tenant_form" model="ir.ui.view">
+        <field name="name">moneta.property.tenant.form</field>
+        <field name="model">moneta.property.tenant</field>
+        <field name="arch" type="xml">
+            <form string="Tenant &amp; Lease Agreement">
+                <header>
+                    <button name="action_generate_rent_schedule" type="object" string="📅 Generate Rent Schedule" class="btn btn-primary" icon="fa-calendar"/>
+                    <field name="lease_status" widget="statusbar" statusbar_visible="upcoming,active,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="text-muted text-uppercase fw-bold small">🏠 Lease Agreement</span>
+                        <h1><field name="name" placeholder="Tenant Full Name..."/></h1>
+                        <span class="badge bg-light text-dark border">
+                            Property: <field name="property_id"/>
+                        </span>
+                    </div>
+
+                    <!-- Tenant Summary Card -->
+                    <div class="row g-3 my-3 text-center">
+                        <div class="col-6 col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small">Monthly Rent</span>
+                                <h3 class="fw-bold text-dark mb-0"><field name="monthly_rent_amount" widget="monetary"/></h3>
+                                <span class="text-muted small">Due Day: <field name="rent_due_day"/> of month</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small">Security Deposit</span>
+                                <h3 class="fw-bold text-primary mb-0"><field name="security_deposit_held" widget="monetary"/></h3>
+                                <field name="deposit_status" widget="badge"/>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small">Total Rent Collected</span>
+                                <h3 class="fw-bold text-success mb-0"><field name="total_rent_collected" widget="monetary"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card border-0 shadow-sm rounded-3 bg-light p-3">
+                                <span class="text-muted small">Overdue Rent</span>
+                                <h3 class="fw-bold mb-0" decoration-danger="total_rent_overdue &gt; 0">
+                                    <field name="total_rent_overdue" widget="monetary"/>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Tenant Contact Info">
+                            <field name="unit_number"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="emergency_contact"/>
+                        </group>
+                        <group string="Lease Agreement">
+                            <field name="lease_start_date"/>
+                            <field name="lease_end_date"/>
+                            <field name="security_deposit_refunded" widget="monetary" invisible="deposit_status == 'held'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Rent Roll Payments" name="rent_payments_page">
+                            <field name="rent_payment_ids">
+                                <list default_order="due_date desc" editable="bottom">
+                                    <field name="period_month" string="Month"/>
+                                    <field name="due_date"/>
+                                    <field name="amount_due" widget="monetary"/>
+                                    <field name="amount_paid" widget="monetary"/>
+                                    <field name="balance_due" widget="monetary"/>
+                                    <field name="paid_date"/>
+                                    <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-warning="payment_status in ('partial', 'pending')" decoration-danger="payment_status == 'overdue'"/>
+                                    <button name="action_mark_paid" type="object" string="Mark Paid" icon="fa-check-circle" class="btn btn-sm btn-success" invisible="payment_status == 'paid'"/>
+                                    <field name="memo" placeholder="Check #, Ref, Bank Tx..."/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Lease Notes &amp; Terms" name="notes_page">
+                            <field name="notes" placeholder="Special terms, pet deposits, key inventory, maintenance responsibilities..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tenant List View -->
+    <record id="view_moneta_property_tenant_tree" model="ir.ui.view">
+        <field name="name">moneta.property.tenant.list</field>
+        <field name="model">moneta.property.tenant</field>
+        <field name="arch" type="xml">
+            <list string="Tenants &amp; Leases" default_order="lease_start_date desc">
+                <field name="name" string="Tenant" class="fw-bold"/>
+                <field name="property_id" string="Property"/>
+                <field name="unit_number" string="Unit"/>
+                <field name="lease_start_date"/>
+                <field name="lease_end_date"/>
+                <field name="monthly_rent_amount" widget="monetary" sum="Total Monthly Rent"/>
+                <field name="security_deposit_held" widget="monetary" optional="show"/>
+                <field name="total_rent_collected" widget="monetary" sum="Total Collected"/>
+                <field name="total_rent_overdue" widget="monetary" sum="Total Overdue" decoration-danger="total_rent_overdue &gt; 0"/>
+                <field name="lease_status" widget="badge" decoration-success="lease_status == 'active'" decoration-info="lease_status == 'upcoming'" decoration-muted="lease_status == 'expired'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action for Tenants -->
+    <record id="action_moneta_property_tenant" model="ir.actions.act_window">
+        <field name="name">Tenants &amp; Leases</field>
+        <field name="res_model">moneta.property.tenant</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- Property, Vehicle & Valuables Kanban View -->
