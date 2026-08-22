@@ -6,54 +6,35 @@ hide:
   - toc
 ---
 
-<div class="hero-wrapper" markdown>
+# Moneta Personal Finance
 
-<div class="hero-pill">
-  <span>✨ Open-Source Sovereign Wealth Suite</span>
-</div>
+### **Institutional Precision. Zero Tracking. 100% Sovereign Wealth Management.**
 
-<h1 class="hero-title">Take Sovereign Control of Your Wealth.</h1>
+**Moneta Personal Finance** is an open-source, self-hosted wealth management suite combining the checkbook ledger precision of **Quicken Premier**, the zero-based envelope budgeting discipline of **YNAB**, the modern visual clarity of **Monarch & Copilot**, and the complete sovereign privacy of your own private database.
 
-<p class="hero-subtitle">
-  Combining the ledger precision of Quicken Premier, the zero-based envelope discipline of YNAB, the visual elegance of Monarch & Copilot, and 100% self-hosted privacy.
-</p>
-
-<div class="hero-actions">
-  <a href="01_GETTING_STARTED/" class="md-button md-button--primary">
-    🚀 Get Started in 30s
-  </a>
-  <a href="https://github.com/lohwswilson/moneta_finance" class="md-button">
-    ⭐ Star on GitHub
-  </a>
-</div>
-
-<div class="terminal-window">
-  <div class="terminal-header">
-    <div class="terminal-dot dot-red"></div>
-    <div class="terminal-dot dot-yellow"></div>
-    <div class="terminal-dot dot-green"></div>
-    <div class="terminal-title">bash — docker-compose</div>
-  </div>
-  <div class="terminal-body">
-    <div><span class="cmd">$ git clone</span> https://github.com/lohwswilson/moneta_finance.git</div>
-    <div><span class="cmd">$ cd</span> moneta_finance</div>
-    <div><span class="cmd">$ docker compose up -d</span> <span class="comment"># Ready at http://localhost:8069</span></div>
-  </div>
-</div>
-
-<div class="trust-chips-row">
-  <div class="trust-chip">🔒 100% Self-Hosted & Private</div>
-  <div class="trust-chip">🌐 Native Multi-Currency</div>
-  <div class="trust-chip">🚫 Zero Cloud Telemetry</div>
-  <div class="trust-chip">🤖 Local AI & MCP Ready</div>
-  <div class="trust-chip">📊 1,000-Path Monte Carlo</div>
-</div>
-
-</div>
+[🚀 Get Started in 30 Seconds](01_GETTING_STARTED.md){ .md-button .md-button--primary }
+[⭐ Star on GitHub](https://github.com/lohwswilson/moneta_finance){ .md-button }
 
 ---
 
-## 🌟 The 6 Pillars of Wealth Management
+## ⚡ 30-Second Quickstart
+
+Get up and running with Docker and persistent storage in seconds:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/lohwswilson/moneta_finance.git
+cd moneta_finance
+
+# 2. Launch Moneta with Docker
+docker compose up -d
+```
+
+Open [**`http://localhost:8069`**](http://localhost:8069) in your browser (Default login: `admin` / `admin`).
+
+---
+
+## 🌟 Core Wealth Capabilities
 
 <div class="grid cards" markdown>
 
@@ -113,17 +94,17 @@ hide:
 
 | Feature / Capability | Moneta Personal Finance | Quicken Premier | YNAB | Monarch Money | Cloud Mint / SaaS |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **100% Self-Hosted & Sovereign** | <span style="color: #10b981; font-weight: 700;">✔ Yes</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> |
-| **Recurring Monthly Cost** | <span style="color: #10b981; font-weight: 700;">✔ $0 / Free</span> | $70+ / year | $109 / year | $100 / year | Free (Ad-Tracked) |
-| **Multi-Currency Ledgers & Transfers** | <span style="color: #10b981; font-weight: 700;">✔ Native</span> | Partial | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> |
-| **Live Yahoo Finance Stock Quotes** | <span style="color: #10b981; font-weight: 700;">✔ Hourly Sync</span> | <span style="color: #10b981; font-weight: 700;">✔ Yes</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #10b981; font-weight: 700;">✔ Yes</span> | <span style="color: #f43f5e;">✖ No</span> |
-| **1,000-Path Monte Carlo Wealth Simulator** | <span style="color: #10b981; font-weight: 700;">✔ Built-in</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> |
-| **Local AI & MCP Server (Ollama)** | <span style="color: #10b981; font-weight: 700;">✔ Native MCP</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> |
-| **Regional Packs (CPF, SRS, EPF, LHDN)** | <span style="color: #10b981; font-weight: 700;">✔ Native</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> | <span style="color: #f43f5e;">✖ No</span> |
+| **100% Self-Hosted & Sovereign** | **✔ Yes** | ✖ No | ✖ No | ✖ No | ✖ No |
+| **Recurring Monthly Cost** | **✔ Free / $0** | $70+ / year | $109 / year | $100 / year | Free (Ad-Tracked) |
+| **Multi-Currency Ledgers & Transfers** | **✔ Native** | Partial | ✖ No | ✖ No | ✖ No |
+| **Live Yahoo Finance Stock Quotes** | **✔ Hourly Sync** | ✔ Yes | ✖ No | ✔ Yes | ✖ No |
+| **1,000-Path Monte Carlo Wealth Simulator** | **✔ Built-in** | ✖ No | ✖ No | ✖ No | ✖ No |
+| **Local AI & MCP Server (Ollama)** | **✔ Native MCP** | ✖ No | ✖ No | ✖ No | ✖ No |
+| **Regional Packs (CPF, SRS, EPF, LHDN)** | **✔ Native** | ✖ No | ✖ No | ✖ No | ✖ No |
 
 ---
 
-## 🏛️ Modular Suite Architecture
+## 🏛️ Modular Architecture
 
 ```mermaid
 graph TD
@@ -143,11 +124,9 @@ graph TD
 
 ---
 
-<div style="text-align: center; padding: 3rem 1.5rem; margin: 3rem 0; background: var(--moneta-chip-bg); border-radius: 20px; border: 1px solid var(--moneta-chip-border);">
-  <h3 style="margin-top: 0; font-size: 1.5rem; font-weight: 700;">Ready to take sovereign control of your finances?</h3>
-  <p style="color: var(--md-default-fg-color--light); max-width: 600px; margin: 0.5rem auto 1.5rem auto;">Get up and running on your own private infrastructure in under a minute with Docker.</p>
-  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-    <a href="01_GETTING_STARTED/" class="md-button md-button--primary">🚀 Launch Quickstart</a>
-    <a href="02_BANKING_AND_RECONCILIATION/" class="md-button">📖 Browse User Guide</a>
-  </div>
-</div>
+## 🚀 Next Steps
+
+* **[Get Started Guide](01_GETTING_STARTED.md)**: 30-second Docker setup or manual local installation.
+* **[User Guide](02_BANKING_AND_RECONCILIATION.md)**: Explore banking, stocks, budgets, and FIRE simulation.
+* **[Regional Wealth Packs](09_SINGAPORE_AND_SEA_WEALTH.md)**: Singapore CPF/SRS and Malaysia EPF localization.
+* **[Developer Guide](dev_setup.md)**: Local development environment, API, and architectural conventions.
