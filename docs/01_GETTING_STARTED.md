@@ -1,6 +1,6 @@
 # Getting Started with Moneta Personal Finance
 
-Welcome to **Moneta Personal Finance**. This guide walks you through the 30-second Docker container quickstart, base currency configuration, and setting up your first accounts.
+Welcome to **Moneta Personal Finance**. This guide walks you through setting up Moneta using either the **30-second Docker container quickstart** or **manual installation into an existing environment**, followed by base currency configuration and setting up your first accounts.
 
 ---
 
@@ -14,7 +14,7 @@ The repository includes a ready-to-use [`docker-compose.yml`](https://github.com
 git clone https://github.com/lohwswilson/moneta_finance.git
 cd moneta_finance
 
-# Start Moneta Personal Finance in background
+# Start Moneta Personal Finance in the background
 docker compose up -d
 ```
 
@@ -35,6 +35,34 @@ docker compose restart
 # Stop services
 docker compose down
 ```
+
+---
+
+## 🛠️ Method 2: Manual Installation (Existing Environment)
+
+For users who prefer installing Moneta into an existing self-hosted environment:
+
+### 1. Install Required Python Dependencies
+To support live Yahoo Finance quote syncing and financial computations:
+
+```bash
+pip install yfinance pandas numpy matplotlib
+```
+
+### 2. Clone Moneta into Your Addons Directory
+```bash
+git clone -b 18.0 https://github.com/lohwswilson/moneta_finance.git /path/to/your/custom_addons/moneta_finance
+```
+
+### 3. Activate the Modules
+* **Via Web Interface**:
+  1. Open your browser and navigate to **Apps**.
+  2. Click **Update Apps List**.
+  3. Search for `Moneta Personal Finance` and click **Activate / Install**.
+* **Via Command Line**:
+  ```bash
+  odoo-bin -c odoo.conf -d <your_database> -i moneta_finance,moneta_finance_property,moneta_finance_singapore,moneta_finance_malaysia
+  ```
 
 ---
 
