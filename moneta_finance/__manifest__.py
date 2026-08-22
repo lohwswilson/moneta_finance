@@ -101,6 +101,9 @@ Key Features & Capabilities:
     'assets': {
         'web.assets_backend': [
             'moneta_finance/static/src/css/moneta_style.css',
+            'moneta_finance/static/src/scss/moneta_dashboard.scss',
+            'moneta_finance/static/src/js/moneta_dashboard.js',
+            'moneta_finance/static/src/xml/moneta_dashboard.xml',
         ],
     },
     'demo': [

@@ -1,0 +1,514 @@
+/* Moneta Personal Finance - OWL 2.0 Fintech Dashboard Styles */
+
+.moneta-dashboard-wrapper {
+  background-color: #080c14;
+  color: #f8fafc;
+  min-height: 100vh;
+  padding: 1.5rem 2rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* Top Bar */
+  .moneta-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .moneta-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .moneta-logo-badge {
+        font-size: 1.75rem;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 12px;
+        padding: 0.25rem 0.5rem;
+      }
+
+      .moneta-app-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #ffffff 40%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .moneta-app-subtitle {
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    .moneta-topbar-actions {
+      display: flex;
+      gap: 0.75rem;
+
+      .moneta-btn {
+        padding: 0.45rem 1.15rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        border: none;
+      }
+
+      .moneta-btn-primary {
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 16px rgba(2, 132, 199, 0.5);
+        }
+      }
+
+      .moneta-btn-secondary {
+        background: #1e293b;
+        color: #cbd5e1;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        &:hover {
+          background: #334155;
+          color: #ffffff;
+        }
+      }
+
+      .moneta-btn-outline {
+        background: transparent;
+        color: #f8fafc;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+
+        &:hover {
+          border-color: #38bdf8;
+          color: #38bdf8;
+        }
+      }
+    }
+  }
+
+  /* Grid Layout */
+  .moneta-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr 1.1fr;
+    grid-template-rows: auto auto;
+    gap: 1.25rem;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Card Styles */
+  .moneta-card {
+    background-color: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease-in-out;
+
+    &:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .moneta-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+
+      .moneta-card-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #f8fafc;
+      }
+
+      .moneta-card-subtitle {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 0.15rem;
+      }
+
+      .moneta-kpi-large {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #ffffff;
+        font-family: 'JetBrains Mono', monospace;
+        letter-spacing: -0.02em;
+        margin-top: 0.25rem;
+      }
+
+      .moneta-time-pills {
+        display: flex;
+        background: #1e293b;
+        border-radius: 6px;
+        padding: 2px;
+
+        .moneta-pill {
+          padding: 0.2rem 0.6rem;
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: #94a3b8;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &.active {
+            background: #0284c7;
+            color: #ffffff;
+          }
+        }
+      }
+
+      .moneta-link-btn {
+        background: transparent;
+        border: none;
+        color: #38bdf8;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  /* Card 1: Net Worth */
+  .moneta-card-nw {
+    .moneta-chart-container {
+      height: 140px;
+      margin-bottom: 1rem;
+    }
+
+    .moneta-nw-footer {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+      .moneta-stat-item {
+        display: flex;
+        flex-direction: column;
+
+        .label {
+          font-size: 0.7rem;
+          color: #64748b;
+          text-transform: uppercase;
+        }
+
+        .val {
+          font-size: 0.88rem;
+          font-weight: 700;
+          font-family: 'JetBrains Mono', monospace;
+          margin-top: 0.15rem;
+        }
+      }
+    }
+  }
+
+  /* Card 2: Cash Flow Register */
+  .moneta-card-register {
+    grid-row: span 2;
+
+    .moneta-table-container {
+      overflow-y: auto;
+      max-height: 520px;
+    }
+
+    .moneta-ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.825rem;
+
+      th {
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        padding: 0.5rem 0.4rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      td {
+        padding: 0.65rem 0.4rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .moneta-cat-badge {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 4px;
+        padding: 0.15rem 0.45rem;
+        font-size: 0.72rem;
+        color: #cbd5e1;
+      }
+
+      .moneta-amount-tag {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.78rem;
+
+        &.tag-inflow {
+          background: rgba(16, 185, 129, 0.15);
+          color: #10b981;
+          border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        &.tag-outflow {
+          background: rgba(244, 63, 94, 0.15);
+          color: #f43f5e;
+          border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+      }
+
+      .moneta-clr-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        cursor: pointer;
+        user-select: none;
+
+        &.clr-c {
+          background: #10b981;
+          color: #ffffff;
+        }
+
+        &.clr-r {
+          background: #0284c7;
+          color: #ffffff;
+        }
+
+        &.clr-u {
+          background: #334155;
+          color: #94a3b8;
+        }
+      }
+    }
+  }
+
+  /* Card 3: Investment Holdings */
+  .moneta-card-holdings {
+    .moneta-holdings-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+
+      th {
+        color: #64748b;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        padding: 0.4rem 0.3rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      td {
+        padding: 0.5rem 0.3rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+    }
+
+    .moneta-donut-section {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+      .moneta-donut-chart {
+        width: 85px;
+        height: 85px;
+      }
+
+      .moneta-donut-legend {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+
+        .legend-row {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.75rem;
+
+          .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+          }
+
+          .legend-text {
+            color: #94a3b8;
+            flex: 1;
+          }
+
+          .legend-val {
+            font-weight: 700;
+            color: #f8fafc;
+          }
+        }
+      }
+    }
+  }
+
+  /* Card 4: Sankey Diagram */
+  .moneta-card-sankey {
+    .moneta-sankey-body {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem 0;
+
+      .sankey-node {
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        text-align: center;
+        min-width: 80px;
+
+        .node-title {
+          font-size: 0.72rem;
+          color: #94a3b8;
+          text-transform: uppercase;
+        }
+
+        .node-val {
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #38bdf8;
+          margin-top: 0.2rem;
+        }
+      }
+
+      .sankey-flows {
+        flex: 1;
+        height: 120px;
+
+        .sankey-svg {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .sankey-outflow-nodes {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        font-size: 0.72rem;
+        color: #cbd5e1;
+
+        .out-node {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+
+          .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+          }
+        }
+
+        .highlight-savings {
+          font-weight: 700;
+          color: #10b981;
+        }
+      }
+    }
+  }
+
+  /* Card 5: Monte Carlo */
+  .moneta-card-montecarlo {
+    .moneta-monte-body {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem 0;
+
+      .cone-container {
+        width: 120px;
+        height: 120px;
+
+        .cone-svg {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .cone-milestones {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+
+        .milestone-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.75rem;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          background: rgba(255, 255, 255, 0.03);
+
+          &.highlight {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+
+            .p-val {
+              color: #38bdf8;
+              font-weight: 800;
+            }
+          }
+
+          .p-tag {
+            color: #94a3b8;
+          }
+
+          .p-val {
+            font-weight: 700;
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+
+  /* Loading State */
+  .moneta-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+  }
+}

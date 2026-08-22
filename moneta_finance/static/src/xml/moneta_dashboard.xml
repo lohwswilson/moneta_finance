@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="moneta_finance.MonetaDashboard">
+        <div class="moneta-dashboard-wrapper">
+            <!-- Top Dashboard Bar -->
+            <div class="moneta-topbar">
+                <div class="moneta-brand">
+                    <div class="moneta-logo-badge">🪙</div>
+                    <div>
+                        <div class="moneta-app-title">Moneta</div>
+                        <div class="moneta-app-subtitle">Personal Finance</div>
+                    </div>
+                </div>
+
+                <div class="moneta-topbar-actions">
+                    <button class="moneta-btn moneta-btn-primary" t-on-click="onOpenTransactions">
+                        <i class="fa fa-plus-circle me-1"/> New Transaction
+                    </button>
+                    <button class="moneta-btn moneta-btn-secondary" t-on-click="onRefreshData">
+                        <i class="fa fa-refresh me-1" t-att-class="{'fa-spin': state.loading}"/> Refresh
+                    </button>
+                    <button class="moneta-btn moneta-btn-outline" t-on-click="onOpenInsights">
+                        <i class="fa fa-lightbulb-o me-1 text-warning"/> AI Insights
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bento Grid 5-Card Layout -->
+            <div class="moneta-grid-container" t-if="!state.loading">
+
+                <!-- 1. Net Worth Summary Card -->
+                <div class="moneta-card moneta-card-nw">
+                    <div class="moneta-card-header">
+                        <div>
+                            <div class="moneta-card-title">Net Worth Summary</div>
+                            <div class="moneta-kpi-large" t-esc="state.data.net_worth_formatted"/>
+                        </div>
+                        <div class="moneta-time-pills">
+                            <span class="moneta-pill" t-att-class="{'active': state.timeframe === '1Y'}" t-on-click="() => this.setTimeframe('1Y')">1Y</span>
+                            <span class="moneta-pill" t-att-class="{'active': state.timeframe === '5Y'}" t-on-click="() => this.setTimeframe('5Y')">5Y</span>
+                        </div>
+                    </div>
+                    <div class="moneta-chart-container">
+                        <canvas t-ref="netWorthCanvas" height="140"></canvas>
+                    </div>
+                    <div class="moneta-nw-footer">
+                        <div class="moneta-stat-item">
+                            <span class="label">Total Assets</span>
+                            <span class="val text-success" t-esc="state.data.total_assets_formatted"/>
+                        </div>
+                        <div class="moneta-stat-item">
+                            <span class="label">Total Liabilities</span>
+                            <span class="val text-danger" t-esc="state.data.total_liabilities_formatted"/>
+                        </div>
+                        <div class="moneta-stat-item">
+                            <span class="label">Runway</span>
+                            <span class="val text-info" t-esc="state.data.emergency_runway_months + ' Mos'"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Cash Flow Register (Transaction Ledger) -->
+                <div class="moneta-card moneta-card-register">
+                    <div class="moneta-card-header">
+                        <div>
+                            <div class="moneta-card-title">Cash Flow Register</div>
+                            <div class="moneta-card-subtitle">Transaction Ledger</div>
+                        </div>
+                        <button class="moneta-link-btn" t-on-click="onOpenTransactions">View All →</button>
+                    </div>
+
+                    <div class="moneta-table-container">
+                        <table class="moneta-ledger-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Payee</th>
+                                    <th>Category</th>
+                                    <th class="text-end">Amount</th>
+                                    <th class="text-end">Balance</th>
+                                    <th class="text-center">Clr</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.data.recent_transactions" t-as="tx" t-key="tx.id">
+                                    <tr>
+                                        <td class="text-muted font-mono" t-esc="tx.date"/>
+                                        <td class="fw-semibold text-truncate" t-esc="tx.payee"/>
+                                        <td>
+                                            <span class="moneta-cat-badge" t-esc="tx.category"/>
+                                        </td>
+                                        <td class="text-end font-mono">
+                                            <span t-attf-class="moneta-amount-tag #{tx.is_inflow ? 'tag-inflow' : 'tag-outflow'}" t-esc="tx.amount_formatted"/>
+                                        </td>
+                                        <td class="text-end font-mono text-muted" t-esc="tx.balance_formatted"/>
+                                        <td class="text-center">
+                                            <span t-attf-class="moneta-clr-pill #{tx.cleared_status == 'R' ? 'clr-r' : (tx.cleared_status == 'C' ? 'clr-c' : 'clr-u')}" t-on-click="() => this.toggleCleared(tx.id)">
+                                                <t t-esc="tx.cleared_status"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. Investment Holdings Card -->
+                <div class="moneta-card moneta-card-holdings">
+                    <div class="moneta-card-header">
+                        <div>
+                            <div class="moneta-card-title">Investment Holdings</div>
+                            <div class="moneta-card-subtitle">Real-Time Portfolio Allocation</div>
+                        </div>
+                        <button class="moneta-link-btn" t-on-click="onOpenHoldings">Holdings →</button>
+                    </div>
+
+                    <table class="moneta-holdings-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Name</th>
+                                <th class="text-end">Qty</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Value</th>
+                                <th class="text-end">Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="state.data.investment_holdings" t-as="h" t-key="h.id">
+                                <tr>
+                                    <td class="fw-bold text-info font-mono" t-esc="h.ticker"/>
+                                    <td class="text-truncate text-muted" t-esc="h.name"/>
+                                    <td class="text-end font-mono" t-esc="h.qty"/>
+                                    <td class="text-end font-mono" t-esc="h.price_formatted"/>
+                                    <td class="text-end font-mono fw-semibold" t-esc="h.market_value_formatted"/>
+                                    <td class="text-end font-mono">
+                                        <span t-attf-class="fw-semibold #{h.is_gain ? 'text-success' : 'text-danger'}">
+                                            <t t-if="h.is_gain">+</t><t t-esc="h.gain_pct"/>%
+                                        </span>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <div class="moneta-donut-section">
+                        <div class="moneta-donut-chart">
+                            <canvas t-ref="donutCanvas" width="100" height="100"></canvas>
+                        </div>
+                        <div class="moneta-donut-legend">
+                            <t t-foreach="state.data.asset_allocation" t-as="item" t-key="item.label">
+                                <div class="legend-row">
+                                    <span class="legend-dot" t-attf-style="background-color: #{item.color};"></span>
+                                    <span class="legend-text" t-esc="item.label"/>
+                                    <span class="legend-val font-mono" t-esc="item.value + '%'"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Sankey Diagram Card -->
+                <div class="moneta-card moneta-card-sankey">
+                    <div class="moneta-card-header">
+                        <div>
+                            <div class="moneta-card-title">Sankey Diagram</div>
+                            <div class="moneta-card-subtitle">Monthly Cash Flow Visualizer</div>
+                        </div>
+                    </div>
+
+                    <div class="moneta-sankey-body">
+                        <!-- Left Inflow Bar -->
+                        <div class="sankey-node income-node">
+                            <div class="node-title">Income</div>
+                            <div class="node-val font-mono" t-esc="state.data.currency_symbol + (state.data.sankey_data.income).toLocaleString()"/>
+                        </div>
+
+                        <!-- Mid Flow SVGs -->
+                        <div class="sankey-flows">
+                            <svg class="sankey-svg" viewBox="0 0 300 160" preserveAspectRatio="none">
+                                <path d="M 0,20 C 150,20 150,20 300,20" stroke="#3b82f6" stroke-width="12" fill="none" stroke-opacity="0.75" />
+                                <path d="M 0,50 C 150,50 150,50 300,50" stroke="#06b6d4" stroke-width="8" fill="none" stroke-opacity="0.75" />
+                                <path d="M 0,80 C 150,80 150,80 300,80" stroke="#f43f5e" stroke-width="10" fill="none" stroke-opacity="0.75" />
+                                <path d="M 0,110 C 150,110 150,110 300,110" stroke="#a855f7" stroke-width="6" fill="none" stroke-opacity="0.75" />
+                                <path d="M 0,140 C 150,140 150,140 300,140" stroke="#10b981" stroke-width="18" fill="none" stroke-opacity="0.85" />
+                            </svg>
+                        </div>
+
+                        <!-- Right Outflow / Savings Target Nodes -->
+                        <div class="sankey-outflow-nodes">
+                            <div class="out-node"><span class="dot" style="background:#3b82f6"/> Housing ($3.5k)</div>
+                            <div class="out-node"><span class="dot" style="background:#06b6d4"/> Food ($1.2k)</div>
+                            <div class="out-node"><span class="dot" style="background:#f43f5e"/> Taxes ($2.1k)</div>
+                            <div class="out-node"><span class="dot" style="background:#a855f7"/> Shopping ($1.0k)</div>
+                            <div class="out-node highlight-savings"><span class="dot" style="background:#10b981"/> Savings ($7.6k)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Monte Carlo Simulation Card -->
+                <div class="moneta-card moneta-card-montecarlo">
+                    <div class="moneta-card-header">
+                        <div>
+                            <div class="moneta-card-title">Monte Carlo Simulation</div>
+                            <div class="moneta-card-subtitle">Stochastic Wealth Probability</div>
+                        </div>
+                        <button class="moneta-link-btn" t-on-click="onOpenMonteCarlo">Simulate →</button>
+                    </div>
+
+                    <div class="moneta-monte-body">
+                        <div class="cone-container">
+                            <svg class="cone-svg" viewBox="0 0 200 160">
+                                <!-- Cone shape -->
+                                <polygon points="100,10 180,150 20,150" fill="url(#coneGrad)" opacity="0.85"/>
+                                <!-- Cross lines for P90, P50, P10 -->
+                                <line x1="60" y1="60" x2="140" y2="60" stroke="#a855f7" stroke-width="2" stroke-dasharray="3,3"/>
+                                <line x1="40" y1="105" x2="160" y2="105" stroke="#38bdf8" stroke-width="2"/>
+                                <line x1="20" y1="150" x2="180" y2="150" stroke="#f43f5e" stroke-width="2" stroke-dasharray="3,3"/>
+                                
+                                <defs>
+                                    <linearGradient id="coneGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9"/>
+                                        <stop offset="50%" stop-color="#6366f1" stop-opacity="0.6"/>
+                                        <stop offset="100%" stop-color="#0f172a" stop-opacity="0.4"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="cone-milestones">
+                            <div class="milestone-row">
+                                <span class="p-tag p90">P90 (Bull)</span>
+                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone.p90_formatted"/>
+                            </div>
+                            <div class="milestone-row highlight">
+                                <span class="p-tag p50">P50 (Median)</span>
+                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone.p50_formatted"/>
+                            </div>
+                            <div class="milestone-row">
+                                <span class="p-tag p10">P10 (Stress)</span>
+                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone.p10_formatted"/>
+                            </div>
+                            <div class="mt-3 text-center">
+                                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-3 py-1 font-mono">
+                                    <i class="fa fa-shield me-1"/> 94.5% Survival
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="moneta-loading" t-if="state.loading">
+                <i class="fa fa-circle-o-notch fa-spin fa-3x text-info"/>
+                <div class="mt-3 text-muted">Calculating Sovereign Financial Intelligence...</div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -18,7 +18,7 @@
     <menuitem id="menu_moneta_dashboard"
               name="Dashboard"
               parent="menu_moneta_root"
-              action="action_moneta_dashboard"
+              action="action_moneta_dashboard_client"
               sequence="5"/>
 
     <!-- =================================================== -->
