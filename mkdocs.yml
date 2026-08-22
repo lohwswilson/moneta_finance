@@ -9,6 +9,9 @@ edit_uri: edit/18.0/docs/
 theme:
   name: material
   language: en
+  font:
+    text: Inter
+    code: JetBrains Mono
   palette:
     # Light Mode
     - scheme: default
@@ -26,15 +29,22 @@ theme:
         name: Switch to light mode
   features:
     - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
     - navigation.tracking
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.top
+    - navigation.footer
     - search.suggest
     - search.highlight
+    - search.share
     - content.code.copy
+    - content.code.annotate
     - content.tabs.link
+    - header.autohide
 
 markdown_extensions:
   - pymdownx.arithmatex:
@@ -54,6 +64,10 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.snippets
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.smartsymbols
   - admonition
   - attr_list
   - def_list
@@ -64,6 +78,9 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
   - Home: index.md

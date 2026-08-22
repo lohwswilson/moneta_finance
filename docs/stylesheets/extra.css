@@ -1,0 +1,102 @@
+/* Moneta Material Modern Styling */
+:root {
+  --md-primary-fg-color: #0284c7;
+  --md-primary-fg-color--light: #38bdf8;
+  --md-primary-fg-color--dark: #0369a1;
+  --md-accent-fg-color: #2563eb;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #38bdf8;
+  --md-primary-fg-color--light: #7dd3fc;
+  --md-primary-fg-color--dark: #0284c7;
+  --md-accent-fg-color: #60a5fa;
+  --md-default-bg-color: #0f172a;
+  --md-default-bg-color--light: #1e293b;
+  --md-default-bg-color--lighter: #334155;
+  --md-card-bg-color: #1e293b;
+}
+
+/* Hero Banner & Cards */
+.moneta-hero {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(37, 99, 235, 0.04) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  margin-bottom: 2rem;
+}
+
+.moneta-hero h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-md-color-scheme="slate"] .moneta-hero h1 {
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.moneta-hero p {
+  font-size: 1.15rem;
+  color: var(--md-default-fg-color--light);
+  max-width: 750px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.moneta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.moneta-badges img {
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Feature Grid Cards */
+.grid.cards > ul > li {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+[data-md-color-scheme="slate"] .grid.cards > ul > li {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #1e293b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.grid.cards > ul > li:hover {
+  transform: translateY(-4px);
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.15);
+}
+
+/* Tables styling */
+.md-typeset table:not([class]) {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.md-typeset table:not([class]) th {
+  background-color: rgba(2, 132, 199, 0.08);
+}
+
+/* Mermaid graph styling */
+.mermaid {
+  background: transparent !important;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
