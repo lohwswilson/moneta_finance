@@ -1,0 +1,2129 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An Open-Source Personal Finance, Banking & Wealth Management Suite">
+      
+      
+        <meta name="author" content="Wilson Loh">
+      
+      
+        <link rel="canonical" href="https://lohwswilson.github.io/moneta_finance/roadmap/">
+      
+      
+        <link rel="prev" href="../odoo-port/">
+      
+      
+        <link rel="next" href="../blog/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.57">
+    
+    
+      
+        <title>Moneta Personal Finance - Product Roadmap & Community Backlog - Moneta Personal Finance</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.5da3a30f.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.812a03bb.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#moneta-personal-finance-product-roadmap-community-backlog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Moneta Personal Finance" class="md-header__button md-logo" aria-label="Moneta Personal Finance" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Moneta Personal Finance
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Moneta Personal Finance - Product Roadmap &amp; Community Backlog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/lohwswilson/moneta_finance" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lohwswilson/moneta_finance
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./.." class="md-tabs__link">
+        
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../01_GETTING_STARTED/" class="md-tabs__link">
+        
+  
+  Get Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../02_BANKING_AND_RECONCILIATION/" class="md-tabs__link">
+          
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../09_SINGAPORE_AND_SEA_WEALTH/" class="md-tabs__link">
+          
+  
+  Regional Packs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../dev_setup/" class="md-tabs__link">
+          
+  
+  Developer Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="././" class="md-tabs__link">
+        
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Moneta Personal Finance" class="md-nav__button md-logo" aria-label="Moneta Personal Finance" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Moneta Personal Finance
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lohwswilson/moneta_finance" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lohwswilson/moneta_finance
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Get Started
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  User Guide
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  User Guide
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BANKING_AND_RECONCILIATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Banking & Checkbook Registers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_STOCKS_AND_INVESTMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Stock Portfolio & Investments
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BUDGETS_BILLS_AND_SUBSCRIPTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Budgets & Scheduled Bills
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_REAL_ESTATE_AND_AMORTIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Real Estate & Mortgages
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_FIRE_AND_SIMULATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  FIRE & Wealth Simulator
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_SECURITY_AND_MULTI_USER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Security & Household Privacy
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Regional Packs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Regional Packs
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_SINGAPORE_AND_SEA_WEALTH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Singapore
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_MALAYSIA_WEALTH_AND_TAX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Malaysia
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developer Guide
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Developer Guide
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Development Environment Setup
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DEVELOPER_AND_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture & MCP Server
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../odoo-port/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Odoo Port Architecture
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Roadmap
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Roadmap
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap-milestones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🌟 Roadmap Milestones
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌟 Roadmap Milestones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-core-wealth-portfolio-engine-completed-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 1: Core Wealth &amp; Portfolio Engine (Completed Core ✅)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-monize-advanced-feature-parity-sprint-active" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 2: Monize Advanced Feature Parity Sprint (Active 🚀)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-singapore-south-east-asia-financial-ecosystem-flagship" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 3: Singapore &amp; South East Asia Financial Ecosystem (Flagship 🇸🇬 🌏)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-quicken-classic-power-parity-landlord-hub-completed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 4: Quicken Classic Power Parity &amp; Landlord Hub (Completed ✅)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-monarch-modern-experience-collaborative-cash-flow-q1-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 5: Monarch Modern Experience &amp; Collaborative Cash Flow (Q1 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-ynab-zero-based-envelope-budgeting-cash-allocation-engine-q1-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 6: YNAB Zero-Based Envelope Budgeting &amp; Cash Allocation Engine (Q1 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-open-banking-automated-feed-sync-q1-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 7: Open Banking &amp; Automated Feed Sync (Q1 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-8-global-tax-multi-jurisdiction-packs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 8: Global Tax &amp; Multi-Jurisdiction Packs
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-9-multi-market-stock-intelligence-technical-indicators-strategies-q2-q3-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 9: Multi-Market Stock Intelligence, Technical Indicators &amp; Strategies (Q2-Q3 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-10-pre-aggregated-reports-macro-reviews-multi-channel-webhook-alerts-q3-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 10: Pre-Aggregated Reports, Macro Reviews &amp; Multi-Channel Webhook Alerts (Q3 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-11-autonomous-ai-copilot-stock-intelligence-private-local-llms-moneta_finance_ai_advisor-q4-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 11: Autonomous AI Copilot, Stock Intelligence &amp; Private Local LLMs (<code>moneta_finance_ai_advisor</code>) (Q4 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-12-native-mobile-apps-ios-android-pwa-q4-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 12: Native Mobile Apps (iOS &amp; Android) &amp; PWA (Q4 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-champion-a-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        💡 How to Champion a Feature
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Blog
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Blog
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Blog Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/posts/2026-08-22-introducing-moneta-finance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introducing Moneta Personal Finance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/posts/2026-08-22-stochastic-fire-monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Stochastic FIRE & Monte Carlo Modeling
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/posts/2026-08-22-cross-currency-multi-ledger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Two-Legged Cross-Currency Transfers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap-milestones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🌟 Roadmap Milestones
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌟 Roadmap Milestones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-core-wealth-portfolio-engine-completed-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 1: Core Wealth &amp; Portfolio Engine (Completed Core ✅)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-monize-advanced-feature-parity-sprint-active" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 2: Monize Advanced Feature Parity Sprint (Active 🚀)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-singapore-south-east-asia-financial-ecosystem-flagship" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 3: Singapore &amp; South East Asia Financial Ecosystem (Flagship 🇸🇬 🌏)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-quicken-classic-power-parity-landlord-hub-completed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 4: Quicken Classic Power Parity &amp; Landlord Hub (Completed ✅)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-monarch-modern-experience-collaborative-cash-flow-q1-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 5: Monarch Modern Experience &amp; Collaborative Cash Flow (Q1 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-ynab-zero-based-envelope-budgeting-cash-allocation-engine-q1-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 6: YNAB Zero-Based Envelope Budgeting &amp; Cash Allocation Engine (Q1 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-open-banking-automated-feed-sync-q1-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 7: Open Banking &amp; Automated Feed Sync (Q1 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-8-global-tax-multi-jurisdiction-packs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 8: Global Tax &amp; Multi-Jurisdiction Packs
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-9-multi-market-stock-intelligence-technical-indicators-strategies-q2-q3-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 9: Multi-Market Stock Intelligence, Technical Indicators &amp; Strategies (Q2-Q3 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-10-pre-aggregated-reports-macro-reviews-multi-channel-webhook-alerts-q3-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 10: Pre-Aggregated Reports, Macro Reviews &amp; Multi-Channel Webhook Alerts (Q3 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-11-autonomous-ai-copilot-stock-intelligence-private-local-llms-moneta_finance_ai_advisor-q4-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 11: Autonomous AI Copilot, Stock Intelligence &amp; Private Local LLMs (<code>moneta_finance_ai_advisor</code>) (Q4 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-12-native-mobile-apps-ios-android-pwa-q4-2027" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Phase 12: Native Mobile Apps (iOS &amp; Android) &amp; PWA (Q4 2027)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-champion-a-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        💡 How to Champion a Feature
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="moneta-personal-finance-product-roadmap-community-backlog">Moneta Personal Finance - Product Roadmap &amp; Community Backlog</h1>
+<p>This document outlines the strategic roadmap for <strong>Moneta Personal Finance</strong>. We welcome community contributions, architectural discussions, and feature proposals!</p>
+<hr />
+<h2 id="roadmap-milestones">🌟 Roadmap Milestones</h2>
+<h3 id="phase-1-core-wealth-portfolio-engine-completed-core">Phase 1: Core Wealth &amp; Portfolio Engine (Completed Core ✅)</h3>
+<ul>
+<li>[x] Multi-account management (Cash, Brokerage, Credit Cards, Loans)</li>
+<li>[x] Quicken-style Checkbook registers with real-time running balances and chronological tiebreakers</li>
+<li>[x] 1-Click <code>Clr</code> status toggles &amp; interactive bank statement reconciliation</li>
+<li>[x] Transfer reconciliation independence with atomic pair-wide VOID transitions</li>
+<li>[x] Live Yahoo Finance stock quote engine with hourly cron &amp; 1-click refresh</li>
+<li>[x] Investment trade reconciliation status (<code>unreconciled</code> / <code>cleared</code> / <code>reconciled</code> / <code>void</code>)</li>
+<li>[x] Multi-lot average cost basis accounting &amp; capital gains analytics</li>
+<li>[x] Expanded recurring transaction cadences (Triannual / Biennial)</li>
+<li>[x] Direct loan &amp; mortgage summary metrics on account views and kanban cards</li>
+<li>[x] Sure-style Executive Wealth Dashboard with Light Sky Blue theme</li>
+<li>[x] FIRE 4% rule milestone &amp; 1,000-path Monte Carlo wealth simulator</li>
+<li>
+<p>[x] 8-Part comprehensive GitHub documentation library</p>
+</li>
+<li>
+<p><strong>Track 1.1: Empirical 20-Year Ticker History &amp; 100-Year Crisis Stress-Tester (<code>moneta.monte.carlo.empirical</code>)</strong></p>
+</li>
+<li>[ ] <strong>Empirical Ticker History Fetcher</strong>: 1-Click extraction of 10-to-20 year adjusted close price series for active user holdings (<code>moneta.holding</code>) via Yahoo Finance API</li>
+<li>[ ] <strong>Realized Portfolio Drift &amp; Volatility Calibration</strong>: Calculates exact annualized historical CAGR, realized standard deviation (<span class="arithmatex">\(\sigma_{\text{realized}}\)</span>), Sharpe ratio, and empirical covariance matrix across user-held tickers</li>
+<li>[ ] <strong>100-Year Historical Crisis Stress-Test Engine</strong>: Replay engine testing retirement survivability across landmark historical financial shocks:<ul>
+<li><strong>1929 Great Crash &amp; Depression</strong> (<span class="arithmatex">\(-86\%\)</span> real equity drawdown + prolonged deflation)</li>
+<li><strong>1973–1974 Stagflation</strong> (<span class="arithmatex">\(+12\%\)</span> inflation spike with negative real asset returns)</li>
+<li><strong>1987 Black Monday</strong> (Single-day <span class="arithmatex">\(-22.6\%\)</span> liquidity shock)</li>
+<li><strong>2000–2002 Dot-Com Bust</strong> (3 consecutive years of equity downturn / sequence risk)</li>
+<li><strong>2008 Global Financial Crisis</strong> (<span class="arithmatex">\(-50\%\)</span> global equity drawdown + real estate contraction)</li>
+<li><strong>2020 Pandemic Shock &amp; Inflationary Recovery</strong></li>
+</ul>
+</li>
+<li>[ ] <strong>Historical Block Bootstrapping</strong>: Hybrid simulation randomly sampling empirical 1-year and 5-year return blocks from historical market series to preserve non-Gaussian "fat tails" and skewness</li>
+<li>[ ] <strong>Interactive Simulation Mode Switcher</strong>: Toggle between <strong>Theoretical Monte Carlo (GBM)</strong>, <strong>Empirical Holdings Calibration (10-20y)</strong>, and <strong>Historical Crisis Backtesting</strong></li>
+</ul>
+<hr />
+<h3 id="phase-2-monize-advanced-feature-parity-sprint-active">Phase 2: Monize Advanced Feature Parity Sprint (Active 🚀)</h3>
+<p><em>Closing advanced feature gaps from Microsoft Money and Monize (<code>/opt/monize</code>):</em></p>
+<ul>
+<li><strong>Track 2.1: Payee Brand Favicons &amp; Visual Category Hierarchy (Completed ✅)</strong></li>
+<li>[x] Payee website domain field and automated favicon resolution (Google / gstatic Favicon cache)</li>
+<li>[x] Payee brand avatars in checkbook registers, compact lists, and kanban cards</li>
+<li>
+<p>[x] Category icon glyph inheritance (subcategories inherit parent icons and badges)</p>
+</li>
+<li>
+<p><strong>Track 2.2: Variable-Rate Mortgage &amp; Rate Change Inference Engine (Completed ✅)</strong></p>
+</li>
+<li>[x] Step-detection algorithm (<span class="arithmatex">\(\text{rate} = \frac{\text{interest}}{\text{balance}} \times 12\)</span>) on historical split loan transactions</li>
+<li>[x] Automated rate inference wizard generating historical <code>moneta.loan.rate.change</code> records</li>
+<li>
+<p>[x] Dynamic amortization curves adapting to segmented variable rate histories</p>
+</li>
+<li>
+<p><strong>Track 2.3: Microsoft Money 75+ Investment &amp; Portfolio Metrics (Completed ✅)</strong></p>
+</li>
+<li>[x] Dynamic market metrics on <code>moneta.security</code>: 52-Week High/Low, Day's Gain/Loss ($ &amp; %), Beta, Day Volume</li>
+<li>[x] Fundamental valuation metrics: P/E Ratio, Forward P/E, EPS, Market Capitalization, Dividend Yield %</li>
+<li>
+<p>[x] Multi-period holding return metrics: Day's Gain/Loss, Portfolio Weight %, 52W High/Low, P/E, Market Cap, Beta</p>
+</li>
+<li>
+<p><strong>Track 2.4: Action History &amp; 1-Click Undo / Rollback Engine (Completed ✅)</strong></p>
+</li>
+<li>[x] Mutation audit logger for batch operations (statement imports, batch categorization, rule execution)</li>
+<li>
+<p>[x] 1-Click "Undo Last Action" wizard to cleanly revert batch imports or bulk changes</p>
+</li>
+<li>
+<p><strong>Track 2.5: Time-Delayed Emergency Digital Estate Access (Completed ✅)</strong></p>
+</li>
+<li>[x] Time-delayed security lock with configurable grace period (7, 14, or 30 days)</li>
+<li>[x] Automated daily email reminder cron to owner before granting access to emergency contacts</li>
+<li>
+<p>[x] Read-only view permissions for designated family members/executors</p>
+</li>
+<li>
+<p><strong>Track 2.6: Financial Assistant MCP Server (Model Context Protocol) (Completed ✅)</strong></p>
+</li>
+<li>[x] Standardized MCP tool endpoints for local AI agents (Claude, Gemini, Antigravity)</li>
+<li>
+<p>[x] Natural language tool suite: balance queries, spending categorization, bill forecasting, and loan simulations</p>
+</li>
+<li>
+<p><strong>Track 2.7: Direct Microsoft Money (<code>.mny</code>) Native Binary Importer</strong></p>
+</li>
+<li>[ ] Native binary <code>.mny</code> parser wizard (<code>wizards/mny_import_wizard.py</code>) extracting accounts, transfers, multi-line splits, investment transactions (Buy, Sell, Reinvest, Split), historical price series, scheduled bills, and custom exchange rates without intermediate QIF export</li>
+<li>
+<p>[ ] Automated post-import reconciliation audit verifying balance and holding integrity against the source <code>.mny</code> database</p>
+</li>
+<li>
+<p><strong>Track 2.8: Scoped Personal Access Token (PAT) Management for MCP &amp; API</strong></p>
+</li>
+<li>[ ] Dedicated UI in Moneta Configuration to generate, label, expire, and revoke scoped API/MCP tokens</li>
+<li>
+<p>[ ] Granular permission scopes (<code>read:ledger</code>, <code>write:transactions</code>, <code>read:reports</code>, <code>read:investments</code>, <code>admin</code>) for external autonomous AI agents</p>
+</li>
+<li>
+<p><strong>Track 2.9: Automated User-Scoped Snapshot Backups (<code>.json.gz</code>) &amp; 1-Click Restore</strong></p>
+</li>
+<li>[ ] Scheduled background cron generating daily, weekly, and monthly <code>.json.gz</code> self-contained data archives sharded per user</li>
+<li>[ ] Automated retention pruning policy (e.g. keep 7 daily, 4 weekly, 12 monthly archives)</li>
+<li>
+<p>[ ] 1-Click user data download and restore wizard directly from user preferences</p>
+</li>
+<li>
+<p><strong>Track 2.10: Financial Data Reset &amp; Re-Import Wizard</strong></p>
+</li>
+<li>[ ] Safe 1-click purge wizard to wipe all financial transactions, accounts, and securities while strictly preserving user credentials, system settings, custom categories, and tags</li>
+</ul>
+<hr />
+<h3 id="phase-3-singapore-south-east-asia-financial-ecosystem-flagship">Phase 3: Singapore &amp; South East Asia Financial Ecosystem (Flagship 🇸🇬 🌏)</h3>
+<p><em>Comprehensive localization for Singapore and South East Asian wealth structures:</em></p>
+<ul>
+<li><strong>Track 3.1: CPF (OA/SA/MA/RA) &amp; SRS Pension Architecture (Completed ✅)</strong></li>
+<li>[x] Specialized account types: <code>cpf_oa</code> (2.5%), <code>cpf_sa</code> (4.0%), <code>cpf_ma</code> (4.0%), <code>cpf_ra</code> (4.0%), and <code>srs</code></li>
+<li>[x] Monthly CPF interest calculation engine (lowest balance rule) with annual December crediting</li>
+<li>[x] CPF LIFE retirement payout simulator (Standard, Escalating, Basic) with BRS / FRS / ERS threshold milestones</li>
+<li>
+<p>[x] SRS voluntary tax-relief contributions ($15,300 citizen/PR, $35,700 foreigner) &amp; 10-year penalty-free withdrawal tracker</p>
+</li>
+<li>
+<p><strong>Track 3.2: Singapore Housing, HDB Loans &amp; CPF Accrued Interest (Completed ✅)</strong></p>
+</li>
+<li>[x] CPF Housing Accrued Interest engine: calculates the 2.5% compounded interest liability due back to CPF upon property sale</li>
+<li>[x] HDB Concessionary Loan (pegged at CPF OA + 0.1% = 2.60%) &amp; SORA-pegged commercial bank mortgage amortization</li>
+<li>[x] Buyer's Stamp Duty (BSD) &amp; Additional Buyer's Stamp Duty (ABSD) property calculator (Singapore Citizen vs PR vs Foreigner)</li>
+<li>
+<p>[x] Total Debt Servicing Ratio (TDSR <span class="arithmatex">\(\le 55\%\)</span>) and Mortgage Servicing Ratio (MSR <span class="arithmatex">\(\le 30\%\)</span>) affordability checks</p>
+</li>
+<li>
+<p><strong>Track 3.3: Singapore Savings Bonds (SSB), MAS T-Bills &amp; S-REITs (Completed ✅)</strong></p>
+</li>
+<li>[x] Singapore Savings Bonds (SSB) engine: 10-year step-up interest schedule with monthly par redemption ($100) and $2 MAS fee</li>
+<li>[x] MAS Treasury Bills (6-Month / 1-Year T-Bills) discount auction yield accounting</li>
+<li>[x] SGX (<code>.SI</code>) security master with one-tier tax-exempt dividend distribution handling and S-REIT distribution yield tracking</li>
+<li>
+<p>[x] Irish-domiciled ETF tracking (<code>CSPX.L</code>, <code>VWRA.L</code>, <code>SWRD.L</code>) with 15% US dividend tax withholding advantage</p>
+</li>
+<li>
+<p><strong>Track 3.4: IRAS Tax Relief &amp; Optimization Engine (Completed ✅)</strong></p>
+</li>
+<li>[x] IRAS progressive personal income tax brackets with instant liability estimation</li>
+<li>[x] Tax Relief Tracker: Retirement Sum Topping-Up (RSTU $8k self + <span class="arithmatex">\(8k loved ones), SRS (\)</span>15.3k), CPF Employee, NSman, Parent, and Child reliefs</li>
+<li>
+<p>[x] Year-end tax optimization advisory: actionable suggestions to maximize tax deductions before Dec 31</p>
+</li>
+<li>
+<p><strong>Track 3.5: Pre-Configured Singapore / SEA Master Data (Completed ✅)</strong></p>
+</li>
+<li>[x] Pre-loaded Singapore &amp; SEA financial institutions: DBS/POSB, OCBC, UOB, Standard Chartered, MariBank, GXS, Trust Bank, CPF Board, Endowus, Syfe, Moomoo, Tiger Brokers, Maybank, CIMB</li>
+<li>[x] Pre-loaded common payees &amp; categories: NTUC FairPrice, Cold Storage, Sheng Siong, Grab/GrabFood, Singtel, StarHub, M1, SP Group, HDB Town Council, IRAS, LTA SimplyGo/ERP, Shopee, Lazada</li>
+</ul>
+<hr />
+<h3 id="phase-4-quicken-classic-power-parity-landlord-hub-completed">Phase 4: Quicken Classic Power Parity &amp; Landlord Hub (Completed ✅)</h3>
+<p><em>Closing the core functional gaps with Quicken Classic Premier &amp; Home &amp; Business:</em></p>
+<ul>
+<li><strong>Track 4.1: Interactive Cash Flow &amp; Financial Calendar View (Completed ✅)</strong></li>
+<li>[x] Month/Week/Day visual calendar view (<code>view_mode="calendar"</code>) plotting scheduled bills, deposits, and transfers</li>
+<li>[x] Daily projected end-of-day bank balance calculation across all active checking/savings accounts</li>
+<li>[x] Visual overdraft &amp; low-balance threshold warnings on future calendar dates</li>
+<li>
+<p>[x] 1-Click quick-entry and skip occurrence directly from the interactive calendar view</p>
+</li>
+<li>
+<p><strong>Track 4.2: Investment Tax-Lot Accounting (Specific ID, FIFO, LIFO, HIFO) (Completed ✅)</strong></p>
+</li>
+<li>[x] Lot-level purchase tracking (<code>moneta.security.lot</code>) recording purchase date, quantity, cost basis, and remaining shares</li>
+<li>[x] Automated disposal strategies on stock/ETF sells: <strong>FIFO</strong>, <strong>LIFO</strong>, <strong>HIFO</strong> (Highest In, First Out), and <strong>Specific Identification</strong></li>
+<li>[x] Holding period tracking (<span class="arithmatex">\(&lt; 365\)</span> days vs. <span class="arithmatex">\(\ge 365\)</span> days) for Short-Term vs. Long-Term Capital Gains classification</li>
+<li>
+<p>[x] Tax-loss harvesting opportunities analyzer with lot-level capital gain/loss breakdown</p>
+</li>
+<li>
+<p><strong>Track 4.3: Landlord &amp; Rental Property Lease / Tenant Roll (<code>moneta_finance_property</code>) (Completed ✅)</strong></p>
+</li>
+<li>[x] Tenant management (<code>moneta.property.tenant</code>) with lease start/end dates, monthly rent amount, and security deposit tracking</li>
+<li>[x] Rent roll ledger with automated monthly rent invoice generation and overdue rent alerts</li>
+<li>
+<p>[x] Rental property expense categorization and Schedule E net operating income (NOI) reporting</p>
+</li>
+<li>
+<p><strong>Track 4.4: Tax Schedule &amp; TurboTax TXF Export (Completed ✅)</strong></p>
+</li>
+<li>[x] IRS Form 8949 / Schedule D capital gains summary report generator</li>
+<li>[x] 1099-DIV / 1099-INT dividend and interest income tax schedules</li>
+<li>[x] Standard <code>.txf</code> (Tax Exchange Format) file exporter for 1-click import into TurboTax, TaxSlayer, and H&amp;R Block</li>
+</ul>
+<hr />
+<h3 id="phase-5-monarch-modern-experience-collaborative-cash-flow-q1-2027">Phase 5: Monarch Modern Experience &amp; Collaborative Cash Flow (Q1 2027)</h3>
+<p><em>Incorporating modern cash flow visualizers, flexible household workflows, and forward-looking forecasting inspired by Monarch Money:</em></p>
+<ul>
+<li><strong>Track 5.1: Interactive Cash Flow Sankey Diagram &amp; Visual Wealth Velocity</strong></li>
+<li>[ ] Interactive D3.js / Chart.js Sankey visualizer widget in Odoo 18 OWL dashboard (<code>moneta.dashboard</code>)</li>
+<li>[ ] Multi-stage dynamic flow: Income Streams <span class="arithmatex">\(\rightarrow\)</span> Master Groups (Fixed, Variable, Savings) <span class="arithmatex">\(\rightarrow\)</span> Detailed Categories <span class="arithmatex">\(\rightarrow\)</span> Net Savings &amp; Investments</li>
+<li>[ ] Interactive period filtering (Current Month, Last Month, Quarter-to-Date, Year-to-Date, Custom Date Range)</li>
+<li>[ ] 1-Click node drill-down: Clicking any Sankey node opens the filtered checkbook ledger for those underlying transactions</li>
+<li>
+<p>[ ] Gross vs. Net Cash Flow toggle (including/excluding internal transfers and credit card settlements)</p>
+</li>
+<li>
+<p><strong>Track 5.2: 12-Month Forward Cash Flow &amp; "What-If" Scenario Forecaster (<code>moneta.cashflow.forecast</code>)</strong></p>
+</li>
+<li>[ ] Deterministic forward balance projection engine combining <code>moneta.recurring</code> scheduled cadences and active <code>moneta.budget</code> allocations</li>
+<li>[ ] Projected daily and monthly account balance trajectory curve across all liquid checking and savings accounts</li>
+<li>[ ] Low-balance and overdraft risk warning flags with projected breach dates</li>
+<li>[ ] Interactive "What-If" scenario sandbox: simulate financial milestones (e.g. car purchase, bonus payout, sabbatical, home down payment) without modifying actual ledger records</li>
+<li>
+<p>[ ] Scenario comparison view: baseline trajectory vs. alternative scenario net worth and liquidity curves</p>
+</li>
+<li>
+<p><strong>Track 5.3: Collaborative "Needs Review" Inbox &amp; Household Transaction Triage</strong></p>
+</li>
+<li>[ ] Transaction review lifecycle state (<code>needs_review</code>, <code>reviewed</code>) on <code>moneta.transaction</code></li>
+<li>[ ] Dedicated "Needs Review" badge counter and quick filter on the checkbook ledger and dashboard</li>
+<li>[ ] Household member assignment (<code>assigned_user_id</code>) to allocate transactions for partner verification</li>
+<li>[ ] In-line discussion chatter (<code>mail.thread</code>) enabling comments, questions (e.g. "Did you buy this?"), and internal notes per transaction</li>
+<li>
+<p>[ ] 1-Click batch "Mark as Reviewed" action wizard</p>
+</li>
+<li>
+<p><strong>Track 5.4: Flexible Category-Group Budgeting &amp; Per-Category Rollovers</strong></p>
+</li>
+<li>[ ] High-level Group Budgeting: set budgets at the master category group level (e.g. "Discretionary Spending", "Lifestyle", "Fixed Bills") with automatic subcategory rollup</li>
+<li>[ ] Granular Per-Category Rollover toggle: independently enable/disable rollover balances on a per-category basis (<code>is_rollover</code>)</li>
+<li>[ ] Flexible Budget Switcher: toggle between Detailed Category View, Group Summary View, and 50/30/20 Rule View</li>
+<li>
+<p>[ ] Real-time visual progress bars with overspending alerts and pace indicators (e.g. "12 days left, 45% budget remaining")</p>
+</li>
+<li>
+<p><strong>Track 5.5: Advanced Multi-Condition Rule Engine with Regex &amp; Auto-Splits</strong></p>
+</li>
+<li>[ ] Regex and raw bank description pattern matching on <code>moneta.transaction.rule</code></li>
+<li>[ ] Multi-criteria condition builder: <code>Raw Memo (Regex)</code> + <code>Amount Range</code> + <code>Account Scope</code> + <code>Date Range</code></li>
+<li>[ ] Multi-action execution: <code>Rename Standard Payee</code>, <code>Assign Category &amp; Tags</code>, <code>Set Status</code>, <code>Hide from Budget / Reports</code></li>
+<li>[ ] Automated Split Templates: auto-split matched transactions by percentage (e.g. 50% Personal / 50% Reimbursable) or fixed dollar amounts</li>
+<li>
+<p>[ ] Interactive Rule Dry-Run &amp; Testing wizard before saving, with 1-click retroactive batch execution</p>
+</li>
+<li>
+<p><strong>Track 5.6: Budget-Linked Goals &amp; Virtual Multi-Account Sinking Funds</strong></p>
+</li>
+<li>[ ] Multi-account goal funding: link a single savings goal across multiple bank accounts or dedicate a fractional slice of a high-yield account</li>
+<li>[ ] Dynamic Budget Integration: auto-inject required monthly goal contributions (<code>monthly_contribution_required</code>) as first-class line items into <code>moneta.budget</code></li>
+<li>[ ] Goal priority tiering (Priority 1: Emergency Fund <span class="arithmatex">\(\rightarrow\)</span> Priority 2: Mortgage Down Payment <span class="arithmatex">\(\rightarrow\)</span> Priority 3: Travel)</li>
+<li>
+<p>[ ] Visual goal completion milestone forecaster calculating estimated achievement date based on trailing 3-month savings velocity</p>
+</li>
+<li>
+<p><strong>Track 5.7: Subscription "Price Creep" &amp; Amount Variance Detector</strong></p>
+</li>
+<li>[ ] Statistical baseline price tracking on detected subscriptions in <code>moneta.subscription.detector</code></li>
+<li>[ ] Automated price creep alerts whenever an imported recurring charge increases by <span class="arithmatex">\(&gt;5\%\)</span> or exceeds historical median</li>
+<li>[ ] Dedicated "Subscription Health &amp; Price Creep" audit card on the Executive Dashboard</li>
+<li>
+<p>[ ] Price change history log per recurring subscription payee showing historical price hikes over time</p>
+</li>
+<li>
+<p><strong>Track 5.8: Modular Drag-and-Drop Customizable OWL Dashboard</strong></p>
+</li>
+<li>[ ] User-configurable widget layout engine in Odoo 18 OWL dashboard (<code>moneta.dashboard</code>)</li>
+<li>[ ] Customizable card arrangement: drag-and-drop reordering, column resizing, and toggling visibility of dashboard widgets</li>
+<li>[ ] Available widget catalog: Net Worth Curve, Cash Flow Sankey Preview, Recent Transactions, Needs Review Inbox, Budget vs. Actual, Recurring Billing Calendar, Goals Tracker, and Investment Watchlist</li>
+<li>[ ] Per-user layout persistence stored in user preferences (<code>moneta.dashboard.config</code>)</li>
+</ul>
+<hr />
+<h3 id="phase-6-ynab-zero-based-envelope-budgeting-cash-allocation-engine-q1-2027">Phase 6: YNAB Zero-Based Envelope Budgeting &amp; Cash Allocation Engine (Q1 2027)</h3>
+<p><em>Delivering strict zero-based envelope budgeting, cash guardrails, and dynamic money movement inspired by YNAB:</em></p>
+<ul>
+<li><strong>Track 6.1: Zero-Based "Ready to Assign" (RTA) Cash Guardrail &amp; Banner</strong></li>
+<li>[ ] Real-time liquid cash calculation: <span class="arithmatex">\(\text{Ready to Assign} = \text{Total Checking/Savings Cash} - \sum \text{Allocated Envelopes}\)</span></li>
+<li>[ ] Visual top banner on Budget Period view displaying RTA status (Green when $0.00, Yellow when positive cash unassigned, Red when over-allocated)</li>
+<li>[ ] Strict cash guardrail mode: prevents budgeting unreceived/projected income to enforce true cash-on-hand discipline</li>
+<li>
+<p>[ ] Payday income intake pipeline auto-incrementing RTA balance on bank deposit</p>
+</li>
+<li>
+<p><strong>Track 6.2: Automated Credit Card Payment Reserve &amp; Shift Engine</strong></p>
+</li>
+<li>[ ] Automated cash envelope shift on credit card spending: moving available funds from budgeted category (e.g. Groceries) directly into dedicated Credit Card Payment reserve category</li>
+<li>[ ] "Available for Payment" vs. "Credit Card Statement Balance" reconciliation indicator (Green = Paid-in-Full, Yellow/Red = Carrying Balance / Debt)</li>
+<li>[ ] Credit card payment transfer wizard paying statement balance from reserved funds without affecting expense categories</li>
+<li>
+<p>[ ] Credit card debt paydown goal simulator for users carrying revolving debt</p>
+</li>
+<li>
+<p><strong>Track 6.3: Smart Dynamic Target Types ("Needed for Spending", "Target by Date", "Monthly Builder")</strong></p>
+</li>
+<li>[ ] Target type configuration on <code>moneta.budget.category</code>:<ul>
+<li><strong>Needed for Spending (Monthly Refill)</strong>: Sets monthly spending ceiling, automatically deducting rollover surplus from required monthly funding (<span class="arithmatex">\(\text{Needed} = \text{Target} - \text{Rollover}\)</span>)</li>
+<li><strong>Target Balance by Date (Sinking Fund)</strong>: Automatically computes monthly required contribution based on remaining months until target date (<span class="arithmatex">\(\text{Monthly} = \frac{\text{Target} - \text{Current}}{\text{Months Remaining}}\)</span>)</li>
+<li><strong>Monthly Savings Builder</strong>: Fixed monthly allocation regardless of account balance</li>
+</ul>
+</li>
+<li>
+<p>[ ] Auto-calculation of <code>underfunded_amount</code> across all categories for the active period</p>
+</li>
+<li>
+<p><strong>Track 6.4: "Roll with the Punches" 1-Click Overspending Resolution Wizard (<code>moneta.budget.cover.wizard</code>)</strong></p>
+</li>
+<li>[ ] Visual overspending alert: highlighted red badge on overspent categories (<span class="arithmatex">\(&lt; 0.00\)</span>)</li>
+<li>[ ] Interactive 1-Click "Cover Overspending" modal listing categories with surplus available funds</li>
+<li>[ ] Instant intra-period fund reallocation with mutation audit logging in <code>moneta.action.history</code></li>
+<li>
+<p>[ ] Automated end-of-period overspending cleanup options (deduct from next month's RTA vs. absorb into debt)</p>
+</li>
+<li>
+<p><strong>Track 6.5: "Age of Money" (AOM) &amp; Days of Cash Buffer Engine</strong></p>
+</li>
+<li>[ ] FIFO (First-In, First-Out) cash queue engine matching outgoing transaction payments against historical deposit dates</li>
+<li>[ ] Real-time "Age of Money" (AOM) metric on the Executive Dashboard (<span class="arithmatex">\(&lt; 30\text{ days}\)</span> Paycheck-to-paycheck vs. <span class="arithmatex">\(\ge 30\text{ days}\)</span> Living on last month's income)</li>
+<li>[ ] "Days of Buffer" metric estimating how many days current liquid cash would sustain average historical spending velocity without new income</li>
+<li>
+<p>[ ] Historical 12-month AOM progression chart</p>
+</li>
+<li>
+<p><strong>Track 6.6: 1-Click "Auto-Assign" / Quick Budget Engine</strong></p>
+</li>
+<li>[ ] 1-Click "Auto-Assign" action button on budget period with selectable distribution strategies:<ul>
+<li><strong>Underfunded</strong>: Fully funds all active category targets up to their calculated shortfall</li>
+<li><strong>Assigned Last Month</strong>: Duplicates exact category assignments from the preceding month</li>
+<li><strong>Average Spent</strong>: Allocates funds based on trailing 3-month average actual category spending</li>
+<li><strong>Custom Priority Allocation</strong>: Distributes available RTA funds down category priority tiers until RTA reaches $0.00</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="phase-7-open-banking-automated-feed-sync-q1-2027">Phase 7: Open Banking &amp; Automated Feed Sync (Q1 2027)</h3>
+<ul>
+<li>[ ] <strong>Plaid Integration</strong>: US &amp; Canada automated bank transaction download and account balance refresh</li>
+<li>[ ] <strong>Salt Edge / Teller / SimpleFIN Sync</strong>: European &amp; Global Open Banking live feed integration</li>
+<li>[ ] <strong>Automated Rule Matching Engine</strong>: Auto-assign categories, payees, and split templates based on imported bank metadata and regex patterns</li>
+<li>[ ] <strong>Bank Feed Deduplication</strong>: Fuzzy hash matching against pending manual entries to prevent double-counting</li>
+</ul>
+<hr />
+<h3 id="phase-8-global-tax-multi-jurisdiction-packs">Phase 8: Global Tax &amp; Multi-Jurisdiction Packs</h3>
+<ul>
+<li>[x] <strong>US Tax Pack (Completed ✅)</strong>: Form 8949, Schedule D, 1099-DIV/INT, Schedule E, and TurboTax <code>.txf</code> export</li>
+<li>[x] <strong>Malaysia Wealth &amp; Tax Pack (<code>moneta_finance_malaysia</code>) (Completed ✅)</strong>:</li>
+<li>[x] EPF / KWSP 3-Account Hub (Akaun Persaraan 75%, Sejahtera 15%, Fleksibel 10%, dividend compounding, and i-Saraan matching)</li>
+<li>[x] LHDN Borang BE Tax Relief Planner &amp; Optimizer (Individual, Medical, Lifestyle, Sports, SSPN, EPF, Life, PRS, EV charging)</li>
+<li>[x] Private Retirement Scheme (PRS) &amp; ASNB Unit Trusts (ASB/ASM capital protected fixed-price tracking)</li>
+<li>[x] Malaysian Semi/Full-Flexi Housing Loan SBR interest savings simulator</li>
+<li>[x] RPGT (Real Property Gains Tax) disposal capital gains tax calculator</li>
+<li>[x] Pre-loaded Malaysian banks, digital banks (GXBank, Boost Bank, AEON Bank), e-wallets, and utility payees</li>
+<li>[ ] <strong>UK / EU Tax Pack</strong>: Capital Gains Tax (CGT) annual exempt amount tracking, ISA (Individual Savings Account) wrapper management, and HMRC Self Assessment schedules</li>
+</ul>
+<hr />
+<h3 id="phase-9-multi-market-stock-intelligence-technical-indicators-strategies-q2-q3-2027">Phase 9: Multi-Market Stock Intelligence, Technical Indicators &amp; Strategies (Q2-Q3 2027)</h3>
+<p><em>Incorporating technical indicator engines and strategy scanners from <code>daily_stock_analysis</code> (<code>/opt/daily_stock_analysis</code>):</em></p>
+<ul>
+<li><strong>Track 9.1: Multi-Market Historical &amp; Real-Time Data Pipeline</strong></li>
+<li>[ ] Expanded market data fetchers with fallback hierarchy: <strong>Yahoo Finance</strong>, <strong>AkShare</strong>, <strong>Tushare</strong>, <strong>TickFlow</strong>, <strong>Longbridge</strong>, and <strong>AlphaVantage</strong></li>
+<li>[ ] Multi-market support: US (NYSE, NASDAQ), HK (HKEX), China A-Shares (SSE, SZSE, BSE), Singapore (SGX), Malaysia (Bursa), Japan (TSE), South Korea (KRX), Taiwan (TWSE), and Global ETFs</li>
+<li>
+<p>[ ] Automated market trading calendar awareness (auto-skip holidays across US, SG, MY, HK, and CN exchanges)</p>
+</li>
+<li>
+<p><strong>Track 9.2: Technical Indicator Calculation Engine (<code>moneta.security.price</code>)</strong></p>
+</li>
+<li>[ ] <strong>Moving Averages</strong>: MA5, MA10, MA20, MA50, MA60, MA120, MA250, EMA12, EMA26</li>
+<li>[ ] <strong>Momentum &amp; Trend Oscillators</strong>: MACD (DIF, DEA, Histogram), RSI (6, 12, 24 periods with overbought/oversold bands), KDJ (9, 3, 3)</li>
+<li>[ ] <strong>Volatility &amp; Range</strong>: Bollinger Bands (20-day, <span class="arithmatex">\(\pm 2\sigma\)</span>, Bandwidth %), Average True Range (ATR 14)</li>
+<li>[ ] <strong>Volume &amp; Liquidity Metrics</strong>: Volume Ratio (量比), Volume Spike factor (<span class="arithmatex">\(&gt;2\times\)</span> 20-day average volume), VWAP (Volume Weighted Average Price)</li>
+<li>
+<p>[ ] <strong>Chip Distribution Analytics (筹码分布)</strong>: Profit chip ratio (获利筹码比例), 70% &amp; 90% chip concentration ranges (筹码集中度)</p>
+</li>
+<li>
+<p><strong>Track 9.3: 15 Built-in Technical &amp; Fundamental Strategy Screeners</strong></p>
+</li>
+<li>[ ] <strong>Technical Pattern Scanners</strong>:<ul>
+<li><strong>MA Golden Cross / Death Cross</strong>: Fast moving average breakout with volume confirmation</li>
+<li><strong>Bull Trend Alignment</strong>: Classic MA5 &gt; MA10 &gt; MA20 &gt; MA60 multi-timeframe alignment</li>
+<li><strong>Volume Breakout (放量突破)</strong>: Heavy-volume surge breaking through 60-day resistance</li>
+<li><strong>Shrink Pullback (缩量回踩)</strong>: Low-volume pullback touching key MA20/MA50 support</li>
+<li><strong>Box Channel Oscillation (箱体震荡)</strong>: Range trading between validated support floor and resistance ceiling</li>
+<li><strong>Bottom Accumulation Volume (底部放量)</strong>: Reversal accumulation signals at multi-month lows</li>
+<li><strong>One Yang Engulfing Three Yin (一阳吞三阴)</strong>: Bullish engulfing candlestick reversal pattern</li>
+<li><strong>Chan Theory (缠论)</strong>: Fractal (分型), Pen (笔), Central Zone (中枢), and 1st/2nd/3rd Buy/Sell point identification</li>
+<li><strong>Elliott Wave Structure (波浪理论)</strong>: 5-wave impulse and 3-wave ABC corrective pattern recognition</li>
+</ul>
+</li>
+<li>
+<p>[ ] <strong>Fundamental &amp; Sentiment Screeners</strong>:</p>
+<ul>
+<li><strong>Growth Quality</strong>: High ROE (<span class="arithmatex">\(&gt;15\%\)</span>), operating margin expansion, low debt-to-equity (<span class="arithmatex">\(&lt;0.5\)</span>), and positive Free Cash Flow</li>
+<li><strong>Dividend Aristocrat &amp; Value</strong>: Low P/E (<span class="arithmatex">\(&lt;15\)</span>), Dividend Yield (<span class="arithmatex">\(&gt;4\%\)</span>), sustained dividend payout history</li>
+<li><strong>Event-Driven &amp; Catalyst</strong>: Earnings surprise beat, stock split announcements, share buyback programs</li>
+<li><strong>Expectation Repricing (预期重估)</strong>: Valuation discount vs. forward consensus growth</li>
+<li><strong>Dragon Head / Momentum Leader (龙头战法)</strong>: Sector leader momentum with relative strength index leadership</li>
+</ul>
+</li>
+<li>
+<p><strong>Track 9.4: Crypto, Commodities &amp; Digital Asset Hub</strong></p>
+</li>
+<li>[ ] Read-only balance sync for major exchanges: Coinbase, Binance, and Kraken</li>
+<li>[ ] Public on-chain wallet tracking for Bitcoin (BTC), Ethereum (ETH), and Solana (SOL)</li>
+<li>[ ] Live spot pricing for Gold (XAU), Silver (XAG), and Platinum (XPT)</li>
+</ul>
+<hr />
+<h3 id="phase-10-pre-aggregated-reports-macro-reviews-multi-channel-webhook-alerts-q3-2027">Phase 10: Pre-Aggregated Reports, Macro Reviews &amp; Multi-Channel Webhook Alerts (Q3 2027)</h3>
+<p><em>Delivering the 46 pre-aggregated report catalog from Monize and automated market digests from DSA:</em></p>
+<ul>
+<li><strong>Track 10.1: Pre-Aggregated Financial Reports &amp; Analytics Suite</strong></li>
+<li>[ ] <strong>Year-over-Year (YoY) Monthly Comparison Matrix</strong>: Side-by-side multi-year monthly category spending, income, and savings rate comparisons</li>
+<li>[ ] <strong>Weekend vs. Weekday Spending Analysis</strong>: Discretionary spending velocity, weekend vs. weekday spending ratio, and daily averages</li>
+<li>[ ] <strong>Cash Flow Statement Engine</strong>: Direct and indirect cash flow statements across custom calendar periods</li>
+<li>[ ] <strong>Spending Anomaly &amp; Spike Detection</strong>: Automated statistical outlier detection (<span class="arithmatex">\(&gt;2\sigma\)</span> historical category variance)</li>
+<li>[ ] <strong>Data Quality &amp; Hygiene Audit</strong>: Automated reports for uncategorized transactions, fuzzy duplicate entries, and recurring price creep</li>
+<li>[ ] <strong>Bill Payment Timeliness Matrix</strong>: Historical tracking of on-time vs. late recurring bill payments</li>
+<li>
+<p>[ ] <strong>Debt Snowball &amp; Avalanche Payoff Planner</strong>: Interactive debt reduction simulator with milestone payoff dates</p>
+</li>
+<li>
+<p><strong>Track 10.2: Daily Macro Market Review Briefing (<code>moneta.market.review</code>)</strong></p>
+</li>
+<li>[ ] Automated post-market cron generating a daily macro briefing across tracked market indices (S&amp;P 500, Nasdaq, STI, KLCI, Hang Seng, CSI 300)</li>
+<li>[ ] Market breadth metrics: Advancing vs. Declining stocks, Total market turnover, Sector &amp; industry leaderboard</li>
+<li>
+<p>[ ] Benchmark comparison: Portfolio alpha/beta performance against index benchmarks synthesized into an executive summary</p>
+</li>
+<li>
+<p><strong>Track 10.3: Multi-Channel Webhook Notification Engine</strong></p>
+</li>
+<li>[ ] Outbound HTTP Webhook dispatchers for <strong>Telegram Bot</strong>, <strong>Discord Webhook</strong>, <strong>Slack Bot</strong>, <strong>Feishu / Lark Interactive Cards</strong>, and <strong>Enterprise WeChat</strong></li>
+<li>[ ] Configurable alert triggers:<ul>
+<li>Daily Morning Portfolio Outlook &amp; Evening Post-Market Digest</li>
+<li>Low balance &amp; impending overdraft alerts</li>
+<li>Scheduled bill payment due date &amp; credit card statement closing warnings</li>
+<li>Stock target price reached, stop-loss breach, and technical strategy triggers</li>
+</ul>
+</li>
+<li>[ ] <strong>Markdown-to-Image Infographic Generator</strong>: Auto-renders daily market and net worth briefings into high-resolution shareable card graphics</li>
+</ul>
+<hr />
+<h3 id="phase-11-autonomous-ai-copilot-stock-intelligence-private-local-llms-moneta_finance_ai_advisor-q4-2027">Phase 11: Autonomous AI Copilot, Stock Intelligence &amp; Private Local LLMs (<code>moneta_finance_ai_advisor</code>) (Q4 2027)</h3>
+<p><em>Combining Monize's agentic financial tools with DSA's stock intelligence and local LLM privacy:</em></p>
+<ul>
+<li><strong>Track 11.1: Daily AI Stock Decision Cards (<code>moneta.security.analysis</code>)</strong></li>
+<li>
+<p>[ ] Automated daily analysis generating a structured stock decision dashboard:</p>
+<ul>
+<li><strong>Quant Score (0–100)</strong> and <strong>Trend Direction</strong> (Bullish / Range-bound / Bearish)</li>
+<li><strong>Action Verdict</strong>: 🟢 Buy / 🟡 Hold / 🔴 Sell with confidence weighting</li>
+<li><strong>Execution Price Levels</strong>: Ideal Entry Range, Strict Stop-Loss Level, Multi-stage Take-Profit Targets</li>
+<li><strong>Risk Alerts</strong>: Institutional outflows, high chip dispersion, overhead resistance clusters</li>
+<li><strong>Bullish Catalysts</strong>: Fundamental earnings surprise, industry tailwinds, technical confluence</li>
+<li><strong>Pre-Trade Execution Checklist</strong>: 5-step risk-reward verification before executing orders</li>
+</ul>
+</li>
+<li>
+<p><strong>Track 11.2: Real-Time Financial News &amp; Sentiment Search</strong></p>
+</li>
+<li>[ ] Integration with multi-engine search APIs: <strong>Tavily</strong>, <strong>SerpAPI</strong>, <strong>Bocha</strong>, <strong>Brave Search</strong>, and <strong>SearXNG</strong></li>
+<li>[ ] Real-time sentiment classification: Bullish / Neutral / Bearish scoring of recent company news and regulatory filings</li>
+<li>
+<p>[ ] Social sentiment integration: Reddit, X (Twitter), and Polymarket prediction market sentiment monitoring (US equities)</p>
+</li>
+<li>
+<p><strong>Track 11.3: Universal Multi-LLM Provider Gateway &amp; Local LLM Support</strong></p>
+</li>
+<li>[ ] <strong>Ollama Local Private Model Gateway</strong>: 100% private, self-hosted local LLMs (Llama 3, DeepSeek-R1, Mistral, Qwen) with zero external network transmission of financial records</li>
+<li>[ ] <strong>Expanded Cloud Provider Support</strong>: Anthropic Claude, Google Gemini, OpenAI (GPT-4o), and custom OpenAI-compatible endpoints</li>
+<li>[ ] <strong>AES-256-GCM Encryption</strong>: Secure encryption for all stored API keys with per-user credential isolation</li>
+<li>
+<p>[ ] <strong>Provider Fallback Chain &amp; Usage Analytics</strong>: Automatic fallback to secondary models on timeout/rate limit, with token and cost tracking</p>
+</li>
+<li>
+<p><strong>Track 11.4: Real-Time Streaming (SSE) &amp; Dynamic Agentic Tool-Calling Loop</strong></p>
+</li>
+<li>[ ] <strong>Server-Sent Events (SSE) Streaming</strong>: Token-by-token streaming chat interface for natural conversation flow</li>
+<li>[ ] <strong>6 Core Financial Agentic Tools</strong>:<ol>
+<li><code>get_account_balances</code>: Real-time balances and credit utilization</li>
+<li><code>get_transactions_by_period</code>: Filtered transaction ledger queries</li>
+<li><code>get_spending_by_category</code>: Deep category and subcategory spending aggregations</li>
+<li><code>get_income_summary</code>: Income breakdown across salary, dividends, rental, and interest</li>
+<li><code>get_net_worth_history</code>: Multi-period historical net worth snapshots</li>
+<li><code>get_period_comparison</code>: Period-over-period financial variance calculations</li>
+</ol>
+</li>
+<li>[ ] <strong>90-Day Predictive Cash Flow Forecasting</strong>: Seasonal regression forecasting for account balance trajectories</li>
+<li>[ ] <strong>SaaS Subscription Negotiation Assistant</strong>: Automated cancellation and reduction request drafts for unused recurring charges</li>
+</ul>
+<hr />
+<h3 id="phase-12-native-mobile-apps-ios-android-pwa-q4-2027">Phase 12: Native Mobile Apps (iOS &amp; Android) &amp; PWA (Q4 2027)</h3>
+<p><em>Delivering dedicated mobile apps and responsive fast-logging interfaces:</em></p>
+<ul>
+<li>[ ] <strong>Cross-Platform Native Apps (iOS &amp; Android)</strong>: High-performance mobile applications built with React Native / Flutter connecting securely to Moneta via REST/JSON-RPC and MCP APIs</li>
+<li>[ ] <strong>Biometric Security</strong>: Native Face ID, Touch ID, and Android Biometric Prompt authentication</li>
+<li>[ ] <strong>Offline-First Architecture</strong>: Local SQLite cache enabling full offline checkbook browsing with background bidirectional synchronization and conflict resolution</li>
+<li>[ ] <strong>Native Camera Receipt &amp; Invoice OCR</strong>: In-app camera scanner capturing receipts and parsing itemized line items into transaction splits via on-device or cloud OCR</li>
+<li>[ ] <strong>Real-Time Push Notifications</strong>: Native iOS (APNs) and Android (FCM) alerts for upcoming bill due dates, low balance thresholds, credit card settlement dates, and stock price alerts</li>
+<li>[ ] <strong>Home Screen Widgets &amp; Fast Capture</strong>: iOS Lock Screen / Home Screen Widgets and Android App Widgets for 1-tap rapid expense capture and live net worth glance</li>
+<li>[ ] <strong>Mobile Progressive Web App (PWA)</strong>: Web-based PWA fallback for instant desktop/mobile browser installation without app store download</li>
+<li>[ ] <strong>Smartwatch Companions (Apple Watch &amp; Wear OS)</strong>: Quick glance at daily checking balance, monthly budget progress, and 1-tap voice expense logging</li>
+</ul>
+<hr />
+<h2 id="how-to-champion-a-feature">💡 How to Champion a Feature</h2>
+<p>If you'd like to work on any item from this roadmap:
+1. Check the <a href="https://github.com/lohwswilson/moneta_finance/issues">Issues tab</a> or open a new Proposal Issue.
+2. Discuss the design approach with maintainers.
+3. Submit a Pull Request targeting branch <code>18.0</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../odoo-port/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Odoo Port Architecture">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Odoo Port Architecture
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../blog/" class="md-footer__link md-footer__link--next" aria-label="Next: Blog Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Blog Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.tracking","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.footer","search.highlight","search.suggest","content.code.copy"],"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.49251538.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

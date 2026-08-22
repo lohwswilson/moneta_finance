@@ -1,0 +1,34 @@
+/* Moneta Personal Finance - Zensical Native Modern Styling */
+
+/* Card hover animation */
+.grid.cards > ul > li {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  border-radius: 12px;
+}
+
+.grid.cards > ul > li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+[data-md-color-scheme="slate"] .grid.cards > ul > li:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Tabular numbers for financial balance alignment */
+table, .moneta-num, code {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Clean table styling */
+.md-typeset table:not([class]) {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Center mermaid diagrams */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}

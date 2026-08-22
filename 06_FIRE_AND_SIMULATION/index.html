@@ -1,0 +1,2106 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An Open-Source Personal Finance, Banking & Wealth Management Suite">
+      
+      
+        <meta name="author" content="Wilson Loh">
+      
+      
+        <link rel="canonical" href="https://lohwswilson.github.io/moneta_finance/06_FIRE_AND_SIMULATION/">
+      
+      
+        <link rel="prev" href="../05_REAL_ESTATE_AND_AMORTIZATION/">
+      
+      
+        <link rel="next" href="../07_SECURITY_AND_MULTI_USER/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.57">
+    
+    
+      
+        <title>FIRE Analytics & Monte Carlo Wealth Simulator Guide - Moneta Personal Finance</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.5da3a30f.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.812a03bb.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fire-analytics-monte-carlo-wealth-simulator-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Moneta Personal Finance" class="md-header__button md-logo" aria-label="Moneta Personal Finance" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Moneta Personal Finance
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FIRE Analytics &amp; Monte Carlo Wealth Simulator Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/lohwswilson/moneta_finance" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lohwswilson/moneta_finance
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./.." class="md-tabs__link">
+        
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../01_GETTING_STARTED/" class="md-tabs__link">
+        
+  
+  Get Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../02_BANKING_AND_RECONCILIATION/" class="md-tabs__link">
+          
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../09_SINGAPORE_AND_SEA_WEALTH/" class="md-tabs__link">
+          
+  
+  Regional Packs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../dev_setup/" class="md-tabs__link">
+          
+  
+  Developer Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../roadmap/" class="md-tabs__link">
+        
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Moneta Personal Finance" class="md-nav__button md-logo" aria-label="Moneta Personal Finance" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Moneta Personal Finance
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lohwswilson/moneta_finance" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lohwswilson/moneta_finance
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Get Started
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  User Guide
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  User Guide
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BANKING_AND_RECONCILIATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Banking & Checkbook Registers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_STOCKS_AND_INVESTMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Stock Portfolio & Investments
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BUDGETS_BILLS_AND_SUBSCRIPTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Budgets & Scheduled Bills
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_REAL_ESTATE_AND_AMORTIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Real Estate & Mortgages
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  FIRE & Wealth Simulator
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  FIRE & Wealth Simulator
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-overview-why-traditional-spreadsheets-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🌟 Executive Overview: Why Traditional Spreadsheets Fail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-live-dashboard-metrics-your-daily-indicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. 🛡️ Live Dashboard Metrics (Your Daily Indicators)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 🛡️ Live Dashboard Metrics (Your Daily Indicators)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-emergency-runway-buffer-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Emergency Runway Buffer (Months)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A. Emergency Runway Buffer (Months)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-interpret-your-runway" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧭 How to Interpret Your Runway:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-the-4-rule-your-fire-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. The 4% Rule &amp; Your "FIRE Number"
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="B. The 4% Rule &amp; Your &quot;FIRE Number&quot;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-world-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Real-World Example:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-1000-path-monte-carlo-wealth-simulator" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. 🎲 1,000-Path Monte Carlo Wealth Simulator
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 🎲 1,000-Path Monte Carlo Wealth Simulator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-how-to-run-a-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Step-by-Step: How to Run a Simulation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-how-to-interpret-your-simulation-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. 📊 How to Interpret Your Simulation Results
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 📊 How to Interpret Your Simulation Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-success-probability" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Success Probability (%)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-the-percentile-bands-p_10-p_50-p_90" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. The Percentile Bands (<span class="arithmatex">\(P_{10}\)</span>, <span class="arithmatex">\(P_{50}\)</span>, <span class="arithmatex">\(P_{90}\)</span>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-median-wealth-at-retirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        C. Median Wealth at Retirement
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-mathematics-behind-the-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. 🔬 The Mathematics Behind the Engine
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 🔬 The Mathematics Behind the Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asset-class-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Asset Class Parameters:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#portfolio-drift-and-volatility" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Portfolio Drift and Volatility:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annual-stochastic-step-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annual Stochastic Step (<span class="arithmatex">\(t\)</span>):
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-strategies-to-improve-your-retirement-success" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. 💡 Strategies to Improve Your Retirement Success
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-empirical-ticker-history-100-year-crisis-stress-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. 🏛️ Empirical Ticker History &amp; 100-Year Crisis Stress-Testing
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 🏛️ Empirical Ticker History &amp; 100-Year Crisis Stress-Testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-personalized-10-to-20-year-ticker-history-empirical-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Personalized 10-to-20 Year Ticker History (Empirical Mode)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-100-year-historical-crisis-replay-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. 100-Year Historical Crisis Replay Mode
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_SECURITY_AND_MULTI_USER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Security & Household Privacy
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Regional Packs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Regional Packs
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_SINGAPORE_AND_SEA_WEALTH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Singapore
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_MALAYSIA_WEALTH_AND_TAX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Malaysia
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developer Guide
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Developer Guide
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Development Environment Setup
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DEVELOPER_AND_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture & MCP Server
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../odoo-port/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Odoo Port Architecture
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Roadmap
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Blog
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Blog
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Blog Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/posts/2026-08-22-introducing-moneta-finance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introducing Moneta Personal Finance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/posts/2026-08-22-stochastic-fire-monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Stochastic FIRE & Monte Carlo Modeling
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/posts/2026-08-22-cross-currency-multi-ledger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Two-Legged Cross-Currency Transfers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-overview-why-traditional-spreadsheets-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🌟 Executive Overview: Why Traditional Spreadsheets Fail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-live-dashboard-metrics-your-daily-indicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. 🛡️ Live Dashboard Metrics (Your Daily Indicators)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 🛡️ Live Dashboard Metrics (Your Daily Indicators)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-emergency-runway-buffer-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Emergency Runway Buffer (Months)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A. Emergency Runway Buffer (Months)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-interpret-your-runway" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧭 How to Interpret Your Runway:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-the-4-rule-your-fire-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. The 4% Rule &amp; Your "FIRE Number"
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="B. The 4% Rule &amp; Your &quot;FIRE Number&quot;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-world-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Real-World Example:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-1000-path-monte-carlo-wealth-simulator" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. 🎲 1,000-Path Monte Carlo Wealth Simulator
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 🎲 1,000-Path Monte Carlo Wealth Simulator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-how-to-run-a-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Step-by-Step: How to Run a Simulation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-how-to-interpret-your-simulation-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. 📊 How to Interpret Your Simulation Results
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 📊 How to Interpret Your Simulation Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-success-probability" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Success Probability (%)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-the-percentile-bands-p_10-p_50-p_90" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. The Percentile Bands (<span class="arithmatex">\(P_{10}\)</span>, <span class="arithmatex">\(P_{50}\)</span>, <span class="arithmatex">\(P_{90}\)</span>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-median-wealth-at-retirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        C. Median Wealth at Retirement
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-mathematics-behind-the-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. 🔬 The Mathematics Behind the Engine
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 🔬 The Mathematics Behind the Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asset-class-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Asset Class Parameters:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#portfolio-drift-and-volatility" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Portfolio Drift and Volatility:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annual-stochastic-step-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annual Stochastic Step (<span class="arithmatex">\(t\)</span>):
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-strategies-to-improve-your-retirement-success" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. 💡 Strategies to Improve Your Retirement Success
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-empirical-ticker-history-100-year-crisis-stress-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. 🏛️ Empirical Ticker History &amp; 100-Year Crisis Stress-Testing
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 🏛️ Empirical Ticker History &amp; 100-Year Crisis Stress-Testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-personalized-10-to-20-year-ticker-history-empirical-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Personalized 10-to-20 Year Ticker History (Empirical Mode)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-100-year-historical-crisis-replay-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. 100-Year Historical Crisis Replay Mode
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="fire-analytics-monte-carlo-wealth-simulator-guide">FIRE Analytics &amp; Monte Carlo Wealth Simulator Guide</h1>
+<p>The <strong>FIRE &amp; Wealth Simulator</strong> in Moneta Personal Finance empowers you to model long-term financial independence, calculate safe withdrawal rates, and stress-test your retirement portfolio against 1,000 randomized market timelines using <strong>stochastic Monte Carlo modeling</strong>.</p>
+<hr />
+<h2 id="executive-overview-why-traditional-spreadsheets-fail">🌟 Executive Overview: Why Traditional Spreadsheets Fail</h2>
+<p>Traditional financial plans assume a constant, linear investment return (e.g., <em>"My portfolio will grow by 7% every year"</em>). In the real world, markets are volatile. </p>
+<p>If a severe market crash occurs during the first 3 to 5 years of your retirement, drawing down fixed living expenses from a depleted portfolio can permanently destroy your capital—a phenomenon known as <strong>Sequence of Returns Risk</strong>.</p>
+<div class="highlight"><pre><span></span><code>Traditional Linear Model:    $500k ──(+7%)──&gt; $535k ──(+7%)──&gt; $572k ──(+7%)──&gt; $612k  (Unrealistic)
+Real World Market Volatility: $500k ──(-18%)─&gt; $410k ──(+24%)─&gt; $508k ──(-6%)──&gt; $477k  (Sequence Risk)
+</code></pre></div>
+<p>Moneta's Monte Carlo simulator models <strong>1,000 independent economic scenarios</strong> using <strong>Geometric Brownian Motion</strong>, accounting for historical asset-class volatilities, cross-asset correlations, and compounding inflation.</p>
+<hr />
+<h2 id="1-live-dashboard-metrics-your-daily-indicators">1. 🛡️ Live Dashboard Metrics (Your Daily Indicators)</h2>
+<p>Located on your <strong>Executive Wealth Command Center</strong> (<strong>Moneta</strong> <span class="arithmatex">\(\rightarrow\)</span> <strong>Dashboard</strong>), these three metrics provide an instant pulse check on your financial freedom.</p>
+<h3 id="a-emergency-runway-buffer-months">A. Emergency Runway Buffer (Months)</h3>
+<p>Answers: <em>"If all income stopped today, how many months could my family survive?"</em></p>
+<div class="arithmatex">\[\text{Emergency Runway (Months)} = \frac{\text{Liquid Cash Assets} + \text{Liquid Brokerage Holdings}}{\text{Trailing 3-Month Average Monthly Burn Rate}}\]</div>
+<ul>
+<li><strong>Liquid Assets</strong>: Sum of checking, savings, money market funds, and non-retirement stock brokerage accounts (automatically converted to your base currency).</li>
+<li><strong>Monthly Burn Rate</strong>: Computed dynamically from the last 90 days of actual categorized expense transactions (excluding internal transfers and credit card payoffs).</li>
+</ul>
+<h4 id="how-to-interpret-your-runway">🧭 How to Interpret Your Runway:</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Runway (Months)</th>
+<th style="text-align: left;">Status</th>
+<th style="text-align: left;">Financial Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><span class="arithmatex">\(&lt; 3\)</span> Months</strong></td>
+<td style="text-align: left;">🔴 <strong>Critical</strong></td>
+<td style="text-align: left;">Build cash buffer immediately; cut discretionary spending.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3 – 6 Months</strong></td>
+<td style="text-align: left;">🟡 <strong>Standard</strong></td>
+<td style="text-align: left;">Healthy buffer for stable salaried employees.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>6 – 12 Months</strong></td>
+<td style="text-align: left;">🟢 <strong>Resilient</strong></td>
+<td style="text-align: left;">Recommended for freelancers, business owners, and families.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><span class="arithmatex">\(&gt; 24\)</span> Months</strong></td>
+<td style="text-align: left;">🔵 <strong>Cash Drag</strong></td>
+<td style="text-align: left;">Excess cash sitting idle; consider investing surplus into productive index funds or bonds.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="b-the-4-rule-your-fire-number">B. The 4% Rule &amp; Your "FIRE Number"</h3>
+<p>Based on the landmark Trinity Study, the <strong>4% Rule</strong> calculates the nest egg required where safe portfolio withdrawals will cover 100% of your annual living expenses indefinitely without depleting principal.</p>
+<div class="arithmatex">\[\text{Annual Living Expenses} = \text{Monthly Burn Rate} \times 12\]</div>
+<div class="arithmatex">\[\text{FIRE Target Amount} = \text{Annual Living Expenses} \times 25 \quad \left( \text{i.e. } \frac{\text{Annual Expenses}}{0.04} \right)\]</div>
+<div class="arithmatex">\[\text{FIRE Progress \%} = \left( \frac{\text{Current Total Net Worth}}{\text{FIRE Target Amount}} \right) \times 100\]</div>
+<h4 id="real-world-example">🎯 Real-World Example:</h4>
+<ul>
+<li><strong>Monthly Expenses</strong>: $5,000 / month</li>
+<li><strong>Annual Expenses</strong>: <span class="arithmatex">\(5,000 \times 12 = \$60,000 / \text{year}\)</span></li>
+<li><strong>FIRE Target</strong>: <span class="arithmatex">\(\$60,000 \times 25 = \mathbf{\$1,500,000}\)</span></li>
+<li><strong>Current Net Worth</strong>: $750,000</li>
+<li><strong>FIRE Progress</strong>: <span class="arithmatex">\(\frac{\$750,000}{\$1,500,000} \times 100 = \mathbf{50.0\%}\)</span></li>
+</ul>
+<hr />
+<h2 id="2-1000-path-monte-carlo-wealth-simulator">2. 🎲 1,000-Path Monte Carlo Wealth Simulator</h2>
+<p>The Monte Carlo engine simulates your exact financial journey across two continuous phases:
+1. <strong>Accumulation Phase</strong>: You work, earn income, add annual savings, and compound returns.
+2. <strong>Decumulation / Retirement Phase</strong>: You stop working and withdraw living expenses adjusted for compounding annual inflation.</p>
+<hr />
+<h3 id="step-by-step-how-to-run-a-simulation">Step-by-Step: How to Run a Simulation</h3>
+<ol>
+<li>Navigate to <strong>Moneta</strong> <span class="arithmatex">\(\rightarrow\)</span> <strong>Planning</strong> <span class="arithmatex">\(\rightarrow\)</span> <strong>Monte Carlo Simulator</strong>.</li>
+<li>Click <strong>New</strong> to create a retirement scenario.</li>
+<li>Fill in your scenario parameters:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Input Field</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: center;">Example Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Plan Name</strong></td>
+<td style="text-align: left;">Label for this scenario (e.g. <em>Retire at 50</em>, <em>Conservative 60/40</em>)</td>
+<td style="text-align: center;"><code>Retire at 50</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Current Portfolio Value</strong></td>
+<td style="text-align: left;">Total existing liquid investments and retirement savings</td>
+<td style="text-align: center;"><code>$250,000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Annual Savings Contribution</strong></td>
+<td style="text-align: left;">New money you save and invest each year during working years</td>
+<td style="text-align: center;"><code>$24,000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Years to Retirement</strong></td>
+<td style="text-align: left;">Number of working years left before you stop working</td>
+<td style="text-align: center;"><code>15</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Years in Retirement</strong></td>
+<td style="text-align: left;">Estimated retirement lifespan to stress-test (typically 30–40 years)</td>
+<td style="text-align: center;"><code>35</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Annual Retirement Spending</strong></td>
+<td style="text-align: left;">Desired annual living expenses in <strong>today's purchasing power</strong></td>
+<td style="text-align: center;"><code>$60,000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Equities Allocation (%)</strong></td>
+<td style="text-align: left;">Percentage allocated to global equities/index funds (e.g. S&amp;P 500, VWRA)</td>
+<td style="text-align: center;"><code>80%</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bonds Allocation (%)</strong></td>
+<td style="text-align: left;">Percentage allocated to fixed income/treasuries (auto-calculated)</td>
+<td style="text-align: center;"><code>20%</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Expected Inflation Rate (%)</strong></td>
+<td style="text-align: left;">Annual cost-of-living inflation expectation (default: 2.5%)</td>
+<td style="text-align: center;"><code>2.5%</code></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Click the <strong>"Run 1,000-Path Simulation"</strong> button in the top header.</li>
+<li>In ~1 second, Moneta executes all 1,000 random market paths and generates your results.</li>
+</ol>
+<hr />
+<h2 id="3-how-to-interpret-your-simulation-results">3. 📊 How to Interpret Your Simulation Results</h2>
+<p>Once the simulation completes, Moneta presents five key summary metrics and a full year-by-year percentile trajectory table.</p>
+<div class="highlight"><pre><span></span><code>                  ┌─────────────────────────────────────────────────────────┐
+                  │              MONTE CARLO PROJECTION CURVES              │
+  Wealth ($)      │                                                         │
+       ▲          │                                    ... P90 (Optimistic) │
+       │          │                             . - ~ ~                     │
+       │          │                      . - ~         ─── P50 (Median)     │
+       │          │               . - ~           - - -                     │
+       │          │        . - ~           - - -       ... P10 (Bear Market)│
+       │          │ . - ~           - - -                                   │
+       └──────────┴─────────────────────────────────────────────────────────► Time (Years)
+                  │ ◄─── Accumulation ───► │ ◄──────── Retirement ────────► │
+</code></pre></div>
+<h3 id="a-success-probability">A. Success Probability (%)</h3>
+<p>The percentage of the 1,000 simulated lifetimes where your money lasted throughout your entire retirement without hitting $0.</p>
+<ul>
+<li><strong><span class="arithmatex">\(\ge 95\%\)</span> (Excellent 🟢)</strong>: Your plan is robust. Your portfolio will survive severe historical market crashes (1929 Depression, 1970s Stagflation, 2008 GFC).</li>
+<li><strong><span class="arithmatex">\(80\% – 94\%\)</span> (Solid 🟡)</strong>: High probability of success. In the worst 10% of market environments, minor temporary spending reductions (e.g., cutting vacations by 10% during recessions) will ensure survival.</li>
+<li><strong>$65\% – 79\% (Vulnerable 🟠)</strong>: Elevated Sequence of Returns Risk. You should increase annual savings, work 2–3 additional years, or reduce retirement spending targets.</li>
+<li><strong><span class="arithmatex">\(&lt; 65\%\)</span> (High Risk 🔴)</strong>: Unsustainable plan. High likelihood of outliving your capital.</li>
+</ul>
+<hr />
+<h3 id="b-the-percentile-bands-p_10-p_50-p_90">B. The Percentile Bands (<span class="arithmatex">\(P_{10}\)</span>, <span class="arithmatex">\(P_{50}\)</span>, <span class="arithmatex">\(P_{90}\)</span>)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Economic Scenario Represented</th>
+<th style="text-align: left;">What It Means for You</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><span class="arithmatex">\(P_{10}\)</span> (Conservative)</strong></td>
+<td style="text-align: left;"><strong>10th Percentile / Prolonged Bear Market</strong></td>
+<td style="text-align: left;">Your portfolio's ending balance in the worst 10% of market conditions. If <span class="arithmatex">\(P_{10} &gt; \$0\)</span>, you are safe even in economic crises.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><span class="arithmatex">\(P_{50}\)</span> (Median)</strong></td>
+<td style="text-align: left;"><strong>50th Percentile / Expected Average Market</strong></td>
+<td style="text-align: left;">Your expected most probable wealth trajectory over time.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><span class="arithmatex">\(P_{90}\)</span> (Optimistic)</strong></td>
+<td style="text-align: left;"><strong>90th Percentile / Secular Bull Market</strong></td>
+<td style="text-align: left;">Your wealth trajectory during exceptional multi-decade market expansions.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="c-median-wealth-at-retirement">C. Median Wealth at Retirement</h3>
+<p>Displays the estimated size of your nest egg on the exact day you transition from the <strong>Accumulation Phase</strong> into the <strong>Retirement Phase</strong>.</p>
+<hr />
+<h2 id="4-the-mathematics-behind-the-engine">4. 🔬 The Mathematics Behind the Engine</h2>
+<p>For financial engineers and curious users, Moneta uses the standard <strong>Geometric Brownian Motion (GBM)</strong> continuous-time stochastic process:</p>
+<h3 id="asset-class-parameters">Asset Class Parameters:</h3>
+<ul>
+<li><strong>Equities</strong>: Expected nominal drift <span class="arithmatex">\(\mu_{\text{eq}} = 9.5\%\)</span>, Volatility <span class="arithmatex">\(\sigma_{\text{eq}} = 16.0\%\)</span></li>
+<li><strong>Bonds / Fixed Income</strong>: Expected nominal drift <span class="arithmatex">\(\mu_{\text{bd}} = 4.5\%\)</span>, Volatility <span class="arithmatex">\(\sigma_{\text{bd}} = 6.0\%\)</span></li>
+<li><strong>Cross-Asset Correlation</strong>: <span class="arithmatex">\(\rho = 0.20\)</span></li>
+</ul>
+<h3 id="portfolio-drift-and-volatility">Portfolio Drift and Volatility:</h3>
+<div class="arithmatex">\[\mu_{\text{port}} = w_{\text{eq}}\mu_{\text{eq}} + w_{\text{bd}}\mu_{\text{bd}}\]</div>
+<div class="arithmatex">\[\sigma_{\text{port}} = \sqrt{(w_{\text{eq}}\sigma_{\text{eq}})^2 + (w_{\text{bd}}\sigma_{\text{bd}})^2 + 2 w_{\text{eq}} w_{\text{bd}} \rho \sigma_{\text{eq}} \sigma_{\text{bd}}}\]</div>
+<h3 id="annual-stochastic-step-t">Annual Stochastic Step (<span class="arithmatex">\(t\)</span>):</h3>
+<p>For each year <span class="arithmatex">\(t\)</span>, a random log-return is drawn from a normal distribution:
+$<span class="arithmatex">\(\text{Return}_t = \exp\left( \left(\mu_{\text{port}} - \frac{1}{2}\sigma_{\text{port}}^2\right) + \sigma_{\text{port}} \cdot Z \right), \quad \text{where } Z \sim \mathcal{N}(0, 1)\)</span>$</p>
+<ul>
+<li><strong>In Accumulation (<span class="arithmatex">\(t \le Y_{\text{accum}}\)</span>)</strong>:
+  $<span class="arithmatex">\(W_t = (W_{t-1} + \text{Annual Savings}) \times \text{Return}_t\)</span>$</li>
+<li><strong>In Retirement (<span class="arithmatex">\(t &gt; Y_{\text{accum}}\)</span>)</strong>:
+  $<span class="arithmatex">\(W_t = \left(W_{t-1} - \text{Annual Spend} \times (1 + \text{Inflation})^{t - 1}\right) \times \text{Return}_t\)</span>$</li>
+</ul>
+<hr />
+<h2 id="5-strategies-to-improve-your-retirement-success">5. 💡 Strategies to Improve Your Retirement Success</h2>
+<p>If your simulation returns a success probability below <span class="arithmatex">\(90\%\)</span>, test these 4 high-leverage levers in Moneta:</p>
+<ol>
+<li><strong>Increase Equity Allocation</strong>: If your timeline is <span class="arithmatex">\(&gt; 15\)</span> years, increasing equity allocation from 50% to 75–80% significantly boosts expected long-term compounding.</li>
+<li><strong>Increase Annual Savings by 10–15%</strong>: Boosting current annual savings exerts compounding pressure during your accumulation years.</li>
+<li><strong>Delay Retirement by 2 Years</strong>: Working just 2 more years has a double compounding benefit: 2 extra years of portfolio growth + 2 fewer years of portfolio withdrawals.</li>
+<li><strong>Implement Flexible Retirement Spending</strong>: Modeling a dynamic spending rule (withdrawing 10% less during negative market years) boosts portfolio survival rates by over <span class="arithmatex">\(+15\%\)</span>.</li>
+</ol>
+<hr />
+<h2 id="6-empirical-ticker-history-100-year-crisis-stress-testing">6. 🏛️ Empirical Ticker History &amp; 100-Year Crisis Stress-Testing</h2>
+<p>Beyond theoretical Gaussian distributions, Moneta supports testing against <strong>real market history</strong>:</p>
+<h3 id="a-personalized-10-to-20-year-ticker-history-empirical-mode">A. Personalized 10-to-20 Year Ticker History (Empirical Mode)</h3>
+<p>Instead of generic asset assumptions, Moneta extracts 10 to 20 years of monthly adjusted close prices from Yahoo Finance for your <strong>actual portfolio holdings</strong> (<code>moneta.holding</code>):
+* Calculates your portfolio's exact empirical <strong>CAGR</strong>, <strong>realized volatility (<span class="arithmatex">\(\sigma_{\text{realized}}\)</span>)</strong>, and <strong>cross-ticker covariance matrix</strong>.
+* Distinguishes between an all-market index portfolio (<code>VOO</code>, <code>VWRA</code>) versus high-beta growth stocks or dividend-heavy aristocrats.</p>
+<h3 id="b-100-year-historical-crisis-replay-mode">B. 100-Year Historical Crisis Replay Mode</h3>
+<p>Replays your retirement plan through real historical market shocks:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Historical Era</th>
+<th style="text-align: left;">Real Market Event</th>
+<th style="text-align: left;">Stress-Test Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>1929 Great Crash</strong></td>
+<td style="text-align: left;"><span class="arithmatex">\(-86\%\)</span> Real equity drawdown over 3 years</td>
+<td style="text-align: left;">Deflationary depression survival</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1973–1974 Stagflation</strong></td>
+<td style="text-align: left;"><span class="arithmatex">\(+12\%\)</span> Inflation spike with negative real asset returns</td>
+<td style="text-align: left;">Purchasing power erosion</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1987 Black Monday</strong></td>
+<td style="text-align: left;">Single-day <span class="arithmatex">\(-22.6\%\)</span> liquidity shock</td>
+<td style="text-align: left;">Recovery resilience</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2000–2002 Dot-Com Bust</strong></td>
+<td style="text-align: left;">3 consecutive negative equity years</td>
+<td style="text-align: left;">Early retirement Sequence of Returns Risk</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2008 Global Financial Crisis</strong></td>
+<td style="text-align: left;"><span class="arithmatex">\(-50\%\)</span> Global equity shock + housing contraction</td>
+<td style="text-align: left;">Liquidity runway and buffer durability</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2020 Pandemic Shock</strong></td>
+<td style="text-align: left;">Rapid <span class="arithmatex">\(-34\%\)</span> crash followed by fast inflationary rebound</td>
+<td style="text-align: left;">Volatility whip-saw resistance</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05_REAL_ESTATE_AND_AMORTIZATION/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Real Estate &amp; Mortgages">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Real Estate & Mortgages
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../07_SECURITY_AND_MULTI_USER/" class="md-footer__link md-footer__link--next" aria-label="Next: Security &amp; Household Privacy">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Security & Household Privacy
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.tracking","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.footer","search.highlight","search.suggest","content.code.copy"],"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.49251538.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
