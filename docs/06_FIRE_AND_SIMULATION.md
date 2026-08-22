@@ -166,3 +166,27 @@ If your simulation returns a success probability below $90\%$, test these 4 high
 2. **Increase Annual Savings by 10–15%**: Boosting current annual savings exerts compounding pressure during your accumulation years.
 3. **Delay Retirement by 2 Years**: Working just 2 more years has a double compounding benefit: 2 extra years of portfolio growth + 2 fewer years of portfolio withdrawals.
 4. **Implement Flexible Retirement Spending**: Modeling a dynamic spending rule (withdrawing 10% less during negative market years) boosts portfolio survival rates by over $+15\%$.
+
+---
+
+## 6. 🏛️ Empirical Ticker History & 100-Year Crisis Stress-Testing
+
+Beyond theoretical Gaussian distributions, Moneta supports testing against **real market history**:
+
+### A. Personalized 10-to-20 Year Ticker History (Empirical Mode)
+Instead of generic asset assumptions, Moneta extracts 10 to 20 years of monthly adjusted close prices from Yahoo Finance for your **actual portfolio holdings** (`moneta.holding`):
+* Calculates your portfolio's exact empirical **CAGR**, **realized volatility ($\sigma_{\text{realized}}$)**, and **cross-ticker covariance matrix**.
+* Distinguishes between an all-market index portfolio (`VOO`, `VWRA`) versus high-beta growth stocks or dividend-heavy aristocrats.
+
+### B. 100-Year Historical Crisis Replay Mode
+Replays your retirement plan through real historical market shocks:
+
+| Historical Era | Real Market Event | Stress-Test Focus |
+| :--- | :--- | :--- |
+| **1929 Great Crash** | $-86\%$ Real equity drawdown over 3 years | Deflationary depression survival |
+| **1973–1974 Stagflation** | $+12\%$ Inflation spike with negative real asset returns | Purchasing power erosion |
+| **1987 Black Monday** | Single-day $-22.6\%$ liquidity shock | Recovery resilience |
+| **2000–2002 Dot-Com Bust** | 3 consecutive negative equity years | Early retirement Sequence of Returns Risk |
+| **2008 Global Financial Crisis** | $-50\%$ Global equity shock + housing contraction | Liquidity runway and buffer durability |
+| **2020 Pandemic Shock** | Rapid $-34\%$ crash followed by fast inflationary rebound | Volatility whip-saw resistance |
+

@@ -289,6 +289,19 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [ ] Public on-chain wallet tracking for Bitcoin (BTC), Ethereum (ETH), and Solana (SOL)
   - [ ] Live spot pricing for Gold (XAU), Silver (XAG), and Platinum (XPT)
 
+* **Track 9.5: Empirical 20-Year Ticker History & 100-Year Historical Crisis Stress-Tester (`moneta.monte.carlo.empirical`)**
+  - [ ] **Empirical Ticker History Fetcher**: 1-Click extraction of 10-to-20 year adjusted close price series for active user holdings (`moneta.holding`) via Yahoo Finance API
+  - [ ] **Realized Portfolio Drift & Volatility Calibration**: Calculates exact annualized historical CAGR, realized standard deviation ($\sigma_{\text{realized}}$), Sharpe ratio, and empirical covariance matrix across user-held tickers
+  - [ ] **100-Year Historical Crisis Stress-Test Engine**: Replay engine testing retirement survivability across landmark historical financial shocks:
+    - **1929 Great Crash & Depression** ($-86\%$ real equity drawdown + prolonged deflation)
+    - **1973–1974 Stagflation** ($+12\%$ inflation spike with negative real asset returns)
+    - **1987 Black Monday** (Single-day $-22.6\%$ liquidity shock)
+    - **2000–2002 Dot-Com Bust** (3 consecutive years of equity downturn / sequence risk)
+    - **2008 Global Financial Crisis** ($-50\%$ global equity drawdown + real estate contraction)
+    - **2020 Pandemic Shock & Inflationary Recovery**
+  - [ ] **Historical Block Bootstrapping**: Hybrid simulation randomly sampling empirical 1-year and 5-year return blocks from historical market series to preserve non-Gaussian "fat tails" and skewness
+  - [ ] **Interactive Simulation Mode Switcher**: Toggle between **Theoretical Monte Carlo (GBM)**, **Empirical Holdings Calibration (10-20y)**, and **Historical Crisis Backtesting**
+
 ---
 
 ### Phase 10: Pre-Aggregated Reports, Macro Reviews & Multi-Channel Webhook Alerts (Q3 2027)
