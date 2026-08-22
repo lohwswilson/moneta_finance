@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- ============================================================= -->
+    <!-- Moneta Finance — Quicken-aligned navigation                   -->
+    <!-- 7 domain centers: Spending · Planning · Investing ·          -->
+    <!-- Property & Debt · Regional Wealth & Tax · Reports · Tools      -->
+    <!-- + Configuration (Master Data / Settings & Rules)             -->
+    <!-- ============================================================= -->
+
     <!-- Top-level Moneta Menu (visible to Moneta users; manager implies user) -->
     <menuitem id="menu_moneta_root"
               name="Moneta Finance"
@@ -14,9 +21,11 @@
               action="action_moneta_dashboard"
               sequence="5"/>
 
-    <!-- Banking & Registers -->
+    <!-- =================================================== -->
+    <!-- Spending  (was "Banking & Registers")                -->
+    <!-- =================================================== -->
     <menuitem id="menu_moneta_banking_root"
-              name="Banking &amp; Registers"
+              name="Spending"
               parent="menu_moneta_root"
               sequence="10"/>
 
@@ -38,65 +47,19 @@
               action="action_moneta_duplicate_detector_wizard"
               sequence="30"/>
 
-    <!-- Investments & Assets -->
-    <menuitem id="menu_moneta_investments_root"
-              name="Investments &amp; Assets"
-              parent="menu_moneta_root"
-              sequence="20"/>
+    <menuitem id="menu_moneta_reconcile_wizard"
+              name="Reconcile Statement"
+              parent="menu_moneta_banking_root"
+              action="action_moneta_reconciliation_wizard"
+              sequence="40"/>
 
-    <menuitem id="menu_moneta_holdings"
-              name="Portfolio Holdings"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_holding"
-              sequence="5"/>
-
-    <menuitem id="menu_moneta_security_lots"
-              name="Tax-Lots &amp; Holdings"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_security_lot"
-              sequence="6"/>
-
-    <menuitem id="menu_moneta_target_alloc"
-              name="Target Asset Allocation"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_target_allocation"
-              sequence="6"/>
-
-    <menuitem id="menu_moneta_benchmark"
-              name="Benchmark Analytics (vs S&amp;P 500)"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_benchmark"
-              sequence="7"/>
-
-    <menuitem id="menu_moneta_properties"
-              name="Real Estate, Vehicles &amp; Valuables"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_property"
-              sequence="8"/>
-
-    <menuitem id="menu_moneta_investment_transactions"
-              name="Investment Trades"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_investment_transaction"
-              sequence="10"/>
-
-    <menuitem id="menu_moneta_securities"
-              name="Securities &amp; Prices"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_security"
-              sequence="20"/>
-
-    <menuitem id="menu_moneta_gem_strategies"
-              name="GEM Momentum Strategy"
-              parent="menu_moneta_investments_root"
-              action="action_moneta_gem_strategy"
-              sequence="30"/>
-
-    <!-- Bills & Planning -->
+    <!-- =================================================== -->
+    <!-- Planning                                             -->
+    <!-- =================================================== -->
     <menuitem id="menu_moneta_planning_root"
-              name="Goals &amp; Planning"
+              name="Planning"
               parent="menu_moneta_root"
-              sequence="30"/>
+              sequence="20"/>
 
     <menuitem id="menu_moneta_goals"
               name="Financial Goals &amp; Sinking Funds"
@@ -122,71 +85,167 @@
               action="action_moneta_budget"
               sequence="20"/>
 
-    <menuitem id="menu_moneta_loan_scenarios"
-              name="Loan &amp; Mortgage Amortization"
-              parent="menu_moneta_planning_root"
-              action="action_moneta_loan_scenario"
-              sequence="30"/>
-
     <menuitem id="menu_moneta_monte_carlo"
               name="Monte Carlo Wealth Simulator"
               parent="menu_moneta_planning_root"
               action="action_moneta_monte_carlo"
               sequence="40"/>
 
-    <!-- Net Worth & Analytics -->
-    <menuitem id="menu_moneta_reports_root"
-              name="Net Worth &amp; Reports"
+    <!-- =================================================== -->
+    <!-- Investing  (was "Investments & Assets")               -->
+    <!-- =================================================== -->
+    <menuitem id="menu_moneta_investments_root"
+              name="Investing"
+              parent="menu_moneta_root"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_holdings"
+              name="Portfolio Holdings"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_holding"
+              sequence="5"/>
+
+    <menuitem id="menu_moneta_security_lots"
+              name="Tax-Lots &amp; Holdings"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_security_lot"
+              sequence="6"/>
+
+    <menuitem id="menu_moneta_target_alloc"
+              name="Target Asset Allocation"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_target_allocation"
+              sequence="7"/>
+
+    <menuitem id="menu_moneta_benchmark"
+              name="Benchmark Analytics (vs S&amp;P 500)"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_benchmark"
+              sequence="8"/>
+
+    <menuitem id="menu_moneta_investment_transactions"
+              name="Investment Trades"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_investment_transaction"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_securities"
+              name="Securities &amp; Prices"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_security"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_gem_strategies"
+              name="GEM Momentum Strategy"
+              parent="menu_moneta_investments_root"
+              action="action_moneta_gem_strategy"
+              sequence="30"/>
+
+    <!-- =================================================== -->
+    <!-- Property & Debt  (NEW — Quicken "Property & Debt"     -->
+    <!-- center: physical assets, loans/mortgages, landlord)   -->
+    <!-- =================================================== -->
+    <menuitem id="menu_moneta_property_debt_root"
+              name="Property &amp; Debt"
               parent="menu_moneta_root"
               sequence="40"/>
 
-<menuitem id="menu_moneta_ai_summary"
-              name="Monthly AI Reports"
-              parent="menu_moneta_reports_root"
-              action="action_moneta_ai_summary"
-              sequence="4"/>
-
-    <menuitem id="menu_moneta_insights"
-              name="Smart Financial Insights"
-              parent="menu_moneta_reports_root"
-              action="action_moneta_insight"
-              sequence="5"/>
-
-    <menuitem id="menu_moneta_net_worth"
-              name="Net Worth Trend"
-              parent="menu_moneta_reports_root"
-              action="action_moneta_net_worth"
+    <menuitem id="menu_moneta_properties"
+              name="Real Estate, Vehicles &amp; Valuables"
+              parent="menu_moneta_property_debt_root"
+              action="action_moneta_property"
               sequence="10"/>
 
-    <menuitem id="menu_moneta_spending_pivot"
-              name="Spending Analysis"
-              parent="menu_moneta_reports_root"
-              action="action_moneta_transaction"
+    <menuitem id="menu_moneta_loan_scenarios"
+              name="Loan &amp; Mortgage Amortization"
+              parent="menu_moneta_property_debt_root"
+              action="action_moneta_loan_scenario"
               sequence="20"/>
 
-    <menuitem id="menu_moneta_tax_schedule"
-              name="Annual Tax Schedules &amp; TurboTax (.TXF)"
-              parent="menu_moneta_reports_root"
-              action="action_moneta_tax_schedule_wizard"
-              sequence="35"/>
+    <!-- Landlord: Tenants & Rent Roll + Rent Roll Ledger attach here -->
+    <!-- from the moneta_finance_property addon (sequences 30, 40). -->
 
-    <!-- Tools & Imports -->
-    <menuitem id="menu_moneta_tools_root"
-              name="Tools &amp; Imports"
+    <!-- =================================================== -->
+    <!-- Regional Wealth & Tax  (NEW — umbrella for the       -->
+    <!-- Singapore & Malaysia satellite packs)                 -->
+    <!-- =================================================== -->
+    <menuitem id="menu_moneta_regional_root"
+              name="Regional Wealth &amp; Tax"
               parent="menu_moneta_root"
               sequence="50"/>
 
-<menuitem id="menu_moneta_subscription_detector"
+    <!-- 🇸🇬 Singapore and 🇲🇾 Malaysia roots attach here from -->
+    <!-- their satellite addons (sequences 10 and 20).          -->
+
+    <!-- =================================================== -->
+    <!-- Reports  (was "Net Worth & Reports") — grouped        -->
+    <!-- =================================================== -->
+    <menuitem id="menu_moneta_reports_root"
+              name="Reports"
+              parent="menu_moneta_root"
+              sequence="60"/>
+
+    <menuitem id="menu_moneta_reports_net_worth"
+              name="Net Worth"
+              parent="menu_moneta_reports_root"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_net_worth"
+              name="Net Worth Trend"
+              parent="menu_moneta_reports_net_worth"
+              action="action_moneta_net_worth"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_reports_spending"
+              name="Spending"
+              parent="menu_moneta_reports_root"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_spending_pivot"
+              name="Spending Analysis"
+              parent="menu_moneta_reports_spending"
+              action="action_moneta_transaction"
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_insights"
+              name="Smart Financial Insights"
+              parent="menu_moneta_reports_spending"
+              action="action_moneta_insight"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_reports_investing"
+              name="Investing"
+              parent="menu_moneta_reports_root"
+              sequence="30"/>
+    <!-- Investing reports populate in Phase 8; auto-hidden while empty. -->
+
+    <menuitem id="menu_moneta_reports_tax"
+              name="Tax"
+              parent="menu_moneta_reports_root"
+              sequence="40"/>
+
+    <menuitem id="menu_moneta_tax_schedule"
+              name="Annual Tax Schedules &amp; TurboTax (.TXF)"
+              parent="menu_moneta_reports_tax"
+              action="action_moneta_tax_schedule_wizard"
+              sequence="10"/>
+
+    <!-- "AI Assistant" sub-group attaches here from the -->
+    <!-- moneta_finance_ai_advisor addon (sequence 50).    -->
+
+    <!-- =================================================== -->
+    <!-- Tools  (was "Tools & Imports")                         -->
+    <!-- =================================================== -->
+    <menuitem id="menu_moneta_tools_root"
+              name="Tools"
+              parent="menu_moneta_root"
+              sequence="70"/>
+
+    <menuitem id="menu_moneta_subscription_detector"
               name="Detect Subscriptions"
               parent="menu_moneta_tools_root"
               action="action_moneta_subscription_detector"
               sequence="5"/>
-
-    <menuitem id="menu_moneta_reconcile_wizard"
-              name="Reconcile Statement"
-              parent="menu_moneta_tools_root"
-              action="action_moneta_reconciliation_wizard"
-              sequence="10"/>
 
     <menuitem id="menu_moneta_rebalance_wiz"
               name="1-Click Portfolio Rebalancer"
@@ -212,75 +271,87 @@
               action="action_moneta_export_wizard"
               sequence="30"/>
 
+    <menuitem id="menu_moneta_payee_merge"
+              name="Merge Duplicate Payees"
+              parent="menu_moneta_tools_root"
+              action="action_moneta_payee_merge_wizard"
+              sequence="35"/>
+
     <menuitem id="menu_moneta_action_history"
               name="Action History &amp; 1-Click Undo"
               parent="menu_moneta_tools_root"
               action="action_moneta_action_history"
               sequence="40"/>
 
-    <!-- Configuration & Estate -->
+    <!-- =================================================== -->
+    <!-- Configuration  (Master Data / Settings & Rules)       -->
+    <!-- =================================================== -->
     <menuitem id="menu_moneta_config_root"
               name="Configuration"
               parent="menu_moneta_root"
-              sequence="60"/>
+              sequence="80"/>
 
-    <menuitem id="menu_moneta_dashboard_actions"
-              name="Customize Quick Action Launchpad"
+    <menuitem id="menu_moneta_config_master"
+              name="Master Data"
               parent="menu_moneta_config_root"
-              action="action_moneta_dashboard_action"
-              sequence="2"/>
-
-    <menuitem id="menu_moneta_transaction_rules"
-              name="Transaction Rules"
-              parent="menu_moneta_config_root"
-              action="action_moneta_transaction_rule"
-              sequence="5"/>
+              sequence="10"/>
 
     <menuitem id="menu_moneta_categories"
               name="Categories"
-              parent="menu_moneta_config_root"
+              parent="menu_moneta_config_master"
               action="action_moneta_category"
               sequence="10"/>
 
     <menuitem id="menu_moneta_payees"
               name="Payees &amp; Aliases"
-              parent="menu_moneta_config_root"
+              parent="menu_moneta_config_master"
               action="action_moneta_payee"
               sequence="20"/>
 
-    <menuitem id="menu_moneta_payee_merge"
-              name="Merge Duplicate Payees"
-              parent="menu_moneta_config_root"
-              action="action_moneta_payee_merge_wizard"
-              sequence="25"/>
-
     <menuitem id="menu_moneta_tags"
               name="Tags"
-              parent="menu_moneta_config_root"
+              parent="menu_moneta_config_master"
               action="action_moneta_tag"
               sequence="30"/>
 
     <menuitem id="menu_moneta_institutions"
               name="Institutions"
-              parent="menu_moneta_config_root"
+              parent="menu_moneta_config_master"
               action="action_moneta_institution"
               sequence="40"/>
 
-    <menuitem id="menu_moneta_emergency_contacts"
-              name="Emergency Contacts &amp; Estate"
-              parent="menu_moneta_config_root"
-              action="action_moneta_emergency_contact"
-              sequence="50"/>
-
     <menuitem id="menu_moneta_currencies"
               name="Currencies &amp; Exchange Rates"
-              parent="menu_moneta_config_root"
+              parent="menu_moneta_config_master"
               action="base.action_currency_form"
-              sequence="55"/>
+              sequence="50"/>
+
+    <menuitem id="menu_moneta_config_settings_rules"
+              name="Settings &amp; Rules"
+              parent="menu_moneta_config_root"
+              sequence="20"/>
 
     <menuitem id="menu_moneta_settings"
               name="Settings"
-              parent="menu_moneta_config_root"
+              parent="menu_moneta_config_settings_rules"
               action="action_moneta_config_settings"
-              sequence="60"/>
+              sequence="10"/>
+
+    <menuitem id="menu_moneta_transaction_rules"
+              name="Transaction Rules"
+              parent="menu_moneta_config_settings_rules"
+              action="action_moneta_transaction_rule"
+              sequence="20"/>
+
+    <menuitem id="menu_moneta_dashboard_actions"
+              name="Customize Quick Action Launchpad"
+              parent="menu_moneta_config_settings_rules"
+              action="action_moneta_dashboard_action"
+              sequence="30"/>
+
+    <menuitem id="menu_moneta_emergency_contacts"
+              name="Emergency Contacts &amp; Estate"
+              parent="menu_moneta_config_settings_rules"
+              action="action_moneta_emergency_contact"
+              sequence="40"/>
 </odoo>

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Landlord & Rental — attached under the core "Property & Debt" center -->
     <menuitem id="menu_moneta_property_tenants"
               name="Landlord: Tenants &amp; Rent Roll"
-              parent="moneta_finance.menu_moneta_investments_root"
+              parent="moneta_finance.menu_moneta_property_debt_root"
               action="action_moneta_property_tenant"
-              sequence="9"/>
+              sequence="30"/>
 
     <menuitem id="menu_moneta_property_rent_payments"
               name="Rent Roll Ledger"
-              parent="moneta_finance.menu_moneta_investments_root"
+              parent="moneta_finance.menu_moneta_property_debt_root"
               action="action_moneta_property_rent_payment"
-              sequence="9"/>
+              sequence="40"/>
 </odoo>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Singapore Wealth Ecosystem Menu -->
+    <!-- Singapore Wealth Ecosystem — nested under the "Regional Wealth & Tax" umbrella -->
     <menuitem id="menu_moneta_singapore_root"
               name="🇸🇬 Singapore"
-              parent="moneta_finance.menu_moneta_root"
-              sequence="35"/>
+              parent="moneta_finance.menu_moneta_regional_root"
+              sequence="10"/>
 
     <menuitem id="menu_moneta_cpf_life"
               name="CPF LIFE Retirement Simulator"

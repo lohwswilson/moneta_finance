@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Malaysia Wealth & Tax Hub -->
+    <!-- Malaysia Wealth & Tax Hub — nested under the "Regional Wealth & Tax" umbrella -->
     <menuitem id="menu_moneta_malaysia_root"
               name="🇲🇾 Malaysia"
-              parent="moneta_finance.menu_moneta_root"
-              sequence="36"/>
+              parent="moneta_finance.menu_moneta_regional_root"
+              sequence="20"/>
 
     <menuitem id="menu_moneta_epf_account"
               name="EPF / KWSP 3-Account Hub"

@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- AI Assistant sub-group under Reports. Defined here (not in core) so the
+         core stays AI-free; auto-hidden when the AI addon is not installed. -->
+    <menuitem id="menu_moneta_ai_assistant_group"
+              name="AI Assistant"
+              parent="moneta_finance.menu_moneta_reports_root"
+              sequence="50"/>
+
     <!-- AI Advisor Chat Menu -->
     <menuitem id="menu_moneta_ai_chat"
               name="Ask Moneta AI"
-              parent="moneta_finance.menu_moneta_reports_root"
+              parent="menu_moneta_ai_assistant_group"
               action="action_moneta_ai_chat"
-              sequence="2"/>
+              sequence="10"/>
 
-    <!-- Monthly AI Reports Menu -->
+    <!-- Monthly AI Reports Menu (canonical definition; the core duplicate was removed) -->
     <menuitem id="menu_moneta_ai_summary"
               name="Monthly AI Reports"
-              parent="moneta_finance.menu_moneta_reports_root"
+              parent="menu_moneta_ai_assistant_group"
               action="action_moneta_ai_summary"
-              sequence="4"/>
+              sequence="20"/>
 
     <!-- AI Receipt OCR Menu -->
     <menuitem id="menu_moneta_ai_receipt"
               name="Scan Receipt / Invoice (AI OCR)"
               parent="moneta_finance.menu_moneta_tools_root"
               action="action_moneta_ai_receipt_wizard"
-              sequence="2"/>
+              sequence="10"/>
 </odoo>
