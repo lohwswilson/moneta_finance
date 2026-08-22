@@ -31,6 +31,32 @@ class MonetaAccount(models.Model):
         ('other', 'Other'),
     ], string='Account Type', default='checking', required=True)
 
+    account_group = fields.Selection([
+        ('cash', 'Cash & Banking'),
+        ('investment', 'Investments & Stocks'),
+        ('credit', 'Credit Cards & Credit Lines'),
+        ('loan', 'Loans & Mortgages'),
+        ('regional', 'Regional & Retirement (CPF/SRS/EPF)'),
+        ('other', 'Other Assets & Tangibles'),
+    ], string='Account Group', compute='_compute_account_group', store=True, index=True)
+
+    @api.depends('account_type')
+    def _compute_account_group(self):
+        for acc in self:
+            t = acc.account_type
+            if t in ('checking', 'chequing', 'savings', 'cash'):
+                acc.account_group = 'cash'
+            elif t in ('brokerage', 'retirement', 'crypto'):
+                acc.account_group = 'investment'
+            elif t in ('credit_card', 'loc'):
+                acc.account_group = 'credit'
+            elif t in ('loan', 'mortgage'):
+                acc.account_group = 'loan'
+            elif t in ('cpf_oa', 'cpf_sa', 'cpf_ma', 'cpf_ra', 'srs'):
+                acc.account_group = 'regional'
+            else:
+                acc.account_group = 'other'
+
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         default=lambda self: self.env.company.currency_id, required=True,

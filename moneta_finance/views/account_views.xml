@@ -231,9 +231,11 @@
         <field name="name">moneta.account.kanban</field>
         <field name="model">moneta.account</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard" default_order="account_type, sequence, name" sample="1">
+            <kanban class="o_kanban_dashboard" default_order="sequence, is_favourite desc, name" records_draggable="1" sample="1">
+                <field name="sequence"/>
                 <field name="name"/>
                 <field name="account_type"/>
+                <field name="account_group"/>
                 <field name="currency_id"/>
                 <field name="institution_name"/>
                 <field name="current_balance"/>
@@ -264,6 +266,7 @@
                             <!-- 1. Header (Fixed Height: 44px) -->
                             <div class="d-flex justify-content-between align-items-start" style="height: 44px; overflow: hidden;">
                                 <div class="d-flex align-items-center me-2 text-truncate">
+                                    <field name="sequence" widget="handle" class="me-2 text-muted" style="cursor: grab; font-size: 0.9rem;" title="Drag to reorder"/>
                                     <div t-attf-class="rounded-circle p-2 me-2 d-flex align-items-center justify-content-center flex-shrink-0 #{badge_class} shadow-xs" 
                                          t-att-style="badge_style + ' width: 34px; height: 34px;'">
                                         <i t-attf-class="fa #{icon_name}"/>
@@ -420,8 +423,10 @@
                 <filter name="filter_brokerage" string="Brokerage &amp; Investments" domain="[('account_type', 'in', ('brokerage', 'retirement', 'crypto'))]"/>
                 <filter name="filter_open" string="Active (Not Closed)" domain="[('is_closed', '=', False)]"/>
                 <group expand="0" string="Group By">
+                    <filter name="group_by_account_group" string="Balance Sheet Category" context="{'group_by': 'account_group'}"/>
                     <filter name="group_by_type" string="Account Type" context="{'group_by': 'account_type'}"/>
                     <filter name="group_by_institution" string="Institution" context="{'group_by': 'institution_name'}"/>
+                    <filter name="group_by_currency" string="Currency" context="{'group_by': 'currency_id'}"/>
                 </group>
             </search>
         </field>
