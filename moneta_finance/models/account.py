@@ -85,6 +85,7 @@ class MonetaAccount(models.Model):
     forecast_balance_30d = fields.Monetary(string='Projected (30d)', compute='_compute_forecast_and_statement_cycle')
     forecast_balance_60d = fields.Monetary(string='Projected (60d)', compute='_compute_forecast_and_statement_cycle')
     forecast_balance_90d = fields.Monetary(string='Projected (90d)', compute='_compute_forecast_and_statement_cycle')
+    forecast_chart_svg = fields.Html(string='90-Day Forecast Chart', compute='_compute_forecast_and_statement_cycle')
     next_statement_date = fields.Date(string='Next Statement Date', compute='_compute_forecast_and_statement_cycle')
     next_payment_due_date = fields.Date(string='Next Due Date', compute='_compute_forecast_and_statement_cycle')
     current_cycle_spent = fields.Monetary(string='Current Cycle Spending', compute='_compute_forecast_and_statement_cycle')
@@ -247,6 +248,57 @@ class MonetaAccount(models.Model):
             acc.forecast_balance_30d = round(cur_bal + delta_30, 4)
             acc.forecast_balance_60d = round(cur_bal + delta_60, 4)
             acc.forecast_balance_90d = round(cur_bal + delta_90, 4)
+
+            # Generate SVG Line Chart
+            sym = acc.currency_id.symbol or '$'
+            pts_vals = [
+                ("Today", cur_bal),
+                ("+30 Days", acc.forecast_balance_30d),
+                ("+60 Days", acc.forecast_balance_60d),
+                ("+90 Days", acc.forecast_balance_90d),
+            ]
+            vals = [v for _, v in pts_vals]
+            min_v = min(vals)
+            max_v = max(vals)
+            spread = max_v - min_v
+            spread = spread if spread > 0 else 100.0
+
+            xs = [60, 220, 380, 540]
+            coords = []
+            for i, (label, val) in enumerate(pts_vals):
+                norm = (val - min_v) / spread
+                y = 125 - int(norm * 80)
+                coords.append((xs[i], y, label, val))
+
+            line_d = " ".join([f"{'M' if i == 0 else 'L'} {x},{y}" for i, (x, y, _, _) in enumerate(coords)])
+            area_d = f"{line_d} L {xs[-1]},150 L {xs[0]},150 Z"
+
+            is_up = vals[-1] >= vals[0]
+            stroke_color = "#10b981" if is_up else "#0284c7"
+
+            svg_lines = [
+                f'<svg viewBox="0 0 600 175" style="width: 100%; height: auto; max-height: 180px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;">',
+                f'<defs>',
+                f'  <linearGradient id="forecast_grad_{acc.id}" x1="0%" y1="0%" x2="0%" y2="100%">',
+                f'    <stop offset="0%" stop-color="{stroke_color}" stop-opacity="0.22"/>',
+                f'    <stop offset="100%" stop-color="{stroke_color}" stop-opacity="0.0"/>',
+                f'  </linearGradient>',
+                f'</defs>',
+                f'<line x1="30" y1="150" x2="570" y2="150" stroke="#e2e8f0" stroke-width="1"/>',
+                f'<line x1="30" y1="85" x2="570" y2="85" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="4,4"/>',
+                f'<line x1="30" y1="25" x2="570" y2="25" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="4,4"/>',
+                f'<path d="{area_d}" fill="url(#forecast_grad_{acc.id})"/>',
+                f'<path d="{line_d}" fill="none" stroke="{stroke_color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+            ]
+
+            for x, y, label, val in coords:
+                val_str = f"{sym}{val:,.2f}"
+                svg_lines.append(f'<circle cx="{x}" cy="{y}" r="5.5" fill="#ffffff" stroke="{stroke_color}" stroke-width="3"/>')
+                svg_lines.append(f'<text x="{x}" y="{y - 12}" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">{val_str}</text>')
+                svg_lines.append(f'<text x="{x}" y="168" text-anchor="middle" font-size="11" font-weight="600" fill="#64748b">{label}</text>')
+
+            svg_lines.append('</svg>')
+            acc.forecast_chart_svg = "".join(svg_lines)
             
             if acc.account_type == 'credit_card' and acc.billing_cycle_day:
                 c_day = max(min(int(acc.billing_cycle_day), 28), 1)

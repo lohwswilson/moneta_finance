@@ -91,18 +91,19 @@
                         <page string="Account Information" name="account_info_tab">
                             <group>
                                 <group string="Account Profile">
+                                    <field name="name"/>
                                     <field name="account_type"/>
                                     <field name="currency_id"/>
-                                    <field name="institution_id"/>
-                                    <field name="institution_name"/>
                                     <field name="account_number"/>
                                 </group>
-                                <group string="Statement Cycle &amp; Due Dates" invisible="account_type != 'credit_card'">
-                                    <field name="billing_cycle_day"/>
-                                    <field name="payment_due_day"/>
-                                    <field name="next_statement_date" readonly="1"/>
-                                    <field name="next_payment_due_date" readonly="1"/>
-                                    <field name="current_cycle_spent" widget="monetary" readonly="1"/>
+                                <group string="Banking &amp; Institution">
+                                    <field name="institution_id"/>
+                                    <field name="institution_name"/>
+                                    <field name="billing_cycle_day" invisible="account_type != 'credit_card'"/>
+                                    <field name="payment_due_day" invisible="account_type != 'credit_card'"/>
+                                    <field name="next_statement_date" readonly="1" invisible="account_type != 'credit_card'"/>
+                                    <field name="next_payment_due_date" readonly="1" invisible="account_type != 'credit_card'"/>
+                                    <field name="current_cycle_spent" widget="monetary" readonly="1" invisible="account_type != 'credit_card'"/>
                                 </group>
                             </group>
                         </page>
@@ -116,12 +117,23 @@
                                     <field name="opening_balance_date"/>
                                     <field name="credit_limit" widget="monetary" invisible="account_type != 'credit_card'"/>
                                 </group>
-                                <group string="90-Day Balance Forecast" invisible="account_type in ('brokerage', 'retirement', 'crypto', 'loan', 'mortgage')">
+                                <group string="Forecast Milestones" invisible="account_type in ('brokerage', 'retirement', 'crypto', 'loan', 'mortgage')">
                                     <field name="forecast_balance_30d" widget="monetary"/>
                                     <field name="forecast_balance_60d" widget="monetary"/>
                                     <field name="forecast_balance_90d" widget="monetary"/>
                                 </group>
                             </group>
+                            <div class="card border-0 shadow-xs rounded-4 p-3 my-2 bg-white" invisible="account_type in ('brokerage', 'retirement', 'crypto', 'loan', 'mortgage')">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-dark mb-0">
+                                        <i class="fa fa-line-chart text-primary me-2"/>90-Day Balance Trajectory (Forecast)
+                                    </h6>
+                                    <span class="badge rounded-pill bg-light text-primary border px-3 py-1 fw-bold" style="font-size: 0.72rem;">
+                                        Scheduled Inflows &amp; Outflows
+                                    </span>
+                                </div>
+                                <field name="forecast_chart_svg" widget="html" nolabel="1"/>
+                            </div>
                         </page>
 
                         <page string="Terms &amp; Settings" name="terms_tab">
