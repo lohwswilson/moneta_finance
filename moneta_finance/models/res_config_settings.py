@@ -16,3 +16,10 @@ class ResConfigSettings(models.TransientModel):
         implied_group='base.group_multi_currency',
         help='Allows multi-currency bank accounts, transfers, and foreign currency exchange rates.'
     )
+    moneta_online_lookups = fields.Boolean(
+        string='Online lookups (quotes &amp; favicons)',
+        config_parameter='moneta_finance.online_lookups',
+        help='Fetch live market quotes from Yahoo Finance and payee brand logos '
+             'from the Google favicon service. Disabled by default to keep the '
+             'core offline-first and deterministic.'
+    )

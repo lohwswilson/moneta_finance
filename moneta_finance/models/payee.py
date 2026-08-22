@@ -2,7 +2,8 @@ import base64
 import unicodedata
 import urllib.parse
 import urllib.request
-from odoo import models, fields, api
+from odoo import _, models, fields, api
+from odoo.exceptions import ValidationError
 
 
 # Business / legal-entity suffixes stripped during payee-name normalization.
@@ -68,7 +69,21 @@ class MonetaPayee(models.Model):
         return False
 
     @api.model
+    def _online_lookups_enabled(self):
+        """True only when the user has opted into 'Online lookups' in Settings.
+        ICP values are strings, so compare against the truthy set rather than
+        relying on bool() (which is True for the string 'False')."""
+        val = self.env['ir.config_parameter'].sudo().get_param(
+            'moneta_finance.online_lookups', '')
+        return val.strip().lower() in ('1', 'true')
+
     def _fetch_favicon_bytes(self, website):
+        """Fetch a payee favicon from Google's favicon service.
+
+        Network-dependent: only runs when online lookups are enabled.
+        """
+        if not self._online_lookups_enabled():
+            return False
         norm = self._normalize_website(website)
         if not norm:
             return False
@@ -92,27 +107,19 @@ class MonetaPayee(models.Model):
 
     def action_fetch_favicon(self):
         """Fetch brand logo / favicon for payees based on website or name."""
+        if not self._online_lookups_enabled():
+            raise ValidationError(
+                _("Online lookups are disabled. Enable 'Online lookups' in "
+                  "Moneta Settings (Configuration > Online Features)."))
         for rec in self:
             target_site = rec.website or f"{rec.name.lower().replace(' ', '')}.com"
             logo_data = self._fetch_favicon_bytes(target_site)
             if logo_data:
                 rec.image_128 = logo_data
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('website') and not vals.get('image_128'):
-                logo = self._fetch_favicon_bytes(vals['website'])
-                if logo:
-                    vals['image_128'] = logo
-        return super().create(vals_list)
-
-    def write(self, vals):
-        if 'website' in vals and vals['website'] and 'image_128' not in vals:
-            logo = self._fetch_favicon_bytes(vals['website'])
-            if logo:
-                vals['image_128'] = logo
-        return super().write(vals)
+    # No create()/write() override: network enrichment never runs on the write
+    # path (the core stays offline-first). Favicons are fetched explicitly via
+    # the "Fetch Brand Logo" action once online lookups are enabled in Settings.
 
     # v1.14.0 Analytics & Cadence Detection
     spent_this_year = fields.Monetary(string='Spent This Year', compute='_compute_payee_analytics')

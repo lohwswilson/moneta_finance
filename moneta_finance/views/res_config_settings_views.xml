@@ -27,6 +27,13 @@
                             </div>
                         </setting>
                     </block>
+                    <block title="Online Features" id="moneta_online_block">
+                        <setting id="moneta_online_lookups"
+                                 string="Online lookups (quotes &amp; favicons)"
+                                 help="Fetch live market quotes from Yahoo Finance and payee brand logos from the Google favicon service. Disabled by default to keep the core offline-first and deterministic.">
+                            <field name="moneta_online_lookups"/>
+                        </setting>
+                    </block>
                 </app>
             </xpath>
         </field>

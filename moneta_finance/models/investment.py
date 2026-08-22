@@ -1,7 +1,7 @@
 import json
 import urllib.request
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from odoo import _, models, fields, api
 from odoo.exceptions import ValidationError
 
 
@@ -208,9 +208,24 @@ class MonetaSecurity(models.Model):
     )
 
 
+    def _online_lookups_enabled(self):
+        """True only when the user has opted into 'Online lookups' in Settings.
+        ICP values are strings, so compare against the truthy set rather than
+        relying on bool() (which is True for the string 'False')."""
+        val = self.env['ir.config_parameter'].sudo().get_param(
+            'moneta_finance.online_lookups', '')
+        return val.strip().lower() in ('1', 'true')
+
     @api.model
     def _lookup_symbol_info(self, symbol):
-        """Query public market quote endpoint to auto-discover ticker metadata."""
+        """Query public market quote endpoint to auto-discover ticker metadata.
+
+        Network-dependent (Yahoo Finance). Gated behind the opt-in
+        'moneta_finance.online_lookups' parameter (default off) so the core
+        stays offline-first and deterministic; returns {} when disabled.
+        """
+        if not self._online_lookups_enabled():
+            return {}
         if not symbol:
             return {}
         sym = symbol.strip().upper()
@@ -380,6 +395,10 @@ class MonetaSecurity(models.Model):
 
     def action_fetch_quote(self):
         """Fetch live quote and auto-fill metadata from Yahoo Finance."""
+        if not self._online_lookups_enabled():
+            raise ValidationError(
+                _("Online quotes are disabled. Enable 'Online lookups' in "
+                  "Moneta Settings (Configuration > Online Features)."))
         today = fields.Date.context_today(self)
         count = 0
         for rec in self:
