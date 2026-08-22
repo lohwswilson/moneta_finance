@@ -313,15 +313,15 @@
     </record>
 
     <record id="action_moneta_dashboard" model="ir.actions.act_window">
-        <field name="name">Dashboard (Form View)</field>
+        <field name="name">Dashboard</field>
         <field name="res_model">moneta.dashboard</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>
     </record>
 
-    <!-- OWL 2.0 Client Action for Executive Wealth Dashboard -->
+    <!-- OWL 2.0 Client Action for Executive Wealth Dashboard (Alternative View) -->
     <record id="action_moneta_dashboard_client" model="ir.actions.client">
-        <field name="name">Dashboard</field>
+        <field name="name">Fintech Dashboard (Experimental)</field>
         <field name="tag">moneta_finance.dashboard_client_action</field>
         <field name="target">main</field>
     </record>
