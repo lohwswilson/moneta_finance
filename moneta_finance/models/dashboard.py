@@ -644,21 +644,26 @@ class MonetaDashboard(models.TransientModel):
 
         # 3. Cash Flow Register (Recent Transactions)
         recent_txs = []
-        tx_domain = ['|', ('account_id.user_id', '=', user.id), ('user_id', '=', user.id)]
-        tx_records = self.env['moneta.transaction'].search(tx_domain, order='date desc, id desc', limit=8)
-        for tx in tx_records:
-            recent_txs.append({
-                'id': tx.id,
-                'date': tx.date.strftime('%b %d') if tx.date else '',
-                'payee': tx.payee_id.name or (tx.payee_name if hasattr(tx, 'payee_name') else 'General Payment') or 'Transfer',
-                'category': tx.category_id.name or 'Uncategorized',
-                'amount': tx.amount,
-                'is_inflow': tx.amount > 0,
-                'amount_formatted': f"{'+' if tx.amount > 0 else ''}{sym}{abs(tx.amount):,.2f}",
-                'balance': tx.running_balance if hasattr(tx, 'running_balance') else 0.0,
-                'balance_formatted': f"{sym}{tx.running_balance:,.2f}" if hasattr(tx, 'running_balance') else f"{sym}0.00",
-                'cleared_status': tx.cleared_status if hasattr(tx, 'cleared_status') else 'U',
-            })
+        try:
+            tx_domain = ['|', ('account_id.user_id', '=', user.id), ('account_id.user_id', '=', False)]
+            tx_records = self.env['moneta.transaction'].search(tx_domain, order='transaction_date desc, id desc', limit=8)
+            state_map = {'unreconciled': 'U', 'cleared': 'C', 'reconciled': 'R', 'void': 'V'}
+            for tx in tx_records:
+                d_str = tx.transaction_date.strftime('%b %d') if tx.transaction_date else ''
+                recent_txs.append({
+                    'id': tx.id,
+                    'date': d_str,
+                    'payee': tx.payee_id.name or 'General Payment',
+                    'category': tx.category_id.name or 'Uncategorized',
+                    'amount': tx.amount,
+                    'is_inflow': tx.amount > 0,
+                    'amount_formatted': f"{'+' if tx.amount > 0 else ''}{sym}{abs(tx.amount):,.2f}",
+                    'balance': tx.running_balance if hasattr(tx, 'running_balance') else 0.0,
+                    'balance_formatted': f"{sym}{tx.running_balance:,.2f}" if hasattr(tx, 'running_balance') else f"{sym}0.00",
+                    'cleared_status': state_map.get(tx.state, 'U'),
+                })
+        except Exception:
+            recent_txs = []
 
         # Fallback realistic transactions if empty
         if not recent_txs:
@@ -671,22 +676,28 @@ class MonetaDashboard(models.TransientModel):
 
         # 4. Investment Holdings
         holdings_data = []
-        holding_domain = [('account_id.user_id', '=', user.id), ('quantity', '>', 0)]
-        holding_records = self.env['moneta.holding'].search(holding_domain, limit=5)
-        for h in holding_records:
-            sec = h.security_id
-            holdings_data.append({
-                'id': h.id,
-                'ticker': sec.ticker if sec else 'TICKER',
-                'name': sec.name if sec else 'Security',
-                'qty': round(h.quantity, 2),
-                'price': h.current_price,
-                'price_formatted': f"{sym}{h.current_price:,.2f}",
-                'market_value': h.market_value,
-                'market_value_formatted': f"{sym}{h.market_value:,.2f}",
-                'gain_pct': round(h.unrealized_gain_pct, 2) if hasattr(h, 'unrealized_gain_pct') else 0.0,
-                'is_gain': (h.unrealized_gain >= 0) if hasattr(h, 'unrealized_gain') else True,
-            })
+        try:
+            holding_domain = [('quantity', '>', 0)]
+            holding_records = self.env['moneta.holding'].search(holding_domain, limit=5)
+            for h in holding_records:
+                sec = h.security_id
+                price = h.current_price or (sec.current_price if sec else 0.0)
+                mval = h.market_value if hasattr(h, 'market_value') and h.market_value else (h.quantity * price)
+                gain = h.unrealized_gain_pct if hasattr(h, 'unrealized_gain_pct') else 0.0
+                holdings_data.append({
+                    'id': h.id,
+                    'ticker': (sec.symbol if sec and sec.symbol else (sec.name if sec else 'TICKER')),
+                    'name': sec.name if sec else 'Security',
+                    'qty': round(h.quantity, 2),
+                    'price': price,
+                    'price_formatted': f"{sym}{price:,.2f}",
+                    'market_value': mval,
+                    'market_value_formatted': f"{sym}{mval:,.2f}",
+                    'gain_pct': round(gain, 2),
+                    'is_gain': gain >= 0,
+                })
+        except Exception:
+            holdings_data = []
 
         if not holdings_data:
             holdings_data = [
