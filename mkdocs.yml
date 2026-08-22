@@ -32,8 +32,6 @@ theme:
     - navigation.instant.prefetch
     - navigation.instant.progress
     - navigation.tracking
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.top
@@ -43,8 +41,14 @@ theme:
     - search.share
     - content.code.copy
     - content.code.annotate
-    - content.tabs.link
     - header.autohide
+
+plugins:
+  - search
+  - blog:
+      blog_dir: blog
+      blog_toc: true
+      post_readtime: true
 
 markdown_extensions:
   - pymdownx.arithmatex:
@@ -84,15 +88,20 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Onboarding & Setup: 01_GETTING_STARTED.md
-  - Banking & Checkbook: 02_BANKING_AND_RECONCILIATION.md
-  - Stocks & Investments: 03_STOCKS_AND_INVESTMENTS.md
-  - Budgets & Subscriptions: 04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md
-  - Real Estate & Loans: 05_REAL_ESTATE_AND_AMORTIZATION.md
-  - FIRE & Wealth Simulator: 06_FIRE_AND_SIMULATION.md
-  - Multi-User & Privacy: 07_SECURITY_AND_MULTI_USER.md
+  - Get Started: 01_GETTING_STARTED.md
+  - User Guides:
+      - Banking & Checkbook Registers: 02_BANKING_AND_RECONCILIATION.md
+      - Stock Portfolio & Investments: 03_STOCKS_AND_INVESTMENTS.md
+      - Budgets & Scheduled Bills: 04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md
+      - Real Estate & Mortgages: 05_REAL_ESTATE_AND_AMORTIZATION.md
+      - FIRE & Wealth Simulator: 06_FIRE_AND_SIMULATION.md
+      - Security & Household Privacy: 07_SECURITY_AND_MULTI_USER.md
   - Regional Wealth Packs:
-      - Singapore & SEA (CPF/SRS): 09_SINGAPORE_AND_SEA_WEALTH.md
-      - Malaysia (EPF/LHDN): 10_MALAYSIA_WEALTH_AND_TAX.md
-  - Developer & MCP Server: 08_DEVELOPER_AND_API.md
-  - Architecture Port: odoo-port.md
+      - Singapore & SEA (CPF / SRS): 09_SINGAPORE_AND_SEA_WEALTH.md
+      - Malaysia (EPF / LHDN): 10_MALAYSIA_WEALTH_AND_TAX.md
+  - Developer Guide:
+      - Architecture & MCP Server: 08_DEVELOPER_AND_API.md
+      - Odoo Port Architecture: odoo-port.md
+  - Roadmap: roadmap.md
+  - Blog:
+      - blog/index.md
