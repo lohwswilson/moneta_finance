@@ -6,6 +6,15 @@ site_url = "https://lohwswilson.github.io/moneta_finance/"
 repo_url = "https://github.com/lohwswilson/moneta_finance"
 repo_name = "lohwswilson/moneta_finance"
 
+extra_css = [
+    "stylesheets/extra.css"
+]
+
+extra_javascript = [
+    "javascripts/mathjax.js",
+    "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+]
+
 nav = [
     { "Home" = "index.md" },
     { "Get Started" = "01_GETTING_STARTED.md" },
@@ -37,8 +46,6 @@ nav = [
 
 [project.theme]
 variant = "modern"
-font_text = "Inter"
-font_code = "JetBrains Mono"
 features = [
     "navigation.instant",
     "navigation.instant.prefetch",
@@ -55,21 +62,23 @@ features = [
 
 [[project.theme.palette]]
 scheme = "default"
-primary = "light blue"
-accent = "royal blue"
+primary = "indigo"
+accent = "indigo"
 toggle = { icon = "material/brightness-7", name = "Switch to dark mode" }
 
 [[project.theme.palette]]
 scheme = "slate"
-primary = "light blue"
-accent = "royal blue"
+primary = "indigo"
+accent = "indigo"
 toggle = { icon = "material/brightness-4", name = "Switch to light mode" }
 
-[project.markdown]
-extra_javascript = [
-    "javascripts/mathjax.js",
-    "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-]
-extra_css = [
-    "stylesheets/extra.css"
-]
+[project.markdown_extensions]
+"pymdownx.arithmatex" = { generic = true }
+"pymdownx.superfences" = {}
+"pymdownx.highlight" = {}
+"pymdownx.details" = {}
+"pymdownx.snippets" = {}
+"admonition" = {}
+"tables" = {}
+"attr_list" = {}
+"def_list" = {}
