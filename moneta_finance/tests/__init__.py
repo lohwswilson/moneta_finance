@@ -31,3 +31,4 @@ from . import test_duplicate_detector
 from . import test_cashflow_calendar
 from . import test_tax_lot
 from . import test_tax_schedule
+from . import test_api_mobile
