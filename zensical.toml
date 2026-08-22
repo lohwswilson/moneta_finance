@@ -1,0 +1,70 @@
+[project]
+site_name = "Moneta Personal Finance"
+site_description = "An Open-Source Personal Finance, Banking & Wealth Management Module for Odoo 18"
+site_author = "Wilson Loh"
+site_url = "https://lohwswilson.github.io/moneta_finance/"
+repo_url = "https://github.com/lohwswilson/moneta_finance"
+repo_name = "lohwswilson/moneta_finance"
+
+nav = [
+    { "Home" = "index.md" },
+    { "Get Started" = "01_GETTING_STARTED.md" },
+    { "User Guides" = [
+        { "Banking & Checkbook Registers" = "02_BANKING_AND_RECONCILIATION.md" },
+        { "Stock Portfolio & Investments" = "03_STOCKS_AND_INVESTMENTS.md" },
+        { "Budgets & Scheduled Bills" = "04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md" },
+        { "Real Estate & Mortgages" = "05_REAL_ESTATE_AND_AMORTIZATION.md" },
+        { "FIRE & Wealth Simulator" = "06_FIRE_AND_SIMULATION.md" },
+        { "Security & Household Privacy" = "07_SECURITY_AND_MULTI_USER.md" }
+    ] },
+    { "Regional Wealth Packs" = [
+        { "Singapore & SEA (CPF / SRS)" = "09_SINGAPORE_AND_SEA_WEALTH.md" },
+        { "Malaysia (EPF / LHDN)" = "10_MALAYSIA_WEALTH_AND_TAX.md" }
+    ] },
+    { "Developer Guide" = [
+        { "Architecture & MCP Server" = "08_DEVELOPER_AND_API.md" },
+        { "Odoo Port Architecture" = "odoo-port.md" }
+    ] },
+    { "Roadmap" = "roadmap.md" },
+    { "Blog" = [
+        { "Blog Index" = "blog/index.md" }
+    ] }
+]
+
+[project.theme]
+variant = "modern"
+font_text = "Inter"
+font_code = "JetBrains Mono"
+features = [
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.instant.progress",
+    "navigation.sections",
+    "navigation.expand",
+    "navigation.top",
+    "navigation.footer",
+    "search.highlight",
+    "search.suggest",
+    "content.code.copy"
+]
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "light blue"
+accent = "royal blue"
+toggle = { icon = "material/brightness-7", name = "Switch to dark mode" }
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "light blue"
+accent = "royal blue"
+toggle = { icon = "material/brightness-4", name = "Switch to light mode" }
+
+[project.markdown]
+extra_javascript = [
+    "javascripts/mathjax.js",
+    "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+]
+extra_css = [
+    "stylesheets/extra.css"
+]

@@ -7,11 +7,14 @@ on:
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
+      - 'zensical.toml'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
@@ -25,10 +28,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install MkDocs Material & Extensions
+      - name: Install Zensical & Dependencies
         run: |
-          pip install mkdocs-material
+          pip install zensical mkdocs-material ghp-import
 
-      - name: Deploy to GitHub Pages
+      - name: Build Documentation (Zensical Engine)
         run: |
-          mkdocs gh-deploy --force
+          zensical build --clean || mkdocs build
+
+      - name: Deploy to GitHub Pages (gh-pages)
+        run: |
+          ghp-import -p -f -n -m "deploy: update docs site with Zensical [skip ci]" site
