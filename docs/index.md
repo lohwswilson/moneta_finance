@@ -1,5 +1,5 @@
 ---
-title: Moneta Personal Finance - Sovereign Wealth Suite
+title: Moneta Personal Finance - Self-Hosted Personal Finance Suite
 description: An Open-Source Personal Finance, Banking & Wealth Management Suite
 hide:
   - navigation
@@ -8,15 +8,15 @@ hide:
 
 # Moneta Personal Finance
 
-### **Institutional Precision. Zero Tracking. 100% Sovereign Wealth Management.**
+### **Precision Accounting. Zero Tracking. 100% Private Wealth Management.**
 
-**Moneta Personal Finance** is an open-source, self-hosted wealth management suite combining the checkbook ledger precision of **Quicken Premier**, the zero-based envelope budgeting discipline of **YNAB**, the modern visual clarity of **Monarch & Copilot**, and the complete sovereign privacy of your own private database.
+**Moneta Personal Finance** is an open-source, self-hosted wealth management suite combining the checkbook ledger precision of **Quicken Premier**, the zero-based envelope budgeting discipline of **YNAB**, the modern visual clarity of **Monarch & Copilot**, and the complete privacy of your own database.
 
 [🚀 Get Started in 30 Seconds](01_GETTING_STARTED.md){ .md-button .md-button--primary }
 [⭐ Star on GitHub](https://github.com/lohwswilson/moneta_finance){ .md-button }
 
 <div style="margin: 2.5rem 0 3rem 0; text-align: center;">
-  <img src="assets/images/moneta_dashboard_hero.jpg" alt="Moneta Personal Finance Sovereign Dashboard" style="border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); max-width: 100%; height: auto;">
+  <img src="assets/images/moneta_dashboard_hero.jpg" alt="Moneta Personal Finance Dashboard" style="border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); max-width: 100%; height: auto;">
 </div>
 
 ---
@@ -98,7 +98,7 @@ Open [**`http://localhost:8069`**](http://localhost:8069) in your browser (Defau
 
 | Feature / Capability | Moneta Personal Finance | Quicken Premier | YNAB | Monarch Money | Cloud Mint / SaaS |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **100% Self-Hosted & Sovereign** | **✔ Yes** | ✖ No | ✖ No | ✖ No | ✖ No |
+| **100% Self-Hosted & Private** | **✔ Yes** | ✖ No | ✖ No | ✖ No | ✖ No |
 | **Recurring Monthly Cost** | **✔ Free / $0** | $70+ / year | $109 / year | $100 / year | Free (Ad-Tracked) |
 | **Multi-Currency Ledgers & Transfers** | **✔ Native** | Partial | ✖ No | ✖ No | ✖ No |
 | **Live Yahoo Finance Stock Quotes** | **✔ Hourly Sync** | ✔ Yes | ✖ No | ✔ Yes | ✖ No |

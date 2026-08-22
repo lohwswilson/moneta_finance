@@ -47,7 +47,7 @@ When using CPF OA funds to buy a property:
 
 ---
 
-## 3. Sovereign Fixed Income & Global UCITS Advantage
+## 3. Government Bonds (SSB / T-Bills) & Global UCITS Advantage
 
 ### Singapore Savings Bonds (SSB)
 * Models 10-year step-up interest schedules, semi-annual coupons, $200k individual holding limits, and monthly par redemption with the $2 MAS fee.

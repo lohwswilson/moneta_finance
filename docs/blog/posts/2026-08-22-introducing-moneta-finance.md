@@ -15,7 +15,7 @@ We are excited to introduce **Moneta Personal Finance** — an open-source, self
 
 ## 🌟 Why Moneta?
 
-Closed-source financial apps like Mint, YNAB, and Monarch lock your historical data behind recurring monthly subscriptions and third-party data aggregators. Moneta gives you **100% sovereign control** of your financial records on your own private infrastructure.
+Closed-source financial apps like Mint, YNAB, and Monarch lock your historical data behind recurring monthly subscriptions and third-party data aggregators. Moneta gives you **100% private control** of your financial records on your own infrastructure.
 
 ### Key Highlights in the Initial Release:
 1. **Quicken-Style Checkbook Registers**: Instant running balance recalculation with credit-before-debit chronological tiebreaking.
