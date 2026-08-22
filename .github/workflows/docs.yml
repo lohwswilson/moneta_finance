@@ -6,7 +6,6 @@ on:
       - '18.0'
     paths:
       - 'docs/**'
-      - 'mkdocs.yml'
       - 'zensical.toml'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
@@ -30,11 +29,11 @@ jobs:
 
       - name: Install Zensical & Dependencies
         run: |
-          pip install zensical mkdocs-material ghp-import
+          pip install zensical ghp-import
 
       - name: Build Documentation (Zensical Engine)
         run: |
-          zensical build --clean || mkdocs build
+          zensical build --clean
 
       - name: Deploy to GitHub Pages (gh-pages)
         run: |
