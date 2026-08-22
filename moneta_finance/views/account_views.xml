@@ -28,7 +28,6 @@
                     </div>
 
                     <div class="oe_title">
-                        <span class="text-muted text-uppercase fw-bold small"><field name="account_type"/> Account</span>
                         <h1><field name="name" placeholder="e.g. Interactive Brokers Main, DBS Multi-Currency..."/></h1>
                     </div>
 
