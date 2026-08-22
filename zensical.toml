@@ -22,6 +22,7 @@ nav = [
         { "Malaysia (EPF & LHDN)" = "10_MALAYSIA_WEALTH_AND_TAX.md" }
     ] },
     { "Developer Guide" = [
+        { "Development Environment Setup" = "dev_setup.md" },
         { "Architecture & MCP Server" = "08_DEVELOPER_AND_API.md" },
         { "Odoo Port Architecture" = "odoo-port.md" }
     ] },
