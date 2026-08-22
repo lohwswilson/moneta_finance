@@ -245,46 +245,61 @@
 }
 
 /* ==========================================================================
-   Frozen / Sticky Table Headers for Transaction & Investment Lists
+   Clean, Modern Transaction Register & Tabular Lists
    ========================================================================== */
 
-/* One2Many scrollable viewport container for transactions and trades */
-.o_form_view .o_notebook .tab-pane .o_field_one2many[name="transaction_ids"],
-.o_form_view .o_notebook .tab-pane .o_field_one2many[name="trade_ids"] {
-    max-height: calc(100vh - 350px);
-    min-height: 380px;
-    overflow-y: auto !important;
-    overflow-x: auto !important;
-    position: relative !important;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-}
-
-/* Freeze the list header (thead) at the top of the scrollable container */
-.o_form_view .o_notebook .tab-pane .o_field_one2many[name="transaction_ids"] .o_list_renderer table thead,
-.o_form_view .o_notebook .tab-pane .o_field_one2many[name="trade_ids"] .o_list_renderer table thead,
-.o_form_view .o_notebook .tab-pane .o_field_one2many .o_list_renderer table thead {
+/* Clean Sticky Header for Sub-Lists */
+.o_form_view .o_notebook .tab-pane .o_list_renderer .table thead,
+.o_form_view .o_notebook .tab-pane .o_list_renderer .o_list_table thead {
     position: sticky !important;
     top: 0 !important;
-    z-index: 10 !important;
+    z-index: 5 !important;
     background-color: #f8fafc !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
 }
 
-.o_form_view .o_notebook .tab-pane .o_field_one2many[name="transaction_ids"] .o_list_renderer table thead th,
-.o_form_view .o_notebook .tab-pane .o_field_one2many[name="trade_ids"] .o_list_renderer table thead th,
-.o_form_view .o_notebook .tab-pane .o_field_one2many .o_list_renderer table thead th {
+.o_form_view .o_notebook .tab-pane .o_list_renderer .table thead th,
+.o_form_view .o_notebook .tab-pane .o_list_renderer .o_list_table thead th {
     position: sticky !important;
     top: 0 !important;
-    background-color: #f1f5f9 !important;
-    color: #1e293b !important;
+    background-color: #f8fafc !important;
+    color: #475569 !important;
     font-weight: 700 !important;
-    font-size: 0.8rem !important;
+    font-size: 0.78rem !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.03em !important;
+    letter-spacing: 0.04em !important;
     border-bottom: 2px solid #cbd5e1 !important;
     padding: 0.65rem 0.5rem !important;
-    z-index: 11 !important;
+    z-index: 6 !important;
+}
+
+/* Polished Table Rows & Tabular Figures */
+.o_form_view .o_notebook .tab-pane .o_list_renderer .table tbody tr {
+    transition: background-color 0.15s ease-in-out !important;
+}
+
+.o_form_view .o_notebook .tab-pane .o_list_renderer .table tbody tr:hover {
+    background-color: #f0f9ff !important;
+}
+
+.o_form_view .o_notebook .tab-pane .o_list_renderer .table tbody td {
+    padding: 0.55rem 0.5rem !important;
+    vertical-align: middle !important;
+    font-size: 0.85rem !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+/* Clr Button Styling */
+.o_form_view .o_notebook .tab-pane .o_list_renderer button[name="action_toggle_cleared"] {
+    padding: 0.15rem 0.4rem !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    color: #0284c7 !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+}
+
+.o_form_view .o_notebook .tab-pane .o_list_renderer button[name="action_toggle_cleared"]:hover {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
 }

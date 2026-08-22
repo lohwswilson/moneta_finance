@@ -86,27 +86,29 @@
                         </div>
                     </div>
 
-                    <group>
-                        <group name="general_acc_info" string="General Details">
+                    <group col="3" class="mt-2">
+                        <group name="general_acc_info" string="Account &amp; Institution">
                             <field name="account_type"/>
                             <field name="currency_id"/>
                             <field name="institution_id"/>
                             <field name="institution_name"/>
                             <field name="account_number"/>
-                            <field name="sequence"/>
                         </group>
-                        <group name="balance_info" string="Balances &amp; Status">
+                        <group name="balance_info" string="Balances &amp; Limits">
+                            <field name="current_balance" widget="monetary" readonly="1" class="fw-bold"/>
+                            <field name="cleared_balance" widget="monetary" readonly="1"/>
                             <field name="opening_balance" widget="monetary"/>
                             <field name="opening_balance_date"/>
-                            <field name="current_balance" widget="monetary" readonly="1"/>
-                            <field name="cleared_balance" widget="monetary" readonly="1"/>
                             <field name="credit_limit" widget="monetary" invisible="account_type != 'credit_card'"/>
+                        </group>
+                        <group name="settings_info" string="Terms &amp; Settings">
                             <field name="interest_rate" invisible="account_type not in ('loan', 'mortgage', 'loc', 'savings')"/>
                             <field name="fx_fee_percent" invisible="account_type not in ('checking', 'chequing','savings','credit_card','loc','cash')"/>
+                            <field name="sequence"/>
                             <field name="is_favourite"/>
+                            <field name="exclude_from_net_worth"/>
                             <field name="is_closed"/>
                             <field name="closed_date" invisible="not is_closed"/>
-                            <field name="exclude_from_net_worth"/>
                         </group>
                     </group>
 
@@ -182,7 +184,7 @@
                             </field>
                         </page>
 
-                        <page string="💵 Cash Register &amp; Transactions" name="transactions_page">
+                        <page string="Transaction Register" name="transactions_page">
                             <field name="transaction_ids">
                                 <list editable="bottom" default_order="transaction_date desc, id desc" limit="100" decoration-muted="state == 'void'">
                                     <field name="transaction_date" string="Date"/>
