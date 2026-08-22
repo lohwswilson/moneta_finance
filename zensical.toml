@@ -9,7 +9,7 @@ repo_name = "lohwswilson/moneta_finance"
 nav = [
     { "Home" = "index.md" },
     { "Get Started" = "01_GETTING_STARTED.md" },
-    { "User Guides" = [
+    { "User Guide" = [
         { "Banking & Checkbook Registers" = "02_BANKING_AND_RECONCILIATION.md" },
         { "Stock Portfolio & Investments" = "03_STOCKS_AND_INVESTMENTS.md" },
         { "Budgets & Scheduled Bills" = "04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md" },
@@ -18,8 +18,8 @@ nav = [
         { "Security & Household Privacy" = "07_SECURITY_AND_MULTI_USER.md" }
     ] },
     { "Regional Packs" = [
-        { "Singapore & SEA (CPF / SRS)" = "09_SINGAPORE_AND_SEA_WEALTH.md" },
-        { "Malaysia (EPF / LHDN)" = "10_MALAYSIA_WEALTH_AND_TAX.md" }
+        { "Singapore (CPF & SRS)" = "09_SINGAPORE_AND_SEA_WEALTH.md" },
+        { "Malaysia (EPF & LHDN)" = "10_MALAYSIA_WEALTH_AND_TAX.md" }
     ] },
     { "Developer Guide" = [
         { "Architecture & MCP Server" = "08_DEVELOPER_AND_API.md" },
