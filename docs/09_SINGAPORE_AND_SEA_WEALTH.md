@@ -1,6 +1,6 @@
-# Singapore & South East Asia Financial Ecosystem 🇸🇬 🌏
+# Singapore 🇸🇬
 
-Moneta Personal Finance provides comprehensive, native localization for Singapore and South East Asian wealth architectures.
+Moneta Personal Finance provides comprehensive, native localization for Singapore wealth architectures.
 
 ---
 

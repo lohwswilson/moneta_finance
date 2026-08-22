@@ -18,8 +18,8 @@ nav = [
         { "Security & Household Privacy" = "07_SECURITY_AND_MULTI_USER.md" }
     ] },
     { "Regional Packs" = [
-        { "Singapore (CPF & SRS)" = "09_SINGAPORE_AND_SEA_WEALTH.md" },
-        { "Malaysia (EPF & LHDN)" = "10_MALAYSIA_WEALTH_AND_TAX.md" }
+        { "Singapore" = "09_SINGAPORE_AND_SEA_WEALTH.md" },
+        { "Malaysia" = "10_MALAYSIA_WEALTH_AND_TAX.md" }
     ] },
     { "Developer Guide" = [
         { "Development Environment Setup" = "dev_setup.md" },
