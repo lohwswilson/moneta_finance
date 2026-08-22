@@ -67,7 +67,7 @@ class TestEmergencyAccess(MonetaTestBase):
         # Verify read-only account share was provisioned
         share = self.env['moneta.account.share'].search([
             ('account_id', '=', acc.id),
-            ('shared_with_user_id', '=', contact_user.id),
+            ('user_id', '=', contact_user.id),
         ])
         self.assertTrue(share)
         self.assertEqual(share.permission, 'read')
@@ -77,6 +77,6 @@ class TestEmergencyAccess(MonetaTestBase):
         self.assertEqual(contact.status, 'revoked')
         shares_after = self.env['moneta.account.share'].search([
             ('account_id', '=', acc.id),
-            ('shared_with_user_id', '=', contact_user.id),
+            ('user_id', '=', contact_user.id),
         ])
         self.assertFalse(shares_after, "Shares must be unlinked upon revocation")

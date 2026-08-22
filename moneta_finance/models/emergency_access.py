@@ -112,7 +112,9 @@ class MonetaEmergencyContact(models.Model):
                 f"<p>You have <strong>{rec.waiting_period_days} days</strong> (until {rec.unlock_date or 'the waiting period expires'}) to review and decline this request.</p>"
                 f"<p>If this is unauthorized, please log in to Moneta Finance and click <strong>Decline Claim</strong>.</p>"
             )
-            owner.partner_id.message_post(
+            # Notify as superuser: a regular (non-system) owner can otherwise
+            # hit mail.message create access restrictions on their own partner.
+            owner.partner_id.sudo().message_post(
                 subject=subject,
                 body=body,
                 message_type='notification',
@@ -128,14 +130,14 @@ class MonetaEmergencyContact(models.Model):
                 for acc in accounts:
                     existing = self.env['moneta.account.share'].search([
                         ('account_id', '=', acc.id),
-                        ('shared_with_user_id', '=', contact_user.id),
+                        ('user_id', '=', contact_user.id),
                     ], limit=1)
                     if existing:
                         existing.write({'permission': 'read'})
                     else:
                         self.env['moneta.account.share'].create({
                             'account_id': acc.id,
-                            'shared_with_user_id': contact_user.id,
+                            'user_id': contact_user.id,
                             'permission': 'read',
                         })
 
@@ -146,7 +148,7 @@ class MonetaEmergencyContact(models.Model):
             if contact_user:
                 shares = self.env['moneta.account.share'].search([
                     ('account_id.user_id', '=', rec.user_id.id),
-                    ('shared_with_user_id', '=', contact_user.id),
+                    ('user_id', '=', contact_user.id),
                 ])
                 shares.unlink()
 

@@ -58,10 +58,18 @@ class TestPayeeMatcher(MonetaTestBase):
     def test_payee_logo_flag(self):
         user = self._make_user('Payee Logo User', 'payee_logo_user')
         Payee = self._payees(user)
+        # fields.Image validates the payload with PIL, so write a real
+        # decodable image -- generate a 1x1 PNG rather than hand-rolled base64.
+        import base64
+        import io
+        from PIL import Image
+        buf = io.BytesIO()
+        Image.new('RGB', (1, 1), (255, 255, 255)).save(buf, format='PNG')
+        tiny_png = base64.b64encode(buf.getvalue())
         p = Payee.create({
             'name': 'Netflix',
             'website': 'https://netflix.com',
-            'image_128': b'fake_image_bytes_123',
+            'image_128': tiny_png,
         })
         self.assertTrue(p.has_logo)
         p.image_128 = False

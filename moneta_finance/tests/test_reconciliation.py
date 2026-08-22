@@ -52,14 +52,18 @@ class TestReconciliation(MonetaTestBase):
         # Rejection before write: the state is untouched.
         self.assertEqual(tx.state, 'void')
 
-    def test_reconcile_propagates_to_transfer_counterpart(self):
+    def test_reconcile_does_not_propagate_to_transfer_counterpart(self):
+        # Monize v1.15.0 parity: transfer reconciliation status is independent
+        # per account -- reconciling one leg does NOT force a state on the
+        # counterpart (the old pair-wide propagation was deliberately removed).
         acc1 = self._make_account(name='Checking', opening_balance=0.0)
         acc2 = self._make_account(name='Savings', opening_balance=0.0)
         tx = self._make_transaction(acc1, -200.0, is_transfer=True, transfer_account_id=acc2.id)
         cp = tx.linked_transaction_id
+        cp_state_before = cp.state
         tx.action_reconcile()
         self.assertEqual(tx.state, 'reconciled')
-        self.assertEqual(cp.state, 'reconciled')
+        self.assertEqual(cp.state, cp_state_before)
 
     # ------------------------------------------------------------------
     # Reconciliation wizard -- the cleared-balance math.

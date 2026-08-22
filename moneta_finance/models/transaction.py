@@ -657,7 +657,22 @@ class MonetaTransaction(models.Model):
         self.write({'state': 'unreconciled', 'reconciled_date': False})
         return True
 
+    def action_void(self):
+        """Void this transaction and, for transfers, its counterpart leg
+        (pair-wide). Voided rows contribute nothing to the balance, so voiding
+        reverses a transaction's effect; transfer legs void together to
+        preserve balance parity across both accounts (Monize v1.15.0 parity).
+        """
+        (self | self.mapped('linked_transaction_id')).write({'state': 'void'})
+        return True
 
+    def action_unvoid(self):
+        """Reverse a void: restore this transaction (and its transfer
+        counterpart) to unreconciled, re-applying its balance contribution."""
+        (self | self.mapped('linked_transaction_id')).write({'state': 'unreconciled', 'reconciled_date': False})
+        return True
+
+    @api.constrains('is_split', 'amount', 'split_ids')
     def _check_split_sum(self):
         for rec in self:
             if rec.is_split and rec.split_ids:

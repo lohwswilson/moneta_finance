@@ -99,7 +99,7 @@ class TestInvestment(MonetaTestBase):
         with self.assertRaises(ValidationError):
             self._inv_tx(acc, sec, 'sell', 11.0, 100.0)
         # Rejection before write: only the buy exists.
-        self.assertEqual(self.env['moneta.investment.transaction'].search_count([]), 1)
+        self.assertEqual(self.env['moneta.investment.transaction'].search_count([('account_id', '=', acc.id), ('security_id', '=', sec.id)]), 1)
 
     def test_split_scales_quantity_and_average(self):
         acc = self._brokerage()
@@ -347,7 +347,7 @@ class TestInvestment(MonetaTestBase):
         self._inv_tx(acc, sec2, 'buy', 10.0, 400.0)
 
         # Record today's prices
-        today = fields.Date.context_today(self)
+        today = fields.Date.context_today(self.env.user)
         self.env['moneta.security.price'].create({'security_id': sec1.id, 'price_date': today, 'price_close': 205.0})
         self.env['moneta.security.price'].create({'security_id': sec2.id, 'price_date': today, 'price_close': 398.0})
 

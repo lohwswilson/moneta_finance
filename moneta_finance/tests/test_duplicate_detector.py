@@ -7,6 +7,11 @@ from .common import MonetaTestBase
 @tagged('post_install', '-at_install')
 class TestDuplicateDetector(MonetaTestBase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.checking_account = cls._make_account(name='Checking', account_type='checking')
+
     def test_duplicate_transaction_scan_and_merge(self):
         """Test scanning for duplicate transactions and 1-click merging."""
         today = date.today()

@@ -7,6 +7,11 @@ from .common import MonetaTestBase
 @tagged('post_install', '-at_install')
 class TestCashflowCalendar(MonetaTestBase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.checking_account = cls._make_account(name='Checking', account_type='checking')
+
     def test_cashflow_projection_simulation(self):
         """Test Quicken-style 90-day daily cashflow projection and balance simulation."""
         today = date.today()

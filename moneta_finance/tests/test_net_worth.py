@@ -65,19 +65,26 @@ class TestNetWorth(MonetaTestBase):
         self.assertEqual(round(july.market_value or 0.0, 4), 500.0)
 
     def test_net_worth_aggregation(self):
-        self._make_account(name='Checking', account_type='checking', opening_balance=1000.0)
-        self._make_account(name='Visa', account_type='credit_card', opening_balance=-500.0)
-        self._make_account(name='Loan', account_type='loan', opening_balance=-2500.0)
+        # Use a dedicated (non-admin) user so the account.balance.monthly record
+        # rule scopes _net_worth_for_month to only these accounts; admin bypasses
+        # record rules and would sum the live DB's real accounts too.
+        user = self._make_user('Net Worth User', 'net_worth_user')
+        Acc = self.env['moneta.account'].with_user(user)
+        Acc.create({'name': 'Checking', 'account_type': 'checking', 'opening_balance': 1000.0, 'currency_id': self.currency.id})
+        Acc.create({'name': 'Visa', 'account_type': 'credit_card', 'opening_balance': -500.0, 'currency_id': self.currency.id})
+        Acc.create({'name': 'Loan', 'account_type': 'loan', 'opening_balance': -2500.0, 'currency_id': self.currency.id})
         today = fields.Date.context_today(self.env.user)
-        net = self.env['moneta.account.balance.monthly']._net_worth_for_month(today.replace(day=1))
+        net = self.env['moneta.account.balance.monthly'].with_user(user)._net_worth_for_month(today.replace(day=1))
         self.assertEqual(net, -2000.0)
 
     def test_exclude_from_net_worth(self):
-        self._make_account(name='Checking', account_type='checking', opening_balance=1000.0)
-        hidden = self._make_account(name='Hidden', account_type='asset', opening_balance=9999.0)
+        user = self._make_user('Net Worth User 2', 'net_worth_user2')
+        Acc = self.env['moneta.account'].with_user(user)
+        Acc.create({'name': 'Checking', 'account_type': 'checking', 'opening_balance': 1000.0, 'currency_id': self.currency.id})
+        hidden = Acc.create({'name': 'Hidden', 'account_type': 'asset', 'opening_balance': 9999.0, 'currency_id': self.currency.id})
         hidden.write({'exclude_from_net_worth': True})
         today = fields.Date.context_today(self.env.user)
-        net = self.env['moneta.account.balance.monthly']._net_worth_for_month(today.replace(day=1))
+        net = self.env['moneta.account.balance.monthly'].with_user(user)._net_worth_for_month(today.replace(day=1))
         self.assertEqual(net, 1000.0)
 
     def test_cron_rolls_monthly_balances(self):

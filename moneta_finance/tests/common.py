@@ -25,7 +25,7 @@ class MonetaTestBase(TransactionCase):
         })
 
     @classmethod
-    def _make_user(cls, name, login, group=None):
+    def _make_user(cls, name, login, group=None, email=None):
         group = group or cls.group_user
         # moneta_no_seed keeps test users' category sets deterministic (empty
         # unless a test seeds explicitly) instead of pulling in the 30-template
@@ -33,7 +33,7 @@ class MonetaTestBase(TransactionCase):
         return cls.env['res.users'].with_context(moneta_no_seed=True).create({
             'name': name,
             'login': login,
-            'email': f'{login}@example.com',
+            'email': email or f'{login}@example.com',
             'groups_id': [(6, 0, [group.id])],
         })
 
