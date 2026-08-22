@@ -15,6 +15,10 @@ hide:
 [🚀 Get Started in 30 Seconds](01_GETTING_STARTED.md){ .md-button .md-button--primary }
 [⭐ Star on GitHub](https://github.com/lohwswilson/moneta_finance){ .md-button }
 
+<div style="margin: 2.5rem 0 3rem 0; text-align: center;">
+  <img src="assets/images/moneta_dashboard_hero.jpg" alt="Moneta Personal Finance Sovereign Dashboard" style="border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); max-width: 100%; height: auto;">
+</div>
+
 ---
 
 ## ⚡ 30-Second Quickstart
