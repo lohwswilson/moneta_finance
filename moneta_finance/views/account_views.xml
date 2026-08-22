@@ -223,7 +223,8 @@
                                 <field name="state" string="Status" widget="badge" 
                                        decoration-info="state == 'cleared'" 
                                        decoration-success="state == 'reconciled'" 
-                                       decoration-muted="state == 'void'"/>
+                                       decoration-muted="state == 'void'"
+                                       optional="hide"/>
                                 <field name="amount" widget="monetary" sum="Total Amount" decoration-danger="amount &lt; 0" decoration-success="amount &gt; 0"/>
                                 <field name="running_balance" string="Balance" widget="monetary" optional="show"/>
                                 <field name="currency_id" column_invisible="1"/>

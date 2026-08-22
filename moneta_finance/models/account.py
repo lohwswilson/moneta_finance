@@ -81,7 +81,7 @@ class MonetaAccount(models.Model):
     billing_cycle_day = fields.Integer(string='Statement Closing Day', help='Day of month when statement closes (1-31)')
     payment_due_day = fields.Integer(string='Payment Due Day', help='Day of month when payment is due (1-31)')
 
-    account_number = fields.Char(string='Account Number / Mask')
+    account_number = fields.Char(string='Account Number')
     forecast_balance_30d = fields.Monetary(string='Projected (30d)', compute='_compute_forecast_and_statement_cycle')
     forecast_balance_60d = fields.Monetary(string='Projected (60d)', compute='_compute_forecast_and_statement_cycle')
     forecast_balance_90d = fields.Monetary(string='Projected (90d)', compute='_compute_forecast_and_statement_cycle')
