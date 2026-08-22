@@ -1,0 +1,82 @@
+site_name: Moneta Personal Finance
+site_description: An Open-Source Personal Finance, Banking & Wealth Management Module for Odoo 18
+site_author: Wilson Loh
+site_url: https://lohwswilson.github.io/moneta_finance/
+repo_url: https://github.com/lohwswilson/moneta_finance
+repo_name: lohwswilson/moneta_finance
+edit_uri: edit/18.0/docs/
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Light Mode
+    - scheme: default
+      primary: light blue
+      accent: royal blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark Mode
+    - scheme: slate
+      primary: light blue
+      accent: royal blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - admonition
+  - attr_list
+  - def_list
+  - tables
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Onboarding & Setup: 01_GETTING_STARTED.md
+  - Banking & Checkbook: 02_BANKING_AND_RECONCILIATION.md
+  - Stocks & Investments: 03_STOCKS_AND_INVESTMENTS.md
+  - Budgets & Subscriptions: 04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md
+  - Real Estate & Loans: 05_REAL_ESTATE_AND_AMORTIZATION.md
+  - FIRE & Wealth Simulator: 06_FIRE_AND_SIMULATION.md
+  - Multi-User & Privacy: 07_SECURITY_AND_MULTI_USER.md
+  - Regional Wealth Packs:
+      - Singapore & SEA (CPF/SRS): 09_SINGAPORE_AND_SEA_WEALTH.md
+      - Malaysia (EPF/LHDN): 10_MALAYSIA_WEALTH_AND_TAX.md
+  - Developer & MCP Server: 08_DEVELOPER_AND_API.md
+  - Architecture Port: odoo-port.md

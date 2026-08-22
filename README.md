@@ -95,11 +95,13 @@ Explore our in-depth guides in the [`docs/`](docs/) directory:
 ## 🗺️ Product Roadmap & Future Features
 
 We have an active product roadmap with exciting upcoming milestones:
-* 🏦 **Phase 2**: Open Banking & Live Bank Sync (Plaid, Salt Edge, SimpleFIN)
-* 📊 **Phase 3**: Global Tax Packs (Singapore CPF/IRAS, US 1099, UK HMRC)
-* 🪙 **Phase 4**: Crypto Exchange API Sync & Commodities Tracking
-* 📱 **Phase 5**: Mobile Progressive Web App (PWA) & Offline Expense Logging
-* 🤖 **Phase 6**: Autonomous Financial Copilot & 90-Day Predictive Forecasting
+* 🌊 **Phase 5**: Monarch Modern Experience, Cash Flow Sankey & 12-Month Forecaster
+* 🎯 **Phase 6**: YNAB Zero-Based Envelope Budgeting, Ready-to-Assign & Credit Card Shifts
+* 🏦 **Phase 7**: Open Banking & Live Bank Sync (Plaid, Salt Edge, SimpleFIN)
+* 📊 **Phase 8**: Global Tax Packs (Singapore CPF/IRAS, US 1099, UK HMRC)
+* 📈 **Phase 9**: Multi-Market Stock Intelligence, Technical Indicators & Strategies
+* 🤖 **Phase 11**: Autonomous Financial Copilot & 90-Day Predictive Forecasting
+* 📱 **Phase 12**: Native Mobile Apps (iOS & Android) & Offline PWA
 
 Check out [`ROADMAP.md`](ROADMAP.md) to see the full vision and contribute!
 

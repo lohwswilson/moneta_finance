@@ -130,7 +130,107 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 5: Open Banking & Automated Feed Sync (Q1 2027)
+### Phase 5: Monarch Modern Experience & Collaborative Cash Flow (Q1 2027)
+*Incorporating modern cash flow visualizers, flexible household workflows, and forward-looking forecasting inspired by Monarch Money:*
+
+* **Track 5.1: Interactive Cash Flow Sankey Diagram & Visual Wealth Velocity**
+  - [ ] Interactive D3.js / Chart.js Sankey visualizer widget in Odoo 18 OWL dashboard (`moneta.dashboard`)
+  - [ ] Multi-stage dynamic flow: Income Streams $\rightarrow$ Master Groups (Fixed, Variable, Savings) $\rightarrow$ Detailed Categories $\rightarrow$ Net Savings & Investments
+  - [ ] Interactive period filtering (Current Month, Last Month, Quarter-to-Date, Year-to-Date, Custom Date Range)
+  - [ ] 1-Click node drill-down: Clicking any Sankey node opens the filtered checkbook ledger for those underlying transactions
+  - [ ] Gross vs. Net Cash Flow toggle (including/excluding internal transfers and credit card settlements)
+
+* **Track 5.2: 12-Month Forward Cash Flow & "What-If" Scenario Forecaster (`moneta.cashflow.forecast`)**
+  - [ ] Deterministic forward balance projection engine combining `moneta.recurring` scheduled cadences and active `moneta.budget` allocations
+  - [ ] Projected daily and monthly account balance trajectory curve across all liquid checking and savings accounts
+  - [ ] Low-balance and overdraft risk warning flags with projected breach dates
+  - [ ] Interactive "What-If" scenario sandbox: simulate financial milestones (e.g. car purchase, bonus payout, sabbatical, home down payment) without modifying actual ledger records
+  - [ ] Scenario comparison view: baseline trajectory vs. alternative scenario net worth and liquidity curves
+
+* **Track 5.3: Collaborative "Needs Review" Inbox & Household Transaction Triage**
+  - [ ] Transaction review lifecycle state (`needs_review`, `reviewed`) on `moneta.transaction`
+  - [ ] Dedicated "Needs Review" badge counter and quick filter on the checkbook ledger and dashboard
+  - [ ] Household member assignment (`assigned_user_id`) to allocate transactions for partner verification
+  - [ ] In-line discussion chatter (`mail.thread`) enabling comments, questions (e.g. "Did you buy this?"), and internal notes per transaction
+  - [ ] 1-Click batch "Mark as Reviewed" action wizard
+
+* **Track 5.4: Flexible Category-Group Budgeting & Per-Category Rollovers**
+  - [ ] High-level Group Budgeting: set budgets at the master category group level (e.g. "Discretionary Spending", "Lifestyle", "Fixed Bills") with automatic subcategory rollup
+  - [ ] Granular Per-Category Rollover toggle: independently enable/disable rollover balances on a per-category basis (`is_rollover`)
+  - [ ] Flexible Budget Switcher: toggle between Detailed Category View, Group Summary View, and 50/30/20 Rule View
+  - [ ] Real-time visual progress bars with overspending alerts and pace indicators (e.g. "12 days left, 45% budget remaining")
+
+* **Track 5.5: Advanced Multi-Condition Rule Engine with Regex & Auto-Splits**
+  - [ ] Regex and raw bank description pattern matching on `moneta.transaction.rule`
+  - [ ] Multi-criteria condition builder: `Raw Memo (Regex)` + `Amount Range` + `Account Scope` + `Date Range`
+  - [ ] Multi-action execution: `Rename Standard Payee`, `Assign Category & Tags`, `Set Status`, `Hide from Budget / Reports`
+  - [ ] Automated Split Templates: auto-split matched transactions by percentage (e.g. 50% Personal / 50% Reimbursable) or fixed dollar amounts
+  - [ ] Interactive Rule Dry-Run & Testing wizard before saving, with 1-click retroactive batch execution
+
+* **Track 5.6: Budget-Linked Goals & Virtual Multi-Account Sinking Funds**
+  - [ ] Multi-account goal funding: link a single savings goal across multiple bank accounts or dedicate a fractional slice of a high-yield account
+  - [ ] Dynamic Budget Integration: auto-inject required monthly goal contributions (`monthly_contribution_required`) as first-class line items into `moneta.budget`
+  - [ ] Goal priority tiering (Priority 1: Emergency Fund $\rightarrow$ Priority 2: Mortgage Down Payment $\rightarrow$ Priority 3: Travel)
+  - [ ] Visual goal completion milestone forecaster calculating estimated achievement date based on trailing 3-month savings velocity
+
+* **Track 5.7: Subscription "Price Creep" & Amount Variance Detector**
+  - [ ] Statistical baseline price tracking on detected subscriptions in `moneta.subscription.detector`
+  - [ ] Automated price creep alerts whenever an imported recurring charge increases by $>5\%$ or exceeds historical median
+  - [ ] Dedicated "Subscription Health & Price Creep" audit card on the Executive Dashboard
+  - [ ] Price change history log per recurring subscription payee showing historical price hikes over time
+
+* **Track 5.8: Modular Drag-and-Drop Customizable OWL Dashboard**
+  - [ ] User-configurable widget layout engine in Odoo 18 OWL dashboard (`moneta.dashboard`)
+  - [ ] Customizable card arrangement: drag-and-drop reordering, column resizing, and toggling visibility of dashboard widgets
+  - [ ] Available widget catalog: Net Worth Curve, Cash Flow Sankey Preview, Recent Transactions, Needs Review Inbox, Budget vs. Actual, Recurring Billing Calendar, Goals Tracker, and Investment Watchlist
+  - [ ] Per-user layout persistence stored in user preferences (`moneta.dashboard.config`)
+
+---
+
+### Phase 6: YNAB Zero-Based Envelope Budgeting & Cash Allocation Engine (Q1 2027)
+*Delivering strict zero-based envelope budgeting, cash guardrails, and dynamic money movement inspired by YNAB:*
+
+* **Track 6.1: Zero-Based "Ready to Assign" (RTA) Cash Guardrail & Banner**
+  - [ ] Real-time liquid cash calculation: $\text{Ready to Assign} = \text{Total Checking/Savings Cash} - \sum \text{Allocated Envelopes}$
+  - [ ] Visual top banner on Budget Period view displaying RTA status (Green when $0.00, Yellow when positive cash unassigned, Red when over-allocated)
+  - [ ] Strict cash guardrail mode: prevents budgeting unreceived/projected income to enforce true cash-on-hand discipline
+  - [ ] Payday income intake pipeline auto-incrementing RTA balance on bank deposit
+
+* **Track 6.2: Automated Credit Card Payment Reserve & Shift Engine**
+  - [ ] Automated cash envelope shift on credit card spending: moving available funds from budgeted category (e.g. Groceries) directly into dedicated Credit Card Payment reserve category
+  - [ ] "Available for Payment" vs. "Credit Card Statement Balance" reconciliation indicator (Green = Paid-in-Full, Yellow/Red = Carrying Balance / Debt)
+  - [ ] Credit card payment transfer wizard paying statement balance from reserved funds without affecting expense categories
+  - [ ] Credit card debt paydown goal simulator for users carrying revolving debt
+
+* **Track 6.3: Smart Dynamic Target Types ("Needed for Spending", "Target by Date", "Monthly Builder")**
+  - [ ] Target type configuration on `moneta.budget.category`:
+    - **Needed for Spending (Monthly Refill)**: Sets monthly spending ceiling, automatically deducting rollover surplus from required monthly funding ($\text{Needed} = \text{Target} - \text{Rollover}$)
+    - **Target Balance by Date (Sinking Fund)**: Automatically computes monthly required contribution based on remaining months until target date ($\text{Monthly} = \frac{\text{Target} - \text{Current}}{\text{Months Remaining}}$)
+    - **Monthly Savings Builder**: Fixed monthly allocation regardless of account balance
+  - [ ] Auto-calculation of `underfunded_amount` across all categories for the active period
+
+* **Track 6.4: "Roll with the Punches" 1-Click Overspending Resolution Wizard (`moneta.budget.cover.wizard`)**
+  - [ ] Visual overspending alert: highlighted red badge on overspent categories ($< 0.00$)
+  - [ ] Interactive 1-Click "Cover Overspending" modal listing categories with surplus available funds
+  - [ ] Instant intra-period fund reallocation with mutation audit logging in `moneta.action.history`
+  - [ ] Automated end-of-period overspending cleanup options (deduct from next month's RTA vs. absorb into debt)
+
+* **Track 6.5: "Age of Money" (AOM) & Days of Cash Buffer Engine**
+  - [ ] FIFO (First-In, First-Out) cash queue engine matching outgoing transaction payments against historical deposit dates
+  - [ ] Real-time "Age of Money" (AOM) metric on the Executive Dashboard ($< 30\text{ days}$ Paycheck-to-paycheck vs. $\ge 30\text{ days}$ Living on last month's income)
+  - [ ] "Days of Buffer" metric estimating how many days current liquid cash would sustain average historical spending velocity without new income
+  - [ ] Historical 12-month AOM progression chart
+
+* **Track 6.6: 1-Click "Auto-Assign" / Quick Budget Engine**
+  - [ ] 1-Click "Auto-Assign" action button on budget period with selectable distribution strategies:
+    - **Underfunded**: Fully funds all active category targets up to their calculated shortfall
+    - **Assigned Last Month**: Duplicates exact category assignments from the preceding month
+    - **Average Spent**: Allocates funds based on trailing 3-month average actual category spending
+    - **Custom Priority Allocation**: Distributes available RTA funds down category priority tiers until RTA reaches $0.00
+
+---
+
+### Phase 7: Open Banking & Automated Feed Sync (Q1 2027)
 - [ ] **Plaid Integration**: US & Canada automated bank transaction download and account balance refresh
 - [ ] **Salt Edge / Teller / SimpleFIN Sync**: European & Global Open Banking live feed integration
 - [ ] **Automated Rule Matching Engine**: Auto-assign categories, payees, and split templates based on imported bank metadata and regex patterns
@@ -138,7 +238,7 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 6: Global Tax & Multi-Jurisdiction Packs
+### Phase 8: Global Tax & Multi-Jurisdiction Packs
 - [x] **US Tax Pack (Completed ✅)**: Form 8949, Schedule D, 1099-DIV/INT, Schedule E, and TurboTax `.txf` export
 - [x] **Malaysia Wealth & Tax Pack (`moneta_finance_malaysia`) (Completed ✅)**:
   - [x] EPF / KWSP 3-Account Hub (Akaun Persaraan 75%, Sejahtera 15%, Fleksibel 10%, dividend compounding, and i-Saraan matching)
@@ -151,22 +251,22 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 7: Multi-Market Stock Intelligence, Technical Indicators & Strategies (Q2-Q3 2027)
+### Phase 9: Multi-Market Stock Intelligence, Technical Indicators & Strategies (Q2-Q3 2027)
 *Incorporating technical indicator engines and strategy scanners from `daily_stock_analysis` (`/opt/daily_stock_analysis`):*
 
-* **Track 7.1: Multi-Market Historical & Real-Time Data Pipeline**
+* **Track 9.1: Multi-Market Historical & Real-Time Data Pipeline**
   - [ ] Expanded market data fetchers with fallback hierarchy: **Yahoo Finance**, **AkShare**, **Tushare**, **TickFlow**, **Longbridge**, and **AlphaVantage**
   - [ ] Multi-market support: US (NYSE, NASDAQ), HK (HKEX), China A-Shares (SSE, SZSE, BSE), Singapore (SGX), Malaysia (Bursa), Japan (TSE), South Korea (KRX), Taiwan (TWSE), and Global ETFs
   - [ ] Automated market trading calendar awareness (auto-skip holidays across US, SG, MY, HK, and CN exchanges)
 
-* **Track 7.2: Technical Indicator Calculation Engine (`moneta.security.price`)**
+* **Track 9.2: Technical Indicator Calculation Engine (`moneta.security.price`)**
   - [ ] **Moving Averages**: MA5, MA10, MA20, MA50, MA60, MA120, MA250, EMA12, EMA26
   - [ ] **Momentum & Trend Oscillators**: MACD (DIF, DEA, Histogram), RSI (6, 12, 24 periods with overbought/oversold bands), KDJ (9, 3, 3)
   - [ ] **Volatility & Range**: Bollinger Bands (20-day, $\pm 2\sigma$, Bandwidth %), Average True Range (ATR 14)
   - [ ] **Volume & Liquidity Metrics**: Volume Ratio (量比), Volume Spike factor ($>2\times$ 20-day average volume), VWAP (Volume Weighted Average Price)
   - [ ] **Chip Distribution Analytics (筹码分布)**: Profit chip ratio (获利筹码比例), 70% & 90% chip concentration ranges (筹码集中度)
 
-* **Track 7.3: 15 Built-in Technical & Fundamental Strategy Screeners**
+* **Track 9.3: 15 Built-in Technical & Fundamental Strategy Screeners**
   - [ ] **Technical Pattern Scanners**:
     - **MA Golden Cross / Death Cross**: Fast moving average breakout with volume confirmation
     - **Bull Trend Alignment**: Classic MA5 > MA10 > MA20 > MA60 multi-timeframe alignment
@@ -184,17 +284,17 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
     - **Expectation Repricing (预期重估)**: Valuation discount vs. forward consensus growth
     - **Dragon Head / Momentum Leader (龙头战法)**: Sector leader momentum with relative strength index leadership
 
-* **Track 7.4: Crypto, Commodities & Digital Asset Hub**
+* **Track 9.4: Crypto, Commodities & Digital Asset Hub**
   - [ ] Read-only balance sync for major exchanges: Coinbase, Binance, and Kraken
   - [ ] Public on-chain wallet tracking for Bitcoin (BTC), Ethereum (ETH), and Solana (SOL)
   - [ ] Live spot pricing for Gold (XAU), Silver (XAG), and Platinum (XPT)
 
 ---
 
-### Phase 8: Pre-Aggregated Reports, Macro Reviews & Multi-Channel Webhook Alerts (Q3 2027)
+### Phase 10: Pre-Aggregated Reports, Macro Reviews & Multi-Channel Webhook Alerts (Q3 2027)
 *Delivering the 46 pre-aggregated report catalog from Monize and automated market digests from DSA:*
 
-* **Track 8.1: Pre-Aggregated Financial Reports & Analytics Suite**
+* **Track 10.1: Pre-Aggregated Financial Reports & Analytics Suite**
   - [ ] **Year-over-Year (YoY) Monthly Comparison Matrix**: Side-by-side multi-year monthly category spending, income, and savings rate comparisons
   - [ ] **Weekend vs. Weekday Spending Analysis**: Discretionary spending velocity, weekend vs. weekday spending ratio, and daily averages
   - [ ] **Cash Flow Statement Engine**: Direct and indirect cash flow statements across custom calendar periods
@@ -203,12 +303,12 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
   - [ ] **Bill Payment Timeliness Matrix**: Historical tracking of on-time vs. late recurring bill payments
   - [ ] **Debt Snowball & Avalanche Payoff Planner**: Interactive debt reduction simulator with milestone payoff dates
 
-* **Track 8.2: Daily Macro Market Review Briefing (`moneta.market.review`)**
+* **Track 10.2: Daily Macro Market Review Briefing (`moneta.market.review`)**
   - [ ] Automated post-market cron generating a daily macro briefing across tracked market indices (S&P 500, Nasdaq, STI, KLCI, Hang Seng, CSI 300)
   - [ ] Market breadth metrics: Advancing vs. Declining stocks, Total market turnover, Sector & industry leaderboard
   - [ ] Benchmark comparison: Portfolio alpha/beta performance against index benchmarks synthesized into an executive summary
 
-* **Track 8.3: Multi-Channel Webhook Notification Engine**
+* **Track 10.3: Multi-Channel Webhook Notification Engine**
   - [ ] Outbound HTTP Webhook dispatchers for **Telegram Bot**, **Discord Webhook**, **Slack Bot**, **Feishu / Lark Interactive Cards**, and **Enterprise WeChat**
   - [ ] Configurable alert triggers:
     - Daily Morning Portfolio Outlook & Evening Post-Market Digest
@@ -219,10 +319,10 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 9: Autonomous AI Copilot, Stock Intelligence & Private Local LLMs (`moneta_finance_ai_advisor`) (Q4 2027)
+### Phase 11: Autonomous AI Copilot, Stock Intelligence & Private Local LLMs (`moneta_finance_ai_advisor`) (Q4 2027)
 *Combining Monize's agentic financial tools with DSA's stock intelligence and local LLM privacy:*
 
-* **Track 9.1: Daily AI Stock Decision Cards (`moneta.security.analysis`)**
+* **Track 11.1: Daily AI Stock Decision Cards (`moneta.security.analysis`)**
   - [ ] Automated daily analysis generating a structured stock decision dashboard:
     - **Quant Score (0–100)** and **Trend Direction** (Bullish / Range-bound / Bearish)
     - **Action Verdict**: 🟢 Buy / 🟡 Hold / 🔴 Sell with confidence weighting
@@ -231,18 +331,18 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
     - **Bullish Catalysts**: Fundamental earnings surprise, industry tailwinds, technical confluence
     - **Pre-Trade Execution Checklist**: 5-step risk-reward verification before executing orders
 
-* **Track 9.2: Real-Time Financial News & Sentiment Search**
+* **Track 11.2: Real-Time Financial News & Sentiment Search**
   - [ ] Integration with multi-engine search APIs: **Tavily**, **SerpAPI**, **Bocha**, **Brave Search**, and **SearXNG**
   - [ ] Real-time sentiment classification: Bullish / Neutral / Bearish scoring of recent company news and regulatory filings
   - [ ] Social sentiment integration: Reddit, X (Twitter), and Polymarket prediction market sentiment monitoring (US equities)
 
-* **Track 9.3: Universal Multi-LLM Provider Gateway & Local LLM Support**
+* **Track 11.3: Universal Multi-LLM Provider Gateway & Local LLM Support**
   - [ ] **Ollama Local Private Model Gateway**: 100% private, self-hosted local LLMs (Llama 3, DeepSeek-R1, Mistral, Qwen) with zero external network transmission of financial records
   - [ ] **Expanded Cloud Provider Support**: Anthropic Claude, Google Gemini, OpenAI (GPT-4o), and custom OpenAI-compatible endpoints
   - [ ] **AES-256-GCM Encryption**: Secure encryption for all stored API keys with per-user credential isolation
   - [ ] **Provider Fallback Chain & Usage Analytics**: Automatic fallback to secondary models on timeout/rate limit, with token and cost tracking
 
-* **Track 9.4: Real-Time Streaming (SSE) & Dynamic Agentic Tool-Calling Loop**
+* **Track 11.4: Real-Time Streaming (SSE) & Dynamic Agentic Tool-Calling Loop**
   - [ ] **Server-Sent Events (SSE) Streaming**: Token-by-token streaming chat interface for natural conversation flow
   - [ ] **6 Core Financial Agentic Tools**:
     1. `get_account_balances`: Real-time balances and credit utilization
@@ -256,7 +356,7 @@ This document outlines the strategic roadmap for **Moneta Personal Finance**. We
 
 ---
 
-### Phase 10: Native Mobile Apps (iOS & Android) & PWA (Q4 2027)
+### Phase 12: Native Mobile Apps (iOS & Android) & PWA (Q4 2027)
 *Delivering dedicated mobile apps and responsive fast-logging interfaces:*
 
 - [ ] **Cross-Platform Native Apps (iOS & Android)**: High-performance mobile applications built with React Native / Flutter connecting securely to Moneta via REST/JSON-RPC and MCP APIs
