@@ -16,7 +16,7 @@ hide:
 [⭐ Star on GitHub](https://github.com/lohwswilson/moneta_finance){ .md-button }
 
 <div style="margin: 2.5rem 0 3rem 0; text-align: center;">
-  <img src="assets/images/moneta_dashboard_hero.jpg" alt="Moneta Personal Finance Dashboard" style="border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); max-width: 100%; height: auto;">
+  <img src="assets/images/moneta_dashboard.png" alt="Moneta Personal Finance Command Center" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2); max-width: 100%; height: auto;">
 </div>
 
 ---
@@ -35,6 +35,46 @@ docker compose up -d
 ```
 
 Open [**`http://localhost:8069`**](http://localhost:8069) in your browser (Default login: `admin` / `admin`).
+
+---
+
+## 📸 Product Screenshots
+
+<div class="grid cards" markdown>
+
+-   ### 🏦 [Transaction Register](02_BANKING_AND_RECONCILIATION.md)
+
+    ---
+
+    Point-in-time running balance calculation with credit-before-debit tiebreaker ordering and 1-click `Clr` status toggles.
+
+    [![Moneta Transaction Register](assets/images/moneta_transactions.png)](02_BANKING_AND_RECONCILIATION.md)
+
+-   ### 📈 [Investments & Portfolios](03_STOCKS_AND_INVESTMENTS.md)
+
+    ---
+
+    Multi-lot holdings with average cost basis, live Yahoo Finance quote synchronization, and asset allocation breakdown.
+
+    [![Moneta Investments](assets/images/moneta_investments.png)](03_STOCKS_AND_INVESTMENTS.md)
+
+-   ### 🇸🇬 [Singapore CPF & Tax Hub](09_SINGAPORE_AND_SEA_WEALTH.md)
+
+    ---
+
+    Native Singapore CPF (OA/SA/MA/RA) 4-account tracking, SRS tax relief optimizer, and HDB loan comparator.
+
+    [![Moneta Singapore CPF](assets/images/moneta_singapore_cpf.png)](09_SINGAPORE_AND_SEA_WEALTH.md)
+
+-   ### 💎 [Executive Wealth Command Center](index.md)
+
+    ---
+
+    Consolidated Net Worth KPI, liquid emergency runway, Balance Sheet breakdown, and instant AI insights.
+
+    [![Moneta Executive Dashboard](assets/images/moneta_dashboard.png)](index.md)
+
+</div>
 
 ---
 
