@@ -16,7 +16,32 @@ export class MonetaDashboard extends Component {
 
         this.state = useState({
             loading: true,
-            data: {},
+            data: {
+                currency_symbol: "$",
+                currency_name: "USD",
+                net_worth: 0,
+                net_worth_formatted: "$0.00",
+                total_assets_formatted: "$0.00",
+                total_liabilities_formatted: "$0.00",
+                recent_transactions: [],
+                investment_holdings: [],
+                asset_allocation: [],
+                net_worth_history: [],
+                sankey_data: {
+                    income: 0,
+                    expenses: 0,
+                    savings: 0,
+                    flows: [],
+                },
+                monte_carlo_cone: {
+                    p10_formatted: "$0",
+                    p50_formatted: "$0",
+                    p90_formatted: "$0",
+                    success_rate: 0,
+                },
+                emergency_runway_months: 0,
+                fire_progress_pct: 0,
+            },
             timeframe: "1Y",
         });
 
@@ -42,7 +67,18 @@ export class MonetaDashboard extends Component {
                 "get_dashboard_payload",
                 []
             );
-            this.state.data = result;
+            if (result && typeof result === "object") {
+                this.state.data = {
+                    ...this.state.data,
+                    ...result,
+                    recent_transactions: result.recent_transactions || [],
+                    investment_holdings: result.investment_holdings || [],
+                    asset_allocation: result.asset_allocation || [],
+                    net_worth_history: result.net_worth_history || [],
+                    sankey_data: result.sankey_data || { income: 0, expenses: 0, savings: 0, flows: [] },
+                    monte_carlo_cone: result.monte_carlo_cone || { p10_formatted: "$0", p50_formatted: "$0", p90_formatted: "$0" },
+                };
+            }
         } catch (err) {
             console.error("Failed to load Moneta dashboard data:", err);
         } finally {
@@ -67,7 +103,7 @@ export class MonetaDashboard extends Component {
         setTimeout(() => {
             this.renderNetWorthChart();
             this.renderDonutChart();
-        }, 50);
+        }, 60);
     }
 
     renderNetWorthChart() {
@@ -88,11 +124,11 @@ export class MonetaDashboard extends Component {
         this.charts.netWorth = new Chart(ctx, {
             type: "line",
             data: {
-                labels: labels,
+                labels: labels.length ? labels : ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
                 datasets: [
                     {
                         label: "Net Worth",
-                        data: dataPoints,
+                        data: dataPoints.length ? dataPoints : [0, 0, 0, 0, 0, 0],
                         borderColor: "#38bdf8",
                         borderWidth: 2.5,
                         pointBackgroundColor: "#0284c7",

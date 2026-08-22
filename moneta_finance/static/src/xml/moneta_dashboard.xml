@@ -34,7 +34,7 @@
                     <div class="moneta-card-header">
                         <div>
                             <div class="moneta-card-title">Net Worth Summary</div>
-                            <div class="moneta-kpi-large" t-esc="state.data.net_worth_formatted"/>
+                            <div class="moneta-kpi-large" t-esc="state.data.net_worth_formatted || '$0.00'"/>
                         </div>
                         <div class="moneta-time-pills">
                             <span class="moneta-pill" t-att-class="{'active': state.timeframe === '1Y'}" t-on-click="() => this.setTimeframe('1Y')">1Y</span>
@@ -47,15 +47,15 @@
                     <div class="moneta-nw-footer">
                         <div class="moneta-stat-item">
                             <span class="label">Total Assets</span>
-                            <span class="val text-success" t-esc="state.data.total_assets_formatted"/>
+                            <span class="val text-success" t-esc="state.data.total_assets_formatted || '$0.00'"/>
                         </div>
                         <div class="moneta-stat-item">
                             <span class="label">Total Liabilities</span>
-                            <span class="val text-danger" t-esc="state.data.total_liabilities_formatted"/>
+                            <span class="val text-danger" t-esc="state.data.total_liabilities_formatted || '$0.00'"/>
                         </div>
                         <div class="moneta-stat-item">
                             <span class="label">Runway</span>
-                            <span class="val text-info" t-esc="state.data.emergency_runway_months + ' Mos'"/>
+                            <span class="val text-info" t-esc="(state.data.emergency_runway_months || 0) + ' Mos'"/>
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="state.data.recent_transactions" t-as="tx" t-key="tx.id">
+                                <t t-foreach="state.data.recent_transactions || []" t-as="tx" t-key="tx.id">
                                     <tr>
                                         <td class="text-muted font-mono" t-esc="tx.date"/>
                                         <td class="fw-semibold text-truncate" t-esc="tx.payee"/>
@@ -128,7 +128,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="state.data.investment_holdings" t-as="h" t-key="h.id">
+                            <t t-foreach="state.data.investment_holdings || []" t-as="h" t-key="h.id">
                                 <tr>
                                     <td class="fw-bold text-info font-mono" t-esc="h.ticker"/>
                                     <td class="text-truncate text-muted" t-esc="h.name"/>
@@ -150,7 +150,7 @@
                             <canvas t-ref="donutCanvas" width="100" height="100"></canvas>
                         </div>
                         <div class="moneta-donut-legend">
-                            <t t-foreach="state.data.asset_allocation" t-as="item" t-key="item.label">
+                            <t t-foreach="state.data.asset_allocation || []" t-as="item" t-key="item.label">
                                 <div class="legend-row">
                                     <span class="legend-dot" t-attf-style="background-color: #{item.color};"></span>
                                     <span class="legend-text" t-esc="item.label"/>
@@ -174,7 +174,7 @@
                         <!-- Left Inflow Bar -->
                         <div class="sankey-node income-node">
                             <div class="node-title">Income</div>
-                            <div class="node-val font-mono" t-esc="state.data.currency_symbol + (state.data.sankey_data.income).toLocaleString()"/>
+                            <div class="node-val font-mono" t-esc="(state.data.currency_symbol || '$') + (state.data.sankey_data ? state.data.sankey_data.income : 0).toLocaleString()"/>
                         </div>
 
                         <!-- Mid Flow SVGs -->
@@ -231,15 +231,15 @@
                         <div class="cone-milestones">
                             <div class="milestone-row">
                                 <span class="p-tag p90">P90 (Bull)</span>
-                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone.p90_formatted"/>
+                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone ? state.data.monte_carlo_cone.p90_formatted : '$0'"/>
                             </div>
                             <div class="milestone-row highlight">
                                 <span class="p-tag p50">P50 (Median)</span>
-                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone.p50_formatted"/>
+                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone ? state.data.monte_carlo_cone.p50_formatted : '$0'"/>
                             </div>
                             <div class="milestone-row">
                                 <span class="p-tag p10">P10 (Stress)</span>
-                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone.p10_formatted"/>
+                                <span class="p-val font-mono" t-esc="state.data.monte_carlo_cone ? state.data.monte_carlo_cone.p10_formatted : '$0'"/>
                             </div>
                             <div class="mt-3 text-center">
                                 <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-3 py-1 font-mono">
@@ -255,7 +255,7 @@
             <!-- Loading Spinner -->
             <div class="moneta-loading" t-if="state.loading">
                 <i class="fa fa-circle-o-notch fa-spin fa-3x text-info"/>
-                <div class="mt-3 text-muted">Calculating Sovereign Financial Intelligence...</div>
+                <div class="mt-3 text-muted">Calculating Financial Intelligence...</div>
             </div>
         </div>
     </t>
