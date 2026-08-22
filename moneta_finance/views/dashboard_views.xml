@@ -7,63 +7,37 @@
         <field name="arch" type="xml">
             <form string="Personal Finance Command Center" class="o_moneta_dashboard">
                 <sheet>
-                    <!-- Top Command Center Hero Header (Soothing Light Sky Blue) -->
-                    <div class="moneta-hero-banner p-4 mb-4">
+                    <!-- Consolidated Command & Advisory Banner with Currency Selector -->
+                    <div class="card moneta-card p-3 mb-4 shadow-xs" style="background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%) !important; border-left: 5px solid #0284c7 !important; border: 1px solid rgba(186, 230, 253, 0.6) !important; border-radius: 12px;">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle p-1 bg-white shadow-sm border border-info border-opacity-25">
-                                    <div class="rounded-circle bg-primary-light p-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: #e0f2fe !important;">
-                                        <i class="fa fa-diamond fa-2x" style="color: #0284c7;"/>
-                                    </div>
+                            <!-- Left: Advisory Icon & Title & Description -->
+                            <div class="d-flex align-items-center gap-3" style="flex: 1; min-width: 320px;">
+                                <div class="rounded-circle bg-white p-2 shadow-xs text-primary d-flex align-items-center justify-content-center border border-info border-opacity-25" style="width: 48px; height: 48px; min-width: 48px;">
+                                    <i class="fa fa-lightbulb-o fa-2x" style="color: #0284c7;"/>
                                 </div>
                                 <div>
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <span class="badge rounded-pill bg-white text-primary border border-info border-opacity-25 px-3 py-1 fw-bold text-uppercase shadow-xs" style="letter-spacing: 0.05em; font-size: 0.72rem; color: #0284c7 !important;">
-                                            <i class="fa fa-circle text-success me-1" style="font-size: 0.6rem;"/>Live Command Center
+                                        <span class="badge rounded-pill px-3 py-1 text-white fw-bold" style="background-color: #0284c7 !important; font-size: 0.72rem;">
+                                            <i class="fa fa-circle text-success me-1" style="font-size: 0.55rem;"/>Live Advisory
                                         </span>
-                                        <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold border shadow-xs" style="font-size: 0.75rem;">
-                                            Base Currency: <field name="currency_id"/>
-                                        </span>
-                                    </div>
-                                    <h3 class="fw-bold mb-0 mt-1" style="color: #0f172a;">
-                                        Personal Finance &amp; Wealth Dashboard
-                                    </h3>
-                                    <span class="small fw-medium" style="color: #0369a1;">
-                                        Consolidated wealth, real-time portfolio valuations, cash flow, and debt resilience.
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- Header Quick Action Triggers -->
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <button name="action_open_holdings" type="object" class="btn btn-primary rounded-pill px-3 shadow-sm fw-semibold" style="font-size: 0.85rem; background-color: #0284c7 !important; border-color: #0284c7 !important;">
-                                    <i class="fa fa-line-chart me-1"/>Portfolio Center
-                                </button>
-                                <button name="action_open_insights" type="object" class="btn btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 0.85rem; border-color: #0284c7 !important; color: #0284c7 !important; background: #ffffff !important;">
-                                    <i class="fa fa-lightbulb-o me-1"/>AI Insights (<field name="insight_count"/>)
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- AI Smart Financial Insights Banner -->
-                    <div class="card moneta-card p-3 mb-4" style="background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%) !important; border-left: 5px solid #0284c7 !important; border: 1px solid rgba(186, 230, 253, 0.6) !important;">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle bg-white p-3 shadow-xs text-primary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                                    <i class="fa fa-lightbulb-o fa-2x text-primary"/>
-                                </div>
-                                <div>
-                                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <span class="badge rounded-pill bg-primary px-3 py-1 text-white fw-bold" style="font-size: 0.72rem;">Smart Advisory</span>
-                                        <h5 class="fw-bold mb-0 text-dark"><field name="top_insight_title"/></h5>
-                                        <span class="badge bg-white text-primary border fw-semibold"><field name="top_insight_badge"/></span>
+                                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem;"><field name="top_insight_title"/></h5>
+                                        <span class="badge bg-white text-primary border border-info border-opacity-25 fw-semibold" style="color: #0284c7 !important;"><field name="top_insight_badge"/></span>
                                     </div>
                                     <p class="text-muted small mb-0 mt-1"><field name="top_insight_desc"/></p>
                                 </div>
                             </div>
-                            <div>
-                                <button name="action_open_insights" type="object" class="btn btn-primary rounded-pill px-4 shadow-sm fw-semibold">
-                                    <i class="fa fa-arrow-circle-right me-1"/>Review Insights (<field name="insight_count"/>)
+
+                            <!-- Right: Currency Selector & Quick Action Buttons -->
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <div class="d-flex align-items-center bg-white px-3 py-1 rounded-pill border shadow-xs" style="gap: 0.5rem;">
+                                    <span class="small fw-bold text-muted text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Currency:</span>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" class="fw-bold" style="font-size: 0.85rem; border: none; min-width: 100px;"/>
+                                </div>
+                                <button name="action_open_holdings" type="object" class="btn btn-outline-primary rounded-pill px-3 fw-semibold shadow-xs" style="font-size: 0.85rem; border-color: #0284c7 !important; color: #0284c7 !important; background: #ffffff !important;">
+                                    <i class="fa fa-line-chart me-1"/>Portfolio
+                                </button>
+                                <button name="action_open_insights" type="object" class="btn btn-primary rounded-pill px-3 shadow-sm fw-semibold" style="font-size: 0.85rem; background-color: #0284c7 !important; border-color: #0284c7 !important;">
+                                    <i class="fa fa-arrow-circle-right me-1"/>Insights (<field name="insight_count"/>)
                                 </button>
                             </div>
                         </div>
