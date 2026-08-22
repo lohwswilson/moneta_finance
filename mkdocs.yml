@@ -43,13 +43,6 @@ theme:
     - content.code.annotate
     - header.autohide
 
-plugins:
-  - search
-  - blog:
-      blog_dir: blog
-      blog_toc: true
-      post_readtime: true
-
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
@@ -104,4 +97,7 @@ nav:
       - Odoo Port Architecture: odoo-port.md
   - Roadmap: roadmap.md
   - Blog:
-      - blog/index.md
+      - Blog Overview: blog/index.md
+      - Introducing Moneta for Odoo 18: blog/posts/2026-08-22-introducing-moneta-finance.md
+      - Stochastic FIRE & Monte Carlo Modeling: blog/posts/2026-08-22-stochastic-fire-monte-carlo.md
+      - Two-Legged Cross-Currency Transfers: blog/posts/2026-08-22-cross-currency-multi-ledger.md

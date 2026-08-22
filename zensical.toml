@@ -27,7 +27,10 @@ nav = [
     ] },
     { "Roadmap" = "roadmap.md" },
     { "Blog" = [
-        { "Blog Index" = "blog/index.md" }
+        { "Blog Overview" = "blog/index.md" },
+        { "Introducing Moneta for Odoo 18" = "blog/posts/2026-08-22-introducing-moneta-finance.md" },
+        { "Stochastic FIRE & Monte Carlo Modeling" = "blog/posts/2026-08-22-stochastic-fire-monte-carlo.md" },
+        { "Two-Legged Cross-Currency Transfers" = "blog/posts/2026-08-22-cross-currency-multi-ledger.md" }
     ] }
 ]
 
