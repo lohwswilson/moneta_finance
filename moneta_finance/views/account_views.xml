@@ -184,7 +184,7 @@
 
                         <page string="💵 Cash Register &amp; Transactions" name="transactions_page">
                             <field name="transaction_ids">
-                                <list editable="bottom" default_order="transaction_date desc, id desc" decoration-muted="state == 'void'">
+                                <list editable="bottom" default_order="transaction_date desc, id desc" limit="100" decoration-muted="state == 'void'">
                                     <field name="transaction_date" string="Date"/>
                                     <field name="check_number" string="Check #" optional="show"/>
                                     <field name="payee_id" string="Payee"/>
