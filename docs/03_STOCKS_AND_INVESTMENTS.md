@@ -67,7 +67,7 @@ $$\text{Total Brokerage Value} = \underbrace{\text{Uninvested Cash Balance}}_{\t
 
 Moneta syncs live market quotes directly from Yahoo Finance:
 
-* **Automatic Hourly Background Sync**: An automated Odoo Cron job (`cron_moneta_fetch_security_quotes`) updates price history every hour during market sessions.
+* **Automatic Hourly Background Sync**: An automated background cron job (`cron_moneta_fetch_security_quotes`) updates price history every hour during market sessions.
 * **1-Click Manual Refresh**: Click **🔄 Refresh All Live Quotes** from any Holding list or form view to fetch live quotes for all portfolio tickers simultaneously.
 
 ---
@@ -77,7 +77,7 @@ Moneta syncs live market quotes directly from Yahoo Finance:
 If you invest in foreign stock markets (e.g. US stocks in `USD`, London UCITS ETFs in `USD`/`GBP`, or Singapore SGX stocks in `SGD`):
 
 * **Native Currency Accounting**: Each stock holding tracks quantity, cost basis, and latest market price in its native trading currency.
-* **Real-Time FX Conversion**: When computing total account value and Net Worth, Moneta converts each individual holding's market value, cost basis, and unrealized gains into your company's base currency using Odoo's real-time exchange rate table.
+* **Real-Time FX Conversion**: When computing total account value and Net Worth, Moneta converts each individual holding's market value, cost basis, and unrealized gains into your base currency using the real-time exchange rate table.
 
 ---
 

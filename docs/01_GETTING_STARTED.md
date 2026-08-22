@@ -1,12 +1,12 @@
 # Getting Started with Moneta Personal Finance
 
-Welcome to **Moneta Personal Finance** for Odoo 18. This guide walks you through the 30-second Docker container quickstart, manual native installation, base currency configuration, and setting up your first accounts.
+Welcome to **Moneta Personal Finance**. This guide walks you through the 30-second Docker container quickstart, base currency configuration, and setting up your first accounts.
 
 ---
 
 ## ⚡ Method 1: 30-Second Docker Quickstart (Recommended)
 
-The repository includes a ready-to-use [`docker-compose.yml`](https://github.com/lohwswilson/moneta_finance/blob/18.0/docker-compose.yml) that automatically provisions **PostgreSQL 16** and **Odoo 18.0** with all Moneta modules pre-installed.
+The repository includes a ready-to-use [`docker-compose.yml`](https://github.com/lohwswilson/moneta_finance/blob/18.0/docker-compose.yml) that automatically provisions all Moneta modules with persistent storage.
 
 ### 1. Launch Containers
 ```bash
@@ -14,11 +14,11 @@ The repository includes a ready-to-use [`docker-compose.yml`](https://github.com
 git clone https://github.com/lohwswilson/moneta_finance.git
 cd moneta_finance
 
-# Start PostgreSQL and Odoo 18 in background
+# Start Moneta Personal Finance in background
 docker compose up -d
 ```
 
-### 2. Access Odoo
+### 2. Access Moneta
 * Open your browser at **`http://localhost:8069`**
 * **Database**: `moneta_dev` (auto-created)
 * **Default Login**: `admin` / `admin`
@@ -38,41 +38,14 @@ docker compose down
 
 ---
 
-## 🛠️ Method 2: Manual Native Odoo 18 Installation
-
-If you already run a local or production Odoo 18 instance:
-
-### 1. Install Required Python Packages
-```bash
-pip install yfinance pandas numpy matplotlib
-```
-
-### 2. Add to Addons Path
-Clone the repository into your Odoo custom addons directory:
-```bash
-cd /path/to/your/custom_addons
-git clone -b 18.0 https://github.com/lohwswilson/moneta_finance.git
-```
-
-### 3. Install in Odoo
-* Navigate to Odoo in your browser $\rightarrow$ **Apps**.
-* Click **Update Apps List**.
-* Search for `Moneta Personal Finance` and click **Activate / Install**.
-* Or install via terminal command line:
-  ```bash
-  ./odoo-bin -c odoo.conf -d <your_database> -i moneta_finance,moneta_finance_property,moneta_finance_singapore,moneta_finance_malaysia
-  ```
-
----
-
 ## ⚙️ Initial Configuration
 
 ### Setting Your Base Currency
-Moneta automatically converts foreign accounts, international stocks (e.g., USD, EUR, GBP), and multi-currency assets into your company's primary base currency (e.g., **SGD**, **USD**, or **EUR**).
+Moneta automatically converts foreign accounts, international stocks (e.g., USD, EUR, GBP), and multi-currency assets into your primary base currency (e.g., **SGD**, **USD**, or **EUR**).
 
-1. Go to **Accounting / Settings** $\rightarrow$ **Companies**.
+1. Go to **Settings** $\rightarrow$ **Companies**.
 2. Set your primary currency (e.g. `SGD` or `USD`).
-3. Ensure active exchange rates exist in **Invoicing / Settings** $\rightarrow$ **Currencies**.
+3. Ensure active exchange rates exist in **Settings** $\rightarrow$ **Currencies**.
 
 ---
 

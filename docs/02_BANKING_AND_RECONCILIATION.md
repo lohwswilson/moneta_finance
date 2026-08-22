@@ -49,7 +49,7 @@ Source Account (SGD Bank)                            Destination Account (USD Br
 ### B. Cross-Currency Transfers (Different Currencies)
 Moneta natively supports transfers between accounts denominated in different currencies (e.g. `SGD` $\rightarrow$ `USD`, or `USD` $\rightarrow$ `EUR`, `MYR`, `GBP`, `JPY`):
 
-1. **Automatic Exchange Rate Conversion**: When you create the transfer in the source currency (e.g. `-$1,350.00 SGD`), Moneta uses Odoo's live exchange rate table (`res.currency`) on the transaction date to calculate and post the target amount in the destination account's native currency (e.g. `+$1,000.00 USD`).
+1. **Automatic Exchange Rate Conversion**: When you create the transfer in the source currency (e.g. `-$1,350.00 SGD`), Moneta uses the live multi-currency exchange rate table (`res.currency`) on the transaction date to calculate and post the target amount in the destination account's native currency (e.g. `+$1,000.00 USD`).
 2. **Realized Bank Spread & Fee Overrides**: If your bank or remittance service (e.g. Wise, DBS Remit, Revolut) charged a wire fee or applied a custom FX spread, you can edit the exact received amount on the destination leg (e.g. change `$1,000.00` to `$996.50 USD`). Moneta preserves each account's independent local currency amount while maintaining the linked transfer pair.
 3. **Smart Match Across Imported Foreign Statements**: If you import CSV/QIF statements for both accounts independently (where dates may differ by 1–2 days due to wire settlement), Moneta's **fuzzy date-window matching engine ($\pm 3\text{ days}$)** automatically pairs the existing imported transactions together instead of creating a duplicate entry.
 

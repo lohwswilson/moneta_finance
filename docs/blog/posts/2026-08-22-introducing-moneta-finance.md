@@ -7,9 +7,9 @@ categories:
   - Architecture
 ---
 
-# Introducing Moneta Personal Finance for Odoo 18
+# Introducing Moneta Personal Finance
 
-We are excited to introduce **Moneta Personal Finance** — an open-source, self-hosted personal finance and wealth management suite built natively on Odoo 18.
+We are excited to introduce **Moneta Personal Finance** — an open-source, self-hosted personal finance and wealth management suite.
 
 <!-- more -->
 

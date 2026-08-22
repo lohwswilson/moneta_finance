@@ -1,18 +1,18 @@
 ---
-title: Moneta Personal Finance - Sovereign Wealth Suite for Odoo 18
-description: An Open-Source Personal Finance, Banking & Wealth Management Suite for Odoo 18
+title: Moneta Personal Finance - Sovereign Wealth Suite
+description: An Open-Source Personal Finance, Banking & Wealth Management Suite
 ---
 
 <div class="hero-wrapper" markdown>
 
 <div class="hero-pill">
-  <span>✨ Built natively for Odoo 18.0</span>
+  <span>✨ Open-Source Sovereign Wealth Suite</span>
 </div>
 
-<h1 class="hero-title">Sovereign Wealth & Personal Finance Suite</h1>
+<h1 class="hero-title">Moneta Personal Finance</h1>
 
 <p class="hero-subtitle">
-  Combining the depth of Quicken Premier, the discipline of YNAB, the visual elegance of Monarch & Copilot, and the complete privacy of Odoo 18.
+  Combining the depth of Quicken Premier, the discipline of YNAB, the visual elegance of Monarch & Copilot, and 100% self-hosted privacy.
 </p>
 
 <div class="hero-actions">
@@ -30,14 +30,14 @@ description: An Open-Source Personal Finance, Banking & Wealth Management Suite 
 
 ## ⚡ 30-Second Quickstart
 
-Get up and running with a complete PostgreSQL 16 and Odoo 18 stack with Moneta pre-installed:
+Get up and running with a complete self-hosted stack in seconds:
 
 ```bash
 # 1. Clone the repository
 git clone https://github.com/lohwswilson/moneta_finance.git
 cd moneta_finance
 
-# 2. Launch Odoo 18 & PostgreSQL with Docker
+# 2. Launch Moneta Personal Finance with Docker
 docker compose up -d
 ```
 
@@ -67,7 +67,7 @@ Open [**`http://localhost:8069`**](http://localhost:8069) (Default login: `admin
 
     "Give Every Dollar a Job" with Ready-to-Assign (RTA) cash guardrails, automated credit card payment reserve shifts, 14-day bill horizons, and smart targets.
 
--   :material-chart-sankey: **[Monarch Cash Flow Visualizer](ROADMAP.md)**
+-   :material-chart-sankey: **[Monarch Cash Flow Visualizer](roadmap.md)**
 
     ---
 
@@ -89,9 +89,9 @@ Open [**`http://localhost:8069`**](http://localhost:8069) (Default login: `admin
 
 ---
 
-## 🏛️ Modular Multi-Addon Architecture
+## 🏛️ Modular Suite Architecture
 
-Moneta is engineered as a clean, modular suite of Odoo addons:
+Moneta is engineered with clean modularity and separation of concerns:
 
 ```mermaid
 graph TD
