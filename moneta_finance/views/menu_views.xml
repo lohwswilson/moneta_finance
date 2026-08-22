@@ -36,7 +36,7 @@
               sequence="10"/>
 
     <menuitem id="menu_moneta_transactions"
-              name="Transaction Register"
+              name="Register"
               parent="menu_moneta_banking_root"
               action="action_moneta_transaction"
               sequence="20"/>
