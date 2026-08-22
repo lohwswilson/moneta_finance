@@ -1,35 +1,97 @@
 ---
-title: Moneta Personal Finance - Documentation
+title: Moneta Personal Finance - Sovereign Wealth Suite for Odoo 18
 description: An Open-Source Personal Finance, Banking & Wealth Management Suite for Odoo 18
 ---
 
-<div class="moneta-hero" markdown>
+<div class="hero-wrapper" markdown>
 
-# Moneta Personal Finance
-
-**An Open-Source Personal Finance, Banking & Wealth Management Suite for Odoo 18.**
-
-*Combining the financial depth of Quicken Premier, the behavioral discipline of YNAB, the visual elegance of Monarch & Copilot, and the sovereign privacy of Odoo.*
-
-<div class="moneta-badges">
-  <img src="https://img.shields.io/badge/Odoo-18.0-714B67?style=flat-square&logo=odoo" alt="Odoo 18.0">
-  <img src="https://img.shields.io/badge/License-LGPL_v3-0284c7?style=flat-square" alt="License LGPLv3">
-  <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=flat-square&logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/Quotes-Yahoo%20Finance-6001D2?style=flat-square&logo=yahoo" alt="Yahoo Finance">
+<div class="hero-pill">
+  <span>✨ Built natively for Odoo 18.0</span>
 </div>
 
-[:material-rocket-launch: Quickstart Guide](01_GETTING_STARTED.md){ .md-button .md-button--primary }
-[:material-github: GitHub Repository](https://github.com/lohwswilson/moneta_finance){ .md-button }
+<h1 class="hero-title">Sovereign Wealth & Personal Finance Suite</h1>
+
+<p class="hero-subtitle">
+  Combining the depth of Quicken Premier, the discipline of YNAB, the visual elegance of Monarch & Copilot, and the complete privacy of Odoo 18.
+</p>
+
+<div class="hero-actions">
+  <a href="01_GETTING_STARTED/" class="md-button md-button--primary">
+    :material-rocket-launch: Get Started
+  </a>
+  <a href="https://github.com/lohwswilson/moneta_finance" class="md-button">
+    :material-github: Star on GitHub
+  </a>
+</div>
 
 </div>
 
 ---
 
-## 🌟 Sovereign Wealth Platform
+## ⚡ 30-Second Quickstart
 
-**Moneta Personal Finance** is a 100% self-hosted, sovereign personal finance suite built on the enterprise-grade **Odoo 18** ORM and PostgreSQL backend.
+Get up and running with a complete PostgreSQL 16 and Odoo 18 stack with Moneta pre-installed:
 
-Unlike closed cloud SaaS applications (Mint, Monarch, YNAB) that monetize your financial data behind monthly subscriptions, Moneta runs entirely on your own private infrastructure with **zero third-party tracking**, **native real-time multi-currency support**, and **direct local AI / MCP agent integration**.
+```bash
+# 1. Clone the repository
+git clone https://github.com/lohwswilson/moneta_finance.git
+cd moneta_finance
+
+# 2. Launch Odoo 18 & PostgreSQL with Docker
+docker compose up -d
+```
+
+Open [**`http://localhost:8069`**](http://localhost:8069) (Default login: `admin` / `admin`).
+
+---
+
+## 🌟 Sovereign Wealth Platform Capabilities
+
+<div class="grid cards" markdown>
+
+-   :material-bank: **[Quicken-Style Registers](02_BANKING_AND_RECONCILIATION.md)**
+
+    ---
+
+    Point-in-time running balances with credit-before-debit chronological tiebreaking, two-legged cross-currency transfers, 1-click `Clr` toggles, and statement reconciliation wizards.
+
+-   :material-chart-line: **[Stock & ETF Intelligence](03_STOCKS_AND_INVESTMENTS.md)**
+
+    ---
+
+    Live Yahoo Finance hourly quote sync, composite brokerage ledger (Cash vs Holdings), multi-lot average cost basis, tax-lot accounting (FIFO/LIFO/HIFO), and corporate split adjustments.
+
+-   :material-bullseye-arrow: **[YNAB Zero-Based Budgeting](04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md)**
+
+    ---
+
+    "Give Every Dollar a Job" with Ready-to-Assign (RTA) cash guardrails, automated credit card payment reserve shifts, 14-day bill horizons, and smart targets.
+
+-   :material-chart-sankey: **[Monarch Cash Flow Visualizer](ROADMAP.md)**
+
+    ---
+
+    Interactive Cash Flow Sankey diagrams, 12-month forward cash flow scenario forecasting, collaborative "Needs Review" triage inbox, and subscription price creep alerts.
+
+-   :material-fire: **[FIRE & Wealth Simulator](06_FIRE_AND_SIMULATION.md)**
+
+    ---
+
+    Emergency liquid runway indicator, Trinity Study 4% rule FIRE milestones, and 1,000-path stochastic Monte Carlo wealth projections with $P_{10}/P_{50}/P_{90}$ percentile bands.
+
+-   :material-flag-checkered: **[Singapore & Malaysia Packs](09_SINGAPORE_AND_SEA_WEALTH.md)**
+
+    ---
+
+    Native Singapore CPF (OA/SA/MA/RA), CPF LIFE simulator, SRS tax exemptions, HDB loans, Malaysia EPF 3-Account Hub, LHDN Borang BE Tax Relief Planner, and Semi-Flexi Loans.
+
+</div>
+
+---
+
+## 🏛️ Modular Multi-Addon Architecture
+
+Moneta is engineered as a clean, modular suite of Odoo addons:
 
 ```mermaid
 graph TD
@@ -49,83 +111,6 @@ graph TD
 
 ---
 
-## 📚 Complete Documentation Library
+## 🔒 100% Privacy & Sovereign Data Ownership
 
-<div class="grid cards" markdown>
-
--   :material-rocket-launch: **[1. Getting Started & Setup](01_GETTING_STARTED.md)**
-
-    ---
-
-    Prerequisites, 30-second Docker setup, native Odoo 18 installation, and base currency configuration.
-
--   :material-bank: **[2. Banking & Checkbook Registers](02_BANKING_AND_RECONCILIATION.md)**
-
-    ---
-
-    Quicken-style running balances, cross-currency transfers, 1-click `Clr` toggles, and statement reconciliation wizards.
-
--   :material-chart-line: **[3. Stocks & Investment Center](03_STOCKS_AND_INVESTMENTS.md)**
-
-    ---
-
-    Composite brokerage model (Cash vs Holdings), live Yahoo Finance quotes, average cost basis, and corporate actions.
-
--   :material-bullseye-arrow: **[4. Budgets & Scheduled Bills](04_BUDGETS_BILLS_AND_SUBSCRIPTIONS.md)**
-
-    ---
-
-    Payday envelope budgeting, 14-day bill reminder horizons, and AI subscription price creep detection.
-
--   :material-home-city: **[5. Real Estate & Loan Amortization](05_REAL_ESTATE_AND_AMORTIZATION.md)**
-
-    ---
-
-    Property appraisal tracking, net home equity, mortgage debt metrics, and loan prepayment savings simulators.
-
--   :material-fire: **[6. FIRE & Wealth Simulator](06_FIRE_AND_SIMULATION.md)**
-
-    ---
-
-    Emergency liquid runway, Trinity 4% FIRE milestone, and 1,000-path stochastic Monte Carlo wealth projections.
-
--   :material-shield-lock: **[7. Security & Household Privacy](07_SECURITY_AND_MULTI_USER.md)**
-
-    ---
-
-    Record-level user isolation, joint family account sharing, and time-delayed digital estate emergency access.
-
--   :material-flag-checkered: **[8. Singapore & SEA Wealth](09_SINGAPORE_AND_SEA_WEALTH.md)**
-
-    ---
-
-    CPF (OA/SA/MA/RA), CPF LIFE simulator, SRS tax optimization, HDB loans, SORA mortgages, SSB, and IRAS relief.
-
--   :material-palm-tree: **[9. Malaysia Wealth & Tax Pack](10_MALAYSIA_WEALTH_AND_TAX.md)**
-
-    ---
-
-    EPF/KWSP 3-Account restructuring, LHDN Borang BE Tax Relief Planner, PRS, ASNB Unit Trusts, and Semi-Flexi Loans.
-
--   :material-code-braces: **[10. Developer Architecture & MCP](08_DEVELOPER_AND_API.md)**
-
-    ---
-
-    Entity relationship diagrams (ERD), automated cron jobs, custom dashboard launchpad actions, and testing.
-
-</div>
-
----
-
-## ⚡ 30-Second Quickstart (Docker)
-
-```bash
-# Clone the repository
-git clone https://github.com/lohwswilson/moneta_finance.git
-cd moneta_finance
-
-# Launch Odoo 18 with Moneta pre-loaded
-docker compose up -d
-```
-
-Open your browser at **`http://localhost:8069`** (Default login: `admin` / `admin`).
+Unlike closed cloud personal finance apps (Mint, Monarch, YNAB) that monetize user financial history or lock accounts behind recurring monthly fees, Moneta runs entirely on your own private infrastructure with **zero cloud data broker tracking**, **native real-time multi-currency support**, and **direct local AI / MCP agent integration**.

@@ -32,6 +32,8 @@ theme:
     - navigation.instant.prefetch
     - navigation.instant.progress
     - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.indexes
     - navigation.top
     - navigation.footer
@@ -88,7 +90,7 @@ nav:
       - Real Estate & Mortgages: 05_REAL_ESTATE_AND_AMORTIZATION.md
       - FIRE & Wealth Simulator: 06_FIRE_AND_SIMULATION.md
       - Security & Household Privacy: 07_SECURITY_AND_MULTI_USER.md
-  - Regional Wealth Packs:
+  - Regional Packs:
       - Singapore & SEA (CPF / SRS): 09_SINGAPORE_AND_SEA_WEALTH.md
       - Malaysia (EPF / LHDN): 10_MALAYSIA_WEALTH_AND_TAX.md
   - Developer Guide:
